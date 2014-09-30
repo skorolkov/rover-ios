@@ -608,7 +608,7 @@ const CGFloat kRVCardViewImageRatio = 1.6;
     }
     
     [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.frame = frame;
+        self.bounds = frame;
         self.center = center;
         self.layer.cornerRadius = 3.0;
         self.moreButton.alpha = 1.0;
