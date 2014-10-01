@@ -77,14 +77,13 @@ typedef struct {
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.invisibleButton = [[UIButton alloc] initWithFrame:frame];
+        self.invisibleButton = [[UIButton alloc] initWithFrame:self.bounds];
         [self.invisibleButton addTarget:self action:@selector(invisibleButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.invisibleButton];
         
         self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPan:)];
         self.panGesture.delegate = (id <UIGestureRecognizerDelegate>)self;
         self.panGesture.cancelsTouchesInView = YES;
-        [self addGestureRecognizer:self.panGesture];
         
         self.fullScreen = NO;
         self.animating = NO;
@@ -132,6 +131,7 @@ typedef struct {
 - (void)reloadData
 {
     [self.cards enumerateObjectsUsingBlock:^(UIView *cardView, NSUInteger idx, BOOL *stop) {
+        [cardView removeGestureRecognizer:self.panGesture];
         [cardView removeFromSuperview];
     }];
     
@@ -152,6 +152,10 @@ typedef struct {
         [self.cards insertObject:cardView atIndex:0];
         [self.cardIndexMap setObject:@(i) forKey:cardView];
         [self addSubview:cardView];
+    }
+    
+    if (self.topCard) {
+        [self.topCard addGestureRecognizer:self.panGesture];
     }
 }
 
@@ -283,8 +287,12 @@ typedef struct {
 
 - (void)removeCard:(RVCardView *)cardView
 {
+    [cardView removeGestureRecognizer:self.panGesture];
     [cardView removeFromSuperview];
     [self.cards removeObject:cardView];
+    if (self.topCard) {
+        [self.topCard addGestureRecognizer:self.panGesture];
+    }
 }
 
 #pragma mark - Actions
@@ -299,7 +307,7 @@ typedef struct {
 
 - (void)didPan:(UIPanGestureRecognizer *)panGesture
 {
-    CGPoint translation = [panGesture translationInView:[self superview]];
+    CGPoint translation = [panGesture translationInView:[self topCard]];
     
     if (panGesture.state == UIGestureRecognizerStateBegan) {
         self.animating = YES;

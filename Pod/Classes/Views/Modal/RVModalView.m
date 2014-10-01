@@ -24,11 +24,11 @@
 
 - (void)addSubviews
 {
-    self.background = [[UIImageView alloc] initWithFrame:self.frame];
+    self.background = [[UIImageView alloc] initWithFrame:self.bounds];
     self.background.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.background];
     
-    self.cardDeck = [[RVCardDeckView alloc] initWithFrame:self.frame];
+    self.cardDeck = [[RVCardDeckView alloc] initWithFrame:self.bounds];
     self.cardDeck.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.cardDeck];
 }
@@ -43,7 +43,7 @@
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[background]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[background]|" options:0 metrics:nil views:views]];
     
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[cardDeck(320)]" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[cardDeck]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[cardDeck]|" options:0 metrics:nil views:views]];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.cardDeck attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0]];
 }
