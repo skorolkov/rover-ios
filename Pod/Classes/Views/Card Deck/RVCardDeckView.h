@@ -33,8 +33,6 @@ typedef enum {
 - (void)enterFullScreen;
 - (void)exitFullScreen;
 
-- (void)nextCardWithDirection:(CardDeckSwipeDirection)direction completion:(void (^)(RVCardView *card))completion;
-
 @end
 
 #pragma mark - CardDeckDataSourceDelegate

@@ -11,7 +11,7 @@
 #import "RVCardViewButton.h"
 
 // Space between the top of the card and the top of the screen
-const CGFloat kCardMarginTop = 67.0;
+//const CGFloat kCardMarginTop = 67.0;
 
 // Focal length used in 3D projection
 const CGFloat kFocalLength = 300.0;
@@ -37,6 +37,7 @@ typedef struct {
 @property (strong, nonatomic) UIButton *invisibleButton;
 
 @property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
+@property (strong, nonatomic) UIDynamicAnimator *animator;
 @property (nonatomic) BOOL fullScreen;
 @property (nonatomic) BOOL animating;
 
@@ -81,6 +82,8 @@ typedef struct {
         [self.invisibleButton addTarget:self action:@selector(invisibleButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         [self addSubview:self.invisibleButton];
         
+        self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
+        
         self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPan:)];
         self.panGesture.delegate = (id <UIGestureRecognizerDelegate>)self;
         self.panGesture.cancelsTouchesInView = YES;
@@ -114,7 +117,7 @@ typedef struct {
 
 - (RVCardViewLayout)layoutForCardAtIndex:(NSUInteger)idx
 {
-    CGPoint origin = CGPointMake(self.frame.size.width / 2, ([RVCardView contractedHeight] / 2) + kCardMarginTop);
+    CGPoint origin = CGPointMake(self.frame.size.width / 2, (self.frame.size.height  / 2) - (kCardSpacing * 2) );
     CGFloat spacing = kCardSpacing * idx;
     CGFloat y = spacing * -1.0;
     CGFloat z = spacing;
@@ -231,56 +234,37 @@ typedef struct {
     return [idx unsignedIntegerValue];
 }
 
-- (void)nextCardWithDirection:(CardDeckSwipeDirection)direction completion:(void (^)(RVCardView *card))completion
+- (void)nextCard
 {
     self.animating = YES;
+    RVCardView *card = self.topCard;
+    [self removeCard:card];
     
-    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        CGFloat x = direction == CardDeckSwipeDirectionRight ? 500.0 : -500.0;
-        CGAffineTransform t1 = CGAffineTransformMakeTranslation(x, 100.0);
-        CGAffineTransform t2 = [self rotationForOffset:x];
-        self.topCard.transform = CGAffineTransformConcat(t1, t2);
-        self.topCard.alpha = 0.0;
+    if (self.delegate) {
+        [self.delegate cardDeck:self didSwipeCard:card];
+    }
+    
+    if (!self.topCard) return;
+    
+    [UIView animateWithDuration:0.2 animations:^{
+        [self layoutCards];
     } completion:^(BOOL finished) {
-        RVCardView *card = self.topCard;
-        [self removeCard:card];
-        
-        if (completion) {
-            completion(card);
-        }
+        [self.topCard didShow];
+        self.animating = NO;
         
         if (self.delegate) {
-            [self.delegate cardDeck:self didSwipeCard:card];
+            [self.delegate cardDeck:self didShowCard:self.topCard];
         }
-        
-        if (!self.topCard) return;
-        
-        [UIView animateWithDuration:0.2 animations:^{
-            [self layoutCards];
-        } completion:^(BOOL finished) {
-            [self.topCard didShow];
-            self.animating = NO;
-            
-            if (self.delegate) {
-                [self.delegate cardDeck:self didShowCard:self.topCard];
-            }
-        }];
     }];
 }
 
 #pragma mark - Utility methods
 
-- (CGAffineTransform)rotationForOffset:(CGFloat)offset
+- (CGFloat)angleOfView:(UIView *)view
 {
-    if (offset < 0) {
-        offset = MAX(offset, 0 - kCardActionTolerance);
-    } else {
-        offset = MIN(offset, kCardActionTolerance);
-    }
+    // http://stackoverflow.com/a/2051861/1271826
     
-    CGFloat degrees = (offset / 100 * 10.0) * -1.0;
-    CGFloat radians = degrees * (M_PI/180.0);
-    return CGAffineTransformMakeRotation(radians);
+    return atan2(view.transform.b, view.transform.a);
 }
 
 #pragma mark - Card Management Methods
@@ -307,29 +291,96 @@ typedef struct {
 
 - (void)didPan:(UIPanGestureRecognizer *)panGesture
 {
-    CGPoint translation = [panGesture translationInView:[self topCard]];
+    static UIAttachmentBehavior *attachment;
+    static CGPoint               startCenter;
+    
+    // variables for calculating angular velocity
+    
+    static CFAbsoluteTime        lastTime;
+    static CGFloat               lastAngle;
+    static CGFloat               angularVelocity;
     
     if (panGesture.state == UIGestureRecognizerStateBegan) {
         self.animating = YES;
+        startCenter = panGesture.view.center;
+        
+        // calculate the center offset and anchor point
+        CGPoint pointWithinAnimatedView = [panGesture locationInView:panGesture.view];
+        
+        UIOffset offset = UIOffsetMake(pointWithinAnimatedView.x - panGesture.view.bounds.size.width / 2.0,
+                                       pointWithinAnimatedView.y - panGesture.view.bounds.size.height / 2.0);
+        
+        CGPoint anchor = [panGesture locationInView:panGesture.view.superview];
+        
+        // create attachment behavior
+        attachment = [[UIAttachmentBehavior alloc] initWithItem:panGesture.view
+                                               offsetFromCenter:offset
+                                               attachedToAnchor:anchor];
+        lastTime = CFAbsoluteTimeGetCurrent();
+        lastAngle = [self angleOfView:panGesture.view];
+        attachment.length = 0.0;
+        
+        attachment.action = ^{
+            CFAbsoluteTime time = CFAbsoluteTimeGetCurrent();
+            CGFloat angle = [self angleOfView:panGesture.view];
+            if (time > lastTime) {
+                angularVelocity = (angle - lastAngle) / (time - lastTime);
+                lastTime = time;
+                lastAngle = angle;
+            }
+        };
+        
+        [self.animator addBehavior:attachment];
     }
-    
-    if (panGesture.state == UIGestureRecognizerStateChanged) {
-        CGAffineTransform t1 = CGAffineTransformMakeTranslation(translation.x, translation.y);
-        CGAffineTransform t2 = [self rotationForOffset:translation.x];
-        self.topCard.transform = CGAffineTransformConcat(t1, t2);
+    else if (panGesture.state == UIGestureRecognizerStateChanged)
+    {
+        // as user makes gesture, update attachment behavior's anchor point, achieving drag 'n' rotate
+        CGPoint anchor = [panGesture locationInView:panGesture.view.superview];
+        attachment.anchorPoint = anchor;
     }
-    
-    if (panGesture.state == UIGestureRecognizerStateEnded) {
-        if (abs(translation.x) > kCardActionTolerance) {
-            CardDeckSwipeDirection direction = translation.x > 0 ? CardDeckSwipeDirectionRight : CardDeckSwipeDirectionLeft;
-            [self nextCardWithDirection:direction completion:nil];
-        } else {
-            [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-                self.topCard.transform = CGAffineTransformIdentity;
-            } completion:^(BOOL finished) {
-                self.animating = NO;
-            }];
+    else if (panGesture.state == UIGestureRecognizerStateEnded)
+    {
+        [self.animator removeAllBehaviors];
+        
+        CGPoint velocity = [panGesture velocityInView:panGesture.view.superview];
+        
+        // if we aren't dragging it down, just snap it back and quit
+        
+        /*
+        if (fabs(atan2(velocity.y, velocity.x) - M_PI_2) > M_PI_4) {
+            NSLog(@"Snap");
+            UISnapBehavior *snap = [[UISnapBehavior alloc] initWithItem:panGesture.view snapToPoint:startCenter];
+            [animator addBehavior:snap];
+            
+            return;
         }
+         */
+        
+        
+        // otherwise, create UIDynamicItemBehavior that carries on animation from where the gesture left off (notably linear and angular velocity)
+        
+        UIDynamicItemBehavior *dynamic = [[UIDynamicItemBehavior alloc] initWithItems:@[panGesture.view]];
+        [dynamic addLinearVelocity:CGPointMake(velocity.x/10,velocity.y/10) forItem:panGesture.view];
+        //dynamic.resistance = 10.f;
+        //dynamic.friction =10;
+        [dynamic addAngularVelocity:angularVelocity forItem:panGesture.view];
+        [dynamic setAngularResistance:7];
+        
+        // when the view no longer intersects with its superview, go ahead and remove it
+        
+        dynamic.action = ^{
+            if (!CGRectIntersectsRect(panGesture.view.superview.bounds, panGesture.view.frame)) {
+                [self.animator removeAllBehaviors];
+                [self nextCard];
+            }
+        };
+        [self.animator addBehavior:dynamic];
+        
+        // add a little gravity so it accelerates off the screen (in case user gesture was slow)
+        
+        UIGravityBehavior *gravity = [[UIGravityBehavior alloc] initWithItems:@[panGesture.view]];
+        gravity.magnitude = 3.7;
+        [self.animator addBehavior:gravity];
     }
 }
 
@@ -361,7 +412,6 @@ typedef struct {
     if (!cardView.discarded) {
         cardView.discarded = YES;
         
-//    [self nextCardWithDirection:CardDeckSwipeDirectionLeft completion:^(RVCardView *card) {
         if (self.delegate) {
             [self.delegate cardDeck:self didDiscardCard:cardView];
         }
