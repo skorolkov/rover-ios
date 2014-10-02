@@ -18,13 +18,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    // Staging
-    NSString *appID = @"13dd067dd82c8d386a7d01eefe3ab555765f1c4e3a2e09b014615bf9a4e8f9b8";
+    // SuperMart
+    NSString *appID = @"1480a683aadb602fc71f678f79dbbb0ae93ed272e90d9aa92e31f519c86883f8";
+    NSArray *beaconUUIDs = @[@"EDA978A7-513C-442A-9364-3F14E74F80EC"];
     
-    // Production
-//    NSString *appID = @"eae9edb6352b8fec6618d3d9cb96f2e795e1c2df1ad5388af807b05d8dfcd7d6";
-    
-    [Rover setApplicationID:appID beaconUUIDs:@[@"6C21D507-C7F7-42C5-BA24-ADF3010BC612"]];    
+    [Rover setApplicationID:appID beaconUUIDs:beaconUUIDs];
     [Rover startMonitoring];
     
     return YES;
