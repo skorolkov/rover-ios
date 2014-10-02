@@ -364,7 +364,7 @@ typedef struct {
         //dynamic.resistance = 10.f;
         //dynamic.friction =10;
         [dynamic addAngularVelocity:angularVelocity forItem:panGesture.view];
-        [dynamic setAngularResistance:7];
+        [dynamic setAngularResistance:22];
         
         // when the view no longer intersects with its superview, go ahead and remove it
         
