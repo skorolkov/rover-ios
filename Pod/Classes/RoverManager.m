@@ -58,7 +58,7 @@ static NSString *const kRVCustomerIDKey = @"kRVCustomerIDKey";
 - (NSString *)endpoint {
     if (!_endpoint) {
         NSString *value = [self.configuration objectForKey:@"API Endpoint"];
-        _endpoint = [value length] > 0 ? value : @"http://rover-app.herokuapp.com/mobileapi/v1/";
+        _endpoint = [value length] > 0 ? value : @"http://api.roverlabs.co/mobileapi/v1/";
     }
     return _endpoint;
 }

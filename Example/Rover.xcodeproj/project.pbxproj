@@ -21,6 +21,7 @@
 		3D1B153C19DB3C2400447853 /* SavedOffersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B153219DB3C2400447853 /* SavedOffersTableViewController.m */; };
 		3D1B154019DB3C4600447853 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B153E19DB3C4600447853 /* main.m */; };
 		3D1B154319DB3C5D00447853 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D1B154219DB3C5D00447853 /* Images.xcassets */; };
+		DBE5828719DF28D800AF36B3 /* Rover.plist in Resources */ = {isa = PBXBuildFile; fileRef = DBE5828619DF28D800AF36B3 /* Rover.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,7 @@
 		9945C1454602289A90D4F3C6 /* Pods-Rover.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rover.release.xcconfig"; path = "Pods/Target Support Files/Pods-Rover/Pods-Rover.release.xcconfig"; sourceTree = "<group>"; };
 		A3273631A61A8989367BF4A8 /* Pods-Rover.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rover.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Rover/Pods-Rover.debug.xcconfig"; sourceTree = "<group>"; };
 		BEC3DEF5CB63C52ED23989B9 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		DBE5828619DF28D800AF36B3 /* Rover.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Rover.plist; sourceTree = "<group>"; };
 		E79CE6FED38E2951DAB2A969 /* libPods-Rover App.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rover App.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F15E84920563AC2F49457A9A /* Rover.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Rover.podspec; path = ../Rover.podspec; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -144,6 +146,7 @@
 			children = (
 				3D1B152519DB3C2400447853 /* Info.plist */,
 				3D1B153E19DB3C4600447853 /* main.m */,
+				DBE5828619DF28D800AF36B3 /* Rover.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -310,6 +313,7 @@
 				3D1B153519DB3C2400447853 /* Info.plist in Resources */,
 				3D1B154319DB3C5D00447853 /* Images.xcassets in Resources */,
 				3D1B153619DB3C2400447853 /* Main.storyboard in Resources */,
+				DBE5828719DF28D800AF36B3 /* Rover.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
