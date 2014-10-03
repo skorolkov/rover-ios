@@ -20,7 +20,6 @@
 		3D1B153B19DB3C2400447853 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B153019DB3C2400447853 /* RootViewController.m */; };
 		3D1B153C19DB3C2400447853 /* SavedOffersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B153219DB3C2400447853 /* SavedOffersTableViewController.m */; };
 		3D1B154019DB3C4600447853 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1B153E19DB3C4600447853 /* main.m */; };
-		3D1B154119DB3C4600447853 /* Rover.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3D1B153F19DB3C4600447853 /* Rover.plist */; };
 		3D1B154319DB3C5D00447853 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D1B154219DB3C5D00447853 /* Images.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -60,7 +59,6 @@
 		3D1B153119DB3C2400447853 /* SavedOffersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedOffersTableViewController.h; sourceTree = "<group>"; };
 		3D1B153219DB3C2400447853 /* SavedOffersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedOffersTableViewController.m; sourceTree = "<group>"; };
 		3D1B153E19DB3C4600447853 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		3D1B153F19DB3C4600447853 /* Rover.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Rover.plist; sourceTree = "<group>"; };
 		3D1B154219DB3C5D00447853 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		417999D097102EA539523416 /* libPods-Rover.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rover.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58A195388D20070C39A /* Rover.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rover.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -146,7 +144,6 @@
 			children = (
 				3D1B152519DB3C2400447853 /* Info.plist */,
 				3D1B153E19DB3C4600447853 /* main.m */,
-				3D1B153F19DB3C4600447853 /* Rover.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -313,7 +310,6 @@
 				3D1B153519DB3C2400447853 /* Info.plist in Resources */,
 				3D1B154319DB3C5D00447853 /* Images.xcassets in Resources */,
 				3D1B153619DB3C2400447853 /* Main.storyboard in Resources */,
-				3D1B154119DB3C4600447853 /* Rover.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
