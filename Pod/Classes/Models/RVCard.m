@@ -138,6 +138,12 @@
     if (discardedAt != (id)[NSNull null] && [discardedAt length] > 0) {
         self.discardedAt = [dateFormatter dateFromString:discardedAt];
     }
+    
+    // expiresAt
+    NSString *expiresAt = [JSON objectForKey:@"expires_at"];
+    if (expiresAt != (id)[NSNull null] && [expiresAt length] > 0) {
+        self.expiresAt = [dateFormatter dateFromString:expiresAt];
+    }
 }
 
 - (NSDictionary *)toJSON {

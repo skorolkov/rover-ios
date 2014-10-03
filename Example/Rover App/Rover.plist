@@ -2,7 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>API Endpoint</key>
+	<key>_API Endpoint</key>
 	<string>http://rover-app.herokuapp.com/mobileapi/v1/</string>
+	<key>API Endpoint</key>
+	<string>http://rover-staging.herokuapp.com/mobileapi/v1/</string>
 </dict>
 </plist>

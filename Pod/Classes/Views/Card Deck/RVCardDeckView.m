@@ -360,11 +360,11 @@ typedef struct {
         // otherwise, create UIDynamicItemBehavior that carries on animation from where the gesture left off (notably linear and angular velocity)
         
         UIDynamicItemBehavior *dynamic = [[UIDynamicItemBehavior alloc] initWithItems:@[panGesture.view]];
-        [dynamic addLinearVelocity:CGPointMake(velocity.x/10,velocity.y/10) forItem:panGesture.view];
+        [dynamic addLinearVelocity:CGPointMake(velocity.x/5,velocity.y/5) forItem:panGesture.view];
         //dynamic.resistance = 10.f;
         //dynamic.friction =10;
         [dynamic addAngularVelocity:angularVelocity forItem:panGesture.view];
-        [dynamic setAngularResistance:22];
+        [dynamic setAngularResistance:10];
         
         // when the view no longer intersects with its superview, go ahead and remove it
         
@@ -379,7 +379,7 @@ typedef struct {
         // add a little gravity so it accelerates off the screen (in case user gesture was slow)
         
         UIGravityBehavior *gravity = [[UIGravityBehavior alloc] initWithItems:@[panGesture.view]];
-        gravity.magnitude = 3.7;
+        gravity.magnitude = 2.7;
         [self.animator addBehavior:gravity];
     }
 }
