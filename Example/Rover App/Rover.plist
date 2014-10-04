@@ -2,7 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>API Endpoint</key>
-	<string>http://api.roverlabs.co/mobileapi/v1</string>
+	<key>beaconUUIDs</key>
+	<array>
+		<string>EDA978A7-513C-442A-9364-3F14E74F80EC</string>
+	</array>
+	<key>applicationID</key>
+	<string>1480a683aadb602fc71f678f79dbbb0ae93ed272e90d9aa92e31f519c86883f8</string>
 </dict>
 </plist>

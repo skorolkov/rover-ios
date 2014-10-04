@@ -39,8 +39,8 @@
 }
 
 - (void)updateBadgeNumber {
-    RVVisit *visit = [Rover currentVisit];
-    int badgeNumber = [visit.unreadCards count];
+    RVVisit *visit = [[Rover shared] currentVisit];
+    int badgeNumber = (int)[visit.unreadCards count];
     
     UITabBarItem *item = [self.tabBar.items objectAtIndex:3];
     item.badgeValue = badgeNumber > 0 ? [NSString stringWithFormat:@"%d", badgeNumber] : nil;
@@ -57,7 +57,7 @@
 #pragma mark - Application Notifications
 
 - (void)applicationDidBecomeActive {
-    if ([Rover currentVisit].unreadCards.count > 0) {
+    if ([[Rover shared] currentVisit].unreadCards.count > 0) {
 //        [self displayModal];
     }
 }
@@ -67,13 +67,13 @@
 - (void)roverDidEnterLocation {
     [self updateBadgeNumber];
     
-    if (![Rover currentVisit].unreadCards.count > 0) {
+    if (![[Rover shared] currentVisit].unreadCards.count > 0) {
         return;
     }
     
     if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive) {
         UILocalNotification *note = [[UILocalNotification alloc] init];
-        note.alertBody = [Rover currentVisit].welcomeMessage;
+        note.alertBody = [[Rover shared] currentVisit].welcomeMessage;
         note.soundName = UILocalNotificationDefaultSoundName;
         [[UIApplication sharedApplication] presentLocalNotificationNow:note];
     } else {

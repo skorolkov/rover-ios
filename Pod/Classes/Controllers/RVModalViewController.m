@@ -84,7 +84,7 @@
     self.view.cardDeck.delegate = self;
     self.view.cardDeck.dataSource = self;
     
-    self.visit = [Rover currentVisit];
+    self.visit = [[Rover shared] currentVisit];
     [self.view.cardDeck reloadData];
 }
 

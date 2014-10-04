@@ -11,6 +11,8 @@
 
 @interface RVCustomer ()
 
-@property (strong, nonatomic) NSString *customerID;
++ (RVCustomer *)cachedCustomer;
+
+@property (nonatomic) BOOL dirty;
 
 @end

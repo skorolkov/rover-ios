@@ -16,17 +16,10 @@
 @implementation AppDelegate
             
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    RVConfig *config = [RVConfig defaultConfig];
+    Rover *rover = [Rover setup:config];
     
-    if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound categories:nil]];
-    }
-    
-    // SuperMart
-    NSString *appID = @"1480a683aadb602fc71f678f79dbbb0ae93ed272e90d9aa92e31f519c86883f8";
-    NSArray *beaconUUIDs = @[@"EDA978A7-513C-442A-9364-3F14E74F80EC"];
-    
-    [Rover setApplicationID:appID beaconUUIDs:beaconUUIDs];
-    [Rover startMonitoring];
+    [rover startMonitoring];
     
     return YES;
 }

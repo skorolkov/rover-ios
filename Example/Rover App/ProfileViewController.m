@@ -7,7 +7,6 @@
 //
 
 #import "ProfileViewController.h"
-#import "MBProgressHUD.h"
 #import <Rover/Rover.h>
 
 @interface ProfileViewController()
@@ -16,28 +15,23 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
-@property (weak, nonatomic) IBOutlet UITextField *collectorField;
+@property (weak, nonatomic) IBOutlet UITextField *phoneField;
+@property (weak, nonatomic) IBOutlet UITextField *customerIDField;
 
 @end
 
 @implementation ProfileViewController
 
-- (void)viewDidLoad {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    [Rover getCustomer:^(RVCustomer *customer, NSString *error) {
-        if (customer) {
-            self.customer = customer;
-            self.nameField.text = customer.name;
-            self.emailField.text = customer.email;
-            self.collectorField.text = (NSString *)[customer getAttribute:@"collectorNumber"];
-        }
-        
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-    }];
+- (void)viewDidLoad {    
+    self.nameField.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"name"];
+    self.emailField.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"email"];
+    self.phoneField.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"phone"];
+    self.customerIDField.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"customerID"];
 }
 
 - (IBAction)saveButtonPressed:(id)sender {
+    [self.view endEditing:YES];
+    
     if (self.nameField.text.length < 1) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter your name" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
@@ -50,25 +44,36 @@
         return;
     }
     
-    if (self.collectorField.text.length < 1) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter your collector number" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    if (self.phoneField.text.length < 1) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter your phone number" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
         return;
     }
     
-    self.customer.name = self.nameField.text;
-    self.customer.email = self.emailField.text;
-    [self.customer setAttribute:@"collectorNumber" value:self.collectorField.text];
-    
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
-    [self.customer save:^{
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-    } failure:^(NSString *reason) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oops" message:@"Something went wrong" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    if (self.customerIDField.text.length < 1) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter a customer ID" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-    }];
+        return;
+    }
+    
+    NSString *name = self.nameField.text;
+    NSString *email = self.emailField.text;
+    NSString *phone = self.phoneField.text;
+    NSString *customerID = self.customerIDField.text;
+    
+    [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"name"];
+    [[NSUserDefaults standardUserDefaults] setObject:email forKey:@"email"];
+    [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
+    [[NSUserDefaults standardUserDefaults] setObject:customerID forKey:@"customerID"];
+    
+    RVCustomer *customer = [[Rover shared] customer];
+    customer.name = name;
+    customer.email = email;
+    customer.customerID = customerID;
+    [customer setAttribute:@"phone" to:phone];
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"User details saved" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
 }
 
 @end
