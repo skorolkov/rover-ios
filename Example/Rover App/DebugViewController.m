@@ -69,16 +69,12 @@
 #pragma mark - Rover Notifications
 
 - (void)roverDidPostNotification:(NSNotification *)note {
-    
     if ([note.name isEqualToString:@"RoverDidRangeBeaconsNotification"]) {
         NSNumber *count = [note.userInfo objectForKey:@"count"];
         self.beaconCountLabel.text = [NSString stringWithFormat:@"%@", count];
-        
         if ([count integerValue] < 1) {
-            // 231, 76, 60
             self.beaconCountLabel.textColor = [UIColor colorWithRed:231.0/255.0 green:76.0/255.0 blue:60.0/255.0 alpha:1.0];
         } else {
-            // 26, 188, 156
             self.beaconCountLabel.textColor = [UIColor colorWithRed:26.0/255.0 green:188.0/255.0 blue:156.0/255.0 alpha:1.0];
         }
     } else {
@@ -87,10 +83,9 @@
     }
 }
 
-- (IBAction)simulateButtonPressed:(id)sender
-{
-    NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"6C21D507-C7F7-42C5-BA24-ADF3010BC612"];
-    [Rover simulateBeaconWithUUID:UUID major:1];
+- (IBAction)simulateButtonPressed:(id)sender {
+    NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"EDA978A7-513C-442A-9364-3F14E74F80EC"];
+    [[Rover shared] simulateBeaconWithUUID:UUID major:1];
 }
 
 @end

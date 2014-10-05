@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="272-CF-ZdZ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="14A379a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="272-CF-ZdZ">
     <dependencies>
         <deployment defaultVersion="1808" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
@@ -183,6 +183,14 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="External Customer ID" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="2TW-9b-Ev3">
+                                <rect key="frame" x="160" y="174" width="280" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="280" id="jzi-wS-Wcw"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="b60-7r-ZNL">
                                 <rect key="frame" x="160" y="98" width="280" height="30"/>
                                 <constraints>
@@ -191,7 +199,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Collector Number" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Srk-nM-54G">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Phone Number" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Srk-nM-54G">
                                 <rect key="frame" x="160" y="136" width="280" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="280" id="lcj-Es-0vT"/>
@@ -200,7 +208,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7ay-EC-KL7">
-                                <rect key="frame" x="406" y="174" width="34" height="30"/>
+                                <rect key="frame" x="406" y="212" width="34" height="30"/>
                                 <state key="normal" title="Save">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -214,18 +222,29 @@
                             <constraint firstItem="Srk-nM-54G" firstAttribute="trailing" secondItem="7ay-EC-KL7" secondAttribute="trailing" id="19I-8a-U0c"/>
                             <constraint firstItem="b60-7r-ZNL" firstAttribute="top" secondItem="OPu-JA-4Ei" secondAttribute="bottom" constant="8" id="5fx-u0-l94"/>
                             <constraint firstAttribute="centerX" secondItem="Srk-nM-54G" secondAttribute="centerX" id="AI4-vd-uXs"/>
+                            <constraint firstItem="2TW-9b-Ev3" firstAttribute="top" secondItem="Srk-nM-54G" secondAttribute="bottom" constant="8" id="I9r-gw-2OP"/>
                             <constraint firstAttribute="centerX" secondItem="OPu-JA-4Ei" secondAttribute="centerX" id="IBa-ho-V2v"/>
                             <constraint firstItem="OPu-JA-4Ei" firstAttribute="top" secondItem="2p6-Qe-pXd" secondAttribute="bottom" constant="40" id="OGg-0s-VkB"/>
                             <constraint firstAttribute="centerX" secondItem="b60-7r-ZNL" secondAttribute="centerX" id="OQQ-lk-5fB"/>
+                            <constraint firstItem="2TW-9b-Ev3" firstAttribute="trailing" secondItem="7ay-EC-KL7" secondAttribute="trailing" id="RCH-rX-dhv"/>
                             <constraint firstItem="7ay-EC-KL7" firstAttribute="top" secondItem="Srk-nM-54G" secondAttribute="bottom" constant="8" id="YnP-eH-UAm"/>
                             <constraint firstItem="Srk-nM-54G" firstAttribute="top" secondItem="b60-7r-ZNL" secondAttribute="bottom" constant="8" id="fAz-vV-HK7"/>
+                            <constraint firstAttribute="centerX" secondItem="2TW-9b-Ev3" secondAttribute="centerX" id="h4v-6d-vP6"/>
+                            <constraint firstItem="7ay-EC-KL7" firstAttribute="top" secondItem="2TW-9b-Ev3" secondAttribute="bottom" constant="8" id="r9T-iO-1ud"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="19I-8a-U0c"/>
+                                <exclude reference="YnP-eH-UAm"/>
+                            </mask>
+                        </variation>
                     </view>
                     <tabBarItem key="tabBarItem" title="Profile" image="man-7" id="u48-2w-Bza"/>
                     <connections>
-                        <outlet property="collectorField" destination="Srk-nM-54G" id="PLY-ks-pBE"/>
+                        <outlet property="customerIDField" destination="2TW-9b-Ev3" id="G0z-f2-t8l"/>
                         <outlet property="emailField" destination="b60-7r-ZNL" id="Af5-Ls-Mnm"/>
                         <outlet property="nameField" destination="OPu-JA-4Ei" id="kFJ-mZ-k9Q"/>
+                        <outlet property="phoneField" destination="Srk-nM-54G" id="HxE-pK-NJT"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="acb-Jx-7kJ" userLabel="First Responder" sceneMemberID="firstResponder"/>

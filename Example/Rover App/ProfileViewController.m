@@ -7,7 +7,6 @@
 //
 
 #import "ProfileViewController.h"
-#import "MBProgressHUD.h"
 #import <Rover/Rover.h>
 
 @interface ProfileViewController()
@@ -16,28 +15,24 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *nameField;
 @property (weak, nonatomic) IBOutlet UITextField *emailField;
-@property (weak, nonatomic) IBOutlet UITextField *collectorField;
+@property (weak, nonatomic) IBOutlet UITextField *phoneField;
+@property (weak, nonatomic) IBOutlet UITextField *customerIDField;
 
 @end
 
 @implementation ProfileViewController
 
 - (void)viewDidLoad {
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    
-    [Rover getCustomer:^(RVCustomer *customer, NSString *error) {
-        if (customer) {
-            self.customer = customer;
-            self.nameField.text = customer.name;
-            self.emailField.text = customer.email;
-            self.collectorField.text = (NSString *)[customer getAttribute:@"collectorNumber"];
-        }
-        
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-    }];
+    RVCustomer *customer = [Rover shared].customer;
+    self.nameField.text = customer.name;
+    self.emailField.text = customer.email;
+    self.phoneField.text = [customer get:@"phone"];
+    self.customerIDField.text = customer.customerID;
 }
 
 - (IBAction)saveButtonPressed:(id)sender {
+    [self.view endEditing:YES];
+    
     if (self.nameField.text.length < 1) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter your name" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
@@ -50,25 +45,26 @@
         return;
     }
     
-    if (self.collectorField.text.length < 1) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter your collector number" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    if (self.phoneField.text.length < 1) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter your phone number" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
         return;
     }
     
-    self.customer.name = self.nameField.text;
-    self.customer.email = self.emailField.text;
-    [self.customer setAttribute:@"collectorNumber" value:self.collectorField.text];
-    
-    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-
-    [self.customer save:^{
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-    } failure:^(NSString *reason) {
-        [MBProgressHUD hideHUDForView:self.view animated:YES];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oops" message:@"Something went wrong" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    if (self.customerIDField.text.length < 1) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Please enter a customer ID" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
-    }];
+        return;
+    }
+    
+    RVCustomer *customer = [[Rover shared] customer];
+    customer.name = self.nameField.text;
+    customer.email = self.emailField.text;
+    [customer set:@"phone" to:self.phoneField.text];
+    customer.customerID = self.customerIDField.text;
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"User details saved" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [alert show];
 }
 
 @end
