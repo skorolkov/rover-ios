@@ -58,7 +58,7 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
     }
 
     CFUUIDRef identifier = CFUUIDCreate(NULL);
-    self.customerID = (NSString *)CFBridgingRelease(CFUUIDCreateString(NULL, identifier));
+    _customerID = (NSString *)CFBridgingRelease(CFUUIDCreateString(NULL, identifier));
     [self cache];
     
     return _customerID;

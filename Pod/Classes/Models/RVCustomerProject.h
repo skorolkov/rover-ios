@@ -13,6 +13,6 @@
 
 + (RVCustomer *)cachedCustomer;
 
-@property (nonatomic) BOOL dirty;
+@property (readonly, nonatomic) BOOL dirty;
 
 @end

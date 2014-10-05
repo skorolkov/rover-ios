@@ -22,11 +22,12 @@
 
 @implementation ProfileViewController
 
-- (void)viewDidLoad {    
-    self.nameField.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"name"];
-    self.emailField.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"email"];
-    self.phoneField.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"phone"];
-    self.customerIDField.text = [[NSUserDefaults standardUserDefaults] objectForKey:@"customerID"];
+- (void)viewDidLoad {
+    RVCustomer *customer = [Rover shared].customer;
+    self.nameField.text = customer.name;
+    self.emailField.text = customer.email;
+    self.phoneField.text = [customer getAttribute:@"phone"];
+    self.customerIDField.text = customer.customerID;
 }
 
 - (IBAction)saveButtonPressed:(id)sender {
@@ -56,21 +57,11 @@
         return;
     }
     
-    NSString *name = self.nameField.text;
-    NSString *email = self.emailField.text;
-    NSString *phone = self.phoneField.text;
-    NSString *customerID = self.customerIDField.text;
-    
-    [[NSUserDefaults standardUserDefaults] setObject:name forKey:@"name"];
-    [[NSUserDefaults standardUserDefaults] setObject:email forKey:@"email"];
-    [[NSUserDefaults standardUserDefaults] setObject:phone forKey:@"phone"];
-    [[NSUserDefaults standardUserDefaults] setObject:customerID forKey:@"customerID"];
-    
     RVCustomer *customer = [[Rover shared] customer];
-    customer.name = name;
-    customer.email = email;
-    customer.customerID = customerID;
-    [customer setAttribute:@"phone" to:phone];
+    customer.name = self.nameField.text;
+    customer.email = self.emailField.text;
+    [customer setAttribute:@"phone" to:self.phoneField.text];
+    customer.customerID = self.customerIDField.text;
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"User details saved" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
     [alert show];
