@@ -181,9 +181,7 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
             self.attributes = attributes;
         }
     }
-    
-    NSLog(@"customer: %@, %@, %@, %@, %@", self.customerID, self.name, self.email, self.dirty ? @"DIRTY" : @"NOT DIRTY", self.attributes);
-    
+        
     return self;
 }
 
