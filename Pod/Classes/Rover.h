@@ -46,7 +46,7 @@ extern NSString *const kRoverDidEnterLocationNotification;
 
 /** Retrieve a list of all cards the customer has saved.
  */
-- (void)getCards:(void (^)(NSArray *cards, NSString *error))block;
+- (void)savedCards:(void (^)(NSArray *cards, NSString *error))block;
 
 /** After the framework has been initialized call startMonitoring to begin monitoring for your beacons. You must call the setApplicationID:beaconUUIDs: method before you can start monitoring.
  */

@@ -29,7 +29,7 @@
 
 - (void)reloadCards {
     Rover *rover = [Rover shared];
-    [rover getCards:^(NSArray *cards, NSString *error) {
+    [rover savedCards:^(NSArray *cards, NSString *error) {
         self.cards = cards;
         [self.tableView reloadData];
         [self.refreshControl endRefreshing];

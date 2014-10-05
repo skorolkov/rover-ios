@@ -115,7 +115,7 @@ static Rover *sharedInstance = nil;
 
 #pragma mark - Public methods
 
-- (void)getCards:(void (^)(NSArray *, NSString *))block {
+- (void)savedCards:(void (^)(NSArray *, NSString *))block {
     [[RVNetworkingManager sharedManager] sendRequestWithMethod:@"GET" path:@"cards" parameters:@{ @"customer_id": self.customer.customerID } success:^(NSDictionary *data) {
         
         NSArray *JSON = [data objectForKey:@"cards"];
