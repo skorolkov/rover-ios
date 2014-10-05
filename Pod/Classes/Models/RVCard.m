@@ -234,6 +234,13 @@
     } else {
         [JSON setObject:[NSNull null] forKey:@"discarded_at"];
     }
+    
+    // expiresAt
+    if (self.expiresAt) {
+        [JSON setObject:[dateFormatter stringFromDate:self.expiresAt] forKey:@"expires_at"];
+    } else {
+        [JSON setObject:[NSNull null] forKey:@"expires_at"];
+    }
 
     return JSON;
 }

@@ -17,6 +17,10 @@
 #import "RVModel.h"
 
 NSString *const kRoverDidEnterLocationNotification = @"RoverDidEnterLocationNotification";
+NSString *const kRoverWillPresentModalNotification = @"RoverWillPresentModalNotification";
+NSString *const kRoverDidPresentModalNotification = @"RoverDidPresentModalNotification";
+NSString *const kRoverWillDismissModalNotification = @"RoverWillDismissModalNotification";
+NSString *const kRoverDidDismissModalNotification = @"RoverDidDismissModalNotification";
 
 @interface Rover()
 
@@ -52,6 +56,35 @@ static Rover *sharedInstance = nil;
         NSLog(@"%@ warning shared called before setup:", self);
     }
     return sharedInstance;
+}
+
++ (UIViewController *)findCurrentViewController:(UIViewController *)vc {
+    if (vc.presentedViewController) {
+        return [Rover findCurrentViewController:vc.presentedViewController];
+    } else if ([vc isKindOfClass:[UISplitViewController class]]) {
+        UISplitViewController *svc = (UISplitViewController *)vc;
+        if (svc.viewControllers.count > 0) {
+            return [Rover findCurrentViewController:svc.viewControllers.lastObject];
+        } else {
+            return vc;
+        }
+    } else if ([vc isKindOfClass:[UINavigationController class]]) {
+        UINavigationController *nvc = (UINavigationController *)vc;
+        if (nvc.viewControllers.count > 0) {
+            return [Rover findCurrentViewController:nvc.topViewController];
+        } else {
+            return vc;
+        }
+    } else if ([vc isKindOfClass:[UITabBarController class]]) {
+        UITabBarController *tbc = (UITabBarController *)vc;
+        if (tbc.viewControllers.count > 0) {
+            return [Rover findCurrentViewController:tbc.selectedViewController];
+        } else {
+            return vc;
+        }
+    } else {
+        return vc;
+    }
 }
 
 #pragma mark - Properties
@@ -150,11 +183,46 @@ static Rover *sharedInstance = nil;
     [[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidEnterRegionNotification object:[RVRegionManager sharedManager] userInfo:@{ @"beaconRegion": beaconRegion }];
 }
 
+- (void)presentModal {
+    if (!self.currentVisit || self.currentVisit.cards.count < 1) {
+        NSLog(@"%@ warning showModal called but there are no cards to display", self);
+        return;
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillPresentModalNotification object:self];
+    
+    RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
+    modalViewController.delegate = self;
+    
+    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
+    [currentViewController presentViewController:modalViewController animated:YES completion:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidPresentModalNotification object:self];
+}
+
 #pragma mark - Utility 
 
 - (void)updateVisitOpenTime {
+    if (!self.currentVisit) {
+        return;
+    }
+    
     self.currentVisit.openedAt = [NSDate date];
     [self.currentVisit save:nil failure:nil];
+}
+
+- (void)sendNotification {
+    if (!self.currentVisit || self.currentVisit.cards.count < 1) {
+        return;
+    }
+    
+    UILocalNotification *note = [[UILocalNotification alloc] init];
+    note.alertBody = self.currentVisit.welcomeMessage;
+    if (self.config.notificationSoundName) {
+        note.soundName = self.config.notificationSoundName;
+    }
+    [[UIApplication sharedApplication] presentLocalNotificationNow:note];
 }
 
 #pragma mark - Visit Manager Notifications
@@ -164,6 +232,12 @@ static Rover *sharedInstance = nil;
     
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         [self updateVisitOpenTime];
+        
+        if (self.config.autoPresentModal) {
+            [self presentModal];
+        }
+    } else {
+        [self sendNotification];
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidEnterLocationNotification object:self];
@@ -173,11 +247,31 @@ static Rover *sharedInstance = nil;
     
 }
 
+#pragma mark - RVModalViewControllerDelegate
+
+- (void)modalViewControllerDidFinish:(RVModalViewController *)modalViewController {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillDismissModalNotification object:self];
+    [modalViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidDismissModalNotification object:self];
+}
+
+- (void)modalViewController:(RVModalViewController *)modalViewController didDisplayCard:(RVCard *)card {
+    
+}
+
+- (void)modalViewController:(RVModalViewController *)modalViewController didSwipeCard:(RVCard *)card {
+    
+}
+
 #pragma mark - Application Notifications
 
 - (void)applicationDidBecomeActive:(NSNotification *)note {
     if (self.currentVisit && !self.currentVisit.openedAt) {
         [self updateVisitOpenTime];
+        
+        if (self.config.autoPresentModal) {
+            [self presentModal];
+        }
     }
 }
 
@@ -191,6 +285,7 @@ static Rover *sharedInstance = nil;
     RVConfig *config = [[RVConfig alloc] init];
     config.allowedUserNotificationTypes = (UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound);
     config.notificationSoundName = UILocalNotificationDefaultSoundName;
+    config.autoPresentModal = YES;
     config.serverURL = @"http://api.roverlabs.co/mobileapi/v1/";
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Rover" ofType:@"plist"];

@@ -89,12 +89,6 @@
         self.welcomeMessage = welcomeMessage;
     }
     
-    // recallMessage
-    NSString *recallMessage = [JSON objectForKey:@"recall_message"];
-    if (recallMessage && recallMessage != (id)[NSNull null] && [recallMessage length] > 0) {
-        self.recallMessage = recallMessage;
-    }
-    
     // keepAlive
     NSNumber *keepAlive = [JSON objectForKey:@"keep_alive"];
     if (keepAlive && keepAlive != (id)[NSNull null]) {
@@ -186,13 +180,6 @@
         [JSON setObject:self.welcomeMessage forKey:@"welcome_message"];
     } else {
         [JSON setObject:[NSNull null] forKey:@"welcome_message"];
-    }
-    
-    // recallMessage
-    if (self.recallMessage) {
-        [JSON setObject:self.recallMessage forKey:@"recall_message"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"recall_message"];
     }
     
     // keepAlive

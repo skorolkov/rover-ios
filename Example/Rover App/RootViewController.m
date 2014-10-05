@@ -58,7 +58,7 @@
 
 - (void)applicationDidBecomeActive {
     if ([[Rover shared] currentVisit].unreadCards.count > 0) {
-//        [self displayModal];
+        [self displayModal];
     }
 }
 
@@ -66,19 +66,6 @@
 
 - (void)roverDidEnterLocation {
     [self updateBadgeNumber];
-    
-    if (![[Rover shared] currentVisit].unreadCards.count > 0) {
-        return;
-    }
-    
-    if ([[UIApplication sharedApplication] applicationState] != UIApplicationStateActive) {
-        UILocalNotification *note = [[UILocalNotification alloc] init];
-        note.alertBody = [[Rover shared] currentVisit].welcomeMessage;
-        note.soundName = UILocalNotificationDefaultSoundName;
-        [[UIApplication sharedApplication] presentLocalNotificationNow:note];
-    } else {
-//        [self displayModal];
-    }
 }
 
 #pragma mark - RVModalViewControllerDelegate

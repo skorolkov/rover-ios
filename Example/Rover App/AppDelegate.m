@@ -17,6 +17,8 @@
             
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     RVConfig *config = [RVConfig defaultConfig];
+    config.autoPresentModal = NO;
+    
     Rover *rover = [Rover setup:config];
     
     [rover startMonitoring];

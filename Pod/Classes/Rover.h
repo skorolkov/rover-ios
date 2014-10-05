@@ -22,11 +22,27 @@
  */
 extern NSString *const kRoverDidEnterLocationNotification;
 
+/** This notification will be posted before the modal view controller is presented.
+ */
+extern NSString *const kRoverWillPresentModalNotification;
+
+/** This notification will be posted after the modal view controller is presented.
+ */
+extern NSString *const kRoverDidPresentModalNotification;
+
+/** This notification will be posted before the modal view controller is dismissed.
+ */
+extern NSString *const kRoverWillDismissModalNotification;
+
+/** This notification will be posted after the modal view controller is dismissed.
+ */
+extern NSString *const kRoverDidDismissModalNotification;
+
 @class RVConfig;
 
 /** The Rover class it the primary interface to the SDK. All properties and methods are invoked on the class itself. There is no reason to instantiate a Rover instance.
  */
-@interface Rover : NSObject
+@interface Rover : NSObject <RVModalViewControllerDelegate>
 
 /** Sets up the Rover framework with the configuration options for your app. You should call as soon as possible in your AppDelegate.
  */
@@ -56,6 +72,10 @@ extern NSString *const kRoverDidEnterLocationNotification;
  */
 - (void)stopMonitoring;
 
+/** Present the modal view controller.
+ */
+- (void)presentModal;
+
 /** You can use this method to simulate your app coming in range of a particular beacon.
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
  */
@@ -84,6 +104,10 @@ extern NSString *const kRoverDidEnterLocationNotification;
 /** The sound used for notifications. By default this is set to UILocalNotificationDefaultSoundName.
  */
 @property (nonatomic, copy) NSString *notificationSoundName;
+
+/** Indicates whether Rover should automatically display the modal dialog when the customer visits a location. The default value is YES.
+ */
+@property (nonatomic) BOOL autoPresentModal;
 
 /** Don't change this.
  */
