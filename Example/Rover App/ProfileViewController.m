@@ -26,7 +26,7 @@
     RVCustomer *customer = [Rover shared].customer;
     self.nameField.text = customer.name;
     self.emailField.text = customer.email;
-    self.phoneField.text = [customer getAttribute:@"phone"];
+    self.phoneField.text = [customer get:@"phone"];
     self.customerIDField.text = customer.customerID;
 }
 
@@ -60,7 +60,7 @@
     RVCustomer *customer = [[Rover shared] customer];
     customer.name = self.nameField.text;
     customer.email = self.emailField.text;
-    [customer setAttribute:@"phone" to:self.phoneField.text];
+    [customer set:@"phone" to:self.phoneField.text];
     customer.customerID = self.customerIDField.text;
     
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success" message:@"User details saved" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];

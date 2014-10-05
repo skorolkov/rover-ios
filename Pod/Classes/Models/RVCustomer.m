@@ -222,8 +222,8 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
 
 #pragma mark - Attribute Methods
 
-- (void)setAttribute:(NSString *)attribute to:(id)value {
-    id existingValue = [self getAttribute:attribute];
+- (void)set:(NSString *)attribute to:(id)value {
+    id existingValue = [self get:attribute];
     if ([existingValue isEqual:value]) {
         return;
     }
@@ -232,7 +232,7 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
     self.dirty = YES;
 }
 
-- (id)getAttribute:(NSString *)attribute {
+- (id)get:(NSString *)attribute {
     attribute = [self parameterize:attribute];
     id obj = [self.attributes objectForKey:attribute];
     return obj == (id)[NSNull null] ? nil : obj;
