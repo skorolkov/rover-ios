@@ -1,4 +1,5 @@
+source 'https://github.com/CocoaPods/Specs.git'
 
-target 'Rover App', :exclusive => true do
+target "Rover", :exclusive => true do
   pod "Rover", :path => "../"
 end

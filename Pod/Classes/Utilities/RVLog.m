@@ -16,6 +16,10 @@ NSString *const kRoverWillPostVisitNotification = @"RoverWillPostVisitNotificati
 NSString *const kRoverDidPostVisitNotification = @"RoverDidPostVisitNotification";
 NSString *const kRoverPostVisitFailedNotification = @"RoverPostVisitFailedNotification";
 
+NSString *const kRoverWillUpdateCustomerNotification = @"RoverWillUpdateCustomerNotification";
+NSString *const kRoverDidUpdateCustomerNotification = @"RoverDidUpdateCustomerNotification";
+NSString *const kRoverUpdateCustomerFailedNotification = @"RoverUpdateCustomerFailedNotification";
+
 NSString *const kRoverWillUpdateExitTimeNotification = @"RoverWillUpdateExitTimeNotification";
 NSString *const kRoverDidUpdateExitTimeNotification = @"RoverDidUpdateExitTimeNotification";
 NSString *const kRoverUpdateExitTimeFailedNotification = @"RoverUpdateExitTimeFailedNotification";

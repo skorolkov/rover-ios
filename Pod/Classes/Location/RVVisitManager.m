@@ -6,6 +6,7 @@
 //  Copyright (c) 2014 Rover Labs Inc. All rights reserved.
 //
 
+#import "Rover.h"
 #import "RVVisitManager.h"
 
 #import "RVCardProject.h"
@@ -14,7 +15,6 @@
 #import "RVNetworkingManager.h"
 #import "RVNotificationCenter.h"
 #import "RVRegionManager.h"
-#import "RoverManager.h"
 #import "RVVisitProject.h"
 
 NSString *const kRVVisitManagerDidEnterLocationNotification = @"RVVisitManagerDidEnterLocationNotification";
@@ -76,7 +76,14 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         return;
     }
 
-    [self createVisitWithUUID:beaconRegion.proximityUUID major:beaconRegion.major];
+    RVCustomer *customer = [Rover shared].customer;
+    if (customer.dirty) {
+        [customer save:^{
+            [self createVisitWithUUID:beaconRegion.proximityUUID major:beaconRegion.major];
+        } failure:nil];
+    } else {
+        [self createVisitWithUUID:beaconRegion.proximityUUID major:beaconRegion.major];
+    }
 }
 
 - (void)regionManagerDidExitRegion:(NSNotification *)note {
@@ -95,7 +102,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
     self.latestVisit = [RVVisit new];
     self.latestVisit.UUID = UUID;
     self.latestVisit.major = major;
-    self.latestVisit.customerID = [[RoverManager sharedManager] customerID];
+    self.latestVisit.customerID = [Rover shared].customer.customerID;
     self.latestVisit.enteredAt = [NSDate date];
     
     [self.latestVisit save:^{

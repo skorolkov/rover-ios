@@ -1,6 +1,6 @@
 # Rover
 
-[![CI Status](http://img.shields.io/travis/ata_n/Rover.svg?style=flat)](https://travis-ci.org/ata_n/Rover)
+[![CI Status](http://img.shields.io/travis/Sean Rucker/Rover.svg?style=flat)](https://travis-ci.org/Sean Rucker/Rover)
 [![Version](https://img.shields.io/cocoapods/v/Rover.svg?style=flat)](http://cocoadocs.org/docsets/Rover)
 [![License](https://img.shields.io/cocoapods/l/Rover.svg?style=flat)](http://cocoadocs.org/docsets/Rover)
 [![Platform](https://img.shields.io/cocoapods/p/Rover.svg?style=flat)](http://cocoadocs.org/docsets/Rover)
@@ -20,7 +20,7 @@ it, simply add the following line to your Podfile:
 
 ## Author
 
-ata_n, ata.namvari@gmail.com
+Sean Rucker, srucker@gmail.com
 
 ## License
 

@@ -61,6 +61,10 @@
  */
 @property (strong, nonatomic) NSDate *discardedAt;
 
+/** The date and time the card expires.
+ */
+@property (strong, nonatomic) NSDate *expiresAt;
+
 /** Indicates whether the customer has viewed this card during *the current visit*. I.e. the customer may have seen this card before on a different visit but could still be unread for this visit. 
  */
 @property (nonatomic) BOOL isUnread;

@@ -15,6 +15,10 @@ extern NSString *const kRoverWillPostVisitNotification;
 extern NSString *const kRoverDidPostVisitNotification;
 extern NSString *const kRoverPostVisitFailedNotification;
 
+extern NSString *const kRoverWillUpdateCustomerNotification;
+extern NSString *const kRoverDidUpdateCustomerNotification;
+extern NSString *const kRoverUpdateCustomerFailedNotification;
+
 extern NSString *const kRoverWillUpdateExitTimeNotification;
 extern NSString *const kRoverDidUpdateExitTimeNotification;
 extern NSString *const kRoverUpdateExitTimeFailedNotification;

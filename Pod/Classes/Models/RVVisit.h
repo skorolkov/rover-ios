@@ -16,10 +16,6 @@
  */
 @property (strong, nonatomic) NSString *welcomeMessage;
 
-/** This property is reserved for a future use case. It may be removed or modified. Use at your own risk.
- */
-@property (strong, nonatomic) NSString *recallMessage;
-
 /** The date and time the customer entered the location.
  */
 @property (strong, nonatomic) NSDate *enteredAt;

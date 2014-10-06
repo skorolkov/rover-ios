@@ -1,41 +1,5 @@
 PODS:
-  - Rover (0.20.4):
-    - Rover/Controllers
-    - Rover/Location
-    - Rover/Manager
-    - Rover/Models
-    - Rover/Networking
-    - Rover/Notifications
-    - Rover/Utilities
-    - Rover/Views
-  - Rover/Controllers (0.20.4):
-    - Rover/Manager
-  - Rover/Location (0.20.4):
-    - Rover/Manager
-  - Rover/Manager (0.20.4):
-    - Rover/Controllers
-    - Rover/Location
-    - Rover/Models
-    - Rover/Networking
-    - Rover/Notifications
-    - Rover/Utilities
-    - Rover/Views
-  - Rover/Models (0.20.4):
-    - Rover/Networking
-    - Rover/Utilities
-  - Rover/Networking (0.20.4):
-    - Rover/Models
-  - Rover/Notifications (0.20.4)
-  - Rover/Utilities (0.20.4)
-  - Rover/Views (0.20.4):
-    - Rover/Views/Card
-    - Rover/Views/CardDeck
-    - Rover/Views/Modal
-  - Rover/Views/Card (0.20.4)
-  - Rover/Views/CardDeck (0.20.4):
-    - Rover/Views/Card
-  - Rover/Views/Modal (0.20.4):
-    - Rover/Views/CardDeck
+  - Rover (0.21.0)
 
 DEPENDENCIES:
   - Rover (from `../`)
@@ -45,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  Rover: c8b6ea09d24fb74ca6e67908b6261194b5085369
+  Rover: 9ceb021f31d1f4c224b4606536dfbf66c79ac07e
 
 COCOAPODS: 0.34.1
