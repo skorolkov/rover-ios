@@ -38,6 +38,14 @@ extern NSString *const kRoverWillDismissModalNotification;
  */
 extern NSString *const kRoverDidDismissModalNotification;
 
+/** This notification will be posted every time a new card is shown to the user. The card is available through the userInfo object.
+ */
+extern NSString *const kRoverDidDisplayCardNotification;
+
+/** This notification will be posted every time the user swipes a card. The card is available through the userInfo object.
+ */
+extern NSString *const kRoverDidSwipeCardNotification;
+
 @class RVConfig;
 
 /** The Rover class it the primary interface to the SDK. All properties and methods are invoked on the class itself. There is no reason to instantiate a Rover instance.
