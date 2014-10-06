@@ -1,9 +1,9 @@
 //
 //  main.m
-//  Rover App
+//  Rover
 //
-//  Created by Ata Namvari on 2014-09-30.
-//  Copyright (c) 2014 ata_n. All rights reserved.
+//  Created by Sean Rucker on 2014-10-05.
+//  Copyright (c) 2014 Rover Labs Inc. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

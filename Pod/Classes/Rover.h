@@ -11,8 +11,8 @@
 // Models
 #import "RVModel.h"
 #import "RVCustomer.h"
-#import "RVCard.h"
 #import "RVVisit.h"
+#import "RVCard.h"
 
 // Controllers
 #import "RVModalViewController.h"
