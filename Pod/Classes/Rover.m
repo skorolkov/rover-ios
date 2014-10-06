@@ -21,6 +21,8 @@ NSString *const kRoverWillPresentModalNotification = @"RoverWillPresentModalNoti
 NSString *const kRoverDidPresentModalNotification = @"RoverDidPresentModalNotification";
 NSString *const kRoverWillDismissModalNotification = @"RoverWillDismissModalNotification";
 NSString *const kRoverDidDismissModalNotification = @"RoverDidDismissModalNotification";
+NSString *const kRoverDidDisplayCardNotification = @"RoverDidDisplayCardNotification";
+NSString *const kRoverDidSwipeCardNotification = @"RoverDidSwipeCardNotification";
 
 @interface Rover()
 
@@ -256,11 +258,13 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)modalViewController:(RVModalViewController *)modalViewController didDisplayCard:(RVCard *)card {
-    
+    NSDictionary *userInfo = @{ @"card": card };
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidDisplayCardNotification object:self userInfo:userInfo];
 }
 
 - (void)modalViewController:(RVModalViewController *)modalViewController didSwipeCard:(RVCard *)card {
-    
+    NSDictionary *userInfo = @{ @"card": card };
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidSwipeCardNotification object:self userInfo:userInfo];
 }
 
 #pragma mark - Application Notifications
