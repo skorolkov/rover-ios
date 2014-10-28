@@ -144,6 +144,42 @@
     if (expiresAt != (id)[NSNull null] && [expiresAt length] > 0) {
         self.expiresAt = [dateFormatter dateFromString:expiresAt];
     }
+    
+    // leftButtonAction
+    NSNumber *leftButtonAction = [JSON objectForKey:@"left_button_action"];
+    if (leftButtonAction != (id)[NSNull null]) {
+        self.leftButtonAction = leftButtonAction;
+    }
+    
+    // leftButtonCaption
+    NSString *leftButtonCaption = [JSON objectForKey:@"left_button_caption"];
+    if (leftButtonCaption != (id)[NSNull null] && [leftButtonCaption length] > 0) {
+        self.leftButtonCaption = leftButtonCaption;
+    }
+
+    // rightButtonAction
+    NSNumber *rightButtonAction = [JSON objectForKey:@"right_button_action"];
+    if (rightButtonAction != (id)[NSNull null]) {
+        self.rightButtonAction = rightButtonAction;
+    }
+    
+    // rightButtonCaption
+    NSString *rightButtonCaption = [JSON objectForKey:@"right_button_caption"];
+    if (rightButtonCaption != (id)[NSNull null] && [rightButtonCaption length] > 0) {
+        self.rightButtonCaption = rightButtonCaption;
+    }
+    
+    // barcode
+    NSString *barcode = [JSON objectForKey:@"barcode"];
+    if (barcode != (id)[NSNull null] && [barcode length] > 0) {
+        self.barcode = barcode;
+    }
+    
+    // offerDetails
+    NSString *offerDetails = [JSON objectForKey:@"offer_details"];
+    if (offerDetails != (id)[NSNull null] && [offerDetails length] > 0) {
+        self.offerDetails = offerDetails;
+    }
 }
 
 - (NSDictionary *)toJSON {

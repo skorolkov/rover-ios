@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
   }
 
   s.frameworks = 'Accelerate', 'CoreLocation'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'RSBarcodes', '~> 0.1'
   
   # s.subspec 'Networking' do |ss|
   #   ss.dependency 'Rover/Models'

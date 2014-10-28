@@ -212,7 +212,7 @@ typedef struct {
             [self.delegate cardDeckWillEnterFullScreen:self];
         }
         self.animating = YES;
-        [self.topCard expandToFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height)];
+        [self.topCard expandToFrame:CGRectMake(0.0, 0.0, self.frame.size.width, self.frame.size.height) animated:YES];
     }
 }
 
@@ -224,7 +224,7 @@ typedef struct {
         }
         self.animating = YES;
         RVCardViewLayout layout = [self layoutForCardAtIndex:0];
-        [self.topCard contractToFrame:CGRectMake(0, 0, [RVCardView contractedWidth], [RVCardView contractedHeight]) atCenter:layout.center];
+        [self.topCard contractToFrame:CGRectMake(0, 0, [RVCardView contractedWidth], [RVCardView contractedHeight]) atCenter:layout.center animated:YES];
     }
 }
 
@@ -355,7 +355,6 @@ typedef struct {
             return;
         }
          */
-        
         
         // otherwise, create UIDynamicItemBehavior that carries on animation from where the gesture left off (notably linear and angular velocity)
         

@@ -16,10 +16,11 @@
 @property (weak, nonatomic) id <RVCardViewButtonBarDelegate> delegate;
 
 @property (strong, nonatomic) UIColor *fontColor;
-@property (strong, nonatomic) UIColor *activeColor;
+//@property (strong, nonatomic) UIColor *activeColor;
+@property (strong, nonatomic) UIButton *leftButton;
+@property (strong, nonatomic) UIButton *rightButton;
 
-@property (nonatomic) BOOL leftButtonActivated;
-@property (nonatomic) BOOL rightButtonActivated;
+- (void)setLeftButtonTitle:(NSString *)leftButtonTitle andRightButtonTitle:(NSString *)rightButtonTitle;
 
 @end
 

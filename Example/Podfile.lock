@@ -1,5 +1,7 @@
 PODS:
-  - Rover (0.21.0)
+  - Rover (0.21.1):
+    - RSBarcodes (~> 0.1)
+  - RSBarcodes (0.1)
 
 DEPENDENCIES:
   - Rover (from `../`)
@@ -9,6 +11,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  Rover: 9ceb021f31d1f4c224b4606536dfbf66c79ac07e
+  Rover: 9972c5e4ffb87db1d589e9f541e3934ac4d1c00d
+  RSBarcodes: c4d54f52033f9af3d781230292568529ade14b78
 
-COCOAPODS: 0.34.1
+COCOAPODS: 0.34.4
