@@ -245,6 +245,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.imageView = [UIImageView new];
     self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
     self.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.imageView.clipsToBounds = YES;
     self.imageView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:self.imageView];
     
