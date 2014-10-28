@@ -29,15 +29,11 @@ const CGFloat kRVCardViewImageRatio = .625;
 @property (strong, nonatomic) UIView *titleLineLeft;
 @property (strong, nonatomic) UIView *titleLineRight;
 
-// Image view
-@property (strong, nonatomic) UIImageView *imageView;
-
 // Constraints
 @property (strong, nonatomic) NSLayoutConstraint *containerViewWidthConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *containerViewHeightConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *contentViewWidthConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *titleBarHeightConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *moreButtonTopConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *imageViewHeightConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *imageViewTopConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *shortDescriptionHeightConstraint;
@@ -78,28 +74,6 @@ const CGFloat kRVCardViewImageRatio = .625;
 {
     self.shortDescriptionTextView.text = shortDescription;
     _shortDescription = shortDescription;
-}
-
-- (void)setLongDescription:(NSString *)longDescription
-{
-    NSArray *styles = @[ @"font: -apple-system-body;",
-                         @"font-size: 14px;",
-                         @"line-height: 21px;"];
-    
-    NSString *html = [NSString stringWithFormat:@"<div style=\"%@\">%@<div>", [styles componentsJoinedByString:@" "], longDescription];
-    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[html dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-    
-    self.longDescriptionTextView.attributedText = attributedString;
-    
-    if (longDescription.length > 0) {
-        //self.moreButton.alpha = 1.0;
-        //self.invisibleButton.enabled = YES;
-    } else {
-        //self.moreButton.alpha = 0.0;
-        //self.invisibleButton.enabled = NO;
-    }
-    
-    _longDescription = longDescription;
 }
 
 - (void)setBackgroundColor:(UIColor *)backgroundColor
@@ -230,13 +204,6 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.shortDescriptionTextView.backgroundColor = [UIColor clearColor];
     [self.contentView addSubview:self.shortDescriptionTextView];
     
-    /*
-    self.moreButton = [RVMoreButton new];
-    self.moreButton.translatesAutoresizingMaskIntoConstraints = NO;
-    self.moreButton.alpha = 0.0;
-    [self.contentView addSubview:self.moreButton];
-    */
-    
     self.buttonBar = [RVCardViewButtonBar new];
     self.buttonBar.translatesAutoresizingMaskIntoConstraints = NO;
     self.buttonBar.delegate = self;
@@ -248,16 +215,6 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.imageView.clipsToBounds = YES;
     self.imageView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:self.imageView];
-    
-    self.longDescriptionTextView = [UITextView new];
-    self.longDescriptionTextView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.longDescriptionTextView.font = [UIFont systemFontOfSize:14.0];
-    self.longDescriptionTextView.backgroundColor = [UIColor colorWithRed:233.0/255.0 green:233.0/255.5 blue:233.0/255.0 alpha:1.0];
-    self.longDescriptionTextView.scrollEnabled = NO;
-    self.longDescriptionTextView.editable = NO;
-    self.longDescriptionTextView.alpha = 0.0;
-    self.longDescriptionTextView.textContainerInset = UIEdgeInsetsMake(20.0, 20.0, 0.0, 20.0);
-    [self.contentView addSubview:self.longDescriptionTextView];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cardTapped)];
     [self.containerView addGestureRecognizer:tapGestureRecognizer];
@@ -295,8 +252,6 @@ const CGFloat kRVCardViewImageRatio = .625;
                              @"titleLineLeft": self.titleLineLeft,
                              @"titleLineRight": self.titleLineRight,
                              @"shortDescriptionTextView": self.shortDescriptionTextView,
-                             @"longDescriptionTextView": self.longDescriptionTextView,
-                             //@"moreButton": self.moreButton,
                              @"imageView": self.imageView,
                              @"buttonBar": self.buttonBar,
                              //@"corner": self.corner,
@@ -405,39 +360,6 @@ const CGFloat kRVCardViewImageRatio = .625;
     [self.contentView addConstraint:self.imageViewTopConstraint];
     
     //----------------------------------------
-    //  moreButton
-    //----------------------------------------
-    
-//    // Width and height of moreButton
-//    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[moreButton(50)]" options:0 metrics:nil views:views]];
-//    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[moreButton(25)]" options:0 metrics:nil views:views]];
-//    
-//    // Horizontally center moreButton
-//    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.moreButton attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0]];
-//    
-//    // Tie bottom edge of moreButton to top edge of imageView
-//    self.moreButtonTopConstraint = [NSLayoutConstraint constraintWithItem:self.moreButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeTop multiplier:1.0 constant:25.0];
-//    [self.contentView addConstraint:self.moreButtonTopConstraint];
-    
-    //----------------------------------------
-    //  longDescription
-    //----------------------------------------
-    
-    // Horizontal spacing of longDescription
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[longDescriptionTextView]|" options:0 metrics:nil views:views]];
-    
-    // Tie the bottom edge of longDescription to the contentView
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[longDescriptionTextView]|" options:0 metrics:nil views:views]];
-    
-    // Set the longDescription's minimum height so it always extends to the bottom edge of the screen
-    CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    CGFloat minHeight = screenBounds.size.height - 344.0;
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.longDescriptionTextView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:minHeight]];
-    
-    // Top position of longDescription
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.longDescriptionTextView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
-    
-    //----------------------------------------
     //  buttonBar
     //----------------------------------------
     
@@ -462,10 +384,7 @@ const CGFloat kRVCardViewImageRatio = .625;
 
 - (void)didShow
 {
-    self.moreButtonTopConstraint.constant = 0.0;
-    [UIView animateWithDuration:0.1 delay:0.2 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        [self layoutIfNeeded];
-    } completion:nil];
+
 }
 
 - (void)expandToFrame:(CGRect)frame animated:(BOOL)animated
@@ -474,7 +393,6 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.containerViewWidthConstraint.constant = frame.size.width;
     self.contentViewWidthConstraint.constant = frame.size.width;
     self.titleBarTopConstraint.constant = 20.0;
-    self.moreButtonTopConstraint.constant = 25.0;
     self.imageViewHeightConstraint.constant = frame.size.width * kRVCardViewImageRatio;
     self.imageViewTopConstraint.constant = 15.0;
     self.titleLineLeftBottomConstraint.constant = 0;
@@ -496,13 +414,12 @@ const CGFloat kRVCardViewImageRatio = .625;
     void (^animations)(void) = ^{
         self.frame = frame;
         self.layer.cornerRadius = 0.0;
-        //self.moreButton.alpha = 0.0;
-        self.longDescriptionTextView.alpha = 1.0;
         
         //        if (_liked) {
         //            self.corner.alpha = 0.0;
         //        }
         
+        [self expandAnimations];
         [self layoutIfNeeded];
     };
     
@@ -531,7 +448,6 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.containerViewWidthConstraint.constant = frame.size.width;
     self.contentViewWidthConstraint.constant = frame.size.width;
     self.titleBarTopConstraint.constant = 26.0;
-    self.moreButtonTopConstraint.constant = 0.0;
     self.imageViewHeightConstraint.constant = 175.0;
     self.imageViewTopConstraint.constant = 31.0;
     self.titleLineRightBottomConstraint.constant = -10;
@@ -551,13 +467,11 @@ const CGFloat kRVCardViewImageRatio = .625;
         self.bounds = frame;
         self.center = center;
         self.layer.cornerRadius = 3.0;
-        //self.moreButton.alpha = 1.0;
-        self.longDescriptionTextView.alpha = 0.0;
         
         //        if (_liked) {
         //            self.corner.alpha = 1.0;
         //        }
-        
+        [self contractAnimations];
         [self layoutIfNeeded];
     };
     
@@ -574,6 +488,16 @@ const CGFloat kRVCardViewImageRatio = .625;
         animations();
         completion(YES);
     }
+}
+
+- (void)expandAnimations
+{
+    // Implement in subclass
+}
+
+- (void)contractAnimations
+{
+    // Implement in subclass
 }
 
 #pragma mark - Actions

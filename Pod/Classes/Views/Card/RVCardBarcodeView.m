@@ -20,7 +20,7 @@
         self.backgroundColor = [UIColor colorWithRed:41/255.f green:41/255.f blue:41/255.f alpha:1];
         [self setTitle:@"use this offer"];
         [self.buttonBar setLeftButtonTitle:@"Back" andRightButtonTitle:nil];
-        [self.longDescriptionTextView setBackgroundColor:[UIColor blackColor]];
+        //[self.longDescriptionTextView setBackgroundColor:[UIColor blackColor]];
     }
     return self;
 }

@@ -22,8 +22,8 @@
 
 - (void)setFontColor:(UIColor *)fontColor {
     self.buttonDivider.backgroundColor = fontColor;
-    self.leftButton.titleLabel.textColor = fontColor;
-    self.rightButton.titleLabel.textColor = fontColor;
+    [self.leftButton setTitleColor:fontColor forState:UIControlStateNormal];
+    [self.rightButton setTitleColor:fontColor forState:UIControlStateNormal];
     _fontColor = fontColor;
 }
 

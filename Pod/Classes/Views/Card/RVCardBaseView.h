@@ -21,13 +21,13 @@
 
 @property (strong, nonatomic) UIView *containerView;
 @property (strong, nonatomic) UIView *contentView;
-@property (strong, nonatomic) UITextView *longDescriptionTextView;
 @property (strong, nonatomic) UIColor *fontColor;
 
 @property (strong, nonatomic) NSString *title;
 @property (strong, nonatomic) NSString *shortDescription;
-@property (strong, nonatomic) NSString *longDescription;
 
+// Image view
+@property (strong, nonatomic) UIImageView *imageView;
 @property (strong, nonatomic) UIImage *image;
 
 @property (strong, nonatomic) RVCardViewButtonBar *buttonBar;
@@ -41,6 +41,8 @@
 - (void)configureLayout;
 - (void)configureContainerLayout;
 - (BOOL)isExpanded;
+- (void)expandAnimations;
+- (void)contractAnimations;
 
 @end
 
