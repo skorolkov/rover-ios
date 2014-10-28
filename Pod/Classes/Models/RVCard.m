@@ -180,6 +180,12 @@
     if (offerDetails != (id)[NSNull null] && [offerDetails length] > 0) {
         self.offerDetails = offerDetails;
     }
+    
+    // tags
+    NSArray *tags = [JSON objectForKey:@"tags"];
+    if (tags != (id)[NSNull null] && [tags count] > 0) {
+        self.tags = tags;
+    }
 }
 
 - (NSDictionary *)toJSON {
