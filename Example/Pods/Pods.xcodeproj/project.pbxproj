@@ -10,42 +10,26 @@
 	<string>46</string>
 	<key>objects</key>
 	<dict>
-		<key>0098569DB0CC1906E704E276</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>RVMoreButton.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVMoreButton.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>014F60980D75E94291E9884B</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.xcconfig</string>
-			<key>path</key>
-			<string>Pods-Rover.release.xcconfig</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>016E0B55B38A31CF7F1E33AC</key>
+		<key>00483FD98133CB7BD877AECF</key>
 		<dict>
 			<key>fileRef</key>
-			<string>DF1447FE7DB71D8AFD1AF270</string>
+			<string>406C49A70EE3D80A770F87C4</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
-		<key>02A1B1A9913F189F736344F7</key>
+		<key>01543E946796AC830F2E5CD5</key>
+		<dict>
+			<key>fileRef</key>
+			<string>4595376D8DC007D78B6CDEB3</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
+		</dict>
+		<key>01585C4E0C6E9D6FA5987890</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -54,40 +38,98 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVCardViewButtonIcon.h</string>
+			<string>RSUPCEGenerator.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVCardViewButtonIcon.h</string>
+			<string>RSBarcodes/RSUPCEGenerator.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>0431FEA40142A12BD7E762F0</key>
+		<key>01954C744DD0E3A3BAB2F642</key>
 		<dict>
-			<key>children</key>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVCustomer.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Models/RVCustomer.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>01BB90B5764B7D251607A4D6</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSISSN13Generator.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSISSN13Generator.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>02CE15BC56FA712A67DB3707</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSUPCEGenerator.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSUPCEGenerator.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>037611F865B5E2055A91ECE3</key>
+		<dict>
+			<key>fileRef</key>
+			<string>D4CB2A9EF4442895EA335A5F</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>03ED47624E3C4CCAA9DAF69C</key>
+		<dict>
+			<key>buildConfigurations</key>
 			<array>
-				<string>D545C4167F69795F21345869</string>
+				<string>799EB2E6314AD82122A2BAC2</string>
+				<string>D94357111E2534033B9ADE95</string>
 			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
 			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Targets Support Files</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
+			<string>XCConfigurationList</string>
 		</dict>
-		<key>04BE35024A85CBEFF17FD633</key>
+		<key>03F333D682118107F83D0ADF</key>
 		<dict>
 			<key>fileRef</key>
-			<string>107798282AA8A8FE5200F311</string>
+			<string>02CE15BC56FA712A67DB3707</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
+		</dict>
+		<key>05A09ADD97CCABC3BE4C6E94</key>
+		<dict>
+			<key>fileRef</key>
+			<string>3A343715F3509BA612106519</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
-		<key>04EC48C478CF0C70C224DCCD</key>
-		<dict>
-			<key>fileRef</key>
-			<string>828C67CE4D1A3A98E5C553F5</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>06691F690DFE8703005865EB</key>
+		<key>0688866D48F2F9BD9038929D</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -96,67 +138,78 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVModelProject.h</string>
+			<string>RSEAN13Generator.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Models/RVModelProject.h</string>
+			<string>RSBarcodes/RSEAN13Generator.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>09D6421F5966C20CA3C725C9</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXFrameworksBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>0CB3A4ED9E3C675474CB2375</key>
+		<key>06BDAFD244298346B3BFA6EC</key>
 		<dict>
 			<key>fileRef</key>
-			<string>30F6F986EA34B97133F812BB</string>
+			<string>D39EE0224EF61E8945C6E2AF</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 			<key>settings</key>
 			<dict>
 				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
 			</dict>
 		</dict>
-		<key>0D318ADCB895C3C7C6E9C0E6</key>
+		<key>06F98B4960E542AF1E1C01DD</key>
 		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
+			<key>baseConfigurationReference</key>
+			<string>DB7F096F0389745A5BD1EED7</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>YES</string>
+				<key>DSTROOT</key>
+				<string>/tmp/xcodeproj.dst</string>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>Target Support Files/Pods-Rover-Rover/Pods-Rover-Rover-prefix.pch</string>
+				<key>INSTALL_PATH</key>
+				<string>$(BUILT_PRODUCTS_DIR)</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>8.0</string>
+				<key>OTHER_CFLAGS</key>
+				<array>
+					<string>-DNS_BLOCK_ASSERTIONS=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>OTHER_CPLUSPLUSFLAGS</key>
+				<array>
+					<string>-DNS_BLOCK_ASSERTIONS=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>OTHER_LDFLAGS</key>
+				<string></string>
+				<key>OTHER_LIBTOOLFLAGS</key>
+				<string></string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>PUBLIC_HEADERS_FOLDER_PATH</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+				<key>SKIP_INSTALL</key>
+				<string>YES</string>
+				<key>VALIDATE_PRODUCT</key>
+				<string>YES</string>
+			</dict>
 			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
+			<string>XCBuildConfiguration</string>
 			<key>name</key>
-			<string>RVModalView.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Views/Modal/RVModalView.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
+			<string>Release</string>
 		</dict>
-		<key>0E0A42AF811A96F003C0E0A6</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.xcconfig</string>
-			<key>path</key>
-			<string>Pods-Rover-Rover.xcconfig</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>0E5619899705A6D21D3CB1F6</key>
+		<key>082AB04617D82E40BF49A2D8</key>
 		<dict>
 			<key>fileRef</key>
-			<string>2FDF7CDE9046E6BDE21F8BBC</string>
+			<string>4CC92ED6CC78EC95F3BEBAB8</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 			<key>settings</key>
@@ -165,178 +218,7 @@
 				<string>-fobjc-arc</string>
 			</dict>
 		</dict>
-		<key>107798282AA8A8FE5200F311</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>Rover.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Rover.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>1479538726D4190062B763DE</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>wrapper.cfbundle</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>Rover.bundle</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-		<key>14EA335B2769F99535A5324F</key>
-		<dict>
-			<key>fileRef</key>
-			<string>828C67CE4D1A3A98E5C553F5</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>15322AA72B5E9D25DB263E8D</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>EE5A37AF7F014D8B378777DB</string>
-				<string>3ECD43DFCDFA0D8D60BE74CA</string>
-				<string>0CB3A4ED9E3C675474CB2375</string>
-				<string>E1F3E2C6628E39A949706D37</string>
-				<string>35BB8EBF0EBB7D1467BD83E5</string>
-				<string>2251F08C7578D1C6177EA757</string>
-				<string>EC053AB2B993AAF0BEAA9E75</string>
-				<string>C8CE953E3B1556B2E06FFE11</string>
-				<string>C4D60AA9C6675F01C5DD67D9</string>
-				<string>4AEFED08E9BC8A1BBA9AFD71</string>
-				<string>A351A48C67389F091FA5DFCD</string>
-				<string>C8F3979C90E017C618B6AE8B</string>
-				<string>EFE977201932680F6DAE2CD1</string>
-				<string>D5CF7639EDF8E07BADB80CDF</string>
-				<string>6443112723DA81B2BB4C5BFC</string>
-				<string>18C7251CE56F73AB20CDA28B</string>
-				<string>1C002C719885A4B15AA87946</string>
-				<string>6971ED20C2FF2617EE06ADF0</string>
-				<string>0E5619899705A6D21D3CB1F6</string>
-				<string>ABF8F89DF5254463AC07C1C4</string>
-				<string>890D3FEBA8ACA4E18287FD98</string>
-				<string>5DF317A328602EF7C292140F</string>
-				<string>7AFC6EB541A6D28B2920F4D3</string>
-				<string>502C8CC1C85D64B25DC697DD</string>
-				<string>584DBC9A116BFB107F580424</string>
-			</array>
-			<key>isa</key>
-			<string>PBXSourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>18C7251CE56F73AB20CDA28B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>E377A65E01E00749BE034336</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>1A8E9B34F6CFB53B826C9F87</key>
-		<dict>
-			<key>containerPortal</key>
-			<string>CFE9661FFA395BEE9D650497</string>
-			<key>isa</key>
-			<string>PBXContainerItemProxy</string>
-			<key>proxyType</key>
-			<string>1</string>
-			<key>remoteGlobalIDString</key>
-			<string>5549B807A3F535017E71AA7A</string>
-			<key>remoteInfo</key>
-			<string>Rover</string>
-		</dict>
-		<key>1C002C719885A4B15AA87946</key>
-		<dict>
-			<key>fileRef</key>
-			<string>2CC5442E2558C844A3CF0397</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>1D4F3C0EACB54967EB67667B</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVVisitManager.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Location/RVVisitManager.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>2251F08C7578D1C6177EA757</key>
-		<dict>
-			<key>fileRef</key>
-			<string>DAFC5DFEC62FD591AF785BC7</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>23A57FCCCB58C70058AABB53</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>Pods-Rover-Rover-dummy.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>24FD0E74F7B45E08E62F65C1</key>
-		<dict>
-			<key>fileRef</key>
-			<string>02A1B1A9913F189F736344F7</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>25A3BBFBF3A1958E1E00318F</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVCloseButton.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Views/Modal/RVCloseButton.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>281A49F115EC1C414BCE1201</key>
+		<key>086AECD5844E38D3A8792732</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -351,16 +233,98 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>2AB850E7C1AD20A207621BFA</key>
+		<key>089DCB2CB56B37595639DB14</key>
 		<dict>
+			<key>explicitFileType</key>
+			<string>archive.ar</string>
+			<key>includeInIndex</key>
+			<string>0</string>
 			<key>isa</key>
-			<string>PBXTargetDependency</string>
-			<key>target</key>
-			<string>5549B807A3F535017E71AA7A</string>
-			<key>targetProxy</key>
-			<string>1A8E9B34F6CFB53B826C9F87</string>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>libPods-Rover.a</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
 		</dict>
-		<key>2BC94F06F399157A9F935D60</key>
+		<key>0BDD3E2F964D0FC5AF7F4562</key>
+		<dict>
+			<key>fileRef</key>
+			<string>131938F6E15E972568EB7289</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>0CA3CAFC32E83FA6DA47D598</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>FC715E8855706AFE6866B200</string>
+			<key>buildPhases</key>
+			<array>
+				<string>B126C6AFACFA295D5916A41C</string>
+				<string>553230CF56B5E7EBFD1548C3</string>
+				<string>CEE815A5A07D910419910084</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>Pods-Rover-RSBarcodes</string>
+			<key>productName</key>
+			<string>Pods-Rover-RSBarcodes</string>
+			<key>productReference</key>
+			<string>2F75A543164315218317A858</string>
+			<key>productType</key>
+			<string>com.apple.product-type.library.static</string>
+		</dict>
+		<key>0CD2751E45226696352167AB</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B34343189D11A623B15FE6D1</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>0DDC83E2974FB297FD89E0D8</key>
+		<dict>
+			<key>fileRef</key>
+			<string>086AECD5844E38D3A8792732</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>0EA74176E3932127F65F19BF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>01585C4E0C6E9D6FA5987890</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>0EC3FFE3A0C9D319EB62D5A6</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSITF14Generator.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSITF14Generator.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>114847DFC635447209C33F94</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -369,226 +333,16 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVNetworkingManager.h</string>
+			<string>RSCode93Generator.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Networking/RVNetworkingManager.h</string>
+			<string>RSBarcodes/RSCode93Generator.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>2CC5442E2558C844A3CF0397</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVModel.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Models/RVModel.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>2F3EBA69283210A2728460EA</key>
-		<dict>
-			<key>fileRef</key>
-			<string>85DC5ED6CEBBF683AB96C25F</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>2FCCA1F7581F430E1CED0D21</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVRegionManager.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Location/RVRegionManager.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>2FDF7CDE9046E6BDE21F8BBC</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVNetworkingManager.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Networking/RVNetworkingManager.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>30F6F986EA34B97133F812BB</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVCardDeckView.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Views/Card Deck/RVCardDeckView.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>3342B041AA4AC2B96E91B061</key>
-		<dict>
-			<key>buildSettings</key>
-			<dict>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>SDKROOT</key>
-				<string>iphoneos</string>
-				<key>SKIP_INSTALL</key>
-				<string>YES</string>
-				<key>WRAPPER_EXTENSION</key>
-				<string>bundle</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
-			<key>name</key>
-			<string>Release</string>
-		</dict>
-		<key>350BEB0F1F1823B496E8D209</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>14EA335B2769F99535A5324F</string>
-			</array>
-			<key>isa</key>
-			<string>PBXFrameworksBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>35BB8EBF0EBB7D1467BD83E5</key>
-		<dict>
-			<key>fileRef</key>
-			<string>39F15F64DFBAC8CB1F4ED0A0</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>35BDAB72FAC3190FD4533844</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVNextButton.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Views/Modal/RVNextButton.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>3686EBD4F72FF6F39C29522B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>7F32551C3523237C7FD976EC</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>369CCFD995D66CB4286189F8</key>
-		<dict>
-			<key>fileRef</key>
-			<string>7361C91146F2BD220003A149</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>3864AF093EB9EB8889534D73</key>
-		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>A3C2BCA770EB1C22B75478F6</string>
-				<string>A60970CD654989FE2683C11C</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>defaultConfigurationName</key>
-			<string>Release</string>
-			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>39F15F64DFBAC8CB1F4ED0A0</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVCardViewButton.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVCardViewButton.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>3CE871165CF55C74728B1644</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>wrapper.framework</string>
-			<key>name</key>
-			<string>CoreLocation.framework</string>
-			<key>path</key>
-			<string>Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/CoreLocation.framework</string>
-			<key>sourceTree</key>
-			<string>DEVELOPER_DIR</string>
-		</dict>
-		<key>3E0225A64BC9CBFB5DE8711D</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text</string>
-			<key>name</key>
-			<string>Podfile</string>
-			<key>path</key>
-			<string>../Podfile</string>
-			<key>sourceTree</key>
-			<string>SOURCE_ROOT</string>
-			<key>xcLanguageSpecificationIdentifier</key>
-			<string>xcode.lang.ruby</string>
-		</dict>
-		<key>3ECD43DFCDFA0D8D60BE74CA</key>
-		<dict>
-			<key>fileRef</key>
-			<string>F75A5EABAFBE9CA972C32DF9</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>3F704B1651F630B4FEFB881A</key>
+		<key>1220C201F982425155166BE5</key>
 		<dict>
 			<key>baseConfigurationReference</key>
-			<string>73BFE4EAB2FC8EEBF48694A3</string>
+			<string>DB7F096F0389745A5BD1EED7</string>
 			<key>buildSettings</key>
 			<dict>
 				<key>ALWAYS_SEARCH_USER_PATHS</key>
@@ -618,6 +372,8 @@
 				<string>8.0</string>
 				<key>OTHER_LDFLAGS</key>
 				<string></string>
+				<key>OTHER_LIBTOOLFLAGS</key>
+				<string></string>
 				<key>PRODUCT_NAME</key>
 				<string>$(TARGET_NAME)</string>
 				<key>PUBLIC_HEADERS_FOLDER_PATH</key>
@@ -632,32 +388,22 @@
 			<key>name</key>
 			<string>Debug</string>
 		</dict>
-		<key>416AFC7C100904B73DADC4CC</key>
+		<key>130DF2F4B486C79AD59E6E97</key>
 		<dict>
-			<key>children</key>
-			<array>
-				<string>0E0A42AF811A96F003C0E0A6</string>
-				<string>73BFE4EAB2FC8EEBF48694A3</string>
-				<string>23A57FCCCB58C70058AABB53</string>
-				<string>4BE62648D09E5C292B70B534</string>
-			</array>
+			<key>includeInIndex</key>
+			<string>1</string>
 			<key>isa</key>
-			<string>PBXGroup</string>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
 			<key>name</key>
-			<string>Support Files</string>
+			<string>RSISBN13Generator.m</string>
 			<key>path</key>
-			<string>Example/Pods/Target Support Files/Pods-Rover-Rover</string>
+			<string>RSBarcodes/RSISBN13Generator.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>44E562325A58B8A4247A058B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>95E5B935F13D9D0040EA163F</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>491844E5E6C74BFF939A41CF</key>
+		<key>131938F6E15E972568EB7289</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -666,42 +412,396 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVRegionManager.h</string>
+			<string>RSEANGenerator.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Location/RVRegionManager.h</string>
+			<string>RSBarcodes/RSEANGenerator.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>49D485BC93D0E448820F80CB</key>
+		<key>139D76879098A31C96B58D4B</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
 			<key>isa</key>
 			<string>PBXFileReference</string>
 			<key>lastKnownFileType</key>
-			<string>text</string>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVImageEffects.h</string>
 			<key>path</key>
-			<string>Pods-Rover-acknowledgements.markdown</string>
+			<string>Pod/Classes/Utilities/RVImageEffects.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>4ADE308EDDBD2F11CFD78746</key>
+		<key>1503BD2114AD6EB22BA5945A</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVCardView.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card/RVCardView.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>154D69204693B3914E6FFDCF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F1F014233D15758A2A547A30</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>156FBB47B3A80629976E7C75</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
+				<string>gnu++0x</string>
+				<key>CLANG_CXX_LIBRARY</key>
+				<string>libc++</string>
+				<key>CLANG_ENABLE_MODULES</key>
+				<string>YES</string>
+				<key>CLANG_ENABLE_OBJC_ARC</key>
+				<string>NO</string>
+				<key>CLANG_WARN_BOOL_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
+				<string>YES</string>
+				<key>CLANG_WARN_EMPTY_BODY</key>
+				<string>YES</string>
+				<key>CLANG_WARN_ENUM_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_INT_CONVERSION</key>
+				<string>YES</string>
+				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
+				<string>YES</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>ENABLE_NS_ASSERTIONS</key>
+				<string>NO</string>
+				<key>GCC_C_LANGUAGE_STANDARD</key>
+				<string>gnu99</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>RELEASE=1</string>
+				</array>
+				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
+				<string>YES</string>
+				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_FUNCTION</key>
+				<string>YES</string>
+				<key>GCC_WARN_UNUSED_VARIABLE</key>
+				<string>YES</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>8.0</string>
+				<key>STRIP_INSTALLED_PRODUCT</key>
+				<string>NO</string>
+				<key>VALIDATE_PRODUCT</key>
+				<string>YES</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Release</string>
+		</dict>
+		<key>17996B8F99F83C9B57D19D55</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVCardBaseView.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card/RVCardBaseView.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>19FC4BCA826D29B176FA4B1F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>114847DFC635447209C33F94</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>1AB2E74F2C2271CD074C3B1D</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>A0B3A14F36BD8FFD5125FB49</string>
+				<string>9F6C186D7FD51977A53281E9</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>1AE7ED501E7E640991E53CCD</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>1220C201F982425155166BE5</string>
+				<string>06F98B4960E542AF1E1C01DD</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>1B5874E6ED40172963F3E0A5</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVLog.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Utilities/RVLog.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>1BC1EF247A691471C2ACB9B3</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVNetworkingManager.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Networking/RVNetworkingManager.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>1C5D76F250FAABA3EFB290AC</key>
+		<dict>
+			<key>fileRef</key>
+			<string>AB6F575C27FD80FF4E19E18C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>1E4F0828DEFC2E9B568E6E75</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVModalView.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Modal/RVModalView.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>1EFDDC36E321FC56F7CE0EF6</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSCode93Generator.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCode93Generator.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>1F2EBA83F099C2D94668374A</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVCardDeckView.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card Deck/RVCardDeckView.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>1F71E17DC7902FECDB6323F7</key>
+		<dict>
+			<key>containerPortal</key>
+			<string>D2CF216571C31F411186A8F8</string>
+			<key>isa</key>
+			<string>PBXContainerItemProxy</string>
+			<key>proxyType</key>
+			<string>1</string>
+			<key>remoteGlobalIDString</key>
+			<string>0CA3CAFC32E83FA6DA47D598</string>
+			<key>remoteInfo</key>
+			<string>Pods-Rover-RSBarcodes</string>
+		</dict>
+		<key>23BC8D12854BD0BECFFBDCFE</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSScannerViewController.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSScannerViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>25D946333CEB4AA5785E9526</key>
+		<dict>
+			<key>fileRef</key>
+			<string>ED55FD8B28B429CB07FEFDB9</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>261E630673BCE62B1F7F912A</key>
 		<dict>
 			<key>buildActionMask</key>
 			<string>2147483647</string>
 			<key>files</key>
 			<array>
-				<string>E079C989058E0F1851B04BCB</string>
+				<string>6D6356175F9751D744BBDFC2</string>
+				<string>E8249BA2AB5F79EF2CBEB6BC</string>
+				<string>C32E387C2A6C902EEA86595D</string>
 			</array>
 			<key>isa</key>
-			<string>PBXSourcesBuildPhase</string>
+			<string>PBXFrameworksBuildPhase</string>
 			<key>runOnlyForDeploymentPostprocessing</key>
 			<string>0</string>
 		</dict>
-		<key>4AEFED08E9BC8A1BBA9AFD71</key>
+		<key>264925B3F8BF3CBC13C60405</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>CFA606DAD60CC49BF59F8354</string>
+				<string>A568EB795975B5C06C7B961A</string>
+				<string>FF2B184B09158455AAA0B5B1</string>
+				<string>84DC6F5BFF062836336E8E9C</string>
+				<string>B9DB1203B117354FDA888B6D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>iOS</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2C75CC49A7585F521669BD42</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSCode39Generator.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCode39Generator.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>2D14944A42D5DCFF9D8CD92A</key>
 		<dict>
 			<key>fileRef</key>
-			<string>25A3BBFBF3A1958E1E00318F</string>
+			<string>55EC22FF078E165049C63480</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>2E5C058D38B3B07FAC64109D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>6BFED4F7F1B8AFF21B76B128</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
+		</dict>
+		<key>2F75A543164315218317A858</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>archive.ar</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>libPods-Rover-RSBarcodes.a</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>3403A22B354745AD03CFE0E5</key>
+		<dict>
+			<key>fileRef</key>
+			<string>66BBBEE7AC6BD7F8FB7A8B5F</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>36065CE5ED41530FA880DCF6</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>7691C00FF965013446562D34</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Targets Support Files</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>3665A2C6EF9C228E57069103</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>Rover.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Rover.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>369F38542CC5ED887D225DE3</key>
+		<dict>
+			<key>fileRef</key>
+			<string>D8CF0ED35A12F873E3A6866C</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 			<key>settings</key>
@@ -710,10 +810,17 @@
 				<string>-fobjc-arc</string>
 			</dict>
 		</dict>
-		<key>4B004E9457C582FF9D930B2B</key>
+		<key>36B99C4C6E51973D8E8856AE</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B16210E141B1783C5A9A1EA7</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>36F4E4306C815C4936CB6957</key>
 		<dict>
 			<key>baseConfigurationReference</key>
-			<string>73BFE4EAB2FC8EEBF48694A3</string>
+			<string>7C10EF323FFE073A4A8F77A5</string>
 			<key>buildSettings</key>
 			<dict>
 				<key>ALWAYS_SEARCH_USER_PATHS</key>
@@ -725,7 +832,7 @@
 				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
 				<string>YES</string>
 				<key>GCC_PREFIX_HEADER</key>
-				<string>Target Support Files/Pods-Rover-Rover/Pods-Rover-Rover-prefix.pch</string>
+				<string>Target Support Files/Pods-Rover-RSBarcodes/Pods-Rover-RSBarcodes-prefix.pch</string>
 				<key>INSTALL_PATH</key>
 				<string>$(BUILT_PRODUCTS_DIR)</string>
 				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
@@ -741,6 +848,8 @@
 					<string>$(inherited)</string>
 				</array>
 				<key>OTHER_LDFLAGS</key>
+				<string></string>
+				<key>OTHER_LIBTOOLFLAGS</key>
 				<string></string>
 				<key>PRODUCT_NAME</key>
 				<string>$(TARGET_NAME)</string>
@@ -758,7 +867,290 @@
 			<key>name</key>
 			<string>Release</string>
 		</dict>
-		<key>4BE62648D09E5C292B70B534</key>
+		<key>3811DC55D6F451A01AC7BAC1</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>03ED47624E3C4CCAA9DAF69C</string>
+			<key>buildPhases</key>
+			<array>
+				<string>C784D461FEEDF56D17A96635</string>
+				<string>E0E3438C7BC5FD17EF75934C</string>
+				<string>F4A1EA681F19881F25AB2BAE</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>Rover</string>
+			<key>productName</key>
+			<string>Rover</string>
+			<key>productReference</key>
+			<string>B13632B203EDCA57E9165468</string>
+			<key>productType</key>
+			<string>com.apple.product-type.bundle</string>
+		</dict>
+		<key>38B812876D71FD7BF0E8CA78</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>D8FC87842B55533D5A50E339</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Pods</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>39596692F17A03E03CACF467</key>
+		<dict>
+			<key>fileRef</key>
+			<string>1B5874E6ED40172963F3E0A5</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>396C6E9092D4D0F35A26C29C</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVModalViewController.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Controllers/RVModalViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>3A343715F3509BA612106519</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVVisitProject.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Models/RVVisitProject.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>3C82DA6148517660871C7812</key>
+		<dict>
+			<key>fileRef</key>
+			<string>ECC48134C5976956EEDD97F4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>3DEB22A7C098F26B9CE2E79F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>AFA25EF088AF40B54706F082</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>406C49A70EE3D80A770F87C4</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSCodeView.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCodeView.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4116D546541D38EF48E41A60</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSITF14Generator.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSITF14Generator.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4185AEE3C1519083C52D26AA</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>B0165AE408CB271D24E96B50</string>
+				<string>441CC6CB4AD6909EBF20D039</string>
+				<string>932D27AE832FC8A63EC65119</string>
+				<string>0CD2751E45226696352167AB</string>
+				<string>62D3AD8DC9CF182046EEDA55</string>
+				<string>DADCAD7AC659F414A4285374</string>
+				<string>520C2735CB509BB04850C768</string>
+				<string>9D036C050E042D8AE804728D</string>
+				<string>DE7CD91C38E25D0CADEE389F</string>
+				<string>DC97F6DCAA3EEFE684492DB7</string>
+				<string>5649FB25BC6E37FDC8E2FADE</string>
+				<string>DDF6BEC9DB532B14DBB7AF00</string>
+				<string>0DDC83E2974FB297FD89E0D8</string>
+				<string>848933757D310CC9A3DF8966</string>
+				<string>769DAD504780A15E8890B836</string>
+				<string>AF45A6AC0B9A3604485683AC</string>
+				<string>082AB04617D82E40BF49A2D8</string>
+				<string>C9507EAFB4EB39B88645BC3B</string>
+				<string>3C82DA6148517660871C7812</string>
+				<string>369F38542CC5ED887D225DE3</string>
+				<string>A6001C2A02EDE1AE4D4044A0</string>
+				<string>E8781247335686697B7D2881</string>
+				<string>C37FC468537D3CE3D5F54E50</string>
+				<string>5C42F6DF0F122DC0261EA0FE</string>
+				<string>B1AF3465C796ADEA00E4DAAF</string>
+				<string>4BBFB9AD093F8EBD2EAA859F</string>
+				<string>E94D978485F27D96BC361AF3</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>4292392AE8D6A912C4B54FC1</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>E73B197A2045AB938A79809F</string>
+				<string>B17CDFE313E7405D772F0E71</string>
+				<string>A42BF6AB5ED1D81EEA0116BE</string>
+				<string>7EA18C2912494250AC442664</string>
+				<string>17996B8F99F83C9B57D19D55</string>
+				<string>B34343189D11A623B15FE6D1</string>
+				<string>1F2EBA83F099C2D94668374A</string>
+				<string>60B565E624CE0B45889AC201</string>
+				<string>F26256416AA7525A51853E14</string>
+				<string>ED55FD8B28B429CB07FEFDB9</string>
+				<string>1503BD2114AD6EB22BA5945A</string>
+				<string>5D29E6872260F456592830CB</string>
+				<string>669BBC613D67ABCAB22F67BC</string>
+				<string>EC6F7F6B76E4C87B83EB182D</string>
+				<string>F348782DEF97BB1AF0C924B2</string>
+				<string>92A19AF339C48F000C31347E</string>
+				<string>967C67C86A04718EC45563C0</string>
+				<string>F1F014233D15758A2A547A30</string>
+				<string>C791C18F063BE5B5B263C45E</string>
+				<string>E711254E84666F32D16F0EB5</string>
+				<string>93E9A8137984127970ADBB75</string>
+				<string>5E3B54ECA1AE29ECF00AFFCE</string>
+				<string>A1558C52BDE346B525E31D5B</string>
+				<string>B16210E141B1783C5A9A1EA7</string>
+				<string>086AECD5844E38D3A8792732</string>
+				<string>01954C744DD0E3A3BAB2F642</string>
+				<string>9C1B16EDC0250D294018C0B4</string>
+				<string>58E843BB54D5AA2FF834AAF0</string>
+				<string>139D76879098A31C96B58D4B</string>
+				<string>4A0A5F50103FA39038A554C3</string>
+				<string>1B5874E6ED40172963F3E0A5</string>
+				<string>F4809A21DA04DF280E462DFE</string>
+				<string>1E4F0828DEFC2E9B568E6E75</string>
+				<string>4CC92ED6CC78EC95F3BEBAB8</string>
+				<string>FE547F52FEC01062192C0EAC</string>
+				<string>396C6E9092D4D0F35A26C29C</string>
+				<string>935B21A5D9EEE9660696AF01</string>
+				<string>ECC48134C5976956EEDD97F4</string>
+				<string>D4CB2A9EF4442895EA335A5F</string>
+				<string>B79548F2D961B736AAA8FA09</string>
+				<string>D8CF0ED35A12F873E3A6866C</string>
+				<string>1BC1EF247A691471C2ACB9B3</string>
+				<string>FB9A070318A297708684C78E</string>
+				<string>93930D03BB74BC3084937E48</string>
+				<string>EA23383E40C65567523EBCDF</string>
+				<string>72C7D61450854610BE67BE29</string>
+				<string>B922834274CB54B6CC4A8AA2</string>
+				<string>7787E7D8B054BEEF41D44BE4</string>
+				<string>4FAFAF58895018CFE5AA4D08</string>
+				<string>66BBBEE7AC6BD7F8FB7A8B5F</string>
+				<string>5FAB6072E001D22F5D9346DC</string>
+				<string>4B3BA77D3CE5744F76DC1102</string>
+				<string>8850586731431F309F87829E</string>
+				<string>3A343715F3509BA612106519</string>
+				<string>3665A2C6EF9C228E57069103</string>
+				<string>4D1A74FA9A0B0AFA94362A15</string>
+				<string>62AFB9CC17B52472C80021D3</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Rover</string>
+			<key>path</key>
+			<string>../..</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>441CC6CB4AD6909EBF20D039</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B17CDFE313E7405D772F0E71</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>4595376D8DC007D78B6CDEB3</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSCodeGenerator.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCodeGenerator.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>464E40FED0026BBFD6D305A0</key>
+		<dict>
+			<key>fileRef</key>
+			<string>01BB90B5764B7D251607A4D6</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>47B71B8A387DFCAE91828C25</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSISBN13Generator.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSISBN13Generator.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4892F94372ADDAB307606C7A</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -767,37 +1159,215 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>path</key>
-			<string>Pods-Rover-Rover-prefix.pch</string>
+			<string>Pods-Rover-RSBarcodes-prefix.pch</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>4D26D59263E94D79FEDEB37E</key>
+		<key>48F9BE14C53909DF38CB821A</key>
 		<dict>
-			<key>buildConfigurationList</key>
-			<string>3864AF093EB9EB8889534D73</string>
-			<key>buildPhases</key>
+			<key>fileRef</key>
+			<string>4116D546541D38EF48E41A60</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>4926F9100C7957EFCA8A6B15</key>
+		<dict>
+			<key>fileRef</key>
+			<string>0688866D48F2F9BD9038929D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>49EB53C24DB6F479739FA7F4</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSCode39Mod43Generator.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCode39Mod43Generator.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4A0A5F50103FA39038A554C3</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVImageEffects.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Utilities/RVImageEffects.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4AD06265A7B8CBEC7BCEC8A9</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B9DB1203B117354FDA888B6D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>4B3BA77D3CE5744F76DC1102</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVVisitManager.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Location/RVVisitManager.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4BBFB9AD093F8EBD2EAA859F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>8850586731431F309F87829E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>4CC92ED6CC78EC95F3BEBAB8</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVModalView.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Modal/RVModalView.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4D1A74FA9A0B0AFA94362A15</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>Rover.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Rover.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>4FAFAF58895018CFE5AA4D08</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVRegionManager.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Location/RVRegionManager.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>50C9CAF9E03D484BB6C2E573</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSCornersView.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCornersView.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>520C2735CB509BB04850C768</key>
+		<dict>
+			<key>fileRef</key>
+			<string>669BBC613D67ABCAB22F67BC</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>541E061B19C5B4ECEC04A2D1</key>
+		<dict>
+			<key>fileRef</key>
+			<string>935B21A5D9EEE9660696AF01</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>553230CF56B5E7EBFD1548C3</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
 			<array>
-				<string>4ADE308EDDBD2F11CFD78746</string>
-				<string>350BEB0F1F1823B496E8D209</string>
-			</array>
-			<key>buildRules</key>
-			<array/>
-			<key>dependencies</key>
-			<array>
-				<string>66147B485F8F19F045F14140</string>
+				<string>609D5D4F74F05EF04AC309E1</string>
+				<string>891822DCEF339F718C026E58</string>
+				<string>773BF52BF05AAE98A3EFC894</string>
 			</array>
 			<key>isa</key>
-			<string>PBXNativeTarget</string>
-			<key>name</key>
-			<string>Pods-Rover</string>
-			<key>productName</key>
-			<string>Pods-Rover</string>
-			<key>productReference</key>
-			<string>E57886A91EFD76E3298DC055</string>
-			<key>productType</key>
-			<string>com.apple.product-type.library.static</string>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
 		</dict>
-		<key>4EED4D744B06E3D73C007DE5</key>
+		<key>55EC22FF078E165049C63480</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>Pods-Rover-dummy.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>5649FB25BC6E37FDC8E2FADE</key>
+		<dict>
+			<key>fileRef</key>
+			<string>93E9A8137984127970ADBB75</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>5751DBB10655EFD4AB49E4CB</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B79548F2D961B736AAA8FA09</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>58E843BB54D5AA2FF834AAF0</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -812,10 +1382,10 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>502C8CC1C85D64B25DC697DD</key>
+		<key>5C42F6DF0F122DC0261EA0FE</key>
 		<dict>
 			<key>fileRef</key>
-			<string>1D4F3C0EACB54967EB67667B</string>
+			<string>4FAFAF58895018CFE5AA4D08</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 			<key>settings</key>
@@ -824,7 +1394,7 @@
 				<string>-fobjc-arc</string>
 			</dict>
 		</dict>
-		<key>516D90718C67ABFD0B9D2115</key>
+		<key>5D0B02846AAE3028477D5A2E</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -833,13 +1403,13 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.objc</string>
 			<key>name</key>
-			<string>RVMoreButton.m</string>
+			<string>RSCornersView.m</string>
 			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVMoreButton.m</string>
+			<string>RSBarcodes/RSCornersView.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>52D09ED2FECBA739BD200ADC</key>
+		<key>5D29E6872260F456592830CB</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -848,56 +1418,139 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVNotificationCenter.h</string>
+			<string>RVCardViewButton.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Notifications/RVNotificationCenter.h</string>
+			<string>Pod/Classes/Views/Card/RVCardViewButton.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>5549B807A3F535017E71AA7A</key>
-		<dict>
-			<key>buildConfigurationList</key>
-			<string>A485734024B204418DCA13CB</string>
-			<key>buildPhases</key>
-			<array>
-				<string>91FF27E6E3148D848630C013</string>
-				<string>09D6421F5966C20CA3C725C9</string>
-				<string>7272259D2235EE3512F6371E</string>
-			</array>
-			<key>buildRules</key>
-			<array/>
-			<key>dependencies</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXNativeTarget</string>
-			<key>name</key>
-			<string>Rover</string>
-			<key>productName</key>
-			<string>Rover</string>
-			<key>productReference</key>
-			<string>1479538726D4190062B763DE</string>
-			<key>productType</key>
-			<string>com.apple.product-type.bundle</string>
-		</dict>
-		<key>57A25727C05DC835CC934A55</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>RVModalViewController.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Controllers/RVModalViewController.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>584DBC9A116BFB107F580424</key>
+		<key>5D5CC0E85C80DAF5DBF35EA2</key>
 		<dict>
 			<key>fileRef</key>
-			<string>6E7FCD4D4C57BA561D55FEB3</string>
+			<string>1BC1EF247A691471C2ACB9B3</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>5E3B54ECA1AE29ECF00AFFCE</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVCloseButton.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Modal/RVCloseButton.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>5FAB6072E001D22F5D9346DC</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVVisit.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Models/RVVisit.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>609D5D4F74F05EF04AC309E1</key>
+		<dict>
+			<key>fileRef</key>
+			<string>CFA606DAD60CC49BF59F8354</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>60B565E624CE0B45889AC201</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVCardDeckView.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card Deck/RVCardDeckView.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>615AB6C412B59351C6432186</key>
+		<dict>
+			<key>containerPortal</key>
+			<string>D2CF216571C31F411186A8F8</string>
+			<key>isa</key>
+			<string>PBXContainerItemProxy</string>
+			<key>proxyType</key>
+			<string>1</string>
+			<key>remoteGlobalIDString</key>
+			<string>3811DC55D6F451A01AC7BAC1</string>
+			<key>remoteInfo</key>
+			<string>Rover</string>
+		</dict>
+		<key>61B63FDF408A4786595EFBA9</key>
+		<dict>
+			<key>fileRef</key>
+			<string>47B71B8A387DFCAE91828C25</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>61DDFEEEAEB35A26867BCE9E</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>4292392AE8D6A912C4B54FC1</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Development Pods</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>61F77CBBE80B91BE618F8819</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>2D14944A42D5DCFF9D8CD92A</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>62AFB9CC17B52472C80021D3</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>C62FD55B6204FEB0CC6818A6</string>
+				<string>DB7F096F0389745A5BD1EED7</string>
+				<string>79AA149F6EBD22BE20EED427</string>
+				<string>DAAE66AC2CDBB0AE47570B2F</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Support Files</string>
+			<key>path</key>
+			<string>Example/Pods/Target Support Files/Pods-Rover-Rover</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>62D3AD8DC9CF182046EEDA55</key>
+		<dict>
+			<key>fileRef</key>
+			<string>60B565E624CE0B45889AC201</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 			<key>settings</key>
@@ -906,7 +1559,7 @@
 				<string>-fobjc-arc</string>
 			</dict>
 		</dict>
-		<key>596610A7A6D101DE777B9A04</key>
+		<key>640D35AF94162FCDB54F9BED</key>
 		<dict>
 			<key>buildSettings</key>
 			<dict>
@@ -973,50 +1626,43 @@
 			<key>name</key>
 			<string>Debug</string>
 		</dict>
-		<key>5A411E7859E472444CDB5865</key>
-		<dict>
-			<key>containerPortal</key>
-			<string>CFE9661FFA395BEE9D650497</string>
-			<key>isa</key>
-			<string>PBXContainerItemProxy</string>
-			<key>proxyType</key>
-			<string>1</string>
-			<key>remoteGlobalIDString</key>
-			<string>6466D19AB159603E2B09CCC5</string>
-			<key>remoteInfo</key>
-			<string>Pods-Rover-Rover</string>
-		</dict>
-		<key>5BE38B7D0644DCE58F70E5F1</key>
+		<key>65AE59DD06FD71C9AD3E9D15</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
 			<key>isa</key>
 			<string>PBXFileReference</string>
 			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSEAN13Generator.m</string>
 			<key>path</key>
-			<string>Pods-Rover-environment.h</string>
+			<string>RSBarcodes/RSEAN13Generator.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>5DF317A328602EF7C292140F</key>
+		<key>65BEDF689EA45FC77DD76E20</key>
 		<dict>
-			<key>fileRef</key>
-			<string>2FCCA1F7581F430E1CED0D21</string>
+			<key>children</key>
+			<array>
+				<string>B13632B203EDCA57E9165468</string>
+				<string>089DCB2CB56B37595639DB14</string>
+				<string>2F75A543164315218317A858</string>
+				<string>6814029731CFD4D648D4C3CE</string>
+			</array>
 			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Products</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
 		</dict>
-		<key>5EB4F371D5438548F359DD6E</key>
+		<key>65CF2073B6EB87D202697DB0</key>
 		<dict>
 			<key>buildConfigurations</key>
 			<array>
-				<string>3F704B1651F630B4FEFB881A</string>
-				<string>4B004E9457C582FF9D930B2B</string>
+				<string>640D35AF94162FCDB54F9BED</string>
+				<string>156FBB47B3A80629976E7C75</string>
 			</array>
 			<key>defaultConfigurationIsVisible</key>
 			<string>0</string>
@@ -1025,7 +1671,7 @@
 			<key>isa</key>
 			<string>XCConfigurationList</string>
 		</dict>
-		<key>60E8086CB0978E7B44B3ACB0</key>
+		<key>65EC43BA35EADAECCD7052D2</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -1038,133 +1684,7 @@
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>635C79BC4AE5380329B35F58</key>
-		<dict>
-			<key>fileRef</key>
-			<string>6A80C91B64A5CC3D876B7776</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>63D78C991A7E5341496C97D3</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>1479538726D4190062B763DE</string>
-				<string>E57886A91EFD76E3298DC055</string>
-				<string>77349234A86552995C8F885F</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Products</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>6443112723DA81B2BB4C5BFC</key>
-		<dict>
-			<key>fileRef</key>
-			<string>0D318ADCB895C3C7C6E9C0E6</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>6466D19AB159603E2B09CCC5</key>
-		<dict>
-			<key>buildConfigurationList</key>
-			<string>5EB4F371D5438548F359DD6E</string>
-			<key>buildPhases</key>
-			<array>
-				<string>15322AA72B5E9D25DB263E8D</string>
-				<string>7AFBB4D311290373B5DBBE35</string>
-				<string>9BBE0754BFB6AC1C2AACF2CF</string>
-			</array>
-			<key>buildRules</key>
-			<array/>
-			<key>dependencies</key>
-			<array>
-				<string>2AB850E7C1AD20A207621BFA</string>
-			</array>
-			<key>isa</key>
-			<string>PBXNativeTarget</string>
-			<key>name</key>
-			<string>Pods-Rover-Rover</string>
-			<key>productName</key>
-			<string>Pods-Rover-Rover</string>
-			<key>productReference</key>
-			<string>77349234A86552995C8F885F</string>
-			<key>productType</key>
-			<string>com.apple.product-type.library.static</string>
-		</dict>
-		<key>64975FDA34233A5E1F7D8B90</key>
-		<dict>
-			<key>fileRef</key>
-			<string>A2FB5132D517F9678B8F6947</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>66147B485F8F19F045F14140</key>
-		<dict>
-			<key>isa</key>
-			<string>PBXTargetDependency</string>
-			<key>target</key>
-			<string>6466D19AB159603E2B09CCC5</string>
-			<key>targetProxy</key>
-			<string>5A411E7859E472444CDB5865</string>
-		</dict>
-		<key>6906241D14020A1D337C8333</key>
-		<dict>
-			<key>fileRef</key>
-			<string>71C5C5309837C5752B6323B4</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>6971ED20C2FF2617EE06ADF0</key>
-		<dict>
-			<key>fileRef</key>
-			<string>516D90718C67ABFD0B9D2115</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>6A80C91B64A5CC3D876B7776</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>RVCard.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Models/RVCard.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>6AFB2DB9E97F6AAADDC0B7CE</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>RVImageEffects.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Utilities/RVImageEffects.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>6E7FCD4D4C57BA561D55FEB3</key>
+		<key>669BBC613D67ABCAB22F67BC</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -1173,13 +1693,13 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.objc</string>
 			<key>name</key>
-			<string>Rover.m</string>
+			<string>RVCardViewButton.m</string>
 			<key>path</key>
-			<string>Pod/Classes/Rover.m</string>
+			<string>Pod/Classes/Views/Card/RVCardViewButton.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>71C5C5309837C5752B6323B4</key>
+		<key>66BBBEE7AC6BD7F8FB7A8B5F</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -1188,59 +1708,13 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVLog.h</string>
+			<string>RVVisit.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Utilities/RVLog.h</string>
+			<string>Pod/Classes/Models/RVVisit.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>7272259D2235EE3512F6371E</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXResourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>7361C91146F2BD220003A149</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>RVCardViewController.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Controllers/RVCardViewController.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>73BFE4EAB2FC8EEBF48694A3</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>text.xcconfig</string>
-			<key>path</key>
-			<string>Pods-Rover-Rover-Private.xcconfig</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>74C37AB37DB141F4ECEABC49</key>
-		<dict>
-			<key>fileRef</key>
-			<string>B899384C890AB9BB32E8C510</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>77349234A86552995C8F885F</key>
+		<key>6814029731CFD4D648D4C3CE</key>
 		<dict>
 			<key>explicitFileType</key>
 			<string>archive.ar</string>
@@ -1253,34 +1727,97 @@
 			<key>sourceTree</key>
 			<string>BUILT_PRODUCTS_DIR</string>
 		</dict>
-		<key>7AFBB4D311290373B5DBBE35</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>98DB9350D13CE043845677E4</string>
-				<string>AAAD0B36EA46C91D075B7708</string>
-				<string>04EC48C478CF0C70C224DCCD</string>
-			</array>
-			<key>isa</key>
-			<string>PBXFrameworksBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>7AFC6EB541A6D28B2920F4D3</key>
+		<key>6994BA0FAF3C8E10B501B043</key>
 		<dict>
 			<key>fileRef</key>
-			<string>82D831411D9C13A5A8A5CE62</string>
+			<string>49EB53C24DB6F479739FA7F4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>6B432574C1999D9D45A888AA</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B1D3953233AD9BA2838F8CDC</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 			<key>settings</key>
 			<dict>
 				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
 			</dict>
 		</dict>
-		<key>7F32551C3523237C7FD976EC</key>
+		<key>6BA183DA8B2C7329127600EB</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>264925B3F8BF3CBC13C60405</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Frameworks</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6BBD602B1D937F90803B1F27</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSCode128Generator.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCode128Generator.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6BFED4F7F1B8AFF21B76B128</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSUnifiedCodeGenerator.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSUnifiedCodeGenerator.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>6D01B5BCA7D57440FC2EA64B</key>
+		<dict>
+			<key>fileRef</key>
+			<string>EC6F7F6B76E4C87B83EB182D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>6D6356175F9751D744BBDFC2</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A568EB795975B5C06C7B961A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>6F098B3947431B3B51855BEF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>FE547F52FEC01062192C0EAC</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>70492027FA88BA1B2C1D954C</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7787E7D8B054BEEF41D44BE4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>72C7D61450854610BE67BE29</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -1289,26 +1826,233 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVCardView.h</string>
+			<string>RVNotificationCenter.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVCardView.h</string>
+			<string>Pod/Classes/Notifications/RVNotificationCenter.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>828C67CE4D1A3A98E5C553F5</key>
+		<key>742DFB3EDC1536A19124BC07</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B46466373AB2C7D5425B591A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
+		</dict>
+		<key>7691C00FF965013446562D34</key>
+		<dict>
+			<key>children</key>
+			<array>
+				<string>F009EB5245E73A9D6061DE5E</string>
+				<string>65EC43BA35EADAECCD7052D2</string>
+				<string>55EC22FF078E165049C63480</string>
+				<string>BCCE8DA3C909E68B1FE76D8B</string>
+				<string>DA7A1EDFF6E5429191C3546A</string>
+				<string>F9B0D9AE1014409C935BD864</string>
+				<string>B4543C8B50701FA02D6C08EC</string>
+			</array>
+			<key>isa</key>
+			<string>PBXGroup</string>
+			<key>name</key>
+			<string>Pods-Rover</string>
+			<key>path</key>
+			<string>Target Support Files/Pods-Rover</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>769DAD504780A15E8890B836</key>
+		<dict>
+			<key>fileRef</key>
+			<string>4A0A5F50103FA39038A554C3</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>773BF52BF05AAE98A3EFC894</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B9DB1203B117354FDA888B6D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7787E7D8B054BEEF41D44BE4</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVRegionManager.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Location/RVRegionManager.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>77BCE2C0B54734CB32BD808E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>CB4D737B637775225F49DCAD</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>799EB2E6314AD82122A2BAC2</key>
+		<dict>
+			<key>buildSettings</key>
+			<dict>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+				<key>SKIP_INSTALL</key>
+				<string>YES</string>
+				<key>WRAPPER_EXTENSION</key>
+				<string>bundle</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>79AA149F6EBD22BE20EED427</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>Pods-Rover-Rover-dummy.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7C10EF323FFE073A4A8F77A5</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>path</key>
+			<string>Pods-Rover-RSBarcodes-Private.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7C3E4515B1000C67139F6425</key>
+		<dict>
+			<key>containerPortal</key>
+			<string>D2CF216571C31F411186A8F8</string>
+			<key>isa</key>
+			<string>PBXContainerItemProxy</string>
+			<key>proxyType</key>
+			<string>1</string>
+			<key>remoteGlobalIDString</key>
+			<string>E998E7A7F5A6555134651C37</string>
+			<key>remoteInfo</key>
+			<string>Pods-Rover-Rover</string>
+		</dict>
+		<key>7CB6918659AF8F73FA060E08</key>
+		<dict>
+			<key>fileRef</key>
+			<string>01954C744DD0E3A3BAB2F642</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>7CE0A3A65806708FF8855DCE</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSEAN8Generator.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSEAN8Generator.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7EA18C2912494250AC442664</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVCardBarcodeView.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card/RVCardBarcodeView.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7FBAA6C454BE14F565BBEEE3</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSCode39Mod43Generator.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCode39Mod43Generator.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>7FCF72401B7A4B437B72A1F0</key>
+		<dict>
+			<key>fileRef</key>
+			<string>130DF2F4B486C79AD59E6E97</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
+		</dict>
+		<key>848933757D310CC9A3DF8966</key>
+		<dict>
+			<key>fileRef</key>
+			<string>9C1B16EDC0250D294018C0B4</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>84DC6F5BFF062836336E8E9C</key>
 		<dict>
 			<key>isa</key>
 			<string>PBXFileReference</string>
 			<key>lastKnownFileType</key>
 			<string>wrapper.framework</string>
 			<key>name</key>
-			<string>Foundation.framework</string>
+			<string>CoreLocation.framework</string>
 			<key>path</key>
-			<string>Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/Foundation.framework</string>
+			<string>Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/CoreLocation.framework</string>
 			<key>sourceTree</key>
 			<string>DEVELOPER_DIR</string>
 		</dict>
-		<key>82D831411D9C13A5A8A5CE62</key>
+		<key>8850586731431F309F87829E</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -1317,20 +2061,62 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.objc</string>
 			<key>name</key>
-			<string>RVVisit.m</string>
+			<string>RVVisitManager.m</string>
 			<key>path</key>
-			<string>Pod/Classes/Models/RVVisit.m</string>
+			<string>Pod/Classes/Location/RVVisitManager.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>8515E17BAA3D4D6711F98512</key>
+		<key>891822DCEF339F718C026E58</key>
 		<dict>
 			<key>fileRef</key>
-			<string>57A25727C05DC835CC934A55</string>
+			<string>FF2B184B09158455AAA0B5B1</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
-		<key>85DC5ED6CEBBF683AB96C25F</key>
+		<key>8A52EC1CDA686B126D83D628</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>path</key>
+			<string>Pods-Rover-RSBarcodes-dummy.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>8C58559159ADCA2EE86D6CCE</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSExtendedCode39Generator.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSExtendedCode39Generator.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>917717456F4876384A619149</key>
+		<dict>
+			<key>fileRef</key>
+			<string>72C7D61450854610BE67BE29</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>9249C8E7140BFF4D98AF5381</key>
+		<dict>
+			<key>fileRef</key>
+			<string>1E4F0828DEFC2E9B568E6E75</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>92A19AF339C48F000C31347E</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -1339,45 +2125,16 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVCardViewButton.h</string>
+			<string>RVCardViewButtonIcon.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVCardViewButton.h</string>
+			<string>Pod/Classes/Views/Card/RVCardViewButtonIcon.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>86BD6F7178763C12FEA1002C</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVNotificationCenter.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Notifications/RVNotificationCenter.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>881E7793D20A8C7CDD1660FF</key>
+		<key>932D27AE832FC8A63EC65119</key>
 		<dict>
 			<key>fileRef</key>
-			<string>C52204146A38EBC3CC96503F</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>88C85503869D5C9466D57862</key>
-		<dict>
-			<key>fileRef</key>
-			<string>B2A4504B6AC2D3216421581F</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>890D3FEBA8ACA4E18287FD98</key>
-		<dict>
-			<key>fileRef</key>
-			<string>86BD6F7178763C12FEA1002C</string>
+			<string>7EA18C2912494250AC442664</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 			<key>settings</key>
@@ -1386,18 +2143,7 @@
 				<string>-fobjc-arc</string>
 			</dict>
 		</dict>
-		<key>91FF27E6E3148D848630C013</key>
-		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array/>
-			<key>isa</key>
-			<string>PBXSourcesBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
-		</dict>
-		<key>955B68703368DCA629E39216</key>
+		<key>935B21A5D9EEE9660696AF01</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -1406,13 +2152,22 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVVisitProject.h</string>
+			<string>RVModel.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Models/RVVisitProject.h</string>
+			<string>Pod/Classes/Models/RVModel.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>95E5B935F13D9D0040EA163F</key>
+		<key>938D1D68CDF4CD48FA996438</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXTargetDependency</string>
+			<key>target</key>
+			<string>E998E7A7F5A6555134651C37</string>
+			<key>targetProxy</key>
+			<string>7C3E4515B1000C67139F6425</string>
+		</dict>
+		<key>93930D03BB74BC3084937E48</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -1421,28 +2176,25 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVModalView.h</string>
+			<string>RVNextButton.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Views/Modal/RVModalView.h</string>
+			<string>Pod/Classes/Views/Modal/RVNextButton.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>96B7E5089406F5EB761F7702</key>
+		<key>93ABB5F8292232A7001A546A</key>
 		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
+			<key>fileRef</key>
+			<string>1EFDDC36E321FC56F7CE0EF6</string>
 			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>RVCardViewButtonBar.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVCardViewButtonBar.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
 		</dict>
-		<key>96BA7200CA39CB86A580F59C</key>
+		<key>93E9A8137984127970ADBB75</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -1451,127 +2203,120 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.objc</string>
 			<key>name</key>
-			<string>RVLog.m</string>
+			<string>RVCardViewCorner.m</string>
 			<key>path</key>
-			<string>Pod/Classes/Utilities/RVLog.m</string>
+			<string>Pod/Classes/Views/Card/RVCardViewCorner.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>98DB9350D13CE043845677E4</key>
+		<key>967C67C86A04718EC45563C0</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVCardViewButtonIcon.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card/RVCardViewButtonIcon.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>979A4CA93DFB236D9091A83D</key>
 		<dict>
 			<key>fileRef</key>
-			<string>B205EDAD3CB59E127400DE28</string>
+			<string>E711254E84666F32D16F0EB5</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
-		<key>99B915C243EA24D44C5CA229</key>
+		<key>99E6E6D92CC704ADF8896574</key>
 		<dict>
 			<key>fileRef</key>
-			<string>955B68703368DCA629E39216</string>
+			<string>FDCD94FE60273D8A3F4D781E</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
-		<key>9BBE0754BFB6AC1C2AACF2CF</key>
+		<key>9C1B16EDC0250D294018C0B4</key>
 		<dict>
-			<key>buildActionMask</key>
-			<string>2147483647</string>
-			<key>files</key>
-			<array>
-				<string>635C79BC4AE5380329B35F58</string>
-				<string>D81C3FF547AF072201D6FA2A</string>
-				<string>64975FDA34233A5E1F7D8B90</string>
-				<string>3686EBD4F72FF6F39C29522B</string>
-				<string>2F3EBA69283210A2728460EA</string>
-				<string>E46A91573711EC04C6E8564A</string>
-				<string>24FD0E74F7B45E08E62F65C1</string>
-				<string>369CCFD995D66CB4286189F8</string>
-				<string>CBA255A41D27F67651A4154B</string>
-				<string>016E0B55B38A31CF7F1E33AC</string>
-				<string>9CBFC004DB9750392361C945</string>
-				<string>E1B72FF792728CF7E5C96F87</string>
-				<string>CB5467665DB6F7B6A30CF309</string>
-				<string>B97EFB3253603E48D1BC7D92</string>
-				<string>6906241D14020A1D337C8333</string>
-				<string>44E562325A58B8A4247A058B</string>
-				<string>8515E17BAA3D4D6711F98512</string>
-				<string>88C85503869D5C9466D57862</string>
-				<string>E10636E1AF6677AEF0DB1DC8</string>
-				<string>F748AC0AA42F4B182489C5FF</string>
-				<string>D9C81318B5E3EA70F1B3FC3B</string>
-				<string>881E7793D20A8C7CDD1660FF</string>
-				<string>AD0F1E811E6D4D00A8C0B7AD</string>
-				<string>C17679A1A8872035CAD991C6</string>
-				<string>D427EA01A72A65DD3D9E2B03</string>
-				<string>74C37AB37DB141F4ECEABC49</string>
-				<string>99B915C243EA24D44C5CA229</string>
-				<string>04BE35024A85CBEFF17FD633</string>
-			</array>
+			<key>includeInIndex</key>
+			<string>1</string>
 			<key>isa</key>
-			<string>PBXHeadersBuildPhase</string>
-			<key>runOnlyForDeploymentPostprocessing</key>
-			<string>0</string>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVCustomer.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Models/RVCustomer.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
 		</dict>
-		<key>9CBFC004DB9750392361C945</key>
+		<key>9C7E1FF597BA8A4F8BE391D0</key>
 		<dict>
 			<key>fileRef</key>
-			<string>FE8287D72DDDE6997587C768</string>
+			<string>6BBD602B1D937F90803B1F27</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
 		</dict>
-		<key>A0CB6156D4262B5BDE82E18F</key>
+		<key>9D036C050E042D8AE804728D</key>
 		<dict>
+			<key>fileRef</key>
+			<string>F348782DEF97BB1AF0C924B2</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>9F6C186D7FD51977A53281E9</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>B4543C8B50701FA02D6C08EC</string>
 			<key>buildSettings</key>
 			<dict>
 				<key>ALWAYS_SEARCH_USER_PATHS</key>
 				<string>NO</string>
-				<key>CLANG_CXX_LANGUAGE_STANDARD</key>
-				<string>gnu++0x</string>
-				<key>CLANG_CXX_LIBRARY</key>
-				<string>libc++</string>
-				<key>CLANG_ENABLE_MODULES</key>
-				<string>YES</string>
-				<key>CLANG_ENABLE_OBJC_ARC</key>
-				<string>NO</string>
-				<key>CLANG_WARN_BOOL_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_CONSTANT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_DIRECT_OBJC_ISA_USAGE</key>
-				<string>YES</string>
-				<key>CLANG_WARN_EMPTY_BODY</key>
-				<string>YES</string>
-				<key>CLANG_WARN_ENUM_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_INT_CONVERSION</key>
-				<string>YES</string>
-				<key>CLANG_WARN_OBJC_ROOT_CLASS</key>
-				<string>YES</string>
 				<key>COPY_PHASE_STRIP</key>
-				<string>NO</string>
-				<key>ENABLE_NS_ASSERTIONS</key>
-				<string>NO</string>
-				<key>GCC_C_LANGUAGE_STANDARD</key>
-				<string>gnu99</string>
-				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
-				<array>
-					<string>RELEASE=1</string>
-				</array>
-				<key>GCC_WARN_64_TO_32_BIT_CONVERSION</key>
 				<string>YES</string>
-				<key>GCC_WARN_ABOUT_RETURN_TYPE</key>
+				<key>DSTROOT</key>
+				<string>/tmp/xcodeproj.dst</string>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
 				<string>YES</string>
-				<key>GCC_WARN_UNDECLARED_SELECTOR</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNINITIALIZED_AUTOS</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNUSED_FUNCTION</key>
-				<string>YES</string>
-				<key>GCC_WARN_UNUSED_VARIABLE</key>
-				<string>YES</string>
+				<key>INSTALL_PATH</key>
+				<string>$(BUILT_PRODUCTS_DIR)</string>
 				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
 				<string>8.0</string>
-				<key>STRIP_INSTALLED_PRODUCT</key>
-				<string>NO</string>
+				<key>OTHER_CFLAGS</key>
+				<array>
+					<string>-DNS_BLOCK_ASSERTIONS=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>OTHER_CPLUSPLUSFLAGS</key>
+				<array>
+					<string>-DNS_BLOCK_ASSERTIONS=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>OTHER_LDFLAGS</key>
+				<string></string>
+				<key>OTHER_LIBTOOLFLAGS</key>
+				<string></string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>PUBLIC_HEADERS_FOLDER_PATH</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+				<key>SKIP_INSTALL</key>
+				<string>YES</string>
 				<key>VALIDATE_PRODUCT</key>
 				<string>YES</string>
 			</dict>
@@ -1580,52 +2325,10 @@
 			<key>name</key>
 			<string>Release</string>
 		</dict>
-		<key>A2FB5132D517F9678B8F6947</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>RVCardProject.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Models/RVCardProject.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>A351A48C67389F091FA5DFCD</key>
-		<dict>
-			<key>fileRef</key>
-			<string>281A49F115EC1C414BCE1201</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>A3B8C71BF77B3BA2C5BB004F</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVCardViewController.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Controllers/RVCardViewController.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>A3C2BCA770EB1C22B75478F6</key>
+		<key>A0B3A14F36BD8FFD5125FB49</key>
 		<dict>
 			<key>baseConfigurationReference</key>
-			<string>CCE38F0C53B7CDDDD3E5DC0A</string>
+			<string>F9B0D9AE1014409C935BD864</string>
 			<key>buildSettings</key>
 			<dict>
 				<key>ALWAYS_SEARCH_USER_PATHS</key>
@@ -1653,6 +2356,8 @@
 				<string>8.0</string>
 				<key>OTHER_LDFLAGS</key>
 				<string></string>
+				<key>OTHER_LIBTOOLFLAGS</key>
+				<string></string>
 				<key>PRODUCT_NAME</key>
 				<string>$(TARGET_NAME)</string>
 				<key>PUBLIC_HEADERS_FOLDER_PATH</key>
@@ -1667,67 +2372,22 @@
 			<key>name</key>
 			<string>Debug</string>
 		</dict>
-		<key>A485734024B204418DCA13CB</key>
+		<key>A144379EA86ACB978299B238</key>
 		<dict>
-			<key>buildConfigurations</key>
-			<array>
-				<string>F005FA59E514DCD05AB7696C</string>
-				<string>3342B041AA4AC2B96E91B061</string>
-			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>defaultConfigurationName</key>
-			<string>Release</string>
+			<key>includeInIndex</key>
+			<string>1</string>
 			<key>isa</key>
-			<string>XCConfigurationList</string>
-		</dict>
-		<key>A60970CD654989FE2683C11C</key>
-		<dict>
-			<key>baseConfigurationReference</key>
-			<string>014F60980D75E94291E9884B</string>
-			<key>buildSettings</key>
-			<dict>
-				<key>ALWAYS_SEARCH_USER_PATHS</key>
-				<string>NO</string>
-				<key>COPY_PHASE_STRIP</key>
-				<string>YES</string>
-				<key>DSTROOT</key>
-				<string>/tmp/xcodeproj.dst</string>
-				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
-				<string>YES</string>
-				<key>INSTALL_PATH</key>
-				<string>$(BUILT_PRODUCTS_DIR)</string>
-				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
-				<string>8.0</string>
-				<key>OTHER_CFLAGS</key>
-				<array>
-					<string>-DNS_BLOCK_ASSERTIONS=1</string>
-					<string>$(inherited)</string>
-				</array>
-				<key>OTHER_CPLUSPLUSFLAGS</key>
-				<array>
-					<string>-DNS_BLOCK_ASSERTIONS=1</string>
-					<string>$(inherited)</string>
-				</array>
-				<key>OTHER_LDFLAGS</key>
-				<string></string>
-				<key>PRODUCT_NAME</key>
-				<string>$(TARGET_NAME)</string>
-				<key>PUBLIC_HEADERS_FOLDER_PATH</key>
-				<string>$(TARGET_NAME)</string>
-				<key>SDKROOT</key>
-				<string>iphoneos</string>
-				<key>SKIP_INSTALL</key>
-				<string>YES</string>
-				<key>VALIDATE_PRODUCT</key>
-				<string>YES</string>
-			</dict>
-			<key>isa</key>
-			<string>XCBuildConfiguration</string>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>Release</string>
+			<string>RSCodeGenerator.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCodeGenerator.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
 		</dict>
-		<key>A9EC6DD47399A050FF4518EF</key>
+		<key>A1558C52BDE346B525E31D5B</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -1735,118 +2395,28 @@
 			<string>PBXFileReference</string>
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.objc</string>
-			<key>path</key>
-			<string>Pods-Rover-dummy.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>AAAD0B36EA46C91D075B7708</key>
-		<dict>
-			<key>fileRef</key>
-			<string>3CE871165CF55C74728B1644</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>AB6E9F9832EC9E28D8A9DB4A</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>B10D285807F323D382B8E640</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
 			<key>name</key>
-			<string>Development Pods</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>ABF8F89DF5254463AC07C1C4</key>
-		<dict>
-			<key>fileRef</key>
-			<string>35BDAB72FAC3190FD4533844</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>AD0F1E811E6D4D00A8C0B7AD</key>
-		<dict>
-			<key>fileRef</key>
-			<string>52D09ED2FECBA739BD200ADC</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>B10D285807F323D382B8E640</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>6A80C91B64A5CC3D876B7776</string>
-				<string>F75A5EABAFBE9CA972C32DF9</string>
-				<string>FFC72E04FDCCED419A81548F</string>
-				<string>30F6F986EA34B97133F812BB</string>
-				<string>A2FB5132D517F9678B8F6947</string>
-				<string>7F32551C3523237C7FD976EC</string>
-				<string>B746CB487D93189EE6BFDF07</string>
-				<string>85DC5ED6CEBBF683AB96C25F</string>
-				<string>39F15F64DFBAC8CB1F4ED0A0</string>
-				<string>96B7E5089406F5EB761F7702</string>
-				<string>DAFC5DFEC62FD591AF785BC7</string>
-				<string>02A1B1A9913F189F736344F7</string>
-				<string>B86D006185BF3E3D9F62B19C</string>
-				<string>7361C91146F2BD220003A149</string>
-				<string>A3B8C71BF77B3BA2C5BB004F</string>
-				<string>B1145E6C7D4DFFE8B796D8DE</string>
-				<string>C0897639CD440172F26B3AD2</string>
-				<string>DF1447FE7DB71D8AFD1AF270</string>
-				<string>25A3BBFBF3A1958E1E00318F</string>
-				<string>FE8287D72DDDE6997587C768</string>
-				<string>281A49F115EC1C414BCE1201</string>
-				<string>BD365A51ADF9522CC8633DF7</string>
-				<string>FBAAA187DFF0C205051A5BAC</string>
-				<string>4EED4D744B06E3D73C007DE5</string>
-				<string>6AFB2DB9E97F6AAADDC0B7CE</string>
-				<string>DFCDF05A6FF1C90761AD4798</string>
-				<string>71C5C5309837C5752B6323B4</string>
-				<string>96BA7200CA39CB86A580F59C</string>
-				<string>95E5B935F13D9D0040EA163F</string>
-				<string>0D318ADCB895C3C7C6E9C0E6</string>
-				<string>57A25727C05DC835CC934A55</string>
-				<string>E377A65E01E00749BE034336</string>
-				<string>B2A4504B6AC2D3216421581F</string>
-				<string>2CC5442E2558C844A3CF0397</string>
-				<string>06691F690DFE8703005865EB</string>
-				<string>0098569DB0CC1906E704E276</string>
-				<string>516D90718C67ABFD0B9D2115</string>
-				<string>2BC94F06F399157A9F935D60</string>
-				<string>2FDF7CDE9046E6BDE21F8BBC</string>
-				<string>C52204146A38EBC3CC96503F</string>
-				<string>35BDAB72FAC3190FD4533844</string>
-				<string>52D09ED2FECBA739BD200ADC</string>
-				<string>86BD6F7178763C12FEA1002C</string>
-				<string>491844E5E6C74BFF939A41CF</string>
-				<string>2FCCA1F7581F430E1CED0D21</string>
-				<string>B1FEDAC6F612E2ACD50426DB</string>
-				<string>82D831411D9C13A5A8A5CE62</string>
-				<string>B899384C890AB9BB32E8C510</string>
-				<string>1D4F3C0EACB54967EB67667B</string>
-				<string>955B68703368DCA629E39216</string>
-				<string>107798282AA8A8FE5200F311</string>
-				<string>6E7FCD4D4C57BA561D55FEB3</string>
-				<string>416AFC7C100904B73DADC4CC</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Rover</string>
+			<string>RVCloseButton.m</string>
 			<key>path</key>
-			<string>../..</string>
+			<string>Pod/Classes/Views/Modal/RVCloseButton.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>B1145E6C7D4DFFE8B796D8DE</key>
+		<key>A2FF4D54E0E2B0132D1B9ACC</key>
+		<dict>
+			<key>fileRef</key>
+			<string>7CE0A3A65806708FF8855DCE</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>A428B5954F266BD0D23FB795</key>
+		<dict>
+			<key>fileRef</key>
+			<string>139D76879098A31C96B58D4B</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>A42BF6AB5ED1D81EEA0116BE</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -1855,28 +2425,13 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVCardViewCorner.h</string>
+			<string>RVCardBarcodeView.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVCardViewCorner.h</string>
+			<string>Pod/Classes/Views/Card/RVCardBarcodeView.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>B1FEDAC6F612E2ACD50426DB</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>RVVisit.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Models/RVVisit.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>B205EDAD3CB59E127400DE28</key>
+		<key>A568EB795975B5C06C7B961A</key>
 		<dict>
 			<key>isa</key>
 			<string>PBXFileReference</string>
@@ -1889,137 +2444,59 @@
 			<key>sourceTree</key>
 			<string>DEVELOPER_DIR</string>
 		</dict>
-		<key>B2A4504B6AC2D3216421581F</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>RVModel.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Models/RVModel.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>B746CB487D93189EE6BFDF07</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVCardView.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVCardView.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>B86D006185BF3E3D9F62B19C</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVCardViewButtonIcon.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVCardViewButtonIcon.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>B899384C890AB9BB32E8C510</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>RVVisitManager.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Location/RVVisitManager.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>B97EFB3253603E48D1BC7D92</key>
+		<key>A6001C2A02EDE1AE4D4044A0</key>
 		<dict>
 			<key>fileRef</key>
-			<string>6AFB2DB9E97F6AAADDC0B7CE</string>
+			<string>FB9A070318A297708684C78E</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
 		</dict>
-		<key>BD365A51ADF9522CC8633DF7</key>
+		<key>A8682D9DD018A62CD1553DC2</key>
 		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
+			<key>fileRef</key>
+			<string>7FBAA6C454BE14F565BBEEE3</string>
 			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.h</string>
-			<key>name</key>
-			<string>RVCustomer.h</string>
-			<key>path</key>
-			<string>Pod/Classes/Models/RVCustomer.h</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
 		</dict>
-		<key>C0897639CD440172F26B3AD2</key>
+		<key>A8AD28996241454405CA1809</key>
 		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVCardViewCorner.m</string>
-			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVCardViewCorner.m</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>C0EFDD7ACE7F991841CC9CED</key>
-		<dict>
-			<key>buildConfigurations</key>
+			<key>children</key>
 			<array>
-				<string>596610A7A6D101DE777B9A04</string>
-				<string>A0CB6156D4262B5BDE82E18F</string>
+				<string>B3A5813C7327FD762583CE5D</string>
+				<string>61DDFEEEAEB35A26867BCE9E</string>
+				<string>6BA183DA8B2C7329127600EB</string>
+				<string>38B812876D71FD7BF0E8CA78</string>
+				<string>65BEDF689EA45FC77DD76E20</string>
+				<string>36065CE5ED41530FA880DCF6</string>
 			</array>
-			<key>defaultConfigurationIsVisible</key>
-			<string>0</string>
-			<key>defaultConfigurationName</key>
-			<string>Release</string>
 			<key>isa</key>
-			<string>XCConfigurationList</string>
+			<string>PBXGroup</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
 		</dict>
-		<key>C17679A1A8872035CAD991C6</key>
+		<key>A8C0BE45733F51DE8DCF1660</key>
 		<dict>
 			<key>fileRef</key>
-			<string>491844E5E6C74BFF939A41CF</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>C4D60AA9C6675F01C5DD67D9</key>
-		<dict>
-			<key>fileRef</key>
-			<string>C0897639CD440172F26B3AD2</string>
+			<string>65AE59DD06FD71C9AD3E9D15</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 			<key>settings</key>
 			<dict>
 				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
 			</dict>
 		</dict>
-		<key>C52204146A38EBC3CC96503F</key>
+		<key>AB6F575C27FD80FF4E19E18C</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -2028,16 +2505,23 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVNextButton.h</string>
+			<string>RSBarcodes.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Views/Modal/RVNextButton.h</string>
+			<string>RSBarcodes/RSBarcodes.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>C8CE953E3B1556B2E06FFE11</key>
+		<key>AD3B580890D2A94DF58B9022</key>
 		<dict>
 			<key>fileRef</key>
-			<string>A3B8C71BF77B3BA2C5BB004F</string>
+			<string>8A52EC1CDA686B126D83D628</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>AF45A6AC0B9A3604485683AC</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F4809A21DA04DF280E462DFE</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 			<key>settings</key>
@@ -2046,10 +2530,105 @@
 				<string>-fobjc-arc</string>
 			</dict>
 		</dict>
-		<key>C8F3979C90E017C618B6AE8B</key>
+		<key>AFA25EF088AF40B54706F082</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSCode128Generator.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCode128Generator.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B0165AE408CB271D24E96B50</key>
 		<dict>
 			<key>fileRef</key>
-			<string>FBAAA187DFF0C205051A5BAC</string>
+			<string>79AA149F6EBD22BE20EED427</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>B126C6AFACFA295D5916A41C</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>AD3B580890D2A94DF58B9022</string>
+				<string>9C7E1FF597BA8A4F8BE391D0</string>
+				<string>CFDA075E4C257F1154EDF183</string>
+				<string>A8682D9DD018A62CD1553DC2</string>
+				<string>93ABB5F8292232A7001A546A</string>
+				<string>01543E946796AC830F2E5CD5</string>
+				<string>E5A5C68F93D4B867F9B0946C</string>
+				<string>D9A62C1B60D776F4F18A5FD1</string>
+				<string>A8C0BE45733F51DE8DCF1660</string>
+				<string>6B432574C1999D9D45A888AA</string>
+				<string>06BDAFD244298346B3BFA6EC</string>
+				<string>C70FC278223558175AE6C97A</string>
+				<string>7FCF72401B7A4B437B72A1F0</string>
+				<string>742DFB3EDC1536A19124BC07</string>
+				<string>CAED1522E2DD0AC740B3276B</string>
+				<string>EE48D735417EAA583D2270CD</string>
+				<string>03F333D682118107F83D0ADF</string>
+				<string>2E5C058D38B3B07FAC64109D</string>
+			</array>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>B13632B203EDCA57E9165468</key>
+		<dict>
+			<key>explicitFileType</key>
+			<string>wrapper.cfbundle</string>
+			<key>includeInIndex</key>
+			<string>0</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>path</key>
+			<string>Rover.bundle</string>
+			<key>sourceTree</key>
+			<string>BUILT_PRODUCTS_DIR</string>
+		</dict>
+		<key>B16210E141B1783C5A9A1EA7</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVColorUtilities.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Utilities/RVColorUtilities.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B17CDFE313E7405D772F0E71</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVCard.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Models/RVCard.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B1AF3465C796ADEA00E4DAAF</key>
+		<dict>
+			<key>fileRef</key>
+			<string>5FAB6072E001D22F5D9346DC</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 			<key>settings</key>
@@ -2058,21 +2637,61 @@
 				<string>-fobjc-arc</string>
 			</dict>
 		</dict>
-		<key>CB5467665DB6F7B6A30CF309</key>
+		<key>B1D3953233AD9BA2838F8CDC</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSEAN8Generator.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSEAN8Generator.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B2340AFBD29BB19AF646C65D</key>
 		<dict>
 			<key>fileRef</key>
-			<string>4EED4D744B06E3D73C007DE5</string>
+			<string>A144379EA86ACB978299B238</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
-		<key>CBA255A41D27F67651A4154B</key>
+		<key>B34343189D11A623B15FE6D1</key>
 		<dict>
-			<key>fileRef</key>
-			<string>B1145E6C7D4DFFE8B796D8DE</string>
+			<key>includeInIndex</key>
+			<string>1</string>
 			<key>isa</key>
-			<string>PBXBuildFile</string>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVCardBaseView.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card/RVCardBaseView.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
 		</dict>
-		<key>CCE38F0C53B7CDDDD3E5DC0A</key>
+		<key>B3A5813C7327FD762583CE5D</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text</string>
+			<key>name</key>
+			<string>Podfile</string>
+			<key>path</key>
+			<string>../Podfile</string>
+			<key>sourceTree</key>
+			<string>SOURCE_ROOT</string>
+			<key>xcLanguageSpecificationIdentifier</key>
+			<string>xcode.lang.ruby</string>
+		</dict>
+		<key>B4543C8B50701FA02D6C08EC</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -2081,24 +2700,388 @@
 			<key>lastKnownFileType</key>
 			<string>text.xcconfig</string>
 			<key>path</key>
-			<string>Pods-Rover.debug.xcconfig</string>
+			<string>Pods-Rover.release.xcconfig</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>CFBC7D7D1EFD6DCA6CAAAE9B</key>
+		<key>B46466373AB2C7D5425B591A</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
 			<key>isa</key>
 			<string>PBXFileReference</string>
 			<key>lastKnownFileType</key>
-			<string>text.script.sh</string>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSISSN13Generator.m</string>
 			<key>path</key>
-			<string>Pods-Rover-resources.sh</string>
+			<string>RSBarcodes/RSISSN13Generator.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>CFE9661FFA395BEE9D650497</key>
+		<key>B79548F2D961B736AAA8FA09</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVMoreButton.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card/RVMoreButton.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B922834274CB54B6CC4A8AA2</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVNotificationCenter.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Notifications/RVNotificationCenter.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>B9DB1203B117354FDA888B6D</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>Foundation.framework</string>
+			<key>path</key>
+			<string>Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/Foundation.framework</string>
+			<key>sourceTree</key>
+			<string>DEVELOPER_DIR</string>
+		</dict>
+		<key>BA3EF66B86B7E39C480CBD09</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSExtendedCode39Generator.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSExtendedCode39Generator.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BB810D41C486F18DF2D52DA5</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSCode39Generator.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCode39Generator.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BBA9BEE49689E9CFDEB18C37</key>
+		<dict>
+			<key>fileRef</key>
+			<string>BA3EF66B86B7E39C480CBD09</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>BC085913CEEA690E93A8F03A</key>
+		<dict>
+			<key>containerPortal</key>
+			<string>D2CF216571C31F411186A8F8</string>
+			<key>isa</key>
+			<string>PBXContainerItemProxy</string>
+			<key>proxyType</key>
+			<string>1</string>
+			<key>remoteGlobalIDString</key>
+			<string>0CA3CAFC32E83FA6DA47D598</string>
+			<key>remoteInfo</key>
+			<string>Pods-Rover-RSBarcodes</string>
+		</dict>
+		<key>BCCE8DA3C909E68B1FE76D8B</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>Pods-Rover-environment.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>BDAB143A526397A0EA180B65</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>4AD06265A7B8CBEC7BCEC8A9</string>
+			</array>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>BDB016F444C5F6C972F1AE8D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>4B3BA77D3CE5744F76DC1102</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>BF8F117350EC4561D811225B</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>path</key>
+			<string>Pods-Rover-RSBarcodes.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>C03FBA56B9C79B1C08DDC598</key>
+		<dict>
+			<key>fileRef</key>
+			<string>E73B197A2045AB938A79809F</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>C32E387C2A6C902EEA86595D</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B9DB1203B117354FDA888B6D</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>C37FC468537D3CE3D5F54E50</key>
+		<dict>
+			<key>fileRef</key>
+			<string>B922834274CB54B6CC4A8AA2</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>C62FD55B6204FEB0CC6818A6</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>path</key>
+			<string>Pods-Rover-Rover.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>C63AF5ECD7C03728D48DBA31</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXTargetDependency</string>
+			<key>target</key>
+			<string>0CA3CAFC32E83FA6DA47D598</string>
+			<key>targetProxy</key>
+			<string>BC085913CEEA690E93A8F03A</string>
+		</dict>
+		<key>C70FC278223558175AE6C97A</key>
+		<dict>
+			<key>fileRef</key>
+			<string>8C58559159ADCA2EE86D6CCE</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
+		</dict>
+		<key>C784D461FEEDF56D17A96635</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXSourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>C791C18F063BE5B5B263C45E</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVCardViewController.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Controllers/RVCardViewController.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>C9507EAFB4EB39B88645BC3B</key>
+		<dict>
+			<key>fileRef</key>
+			<string>396C6E9092D4D0F35A26C29C</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>CAED1522E2DD0AC740B3276B</key>
+		<dict>
+			<key>fileRef</key>
+			<string>0EC3FFE3A0C9D319EB62D5A6</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
+		</dict>
+		<key>CB391BC996B84A775D8F9014</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>C03FBA56B9C79B1C08DDC598</string>
+				<string>FC4633AB2318D78160EAB53E</string>
+				<string>D4943D61BDE152E08D0BE8AC</string>
+				<string>ED50723FE3E263F380EF430C</string>
+				<string>E97F8C8891DB1C3A5DD082D9</string>
+				<string>25D946333CEB4AA5785E9526</string>
+				<string>EC42E7527BF09A9F8C73B239</string>
+				<string>6D01B5BCA7D57440FC2EA64B</string>
+				<string>FEBF51918A8696E8678F922C</string>
+				<string>154D69204693B3914E6FFDCF</string>
+				<string>979A4CA93DFB236D9091A83D</string>
+				<string>EA2B31F4FC086754AA856072</string>
+				<string>36B99C4C6E51973D8E8856AE</string>
+				<string>7CB6918659AF8F73FA060E08</string>
+				<string>F491EE96F96130BCD347A938</string>
+				<string>A428B5954F266BD0D23FB795</string>
+				<string>39596692F17A03E03CACF467</string>
+				<string>9249C8E7140BFF4D98AF5381</string>
+				<string>6F098B3947431B3B51855BEF</string>
+				<string>541E061B19C5B4ECEC04A2D1</string>
+				<string>037611F865B5E2055A91ECE3</string>
+				<string>5751DBB10655EFD4AB49E4CB</string>
+				<string>5D5CC0E85C80DAF5DBF35EA2</string>
+				<string>D3D6E68A58A1426C8424748F</string>
+				<string>917717456F4876384A619149</string>
+				<string>70492027FA88BA1B2C1D954C</string>
+				<string>3403A22B354745AD03CFE0E5</string>
+				<string>BDB016F444C5F6C972F1AE8D</string>
+				<string>05A09ADD97CCABC3BE4C6E94</string>
+				<string>FE29E9BB27B35AC340473021</string>
+			</array>
+			<key>isa</key>
+			<string>PBXHeadersBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>CB4D737B637775225F49DCAD</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSUnifiedCodeGenerator.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSUnifiedCodeGenerator.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>CEE815A5A07D910419910084</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array>
+				<string>1C5D76F250FAABA3EFB290AC</string>
+				<string>3DEB22A7C098F26B9CE2E79F</string>
+				<string>F4A31F75CC13D260BB63B731</string>
+				<string>6994BA0FAF3C8E10B501B043</string>
+				<string>19FC4BCA826D29B176FA4B1F</string>
+				<string>D5C15270AFB6D663A75B399B</string>
+				<string>B2340AFBD29BB19AF646C65D</string>
+				<string>00483FD98133CB7BD877AECF</string>
+				<string>FF35DB1D7939B8D532C013E7</string>
+				<string>4926F9100C7957EFCA8A6B15</string>
+				<string>A2FF4D54E0E2B0132D1B9ACC</string>
+				<string>0BDD3E2F964D0FC5AF7F4562</string>
+				<string>BBA9BEE49689E9CFDEB18C37</string>
+				<string>61B63FDF408A4786595EFBA9</string>
+				<string>464E40FED0026BBFD6D305A0</string>
+				<string>48F9BE14C53909DF38CB821A</string>
+				<string>99E6E6D92CC704ADF8896574</string>
+				<string>0EA74176E3932127F65F19BF</string>
+				<string>77BCE2C0B54734CB32BD808E</string>
+			</array>
+			<key>isa</key>
+			<string>PBXHeadersBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>CFA606DAD60CC49BF59F8354</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>AVFoundation.framework</string>
+			<key>path</key>
+			<string>Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/AVFoundation.framework</string>
+			<key>sourceTree</key>
+			<string>DEVELOPER_DIR</string>
+		</dict>
+		<key>CFDA075E4C257F1154EDF183</key>
+		<dict>
+			<key>fileRef</key>
+			<string>2C75CC49A7585F521669BD42</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
+		</dict>
+		<key>D2CF216571C31F411186A8F8</key>
 		<dict>
 			<key>attributes</key>
 			<dict>
@@ -2106,7 +3089,7 @@
 				<string>0510</string>
 			</dict>
 			<key>buildConfigurationList</key>
-			<string>C0EFDD7ACE7F991841CC9CED</string>
+			<string>65CF2073B6EB87D202697DB0</string>
 			<key>compatibilityVersion</key>
 			<string>Xcode 3.2</string>
 			<key>developmentRegion</key>
@@ -2120,9 +3103,9 @@
 				<string>en</string>
 			</array>
 			<key>mainGroup</key>
-			<string>EBF7CD47273C5E70491A07A4</string>
+			<string>A8AD28996241454405CA1809</string>
 			<key>productRefGroup</key>
-			<string>63D78C991A7E5341496C97D3</string>
+			<string>65BEDF689EA45FC77DD76E20</string>
 			<key>projectDirPath</key>
 			<string></string>
 			<key>projectReferences</key>
@@ -2131,66 +3114,13 @@
 			<string></string>
 			<key>targets</key>
 			<array>
-				<string>4D26D59263E94D79FEDEB37E</string>
-				<string>6466D19AB159603E2B09CCC5</string>
-				<string>5549B807A3F535017E71AA7A</string>
+				<string>E73570299159F5540FDEB01C</string>
+				<string>0CA3CAFC32E83FA6DA47D598</string>
+				<string>E998E7A7F5A6555134651C37</string>
+				<string>3811DC55D6F451A01AC7BAC1</string>
 			</array>
 		</dict>
-		<key>D427EA01A72A65DD3D9E2B03</key>
-		<dict>
-			<key>fileRef</key>
-			<string>B1FEDAC6F612E2ACD50426DB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>D545C4167F69795F21345869</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>49D485BC93D0E448820F80CB</string>
-				<string>60E8086CB0978E7B44B3ACB0</string>
-				<string>A9EC6DD47399A050FF4518EF</string>
-				<string>5BE38B7D0644DCE58F70E5F1</string>
-				<string>CFBC7D7D1EFD6DCA6CAAAE9B</string>
-				<string>CCE38F0C53B7CDDDD3E5DC0A</string>
-				<string>014F60980D75E94291E9884B</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>name</key>
-			<string>Pods-Rover</string>
-			<key>path</key>
-			<string>Target Support Files/Pods-Rover</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>D5CF7639EDF8E07BADB80CDF</key>
-		<dict>
-			<key>fileRef</key>
-			<string>96BA7200CA39CB86A580F59C</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>D81C3FF547AF072201D6FA2A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>FFC72E04FDCCED419A81548F</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>D9C81318B5E3EA70F1B3FC3B</key>
-		<dict>
-			<key>fileRef</key>
-			<string>2BC94F06F399157A9F935D60</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>DAFC5DFEC62FD591AF785BC7</key>
+		<key>D39EE0224EF61E8945C6E2AF</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -2199,13 +3129,27 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.objc</string>
 			<key>name</key>
-			<string>RVCardViewButtonBar.m</string>
+			<string>RSEANGenerator.m</string>
 			<key>path</key>
-			<string>Pod/Classes/Views/Card/RVCardViewButtonBar.m</string>
+			<string>RSBarcodes/RSEANGenerator.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>DF1447FE7DB71D8AFD1AF270</key>
+		<key>D3D6E68A58A1426C8424748F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>93930D03BB74BC3084937E48</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>D4943D61BDE152E08D0BE8AC</key>
+		<dict>
+			<key>fileRef</key>
+			<string>17996B8F99F83C9B57D19D55</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>D4CB2A9EF4442895EA335A5F</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -2214,13 +3158,29 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVCloseButton.h</string>
+			<string>RVModelProject.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Views/Modal/RVCloseButton.h</string>
+			<string>Pod/Classes/Models/RVModelProject.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>DFCDF05A6FF1C90761AD4798</key>
+		<key>D5C15270AFB6D663A75B399B</key>
+		<dict>
+			<key>fileRef</key>
+			<string>DACCBE43ED0822BC6D631E58</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>D6C7F46045F89B71EAF550DD</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXTargetDependency</string>
+			<key>target</key>
+			<string>3811DC55D6F451A01AC7BAC1</string>
+			<key>targetProxy</key>
+			<string>615AB6C412B59351C6432186</string>
+		</dict>
+		<key>D8CF0ED35A12F873E3A6866C</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -2229,142 +3189,64 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.objc</string>
 			<key>name</key>
-			<string>RVImageEffects.m</string>
+			<string>RVMoreButton.m</string>
 			<key>path</key>
-			<string>Pod/Classes/Utilities/RVImageEffects.m</string>
+			<string>Pod/Classes/Views/Card/RVMoreButton.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>E079C989058E0F1851B04BCB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>A9EC6DD47399A050FF4518EF</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>E0BB27F941CC75932F57BEDA</key>
+		<key>D8FC87842B55533D5A50E339</key>
 		<dict>
 			<key>children</key>
 			<array>
-				<string>B205EDAD3CB59E127400DE28</string>
-				<string>3CE871165CF55C74728B1644</string>
-				<string>828C67CE4D1A3A98E5C553F5</string>
+				<string>AB6F575C27FD80FF4E19E18C</string>
+				<string>AFA25EF088AF40B54706F082</string>
+				<string>6BBD602B1D937F90803B1F27</string>
+				<string>BB810D41C486F18DF2D52DA5</string>
+				<string>2C75CC49A7585F521669BD42</string>
+				<string>49EB53C24DB6F479739FA7F4</string>
+				<string>7FBAA6C454BE14F565BBEEE3</string>
+				<string>114847DFC635447209C33F94</string>
+				<string>1EFDDC36E321FC56F7CE0EF6</string>
+				<string>DACCBE43ED0822BC6D631E58</string>
+				<string>A144379EA86ACB978299B238</string>
+				<string>4595376D8DC007D78B6CDEB3</string>
+				<string>406C49A70EE3D80A770F87C4</string>
+				<string>FEB72EEE0C1AB6BBEC770FC5</string>
+				<string>50C9CAF9E03D484BB6C2E573</string>
+				<string>5D0B02846AAE3028477D5A2E</string>
+				<string>0688866D48F2F9BD9038929D</string>
+				<string>65AE59DD06FD71C9AD3E9D15</string>
+				<string>7CE0A3A65806708FF8855DCE</string>
+				<string>B1D3953233AD9BA2838F8CDC</string>
+				<string>131938F6E15E972568EB7289</string>
+				<string>D39EE0224EF61E8945C6E2AF</string>
+				<string>BA3EF66B86B7E39C480CBD09</string>
+				<string>8C58559159ADCA2EE86D6CCE</string>
+				<string>47B71B8A387DFCAE91828C25</string>
+				<string>130DF2F4B486C79AD59E6E97</string>
+				<string>01BB90B5764B7D251607A4D6</string>
+				<string>B46466373AB2C7D5425B591A</string>
+				<string>4116D546541D38EF48E41A60</string>
+				<string>0EC3FFE3A0C9D319EB62D5A6</string>
+				<string>FDCD94FE60273D8A3F4D781E</string>
+				<string>23BC8D12854BD0BECFFBDCFE</string>
+				<string>01585C4E0C6E9D6FA5987890</string>
+				<string>02CE15BC56FA712A67DB3707</string>
+				<string>CB4D737B637775225F49DCAD</string>
+				<string>6BFED4F7F1B8AFF21B76B128</string>
+				<string>F538A25B1ECCC89328961CDA</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
 			<key>name</key>
-			<string>iOS</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>E10636E1AF6677AEF0DB1DC8</key>
-		<dict>
-			<key>fileRef</key>
-			<string>06691F690DFE8703005865EB</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>E1B72FF792728CF7E5C96F87</key>
-		<dict>
-			<key>fileRef</key>
-			<string>BD365A51ADF9522CC8633DF7</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>E1F3E2C6628E39A949706D37</key>
-		<dict>
-			<key>fileRef</key>
-			<string>B746CB487D93189EE6BFDF07</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>E377A65E01E00749BE034336</key>
-		<dict>
-			<key>includeInIndex</key>
-			<string>1</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>lastKnownFileType</key>
-			<string>sourcecode.c.objc</string>
-			<key>name</key>
-			<string>RVModalViewController.m</string>
+			<string>RSBarcodes</string>
 			<key>path</key>
-			<string>Pod/Classes/Controllers/RVModalViewController.m</string>
+			<string>RSBarcodes</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>E46A91573711EC04C6E8564A</key>
-		<dict>
-			<key>fileRef</key>
-			<string>96B7E5089406F5EB761F7702</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>E57886A91EFD76E3298DC055</key>
-		<dict>
-			<key>explicitFileType</key>
-			<string>archive.ar</string>
-			<key>includeInIndex</key>
-			<string>0</string>
-			<key>isa</key>
-			<string>PBXFileReference</string>
-			<key>path</key>
-			<string>libPods-Rover.a</string>
-			<key>sourceTree</key>
-			<string>BUILT_PRODUCTS_DIR</string>
-		</dict>
-		<key>EBF7CD47273C5E70491A07A4</key>
-		<dict>
-			<key>children</key>
-			<array>
-				<string>3E0225A64BC9CBFB5DE8711D</string>
-				<string>AB6E9F9832EC9E28D8A9DB4A</string>
-				<string>F80825D3260DEA21321FACCA</string>
-				<string>63D78C991A7E5341496C97D3</string>
-				<string>0431FEA40142A12BD7E762F0</string>
-			</array>
-			<key>isa</key>
-			<string>PBXGroup</string>
-			<key>sourceTree</key>
-			<string>&lt;group&gt;</string>
-		</dict>
-		<key>EC053AB2B993AAF0BEAA9E75</key>
-		<dict>
-			<key>fileRef</key>
-			<string>B86D006185BF3E3D9F62B19C</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>EE5A37AF7F014D8B378777DB</key>
-		<dict>
-			<key>fileRef</key>
-			<string>23A57FCCCB58C70058AABB53</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-		</dict>
-		<key>EFE977201932680F6DAE2CD1</key>
-		<dict>
-			<key>fileRef</key>
-			<string>DFCDF05A6FF1C90761AD4798</string>
-			<key>isa</key>
-			<string>PBXBuildFile</string>
-			<key>settings</key>
-			<dict>
-				<key>COMPILER_FLAGS</key>
-				<string>-fobjc-arc</string>
-			</dict>
-		</dict>
-		<key>F005FA59E514DCD05AB7696C</key>
+		<key>D94357111E2534033B9ADE95</key>
 		<dict>
 			<key>buildSettings</key>
 			<dict>
@@ -2380,16 +3262,278 @@
 			<key>isa</key>
 			<string>XCBuildConfiguration</string>
 			<key>name</key>
-			<string>Debug</string>
+			<string>Release</string>
 		</dict>
-		<key>F748AC0AA42F4B182489C5FF</key>
+		<key>D9A62C1B60D776F4F18A5FD1</key>
 		<dict>
 			<key>fileRef</key>
-			<string>0098569DB0CC1906E704E276</string>
+			<string>5D0B02846AAE3028477D5A2E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
+		</dict>
+		<key>DA7A1EDFF6E5429191C3546A</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.script.sh</string>
+			<key>path</key>
+			<string>Pods-Rover-resources.sh</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DAAE66AC2CDBB0AE47570B2F</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>path</key>
+			<string>Pods-Rover-Rover-prefix.pch</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DACCBE43ED0822BC6D631E58</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RSCodeGen.h</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCodeGen.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DADCAD7AC659F414A4285374</key>
+		<dict>
+			<key>fileRef</key>
+			<string>1503BD2114AD6EB22BA5945A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>DB7F096F0389745A5BD1EED7</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>path</key>
+			<string>Pods-Rover-Rover-Private.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>DC97F6DCAA3EEFE684492DB7</key>
+		<dict>
+			<key>fileRef</key>
+			<string>C791C18F063BE5B5B263C45E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>DDF6BEC9DB532B14DBB7AF00</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A1558C52BDE346B525E31D5B</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>DE7CD91C38E25D0CADEE389F</key>
+		<dict>
+			<key>fileRef</key>
+			<string>967C67C86A04718EC45563C0</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>DFB25CACC514E6E18B08AF1B</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXTargetDependency</string>
+			<key>target</key>
+			<string>0CA3CAFC32E83FA6DA47D598</string>
+			<key>targetProxy</key>
+			<string>1F71E17DC7902FECDB6323F7</string>
+		</dict>
+		<key>E0E3438C7BC5FD17EF75934C</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXFrameworksBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>E5A5C68F93D4B867F9B0946C</key>
+		<dict>
+			<key>fileRef</key>
+			<string>FEB72EEE0C1AB6BBEC770FC5</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
+		</dict>
+		<key>E711254E84666F32D16F0EB5</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVCardViewCorner.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card/RVCardViewCorner.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>E73570299159F5540FDEB01C</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>1AB2E74F2C2271CD074C3B1D</string>
+			<key>buildPhases</key>
+			<array>
+				<string>61F77CBBE80B91BE618F8819</string>
+				<string>BDAB143A526397A0EA180B65</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array>
+				<string>C63AF5ECD7C03728D48DBA31</string>
+				<string>938D1D68CDF4CD48FA996438</string>
+			</array>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>Pods-Rover</string>
+			<key>productName</key>
+			<string>Pods-Rover</string>
+			<key>productReference</key>
+			<string>089DCB2CB56B37595639DB14</string>
+			<key>productType</key>
+			<string>com.apple.product-type.library.static</string>
+		</dict>
+		<key>E73B197A2045AB938A79809F</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVCard.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Models/RVCard.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>E8249BA2AB5F79EF2CBEB6BC</key>
+		<dict>
+			<key>fileRef</key>
+			<string>84DC6F5BFF062836336E8E9C</string>
 			<key>isa</key>
 			<string>PBXBuildFile</string>
 		</dict>
-		<key>F75A5EABAFBE9CA972C32DF9</key>
+		<key>E8781247335686697B7D2881</key>
+		<dict>
+			<key>fileRef</key>
+			<string>EA23383E40C65567523EBCDF</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>E94D978485F27D96BC361AF3</key>
+		<dict>
+			<key>fileRef</key>
+			<string>4D1A74FA9A0B0AFA94362A15</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc</string>
+			</dict>
+		</dict>
+		<key>E97F8C8891DB1C3A5DD082D9</key>
+		<dict>
+			<key>fileRef</key>
+			<string>F26256416AA7525A51853E14</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>E998E7A7F5A6555134651C37</key>
+		<dict>
+			<key>buildConfigurationList</key>
+			<string>1AE7ED501E7E640991E53CCD</string>
+			<key>buildPhases</key>
+			<array>
+				<string>4185AEE3C1519083C52D26AA</string>
+				<string>261E630673BCE62B1F7F912A</string>
+				<string>CB391BC996B84A775D8F9014</string>
+			</array>
+			<key>buildRules</key>
+			<array/>
+			<key>dependencies</key>
+			<array>
+				<string>DFB25CACC514E6E18B08AF1B</string>
+				<string>D6C7F46045F89B71EAF550DD</string>
+			</array>
+			<key>isa</key>
+			<string>PBXNativeTarget</string>
+			<key>name</key>
+			<string>Pods-Rover-Rover</string>
+			<key>productName</key>
+			<string>Pods-Rover-Rover</string>
+			<key>productReference</key>
+			<string>6814029731CFD4D648D4C3CE</string>
+			<key>productType</key>
+			<string>com.apple.product-type.library.static</string>
+		</dict>
+		<key>EA23383E40C65567523EBCDF</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -2398,26 +3542,269 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.objc</string>
 			<key>name</key>
-			<string>RVCard.m</string>
+			<string>RVNextButton.m</string>
 			<key>path</key>
-			<string>Pod/Classes/Models/RVCard.m</string>
+			<string>Pod/Classes/Views/Modal/RVNextButton.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>F80825D3260DEA21321FACCA</key>
+		<key>EA2B31F4FC086754AA856072</key>
+		<dict>
+			<key>fileRef</key>
+			<string>5E3B54ECA1AE29ECF00AFFCE</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>EC42E7527BF09A9F8C73B239</key>
+		<dict>
+			<key>fileRef</key>
+			<string>5D29E6872260F456592830CB</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>EC6F7F6B76E4C87B83EB182D</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVCardViewButtonBar.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card/RVCardViewButtonBar.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>ECC48134C5976956EEDD97F4</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVModel.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Models/RVModel.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>ED50723FE3E263F380EF430C</key>
+		<dict>
+			<key>fileRef</key>
+			<string>1F2EBA83F099C2D94668374A</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>ED55FD8B28B429CB07FEFDB9</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVCardView.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card/RVCardView.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>EE48D735417EAA583D2270CD</key>
+		<dict>
+			<key>fileRef</key>
+			<string>23BC8D12854BD0BECFFBDCFE</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+			<key>settings</key>
+			<dict>
+				<key>COMPILER_FLAGS</key>
+				<string>-fobjc-arc -DOS_OBJECT_USE_OBJC=0</string>
+			</dict>
+		</dict>
+		<key>F009EB5245E73A9D6061DE5E</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text</string>
+			<key>path</key>
+			<string>Pods-Rover-acknowledgements.markdown</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F1F014233D15758A2A547A30</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVCardViewController.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Controllers/RVCardViewController.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F26256416AA7525A51853E14</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.h</string>
+			<key>name</key>
+			<string>RVCardProject.h</string>
+			<key>path</key>
+			<string>Pod/Classes/Models/RVCardProject.h</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F348782DEF97BB1AF0C924B2</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVCardViewButtonBar.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Views/Card/RVCardViewButtonBar.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F37254615C28B76EC2629250</key>
+		<dict>
+			<key>baseConfigurationReference</key>
+			<string>7C10EF323FFE073A4A8F77A5</string>
+			<key>buildSettings</key>
+			<dict>
+				<key>ALWAYS_SEARCH_USER_PATHS</key>
+				<string>NO</string>
+				<key>COPY_PHASE_STRIP</key>
+				<string>NO</string>
+				<key>DSTROOT</key>
+				<string>/tmp/xcodeproj.dst</string>
+				<key>GCC_DYNAMIC_NO_PIC</key>
+				<string>NO</string>
+				<key>GCC_OPTIMIZATION_LEVEL</key>
+				<string>0</string>
+				<key>GCC_PRECOMPILE_PREFIX_HEADER</key>
+				<string>YES</string>
+				<key>GCC_PREFIX_HEADER</key>
+				<string>Target Support Files/Pods-Rover-RSBarcodes/Pods-Rover-RSBarcodes-prefix.pch</string>
+				<key>GCC_PREPROCESSOR_DEFINITIONS</key>
+				<array>
+					<string>DEBUG=1</string>
+					<string>$(inherited)</string>
+				</array>
+				<key>GCC_SYMBOLS_PRIVATE_EXTERN</key>
+				<string>NO</string>
+				<key>INSTALL_PATH</key>
+				<string>$(BUILT_PRODUCTS_DIR)</string>
+				<key>IPHONEOS_DEPLOYMENT_TARGET</key>
+				<string>8.0</string>
+				<key>OTHER_LDFLAGS</key>
+				<string></string>
+				<key>OTHER_LIBTOOLFLAGS</key>
+				<string></string>
+				<key>PRODUCT_NAME</key>
+				<string>$(TARGET_NAME)</string>
+				<key>PUBLIC_HEADERS_FOLDER_PATH</key>
+				<string>$(TARGET_NAME)</string>
+				<key>SDKROOT</key>
+				<string>iphoneos</string>
+				<key>SKIP_INSTALL</key>
+				<string>YES</string>
+			</dict>
+			<key>isa</key>
+			<string>XCBuildConfiguration</string>
+			<key>name</key>
+			<string>Debug</string>
+		</dict>
+		<key>F4809A21DA04DF280E462DFE</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RVLog.m</string>
+			<key>path</key>
+			<string>Pod/Classes/Utilities/RVLog.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>F491EE96F96130BCD347A938</key>
+		<dict>
+			<key>fileRef</key>
+			<string>58E843BB54D5AA2FF834AAF0</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F4A1EA681F19881F25AB2BAE</key>
+		<dict>
+			<key>buildActionMask</key>
+			<string>2147483647</string>
+			<key>files</key>
+			<array/>
+			<key>isa</key>
+			<string>PBXResourcesBuildPhase</string>
+			<key>runOnlyForDeploymentPostprocessing</key>
+			<string>0</string>
+		</dict>
+		<key>F4A31F75CC13D260BB63B731</key>
+		<dict>
+			<key>fileRef</key>
+			<string>BB810D41C486F18DF2D52DA5</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>F538A25B1ECCC89328961CDA</key>
 		<dict>
 			<key>children</key>
 			<array>
-				<string>E0BB27F941CC75932F57BEDA</string>
+				<string>BF8F117350EC4561D811225B</string>
+				<string>7C10EF323FFE073A4A8F77A5</string>
+				<string>8A52EC1CDA686B126D83D628</string>
+				<string>4892F94372ADDAB307606C7A</string>
 			</array>
 			<key>isa</key>
 			<string>PBXGroup</string>
 			<key>name</key>
-			<string>Frameworks</string>
+			<string>Support Files</string>
+			<key>path</key>
+			<string>../Target Support Files/Pods-Rover-RSBarcodes</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>FBAAA187DFF0C205051A5BAC</key>
+		<key>F9B0D9AE1014409C935BD864</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>text.xcconfig</string>
+			<key>path</key>
+			<string>Pods-Rover.debug.xcconfig</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>FB9A070318A297708684C78E</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -2426,13 +3813,34 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.objc</string>
 			<key>name</key>
-			<string>RVCustomer.m</string>
+			<string>RVNetworkingManager.m</string>
 			<key>path</key>
-			<string>Pod/Classes/Models/RVCustomer.m</string>
+			<string>Pod/Classes/Networking/RVNetworkingManager.m</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>FE8287D72DDDE6997587C768</key>
+		<key>FC4633AB2318D78160EAB53E</key>
+		<dict>
+			<key>fileRef</key>
+			<string>A42BF6AB5ED1D81EEA0116BE</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>FC715E8855706AFE6866B200</key>
+		<dict>
+			<key>buildConfigurations</key>
+			<array>
+				<string>F37254615C28B76EC2629250</string>
+				<string>36F4E4306C815C4936CB6957</string>
+			</array>
+			<key>defaultConfigurationIsVisible</key>
+			<string>0</string>
+			<key>defaultConfigurationName</key>
+			<string>Release</string>
+			<key>isa</key>
+			<string>XCConfigurationList</string>
+		</dict>
+		<key>FDCD94FE60273D8A3F4D781E</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -2441,13 +3849,20 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVColorUtilities.h</string>
+			<string>RSScannerViewController.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Utilities/RVColorUtilities.h</string>
+			<string>RSBarcodes/RSScannerViewController.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
 		</dict>
-		<key>FFC72E04FDCCED419A81548F</key>
+		<key>FE29E9BB27B35AC340473021</key>
+		<dict>
+			<key>fileRef</key>
+			<string>3665A2C6EF9C228E57069103</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>FE547F52FEC01062192C0EAC</key>
 		<dict>
 			<key>includeInIndex</key>
 			<string>1</string>
@@ -2456,14 +3871,56 @@
 			<key>lastKnownFileType</key>
 			<string>sourcecode.c.h</string>
 			<key>name</key>
-			<string>RVCardDeckView.h</string>
+			<string>RVModalViewController.h</string>
 			<key>path</key>
-			<string>Pod/Classes/Views/Card Deck/RVCardDeckView.h</string>
+			<string>Pod/Classes/Controllers/RVModalViewController.h</string>
 			<key>sourceTree</key>
 			<string>&lt;group&gt;</string>
+		</dict>
+		<key>FEB72EEE0C1AB6BBEC770FC5</key>
+		<dict>
+			<key>includeInIndex</key>
+			<string>1</string>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>sourcecode.c.objc</string>
+			<key>name</key>
+			<string>RSCodeView.m</string>
+			<key>path</key>
+			<string>RSBarcodes/RSCodeView.m</string>
+			<key>sourceTree</key>
+			<string>&lt;group&gt;</string>
+		</dict>
+		<key>FEBF51918A8696E8678F922C</key>
+		<dict>
+			<key>fileRef</key>
+			<string>92A19AF339C48F000C31347E</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
+		</dict>
+		<key>FF2B184B09158455AAA0B5B1</key>
+		<dict>
+			<key>isa</key>
+			<string>PBXFileReference</string>
+			<key>lastKnownFileType</key>
+			<string>wrapper.framework</string>
+			<key>name</key>
+			<string>CoreImage.framework</string>
+			<key>path</key>
+			<string>Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/System/Library/Frameworks/CoreImage.framework</string>
+			<key>sourceTree</key>
+			<string>DEVELOPER_DIR</string>
+		</dict>
+		<key>FF35DB1D7939B8D532C013E7</key>
+		<dict>
+			<key>fileRef</key>
+			<string>50C9CAF9E03D484BB6C2E573</string>
+			<key>isa</key>
+			<string>PBXBuildFile</string>
 		</dict>
 	</dict>
 	<key>rootObject</key>
-	<string>CFE9661FFA395BEE9D650497</string>
+	<string>D2CF216571C31F411186A8F8</string>
 </dict>
 </plist>

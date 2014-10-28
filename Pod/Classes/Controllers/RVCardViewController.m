@@ -47,7 +47,7 @@
     self.view.useCloseButton = YES;
     self.view.delegate = self;
     [self configureView];
-    [self.view expandToFrame:self.view.frame];
+    [self.view expandToFrame:self.view.frame animated:YES];
 }
 
 - (void)configureView {
@@ -69,6 +69,10 @@
     self.view.secondaryFontColor = self.card.secondaryFontColor;
     self.view.liked = self.card.likedAt != nil;
     self.view.discarded = self.card.discardedAt != nil;
+    
+    //if (self.card.barcode) {
+        //self.view.barcode = @"12345678"; //self.card.barcode;
+    //}
 }
 
 #pragma mark - RVCardViewDelegate

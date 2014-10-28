@@ -179,16 +179,8 @@
 - (RVCardView *)cardDeck:(RVCardDeckView *)cardDeck cardViewForItemAtIndex:(NSUInteger)index {
     RVCard *card = [self.cards objectAtIndex:index];
     RVCardView  *cardView = [cardDeck createCard];
-    cardView.title = card.title;
-    cardView.shortDescription = card.shortDescription;
-    cardView.longDescription = card.longDescription;
-    cardView.imageURL = card.imageURL;
-    cardView.backgroundColor = card.primaryBackgroundColor;
-    cardView.fontColor = card.primaryFontColor;
-    cardView.secondaryBackgroundColor = card.secondaryBackgroundColor;
-    cardView.secondaryFontColor = card.secondaryFontColor;
-    cardView.liked = card.likedAt != nil;
-    cardView.discarded = card.discardedAt != nil;
+    [cardView setCard:card];
+    
     return cardView;
 }
 
