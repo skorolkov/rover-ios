@@ -28,13 +28,18 @@ typedef enum {
     
     /** Used to indicate the view controller should display only cards do not containt specific tags, supplied by the options argument.
      */
-    ModalViewCardSetTagsExclude
+    ModalViewCardSetTagsExclude,
+    
+    /** User to indicate the view controller should display cards using a filter predicate, supplied by the options argument.
+     */
+    ModalViewCardSetCustom
 } ModalViewCardSet;
 
 
 /* Predefined keys for options. If the key is not in the dictionary, then use the default values as described below.
  */
 NSString *const RVModalViewOptionsTag;
+NSString *const RVModalViewOptionsPredicate;
 
 @protocol RVModalViewControllerDelegate;
 
