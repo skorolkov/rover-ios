@@ -89,6 +89,10 @@
  */
 @property (strong, nonatomic) NSString *offerDetails;
 
+/** The caption for unlike
+ */
+@property (strong, nonatomic) NSString *unlikeCaption;
+
 /** The tags
  */
 @property (strong, nonatomic) NSArray *tags;

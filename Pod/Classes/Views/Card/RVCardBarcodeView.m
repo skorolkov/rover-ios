@@ -87,6 +87,13 @@
     [self setImage:newImage];
 }
 
+- (void)cardTapped
+{
+    if (!self.isExpanded) {
+        [self flipToCardView];
+    }
+}
+
 #pragma mark - RVCardViewBarButtonDelegate
 
 - (void)buttonBarLeftButtonPressed:(RVCardViewButtonBar *)buttonBar {

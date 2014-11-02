@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class RVCardViewButton;
+@class RVCardViewButton;
 @protocol RVCardViewButtonBarDelegate;
 
 @interface RVCardViewButtonBar : UIView
@@ -17,11 +18,12 @@
 
 @property (strong, nonatomic) UIColor *fontColor;
 //@property (strong, nonatomic) UIColor *activeColor;
-@property (strong, nonatomic) UIButton *leftButton;
-@property (strong, nonatomic) UIButton *rightButton;
+@property (strong, nonatomic) RVCardViewButton *leftButton;
+@property (strong, nonatomic) RVCardViewButton *rightButton;
 
 - (void)setLeftButtonTitle:(NSString *)leftButtonTitle andRightButtonTitle:(NSString *)rightButtonTitle;
-
+- (void)setPressedCaption:(NSString *)pressedCaption forButton:(RVCardViewButton *)button;
+- (void)setPressed:(BOOL)pressed forButton:(RVCardViewButton *)button;
 @end
 
 @protocol RVCardViewButtonBarDelegate

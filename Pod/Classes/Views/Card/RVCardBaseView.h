@@ -43,6 +43,8 @@
 - (BOOL)isExpanded;
 - (void)expandAnimations;
 - (void)contractAnimations;
+- (void)expandCompletion;
+- (void)contractCompletion;
 
 @end
 

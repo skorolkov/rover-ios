@@ -10,4 +10,6 @@
 
 @interface RVCloseButton : UIButton
 
+@property (nonatomic, strong) UIColor *color;
+
 @end

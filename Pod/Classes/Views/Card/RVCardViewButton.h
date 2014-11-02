@@ -14,7 +14,6 @@
 
 @property (nonatomic) BOOL active;
 
-@property (strong, nonatomic) RVCardViewButtonIcon *icon;
 @property (strong, nonatomic) UILabel *label;
 
 @property (strong, nonatomic) UIColor *color;

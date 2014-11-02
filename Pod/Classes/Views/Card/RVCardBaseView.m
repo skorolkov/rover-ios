@@ -219,12 +219,6 @@ const CGFloat kRVCardViewImageRatio = .625;
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cardTapped)];
     [self.containerView addGestureRecognizer:tapGestureRecognizer];
     
-    /*
-    self.closeButton = [[RVCloseButton alloc] initWithFrame:CGRectMake(272.0, 24.0, 44.0, 44.0)];
-    self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.closeButton addTarget:self action:@selector(closeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:self.closeButton];
-     */
 }
 
 - (void)configureContainerLayout
@@ -253,9 +247,7 @@ const CGFloat kRVCardViewImageRatio = .625;
                              @"titleLineRight": self.titleLineRight,
                              @"shortDescriptionTextView": self.shortDescriptionTextView,
                              @"imageView": self.imageView,
-                             @"buttonBar": self.buttonBar,
-                             //@"corner": self.corner,
-                             //@"closeButton": self.closeButton
+                             @"buttonBar": self.buttonBar
                              };
     
     //----------------------------------------
@@ -369,15 +361,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     // Set the height of the button bar
     self.buttonBarHeightConstraint = [NSLayoutConstraint constraintWithItem:self.buttonBar attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:48];
     [self.containerView addConstraint:self.buttonBarHeightConstraint];
-    
-    //----------------------------------------
-    //  closeButton
-    //----------------------------------------
-    /*
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[closeButton(44)]" options:0 metrics:nil views:views]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.closeButton attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:142.0]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-15-[closeButton(44)]" options:0 metrics:nil views:views]];
-    */
+
 }
 
 #pragma mark - Expand/Contract
@@ -415,10 +399,6 @@ const CGFloat kRVCardViewImageRatio = .625;
         self.frame = frame;
         self.layer.cornerRadius = 0.0;
         
-        //        if (_liked) {
-        //            self.corner.alpha = 0.0;
-        //        }
-        
         [self expandAnimations];
         [self layoutIfNeeded];
     };
@@ -426,6 +406,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     void (^completion)(BOOL finished) = ^(BOOL finished){
         self.expanded = YES;
         _expandedFrame = frame;
+        [self expandCompletion];
         
         if ([self.delegate respondsToSelector:@selector(cardViewDidExpand:)]) {
             [self.delegate cardViewDidExpand:self];
@@ -468,15 +449,13 @@ const CGFloat kRVCardViewImageRatio = .625;
         self.center = center;
         self.layer.cornerRadius = 3.0;
         
-        //        if (_liked) {
-        //            self.corner.alpha = 1.0;
-        //        }
         [self contractAnimations];
         [self layoutIfNeeded];
     };
     
     void (^completion)(BOOL finished) = ^(BOOL finished){
         self.expanded = NO;
+        [self contractCompletion];
         if (self.delegate) {
             [self.delegate cardViewDidContract:self];
         }
@@ -500,6 +479,16 @@ const CGFloat kRVCardViewImageRatio = .625;
     // Implement in subclass
 }
 
+- (void)expandCompletion
+{
+    // Implement in subclass
+}
+
+- (void)contractCompletion
+{
+    // Implement in subclass
+}
+
 #pragma mark - Actions
 
 - (void)cardTapped
@@ -508,14 +497,6 @@ const CGFloat kRVCardViewImageRatio = .625;
         [self.delegate cardViewMoreButtonPressed:self];
     }
 }
-
-/*
-- (void)closeButtonPressed {
-    if ([self.delegate respondsToSelector:@selector(cardViewCloseButtonPressed:)]) {
-        [self.delegate cardViewCloseButtonPressed:self];
-    }
-}
- */
 
 #pragma mark - RVCardViewBarButtonDelegate
 

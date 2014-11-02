@@ -203,6 +203,22 @@ static Rover *sharedInstance = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidPresentModalNotification object:self];
 }
 
+- (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillPresentModalNotification object:self];
+    
+    RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
+    modalViewController.delegate = self;
+    modalViewController.cardSet = cardSet;
+    modalViewController.options = options;
+    
+    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
+    [currentViewController presentViewController:modalViewController animated:YES completion:nil];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidPresentModalNotification object:self];
+}
+
 #pragma mark - Utility 
 
 - (void)updateVisitOpenTime {
