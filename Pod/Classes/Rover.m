@@ -203,8 +203,7 @@ static Rover *sharedInstance = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidPresentModalNotification object:self];
 }
 
-- (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options
-{
+- (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options {
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillPresentModalNotification object:self];
     
     RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
