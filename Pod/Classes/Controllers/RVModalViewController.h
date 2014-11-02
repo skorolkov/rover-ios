@@ -20,8 +20,21 @@ typedef enum {
     
     /** Used to indicate the view controller should display only cards that the customer has not yet viewed.
      */
-    ModalViewCardSetUnread
+    ModalViewCardSetUnread,
+    
+    /** User to indicate the view controller should display only cards that contain specific tags, supplied by the options argument.
+     */
+    ModalViewCardSetTagsInclude,
+    
+    /** Used to indicate the view controller should display only cards do not containt specific tags, supplied by the options argument.
+     */
+    ModalViewCardSetTagsExclude
 } ModalViewCardSet;
+
+
+/* Predefined keys for options. If the key is not in the dictionary, then use the default values as described below.
+ */
+NSString *const RVModalViewOptionsTag;
 
 @protocol RVModalViewControllerDelegate;
 
@@ -37,10 +50,15 @@ typedef enum {
  */
 @property (weak, nonatomic) id <RVModalViewControllerDelegate> delegate;
 
-/** The cardSet property determines which cards the RVModalViewController will display. The options are all cards, saved cards or unread cards. 
+/** The cardSet property determines which cards the RVModalViewController will display. The options are all cards, saved cards, unread cards, cards including tags or excluding tags.
  @see ModalViewCardSet
  */
 @property (nonatomic) ModalViewCardSet cardSet;
+
+/** The options property determines the following modal view options:
+        RVModalViewOptionsTag: tags to include/exclude
+ */
+@property (nonatomic, strong) NSDictionary *options;
 
 @end
 

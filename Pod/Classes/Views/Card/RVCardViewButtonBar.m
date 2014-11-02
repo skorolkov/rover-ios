@@ -7,6 +7,7 @@
 //
 
 #import "RVCardViewButtonBar.h"
+#import "RVCardViewButton.h"
 
 @interface RVCardViewButtonBar()
 
@@ -17,6 +18,13 @@
 @end
 
 @implementation RVCardViewButtonBar
+
++ (UIColor*)inverseOfColor:(UIColor *)color
+{
+    CGFloat r,g,b,a;
+    [color getRed:&r green:&g blue:&b alpha:&a];
+    return [UIColor colorWithRed:1.-r green:1.-g blue:1.-b alpha:a];
+}
 
 #pragma mark - Properties
 
@@ -30,20 +38,22 @@
 - (void)setLeftButtonTitle:(NSString *)leftButtonTitle andRightButtonTitle:(NSString *)rightButtonTitle
 {
     if (leftButtonTitle) {
-        self.leftButton = [UIButton new];
+        self.leftButton = [RVCardViewButton new];
         self.leftButton.translatesAutoresizingMaskIntoConstraints = NO;
         [self.leftButton setTitle:leftButtonTitle forState:UIControlStateNormal];
         [self.leftButton addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        [self.leftButton setColor:self.fontColor];
         [self addSubview:self.leftButton];
     } else {
         self.leftButton = nil;
     }
     
     if (rightButtonTitle) {
-        self.rightButton = [UIButton new];
+        self.rightButton = [RVCardViewButton new];
         self.rightButton.translatesAutoresizingMaskIntoConstraints = NO;
         [self.rightButton setTitle:rightButtonTitle forState:UIControlStateNormal];
         [self.rightButton addTarget:self action:@selector(rightButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        [self.rightButton setColor:self.fontColor];
         [self addSubview:self.rightButton];
         
         self.buttonDivider = [UIView new];
@@ -145,6 +155,16 @@
 - (void)setRightButtonTitle:(NSString *)rightButtonTitle
 {
     [self.rightButton setTitle:rightButtonTitle forState:UIControlStateNormal];
+}
+
+- (void)setPressedCaption:(NSString *)pressedCaption forButton:(UIButton *)button
+{
+    [button setTitle:pressedCaption forState:UIControlStateSelected];
+}
+
+- (void)setPressed:(BOOL)pressed forButton:(UIButton *)button
+{
+    [button setSelected:pressed];
 }
 
 @end

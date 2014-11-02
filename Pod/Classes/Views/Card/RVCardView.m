@@ -26,7 +26,6 @@ typedef enum : NSUInteger {
 
 @property (strong, nonatomic) UIView *shadowView;
 @property (strong, nonatomic) RVMoreButton *moreButton;
-@property (strong, nonatomic) RVCardViewCorner *corner;
 @property (strong, nonatomic) UITextView *longDescriptionTextView;
 
 // Close button
@@ -83,42 +82,14 @@ typedef enum : NSUInteger {
     _longDescription = longDescription;
 }
 
-- (void)setSecondaryBackgroundColor:(UIColor *)secondaryBackgroundColor {
-    self.corner.backgroundColor = secondaryBackgroundColor;
-    //self.buttonBar.activeColor = secondaryBackgroundColor;
-    _secondaryBackgroundColor = secondaryBackgroundColor;
-}
-
-- (void)setSecondaryFontColor:(UIColor *)secondaryFontColor {
-    self.corner.iconColor = secondaryFontColor;
-    _secondaryFontColor = secondaryFontColor;
-}
-
 - (void)setLiked:(BOOL)liked {
     if (liked) {
         self.discarded = NO;
     }
     
-    //if (!self.isExpanded) {
-        if (liked) {
-            self.cornerTopConstraint.constant = 0.0;
-            self.cornerRightConstraint.constant = 0.0;
-            [UIView animateWithDuration:0.2 animations:^{
-                self.corner.alpha = 1.0;
-                [self layoutIfNeeded];
-            }];
-        } else {
-            self.cornerTopConstraint.constant = -30.0;
-            self.cornerRightConstraint.constant = 30.0;
-            [UIView animateWithDuration:0.2 animations:^{
-                self.corner.alpha = 0.0;
-                [self layoutIfNeeded];
-            }];
-        }
-    //}
+    [self.buttonBar setPressed:liked forButton:self.buttonBar.leftButton];
     
     _liked = liked;
-    liked = liked; // Why?
 }
 
 - (void)setDiscarded:(BOOL)discarded {
@@ -146,9 +117,9 @@ typedef enum : NSUInteger {
     self.imageURL = card.imageURL;
     self.backgroundColor = card.primaryBackgroundColor;
     self.fontColor = card.primaryFontColor;
+    self.closeButton.color = card.primaryFontColor;
     self.secondaryBackgroundColor = card.secondaryBackgroundColor;
     self.secondaryFontColor = card.secondaryFontColor;
-    self.liked = card.likedAt != nil;
     self.discarded = card.discardedAt != nil;
     
     if (card.barcode) {
@@ -163,6 +134,10 @@ typedef enum : NSUInteger {
     
     [self.buttonBar setLeftButtonTitle:card.leftButtonCaption andRightButtonTitle:card.rightButtonCaption];
     [self.buttonBar setFontColor:card.primaryFontColor];
+    
+    [self.buttonBar setPressedCaption:card.unlikeCaption forButton:self.buttonBar.leftButton];
+    
+    self.liked = card.likedAt != nil;
     
     _card = card;
 }
@@ -184,12 +159,6 @@ typedef enum : NSUInteger {
     self.shadowView.userInteractionEnabled = NO;
     [self addSubview:self.shadowView];
     
-    self.corner = [RVCardViewCorner new];
-    self.corner.translatesAutoresizingMaskIntoConstraints = NO;
-    self.corner.alpha = 0.0;
-    self.corner.icon.iconType = RVCardViewButtonIconTypeHeart;
-    [self.containerView addSubview:self.corner];
-    
     self.moreButton = [RVMoreButton new];
     self.moreButton.translatesAutoresizingMaskIntoConstraints = NO;
     self.moreButton.alpha = 0.0;
@@ -205,6 +174,12 @@ typedef enum : NSUInteger {
     self.longDescriptionTextView.alpha = 0.0;
     self.longDescriptionTextView.textContainerInset = UIEdgeInsetsMake(20.0, 20.0, 0.0, 20.0);
     [self.contentView addSubview:self.longDescriptionTextView];
+    
+    self.closeButton = [[RVCloseButton alloc] initWithFrame:CGRectMake(272.0, 24.0, 44.0, 44.0)];
+    self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.closeButton addTarget:self action:@selector(closeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    self.closeButton.alpha = 0.0;
+    [self addSubview:self.closeButton];
 }
 
 - (void)configureLayout
@@ -214,7 +189,7 @@ typedef enum : NSUInteger {
     NSDictionary *views = @{ @"moreButton": self.moreButton,
                              @"shadowView": self.shadowView,
                              @"longDescriptionTextView": self.longDescriptionTextView,
-                             @"corner": self.corner};
+                             @"closeButton": self.closeButton};
     
     //----------------------------------------
     //  shadowView
@@ -222,22 +197,6 @@ typedef enum : NSUInteger {
     
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[shadowView]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[shadowView]|" options:0 metrics:nil views:views]];
-
-    //----------------------------------------
-    //  corner
-    //----------------------------------------
-    
-    // Set the width and height of the corner
-    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[corner(60)]" options:0 metrics:nil views:views]];
-    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[corner(60)]" options:0 metrics:nil views:views]];
-    
-    // Pin the corner to the top edge
-    self.cornerTopConstraint = [NSLayoutConstraint constraintWithItem:self.corner attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeTop multiplier:1.0 constant:-30.0];
-    [self.containerView addConstraint:self.cornerTopConstraint];
-    
-    // Pin the corner to the right edge
-    self.cornerRightConstraint = [NSLayoutConstraint constraintWithItem:self.corner attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeRight multiplier:1.0 constant:30.0];
-    [self.containerView addConstraint:self.cornerRightConstraint];
     
     //----------------------------------------
     //  moreButton
@@ -271,6 +230,13 @@ typedef enum : NSUInteger {
     
     // Top position of longDescription
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.longDescriptionTextView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
+    
+    //----------------------------------------
+    //  closeButton
+    //----------------------------------------
+    
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[closeButton(44)]-8-|" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[closeButton(44)]" options:0 metrics:nil views:views]];
 }
 
 
@@ -317,6 +283,14 @@ typedef enum : NSUInteger {
     }
 }
 
+- (void)closeButtonPressed {
+    if ([self.delegate respondsToSelector:@selector(cardViewCloseButtonPressed:)]) {
+        [self.delegate cardViewCloseButtonPressed:self];
+    } else if ([self.delegate respondsToSelector:@selector(cardViewMoreButtonPressed:)]) {
+        [self.delegate cardViewMoreButtonPressed:self];
+    }
+}
+
 #pragma mark - Expand/Contract
 
 - (void)didShow
@@ -342,11 +316,18 @@ typedef enum : NSUInteger {
 {
     self.moreButtonTopConstraint.constant = 0.0;
     
+    if (animated) {
+        [UIView animateWithDuration:0.15 animations:^{
+            self.closeButton.alpha = 0.0;
+        }];
+    }
+    
     [super contractToFrame:frame atCenter:center animated:animated];
     
     if (self.barcodeView) {
         [self.barcodeView contractToFrame:frame atCenter:center animated:NO];
     }
+    
 }
 
 - (void)expandAnimations
@@ -359,6 +340,13 @@ typedef enum : NSUInteger {
 {
     self.moreButton.alpha = 1.0;
     self.longDescriptionTextView.alpha = 0.0;
+}
+
+- (void)expandCompletion
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        self.closeButton.alpha = 1.0;
+    }];
 }
 
 #pragma mark - Barcode Transitions

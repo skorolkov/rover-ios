@@ -89,6 +89,14 @@
  */
 @property (strong, nonatomic) NSString *offerDetails;
 
+/** The caption for unlike
+ */
+@property (strong, nonatomic) NSString *unlikeCaption;
+
+/** The tags
+ */
+@property (strong, nonatomic) NSArray *tags;
+
 /** Indicates whether the customer has viewed this card during *the current visit*. I.e. the customer may have seen this card before on a different visit but could still be unread for this visit. 
  */
 @property (nonatomic) BOOL isUnread;

@@ -14,7 +14,7 @@
 //const CGFloat kCardMarginTop = 67.0;
 
 // Focal length used in 3D projection
-const CGFloat kFocalLength = 300.0;
+const CGFloat kFocalLength = 280.0;
 
 // Amount we need to move the card before letting go triggers action callback
 const CGFloat kCardActionTolerance = 80.0;
@@ -343,23 +343,21 @@ typedef struct {
         [self.animator removeAllBehaviors];
         
         CGPoint velocity = [panGesture velocityInView:panGesture.view.superview];
+        CGPoint translation = [panGesture translationInView:panGesture.view.superview];
         
-        // if we aren't dragging it down, just snap it back and quit
+        // if we aren't dragging it far enough, just snap it back and quit
         
-        /*
-        if (fabs(atan2(velocity.y, velocity.x) - M_PI_2) > M_PI_4) {
-            NSLog(@"Snap");
+        if (MAX(fabs(translation.x), fabs(translation.y)) < 20) { //fabs(atan2(velocity.y, velocity.x) - M_PI_2) > M_PI_4) {
             UISnapBehavior *snap = [[UISnapBehavior alloc] initWithItem:panGesture.view snapToPoint:startCenter];
-            [animator addBehavior:snap];
+            [self.animator addBehavior:snap];
             
             return;
         }
-         */
         
         // otherwise, create UIDynamicItemBehavior that carries on animation from where the gesture left off (notably linear and angular velocity)
         
         UIDynamicItemBehavior *dynamic = [[UIDynamicItemBehavior alloc] initWithItems:@[panGesture.view]];
-        [dynamic addLinearVelocity:CGPointMake(velocity.x/5,velocity.y/5) forItem:panGesture.view];
+        [dynamic addLinearVelocity:CGPointMake(MIN(velocity.x, 10)/4,velocity.y/4) forItem:panGesture.view];
         //dynamic.resistance = 10.f;
         //dynamic.friction =10;
         [dynamic addAngularVelocity:angularVelocity forItem:panGesture.view];

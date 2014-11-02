@@ -180,6 +180,18 @@
     if (offerDetails != (id)[NSNull null] && [offerDetails length] > 0) {
         self.offerDetails = offerDetails;
     }
+    
+    // tags
+    NSArray *tags = [JSON objectForKey:@"tags"];
+    if (tags != (id)[NSNull null] && [tags count] > 0) {
+        self.tags = tags;
+    }
+    
+    // unlikeCaption
+    NSString *unlikeCaption = [JSON objectForKey:@"unlike_caption"];
+    if (unlikeCaption != (id)[NSNull null] && [unlikeCaption length] > 0) {
+        self.unlikeCaption = unlikeCaption;
+    }
 }
 
 - (NSDictionary *)toJSON {

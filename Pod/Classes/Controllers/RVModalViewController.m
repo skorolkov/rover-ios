@@ -17,6 +17,8 @@
 #import "RVModalView.h"
 #import "RVImageEffects.h"
 
+NSString *const RVModalViewOptionsTag = @"Tags";
+
 @interface RVModalViewController () <RVModalViewDelegate, RVCardDeckViewDelegate, RVCardDeckViewDataSourceDelegate>
 
 @property (strong, nonatomic) RVModalView *view;
@@ -50,10 +52,30 @@
         return _cards;
     }
     
+    NSArray *tags = [self.options objectForKey:RVModalViewOptionsTag];
+    
     if (self.cardSet == ModalViewCardSetSaved) {
         _cards = self.visit.savedCards;
     } else if (self.cardSet == ModalViewCardSetUnread) {
         _cards = self.visit.unreadCards;
+    } else if (self.cardSet == ModalViewCardSetTagsInclude) {
+        NSAssert(tags != nil, @"No tag options supplied. You must set the RVModalViewOptionsTag key of the options property.");
+        _cards = [self.visit.cards filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            RVCard *card = evaluatedObject;
+            
+            __block BOOL includesTags = YES;
+            [tags enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                NSString *tag = obj;
+                
+                if (![card.tags containsObject:tag]) {
+                    includesTags = NO;
+                    *stop = YES;
+                }
+                
+            }];
+            
+            return includesTags;
+        }]];
     } else {
         _cards = self.visit.cards;
     }

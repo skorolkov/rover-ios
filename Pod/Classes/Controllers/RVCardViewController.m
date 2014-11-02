@@ -44,10 +44,10 @@
 }
 
 - (void)viewDidLoad {
-    self.view.useCloseButton = YES;
+    //self.view.useCloseButton = YES;
     self.view.delegate = self;
     [self configureView];
-    [self.view expandToFrame:self.view.frame animated:YES];
+    [self.view expandToFrame:self.view.frame animated:NO];
 }
 
 - (void)configureView {
@@ -55,24 +55,7 @@
         return;
     }
     
-    self.view.title = self.card.title;
-    self.view.shortDescription = self.card.shortDescription;
-    
-    if (self.card.longDescription) {
-        self.view.longDescription = self.card.longDescription;
-    }
-    
-    self.view.imageURL = self.card.imageURL;
-    self.view.backgroundColor = self.card.primaryBackgroundColor;
-    self.view.fontColor = self.card.primaryFontColor;
-    self.view.secondaryBackgroundColor = self.card.secondaryBackgroundColor;
-    self.view.secondaryFontColor = self.card.secondaryFontColor;
-    self.view.liked = self.card.likedAt != nil;
-    self.view.discarded = self.card.discardedAt != nil;
-    
-    //if (self.card.barcode) {
-        //self.view.barcode = @"12345678"; //self.card.barcode;
-    //}
+    [self.view setCard:self.card];
 }
 
 #pragma mark - RVCardViewDelegate
@@ -80,5 +63,7 @@
 - (void)cardViewCloseButtonPressed:(RVCardView *)cardView {
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
+
+// LIKE BUTTON
 
 @end
