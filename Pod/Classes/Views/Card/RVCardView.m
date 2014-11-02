@@ -73,12 +73,6 @@ typedef enum : NSUInteger {
     
     self.longDescriptionTextView.attributedText = attributedString;
     
-    if (longDescription.length > 0) {
-        self.moreButton.alpha = 1.0;
-    } else {
-        self.moreButton.alpha = 0.0;
-    }
-    
     _longDescription = longDescription;
 }
 
@@ -161,7 +155,7 @@ typedef enum : NSUInteger {
     
     self.moreButton = [RVMoreButton new];
     self.moreButton.translatesAutoresizingMaskIntoConstraints = NO;
-    self.moreButton.alpha = 0.0;
+    self.moreButton.alpha = 1.0;
     [self.contentView addSubview:self.moreButton];
     [self.contentView sendSubviewToBack:self.moreButton];
     
