@@ -52,7 +52,6 @@
 
 - (void)displayModal {
     [[Rover shared] presentModal];
-//    [[Rover shared] presentModalForCardSet:ModalViewCardSetTagsInclude withOptions:@{ RVModalViewOptionsTag: @[@"tutorial"] }];
 }
 
 #pragma mark - Application Notifications
