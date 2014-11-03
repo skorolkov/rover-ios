@@ -65,33 +65,17 @@
  */
 @property (strong, nonatomic) NSDate *expiresAt;
 
-/** The action for the left button of the card.
+/** The buttons array for the card.
  */
-@property (strong, nonatomic) NSNumber *leftButtonAction;
-
-/** The caption for the left button of the card.
- */
-@property (strong, nonatomic) NSString *leftButtonCaption;
-
-/** The action for the right button of the card.
- */
-@property (strong, nonatomic) NSNumber *rightButtonAction;
-
-/** The caption for the right button of the card.
- */
-@property (strong, nonatomic) NSString *rightButtonCaption;
+@property (strong, nonatomic) NSArray *buttons;
 
 /** The barcode assocciated with the card template.
  */
 @property (strong, nonatomic) NSString *barcode;
 
-/** The offer message for barcode.
+/** The instructions for the barcode.
  */
-@property (strong, nonatomic) NSString *offerDetails;
-
-/** The caption for unlike
- */
-@property (strong, nonatomic) NSString *unlikeCaption;
+@property (strong, nonatomic) NSString *barcodeInstructions;
 
 /** The tags
  */

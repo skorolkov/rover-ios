@@ -129,7 +129,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     self.view.cardDeck.dataSource = self;
     
     self.visit = [[Rover shared] currentVisit];
-    [self.view.cardDeck reloadData];
+    //[self.view.cardDeck reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated {

@@ -120,16 +120,49 @@ typedef enum : NSUInteger {
         self.barcodeView = [[RVCardBarcodeView alloc] initWithFrame:self.frame];
         self.barcodeView.cardView = self;
         self.barcodeView.title = self.title;
-        self.barcodeView.shortDescription = card.offerDetails;
+        self.barcodeView.shortDescription = card.barcodeInstructions;
         [self.barcodeView setBarcode:card.barcode withType:AVMetadataObjectTypeCode128Code];
     } else {
         self.barcodeView = nil;
     }
     
-    [self.buttonBar setLeftButtonTitle:card.leftButtonCaption andRightButtonTitle:card.rightButtonCaption];
+    
+    // Buttons
+    
+    NSString *leftButtonTitle, *rightButtonTitle;
+    NSString *leftButtonActiveTitle, *rightButtonActiveTitle;
+    
+    if (card.buttons && card.buttons.count > 0) {
+        leftButtonTitle = [card.buttons[0] objectForKey:@"title"];
+        leftButtonActiveTitle = [card.buttons[0] objectForKey:@"active_title"];
+        
+        if (card.buttons.count > 1) {
+            rightButtonTitle = [card.buttons[1] objectForKey:@"title"];
+            rightButtonActiveTitle = [card.buttons[1] objectForKey:@"active_title"];
+        }
+    }
+    
+    if ([leftButtonTitle isKindOfClass:[NSNull class]]) {
+        leftButtonTitle = nil;
+    }
+    
+    if ([rightButtonTitle isKindOfClass:[NSNull class]]) {
+        rightButtonTitle = nil;
+    }
+
+    if ([rightButtonActiveTitle isKindOfClass:[NSNull class]]) {
+        rightButtonActiveTitle = nil;
+    }
+    
+    if ([leftButtonActiveTitle isKindOfClass:[NSNull class]]) {
+        leftButtonActiveTitle = nil;
+    }
+    
+    [self.buttonBar setLeftButtonTitle:leftButtonTitle andRightButtonTitle:rightButtonTitle];
     [self.buttonBar setFontColor:card.primaryFontColor];
     
-    [self.buttonBar setPressedCaption:card.unlikeCaption forButton:self.buttonBar.leftButton];
+    [self.buttonBar setPressedCaption:leftButtonActiveTitle forButton:self.buttonBar.leftButton];
+    [self.buttonBar setPressedCaption:rightButtonActiveTitle forButton:self.buttonBar.rightButton];
     
     self.liked = card.likedAt != nil;
     
@@ -237,12 +270,21 @@ typedef enum : NSUInteger {
 #pragma mark - RVCardViewBarButtonDelegate
 
 - (void)buttonBarLeftButtonPressed:(RVCardViewButtonBar *)buttonBar {
-    [self performAction:self.card.leftButtonAction.integerValue];
-
+    if (self.card.buttons.count < 1) {
+        return;
+    }
+    
+    NSNumber *buttonType = [self.card.buttons[0] objectForKey:@"button_type"];
+    [self performAction:buttonType.integerValue];
 }
 
 - (void)buttonBarRightButtonPressed:(RVCardViewButtonBar *)buttonBar {
-    [self performAction:self.card.rightButtonAction.integerValue];
+    if (self.card.buttons.count < 2) {
+        return;
+    }
+    
+    NSNumber *buttonType = [self.card.buttons[1] objectForKey:@"button_type"];
+    [self performAction:buttonType.integerValue];
 }
 
 #pragma mark - Button Actions

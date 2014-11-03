@@ -144,29 +144,11 @@
     if (expiresAt != (id)[NSNull null] && [expiresAt length] > 0) {
         self.expiresAt = [dateFormatter dateFromString:expiresAt];
     }
-    
-    // leftButtonAction
-    NSNumber *leftButtonAction = [JSON objectForKey:@"left_button_action"];
-    if (leftButtonAction != (id)[NSNull null]) {
-        self.leftButtonAction = leftButtonAction;
-    }
-    
-    // leftButtonCaption
-    NSString *leftButtonCaption = [JSON objectForKey:@"left_button_caption"];
-    if (leftButtonCaption != (id)[NSNull null] && [leftButtonCaption length] > 0) {
-        self.leftButtonCaption = leftButtonCaption;
-    }
 
-    // rightButtonAction
-    NSNumber *rightButtonAction = [JSON objectForKey:@"right_button_action"];
-    if (rightButtonAction != (id)[NSNull null]) {
-        self.rightButtonAction = rightButtonAction;
-    }
-    
-    // rightButtonCaption
-    NSString *rightButtonCaption = [JSON objectForKey:@"right_button_caption"];
-    if (rightButtonCaption != (id)[NSNull null] && [rightButtonCaption length] > 0) {
-        self.rightButtonCaption = rightButtonCaption;
+    // buttons
+    NSArray *buttons = [JSON objectForKey:@"buttons"];
+    if (buttons != (id)[NSNull null] && [buttons count] > 0) {
+        self.buttons = buttons;
     }
     
     // barcode
@@ -175,22 +157,16 @@
         self.barcode = barcode;
     }
     
-    // offerDetails
-    NSString *offerDetails = [JSON objectForKey:@"offer_details"];
-    if (offerDetails != (id)[NSNull null] && [offerDetails length] > 0) {
-        self.offerDetails = offerDetails;
+    // barcodeInstructions
+    NSString *barcodeInstructions = [JSON objectForKey:@"barcode_instructions"];
+    if (barcodeInstructions != (id)[NSNull null] && [barcodeInstructions length] > 0) {
+        self.barcodeInstructions = barcodeInstructions;
     }
     
     // tags
     NSArray *tags = [JSON objectForKey:@"tags"];
     if (tags != (id)[NSNull null] && [tags count] > 0) {
         self.tags = tags;
-    }
-    
-    // unlikeCaption
-    NSString *unlikeCaption = [JSON objectForKey:@"unlike_caption"];
-    if (unlikeCaption != (id)[NSNull null] && [unlikeCaption length] > 0) {
-        self.unlikeCaption = unlikeCaption;
     }
 }
 

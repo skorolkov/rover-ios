@@ -66,6 +66,18 @@
     }
     
     [self configureLayout];
+    
+ 
+}
+
+- (void)setButtonTitles:(NSString *)buttonTitles,... NS_REQUIRES_NIL_TERMINATION
+{
+    va_list args;
+    va_start(args, buttonTitles);
+    for (NSString *buttonTitle = buttonTitles; buttonTitle != nil; buttonTitle = va_arg(args, NSString*)) {
+        
+    }
+    va_end(args);
 }
 
 #pragma mark - Initialization
@@ -159,7 +171,9 @@
 
 - (void)setPressedCaption:(NSString *)pressedCaption forButton:(UIButton *)button
 {
-    [button setTitle:pressedCaption forState:UIControlStateSelected];
+    if (pressedCaption != nil && button != nil) {
+        [button setTitle:pressedCaption forState:UIControlStateSelected];
+    }
 }
 
 - (void)setPressed:(BOOL)pressed forButton:(UIButton *)button
