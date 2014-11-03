@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <Rover/Rover.h>
 
-@interface RootViewController : UITabBarController <UITabBarControllerDelegate, RVModalViewControllerDelegate>
+@interface RootViewController : UITabBarController <UITabBarControllerDelegate>
 
 @end

@@ -12,8 +12,15 @@
 @interface RVCardViewButton ()
 
 @property (strong, nonatomic) UIView *shadow;
+@property (strong, nonatomic) UILabel *secondLabel;
+
+@property (strong, nonatomic) NSLayoutConstraint *labelCenterXConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *labelTrailConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *secondLabelCenterXConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *secondLabelLeftConstraint;
 
 @end
+
 
 @implementation RVCardViewButton
 {
@@ -28,9 +35,6 @@
     
     self.label.textColor = color;
     
-    if (!self.active) {
-        self.icon.color = color;
-    }
 }
 
 - (UIColor *)color {
@@ -43,9 +47,6 @@
 - (void)setActiveColor:(UIColor *)activeColor {
     _activeColor = activeColor;
     
-    if (self.active) {
-        self.icon.color = activeColor;
-    }
 }
 
 - (UIColor *)activeColor {
@@ -57,11 +58,21 @@
 
 - (void)setActive:(BOOL)active {
     if (active) {
-        self.shadow.alpha = 1.0;
-        self.icon.color = self.activeColor;
+        [self removeConstraints:@[self.labelCenterXConstraint, self.secondLabelLeftConstraint]];
+        [self addConstraints:@[self.labelTrailConstraint, self.secondLabelCenterXConstraint]];
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            [self layoutIfNeeded];
+            self.shadow.alpha = 1.0;
+        }];
     } else {
-        self.shadow.alpha = 0.0;
-        self.icon.color = self.color;
+        [self removeConstraints:@[self.labelTrailConstraint, self.secondLabelCenterXConstraint]];
+        [self addConstraints:@[self.labelCenterXConstraint, self.secondLabelLeftConstraint]];
+        
+        [UIView animateWithDuration:0.2 animations:^{
+            [self layoutIfNeeded];
+            self.shadow.alpha = 0.0;
+        }];
     }
     _active = active;
 }
@@ -74,6 +85,7 @@
         [self addSubviews];
         [self configureLayout];
         self.active = NO;
+        self.clipsToBounds = YES;
     }
     return self;
 }
@@ -85,35 +97,59 @@
     self.shadow.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.3];
     [self addSubview:self.shadow];
     
-    self.icon = [RVCardViewButtonIcon new];
-    self.icon.translatesAutoresizingMaskIntoConstraints = NO;
-    self.icon.userInteractionEnabled = NO;
-    [self addSubview:self.icon];
-    
     self.label = [UILabel new];
     self.label.translatesAutoresizingMaskIntoConstraints = NO;
     self.label.userInteractionEnabled = NO;
-    self.label.font = [UIFont boldSystemFontOfSize:14.0];
+    self.label.font = [UIFont systemFontOfSize:14.0];
+    self.label.textColor = self.color;
     [self addSubview:self.label];
+    
+    self.secondLabel = [UILabel new];
+    self.secondLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.secondLabel.userInteractionEnabled = NO;
+    self.secondLabel.font = [UIFont systemFontOfSize:14];
+    self.secondLabel.textColor = self.color;
+    [self addSubview:self.secondLabel];
 }
 
 - (void)configureLayout {
     NSDictionary *views = @{ @"shadow": self.shadow,
-                             @"icon": self.icon,
                              @"label": self.label };
     
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[shadow]|" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[shadow]|" options:0 metrics:nil views:views]];
     
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-18-[icon(16)]-10-[label]" options:0 metrics:nil views:views]];
+    self.labelCenterXConstraint = [NSLayoutConstraint constraintWithItem:self.label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
     
-    // Center the icon vertically
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.icon attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
+    self.labelTrailConstraint = [NSLayoutConstraint constraintWithItem:self.label attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeading multiplier:1.0 constant:0];
+    
+    [self addConstraint:self.labelCenterXConstraint];
+    
+    self.secondLabelCenterXConstraint = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
+    
+    self.secondLabelLeftConstraint = [NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0];
+    
+    [self addConstraint:self.secondLabelLeftConstraint];
+    
     
     // Center the label vertically
     [self addConstraint:[NSLayoutConstraint constraintWithItem:self.label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.secondLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
     
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[icon(16)]" options:0 metrics:nil views:views]];
+}
+
+- (void)setTitle:(NSString *)title forState:(UIControlState)state
+{
+    if (state == UIControlStateSelected) {
+        [self.secondLabel setText:title];
+    } else {
+        [self.label setText:title];
+    }
+}
+
+- (void)setSelected:(BOOL)selected
+{
+    self.active = selected;
 }
 
 @end

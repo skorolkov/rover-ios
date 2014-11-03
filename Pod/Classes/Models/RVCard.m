@@ -144,6 +144,30 @@
     if (expiresAt != (id)[NSNull null] && [expiresAt length] > 0) {
         self.expiresAt = [dateFormatter dateFromString:expiresAt];
     }
+
+    // buttons
+    NSArray *buttons = [JSON objectForKey:@"buttons"];
+    if (buttons != (id)[NSNull null] && [buttons count] > 0) {
+        self.buttons = buttons;
+    }
+    
+    // barcode
+    NSString *barcode = [JSON objectForKey:@"barcode"];
+    if (barcode != (id)[NSNull null] && [barcode length] > 0) {
+        self.barcode = barcode;
+    }
+    
+    // barcodeInstructions
+    NSString *barcodeInstructions = [JSON objectForKey:@"barcode_instructions"];
+    if (barcodeInstructions != (id)[NSNull null] && [barcodeInstructions length] > 0) {
+        self.barcodeInstructions = barcodeInstructions;
+    }
+    
+    // tags
+    NSArray *tags = [JSON objectForKey:@"tags"];
+    if (tags != (id)[NSNull null] && [tags count] > 0) {
+        self.tags = tags;
+    }
 }
 
 - (NSDictionary *)toJSON {

@@ -65,6 +65,22 @@
  */
 @property (strong, nonatomic) NSDate *expiresAt;
 
+/** The buttons array for the card.
+ */
+@property (strong, nonatomic) NSArray *buttons;
+
+/** The barcode assocciated with the card template.
+ */
+@property (strong, nonatomic) NSString *barcode;
+
+/** The instructions for the barcode.
+ */
+@property (strong, nonatomic) NSString *barcodeInstructions;
+
+/** The tags
+ */
+@property (strong, nonatomic) NSArray *tags;
+
 /** Indicates whether the customer has viewed this card during *the current visit*. I.e. the customer may have seen this card before on a different visit but could still be unread for this visit. 
  */
 @property (nonatomic) BOOL isUnread;

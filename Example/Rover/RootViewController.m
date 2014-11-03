@@ -23,6 +23,8 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roverDidEnterLocation) name:kRoverDidEnterLocationNotification object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roverDidDisplayCardNotification) name:kRoverDidDisplayCardNotification object:nil];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
@@ -49,9 +51,7 @@
 }
 
 - (void)displayModal {
-    RVModalViewController *viewController = [[RVModalViewController alloc] init];
-    viewController.delegate = self;
-    [self presentViewController:viewController animated:YES completion:nil];
+    [[Rover shared] presentModal];
 }
 
 #pragma mark - Application Notifications
@@ -68,18 +68,8 @@
     [self updateBadgeNumber];
 }
 
-#pragma mark - RVModalViewControllerDelegate
-
-- (void)modalViewControllerDidFinish:(RVModalViewController *)modalViewController {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-- (void)modalViewController:(RVModalViewController *)modalViewController didDisplayCard:(RVCard *)card {
+- (void)roverDidDisplayCardNotification {
     [self updateBadgeNumber];
-}
-
-- (void)modalViewController:(RVModalViewController *)modalViewController didSwipeCard:(RVCard *)card {
-
 }
 
 @end

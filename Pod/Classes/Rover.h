@@ -84,6 +84,10 @@ extern NSString *const kRoverDidSwipeCardNotification;
  */
 - (void)presentModal;
 
+/** Present the modal view controller with a subset of cards. E.g. only show unread cards.
+ */
+- (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options;
+
 /** You can use this method to simulate your app coming in range of a particular beacon.
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
  */

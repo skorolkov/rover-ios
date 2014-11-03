@@ -17,6 +17,7 @@ CGFloat const kHeight = 22.0;
     self = [super initWithFrame:frame];
     if (self) {
         self.opaque = NO;
+        self.color = [UIColor whiteColor];
         [self sizeToFit];
     }
     return self;
@@ -35,7 +36,7 @@ CGFloat const kHeight = 22.0;
     
     //// Oval Drawing
     UIBezierPath* ovalPath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(offset.x + 0.5, offset.y + 0.5, kWidth - 1.0, kWidth - 1.0)];
-    [UIColor.whiteColor setStroke];
+    [self.color setStroke];
     ovalPath.lineWidth = 1;
     [ovalPath stroke];
     
@@ -43,7 +44,7 @@ CGFloat const kHeight = 22.0;
     UIBezierPath* bezierPath = UIBezierPath.bezierPath;
     [bezierPath moveToPoint: CGPointMake(offset.x + 7.5, offset.y + 7.5)];
     [bezierPath addLineToPoint:CGPointMake(offset.x + kWidth - 7.5, offset.y + kHeight - 7.5)];
-    [UIColor.whiteColor setStroke];
+    [self.color setStroke];
     bezierPath.lineWidth = 1;
     [bezierPath stroke];
     
@@ -51,7 +52,7 @@ CGFloat const kHeight = 22.0;
     UIBezierPath* bezier2Path = UIBezierPath.bezierPath;
     [bezier2Path moveToPoint: CGPointMake(offset.x + kWidth - 7.5, offset.y + 7.5)];
     [bezier2Path addLineToPoint:CGPointMake(offset.x + 7.5, offset.y + kHeight - 7.5)];
-    [UIColor.whiteColor setStroke];
+    [self.color setStroke];
     bezier2Path.lineWidth = 1;
     [bezier2Path stroke];
 }
