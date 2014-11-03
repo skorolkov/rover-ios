@@ -155,7 +155,7 @@ typedef enum : NSUInteger {
     }
     
     if ([leftButtonActiveTitle isKindOfClass:[NSNull class]]) {
-        leftButtonActiveTitle = nil;
+        leftButtonActiveTitle = leftButtonTitle;
     }
     
     [self.buttonBar setLeftButtonTitle:leftButtonTitle andRightButtonTitle:rightButtonTitle];

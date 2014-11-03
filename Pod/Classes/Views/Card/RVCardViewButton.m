@@ -61,7 +61,7 @@
         [self removeConstraints:@[self.labelCenterXConstraint, self.secondLabelLeftConstraint]];
         [self addConstraints:@[self.labelTrailConstraint, self.secondLabelCenterXConstraint]];
         
-        [UIView animateWithDuration:0.1 animations:^{
+        [UIView animateWithDuration:0.2 animations:^{
             [self layoutIfNeeded];
             self.shadow.alpha = 1.0;
         }];
