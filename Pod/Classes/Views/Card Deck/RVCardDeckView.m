@@ -33,7 +33,6 @@ typedef struct {
 @property (strong, nonatomic) NSMapTable *cardIndexMap;
 @property (strong, nonatomic) NSMutableArray *cards;
 @property (readonly, nonatomic) NSArray *otherCards;
-@property (readonly, nonatomic) RVCardView *topCard;
 @property (strong, nonatomic) UIButton *invisibleButton;
 
 @property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
@@ -412,6 +411,12 @@ typedef struct {
         if (self.delegate) {
             [self.delegate cardDeck:self didDiscardCard:cardView];
         }
+    }
+}
+
+- (void)cardViewBarcodeButtonPressed:(RVCardView *)cardView {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(cardDeckDidEnterBarcodeView:)]) {
+        [self.delegate cardDeckDidEnterBarcodeView:self];
     }
 }
 

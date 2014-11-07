@@ -152,6 +152,13 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     self.view.background.image = image;
 }
 
+- (void)saveCard:(RVCard *)card {
+    NSUInteger idx = [self.cards indexOfObject:card];
+    card.lastViewedFrom = @"Modal";
+    card.lastViewedPosition = [NSNumber numberWithInteger:(idx + 1)];
+    [card save:nil failure:nil];
+}
+
 #pragma mark - RVModalViewDelegate
 
 - (void)modalViewBackgroundPressed:(RVModalView *)modalView {
@@ -184,7 +191,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     RVCard *card = [self.cards objectAtIndex:idx];
     card.isUnread = NO;
     card.viewedAt = [NSDate date];
-    [card save:nil failure:nil];
+    [self saveCard:card];
     
     if ([self.delegate respondsToSelector:@selector(modalViewController:didDisplayCard:)]) {
         [self.delegate modalViewController:self didDisplayCard:card];
@@ -196,14 +203,14 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     RVCard *card = [self.cards objectAtIndex:idx];
     card.likedAt = [NSDate date];
     card.discardedAt = nil;
-    [card save:nil failure:nil];
+    [self saveCard:card];
 }
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didUnlikeCard:(RVCardView *)cardView {
     NSUInteger idx = [self.view.cardDeck indexForCardView:cardView];
     RVCard *card = [self.cards objectAtIndex:idx];
     card.likedAt = nil;
-    [card save:nil failure:nil];
+    [self saveCard:card];
 }
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didDiscardCard:(RVCardView *)cardView {
@@ -211,7 +218,19 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     RVCard *card = [self.cards objectAtIndex:idx];
     card.likedAt = nil;
     card.discardedAt = [NSDate date];
-    [card save:nil failure:nil];
+    [self saveCard:card];
+}
+
+- (void)cardDeckDidEnterFullScreen:(RVCardDeckView *)cardDeck {
+    RVCard *card = cardDeck.topCard.card;
+    card.lastExpandedAt = [NSDate date];
+    [self saveCard:card];
+}
+
+- (void)cardDeckDidEnterBarcodeView:(RVCardDeckView *)cardDeck {
+    RVCard *card = cardDeck.topCard.card;
+    card.lastViewedBarcodeAt = [NSDate date];
+    [self saveCard:card];
 }
 
 #pragma mark - RVCardDeckViewDataSourceDelegate

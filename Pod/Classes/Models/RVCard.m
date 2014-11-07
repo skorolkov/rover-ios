@@ -168,74 +168,22 @@
     if (tags != (id)[NSNull null] && [tags count] > 0) {
         self.tags = tags;
     }
+    
+    // lastExpandedAt
+    NSString *lastExpandedAt = [JSON objectForKey:@"last_expanded_at"];
+    if (lastExpandedAt != (id)[NSNull null] && [lastExpandedAt length] > 0) {
+        self.lastExpandedAt = [dateFormatter dateFromString:lastExpandedAt];
+    }
+    
+    // lastViewedBarcodeAt
+    NSString *lastViewedBarcodeAt = [JSON objectForKey:@"last_viewed_barcode_at"];
+    if (lastViewedBarcodeAt != (id)[NSNull null] && [lastViewedBarcodeAt length] > 0) {
+        self.lastViewedBarcodeAt = [dateFormatter dateFromString:lastViewedBarcodeAt];
+    }
 }
 
 - (NSDictionary *)toJSON {
     NSMutableDictionary *JSON = [[super toJSON] mutableCopy];
-    
-    // organizationTitle
-    if (self.organizationTitle) {
-        [JSON setObject:self.organizationTitle forKey:@"organization_title"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"organization_title"];
-    }
-    
-    // title
-    if (self.title) {
-        [JSON setObject:self.title forKey:@"title"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"title"];
-    }
-    
-    // shortDescription
-    if (self.shortDescription) {
-        [JSON setObject:self.shortDescription forKey:@"short_description"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"short_description"];
-    }
-    
-    // longDescription
-    if (self.longDescription) {
-        [JSON setObject:self.longDescription forKey:@"long_description"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"long_description"];
-    }
-    
-    // imageURL
-    if (self.imageURL) {
-        [JSON setObject:self.imageURL.description forKey:@"image_url"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"image_url"];
-    }
-    
-    // primaryBackgroundColor
-    if (self.primaryBackgroundColor) {
-        [JSON setObject:[RVColorUtilities hexStringFromColor:self.primaryBackgroundColor] forKey:@"primary_background_color"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"primary_background_color"];
-    }
-    
-    // primaryFontColor
-    if (self.primaryFontColor) {
-        [JSON setObject:[RVColorUtilities hexStringFromColor:self.primaryFontColor] forKey:@"primary_font_color"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"primary_font_color"];
-    }
-    
-    // secondaryBackgroundColor
-    if (self.secondaryBackgroundColor) {
-        [JSON setObject:[RVColorUtilities hexStringFromColor:self.secondaryBackgroundColor] forKey:@"secondary_background_color"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"secondary_background_color"];
-    }
-    
-    // secondaryFontColor
-    if (self.secondaryFontColor) {
-        [JSON setObject:[RVColorUtilities hexStringFromColor:self.secondaryFontColor] forKey:@"secondary_font_color"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"secondary_font_color"];
-    }
-    
     NSDateFormatter *dateFormatter = [self dateFormatter];
     
     // viewedAt
@@ -265,7 +213,35 @@
     } else {
         [JSON setObject:[NSNull null] forKey:@"expires_at"];
     }
-
+    
+    // lastExpandedAt
+    if (self.lastExpandedAt) {
+        [JSON setObject:[dateFormatter stringFromDate:self.lastExpandedAt] forKey:@"last_expanded_at"];
+    } else {
+        [JSON setObject:[NSNull null] forKey:@"last_expanded_at"];
+    }
+    
+    // lastViewedBarcodeAt
+    if (self.lastViewedBarcodeAt) {
+        [JSON setObject:[dateFormatter stringFromDate:self.lastViewedBarcodeAt] forKey:@"last_viewed_barcode_at"];
+    } else {
+        [JSON setObject:[NSNull null] forKey:@"last_viewed_barcode_at"];
+    }
+    
+    // lastViewedFrom
+    if (self.lastViewedFrom) {
+        [JSON setObject:self.lastViewedFrom forKey:@"last_viewed_from"];
+    } else {
+        [JSON setObject:[NSNull null] forKey:@"last_viewed_from"];
+    }
+    
+    // lastViewedPosition
+    if (self.lastViewedPosition) {
+        [JSON setObject:self.lastViewedPosition forKey:@"last_viewed_position"];
+    } else {
+        [JSON setObject:[NSNull null] forKey:@"last_viewed_position"];
+    }
+    
     return JSON;
 }
 

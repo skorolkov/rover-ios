@@ -21,7 +21,7 @@
 - (void)cardViewLikeButtonPressed:(RVCardView *)cardView;
 - (void)cardViewDiscardButtonPressed:(RVCardView *)cardView;
 - (void)cardViewCloseButtonPressed:(RVCardView *)cardView;
-
+- (void)cardViewBarcodeButtonPressed:(RVCardView *)cardView;
 
 @end
 

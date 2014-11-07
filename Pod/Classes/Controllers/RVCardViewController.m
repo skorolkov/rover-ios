@@ -58,12 +58,35 @@
     [self.view setCard:self.card];
 }
 
+- (void)saveCard:(RVCard *)card {
+    card.lastViewedFrom = @"ViewController";
+    card.lastViewedPosition = nil;
+    [card save:nil failure:nil];
+}
+
 #pragma mark - RVCardViewDelegate
 
 - (void)cardViewCloseButtonPressed:(RVCardView *)cardView {
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
-// LIKE BUTTON
+- (void)cardViewLikeButtonPressed:(RVCardView *)cardView {
+    RVCard *card = cardView.card;
+    cardView.liked = !cardView.liked;
+    if (cardView.liked) {
+        card.likedAt = [NSDate date];
+        card.discardedAt = nil;
+    } else {
+        card.likedAt = nil;
+    }
+    [self saveCard:card];
+}
+
+- (void)cardViewBarcodeButtonPressed:(RVCardView *)cardView {
+    RVCard *card = cardView.card;
+    card.lastViewedBarcodeAt = [NSDate date];
+    [self saveCard:card];
+}
+
 
 @end

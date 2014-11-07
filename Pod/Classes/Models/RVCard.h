@@ -85,4 +85,12 @@
  */
 @property (nonatomic) BOOL isUnread;
 
+/** Analytics properties
+ */
+
+@property (strong, nonatomic) NSString *lastViewedFrom;
+@property (strong, nonatomic) NSNumber *lastViewedPosition;
+@property (strong, nonatomic) NSDate *lastExpandedAt;
+@property (strong, nonatomic) NSDate *lastViewedBarcodeAt;
+
 @end
