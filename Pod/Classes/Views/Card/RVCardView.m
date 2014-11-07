@@ -206,7 +206,7 @@ typedef enum : NSUInteger {
     self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.closeButton addTarget:self action:@selector(closeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.closeButton.alpha = 0.0;
-    [self addSubview:self.closeButton];
+    [self.containerView addSubview:self.closeButton];
 }
 
 - (void)configureLayout
@@ -215,8 +215,7 @@ typedef enum : NSUInteger {
     
     NSDictionary *views = @{ @"moreButton": self.moreButton,
                              @"shadowView": self.shadowView,
-                             @"longDescriptionTextView": self.longDescriptionTextView,
-                             @"closeButton": self.closeButton};
+                             @"longDescriptionTextView": self.longDescriptionTextView};
     
     //----------------------------------------
     //  shadowView
@@ -257,6 +256,13 @@ typedef enum : NSUInteger {
     
     // Top position of longDescription
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.longDescriptionTextView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
+}
+
+- (void)configureContainerLayout
+{
+    [super configureContainerLayout];
+    
+    NSDictionary *views = @{@"closeButton": self.closeButton};
     
     //----------------------------------------
     //  closeButton
@@ -316,6 +322,10 @@ typedef enum : NSUInteger {
         [self slideInBarcodeView];
     } else {
         [self flipCardToBarcodeView];
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(cardViewBarcodeButtonPressed:)]) {
+        [self.delegate cardViewBarcodeButtonPressed:self];
     }
 }
 

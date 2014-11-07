@@ -22,6 +22,7 @@ typedef enum {
 @property (weak, nonatomic) id <RVCardDeckViewDelegate> delegate;
 @property (weak, nonatomic) id <RVCardDeckViewDataSourceDelegate> dataSource;
 
+@property (readonly, nonatomic) RVCardView *topCard;
 @property (readonly, nonatomic) BOOL isFullScreen;
 
 - (void)reloadData;
@@ -62,5 +63,6 @@ typedef enum {
 - (void)cardDeckDidEnterFullScreen:(RVCardDeckView *)cardDeck;
 - (void)cardDeckWillExitFullScreen:(RVCardDeckView *)cardDeck;
 - (void)cardDeckDidExitFullScreen:(RVCardDeckView *)cardDeck;
+- (void)cardDeckDidEnterBarcodeView:(RVCardDeckView *)cardDeck;
 
 @end
