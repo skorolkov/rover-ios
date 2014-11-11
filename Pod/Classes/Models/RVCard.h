@@ -81,6 +81,10 @@
  */
 @property (strong, nonatomic) NSArray *tags;
 
+/** The terms and conditions
+ */
+@property (strong, nonatomic) NSString *terms;
+
 /** Indicates whether the customer has viewed this card during *the current visit*. I.e. the customer may have seen this card before on a different visit but could still be unread for this visit. 
  */
 @property (nonatomic) BOOL isUnread;

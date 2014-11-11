@@ -27,6 +27,12 @@ typedef enum : NSUInteger {
 @property (strong, nonatomic) UIView *shadowView;
 @property (strong, nonatomic) RVMoreButton *moreButton;
 @property (strong, nonatomic) UITextView *longDescriptionTextView;
+@property (strong, nonatomic) UIView *termsView;
+@property (strong, nonatomic) UILabel *termsLabel;
+@property (strong, nonatomic) UIView *termsTitleLineLeft;
+@property (strong, nonatomic) UIView *termsTitleLineRight;
+@property (strong, nonatomic) UILabel *termsTitle;
+@property (strong, nonatomic) UIView *termsTitleView;
 
 // Close button
 @property (strong, nonatomic) RVCloseButton *closeButton;
@@ -116,6 +122,13 @@ typedef enum : NSUInteger {
     self.secondaryFontColor = card.secondaryFontColor;
     self.discarded = card.discardedAt != nil;
     
+    if (card.terms) {
+        self.termsLabel.text = card.terms;
+    } else {
+        // This works for now because we aren't reusing cardViews
+        [self.termsView removeFromSuperview];
+    }
+    
     if (card.barcode) {
         self.barcodeView = [[RVCardBarcodeView alloc] initWithFrame:self.frame];
         self.barcodeView.cardView = self;
@@ -169,10 +182,6 @@ typedef enum : NSUInteger {
     _card = card;
 }
 
-#pragma mark - Private Properties
-
-
-
 #pragma mark - Initialization
 
 - (void)addSubviews
@@ -192,10 +201,12 @@ typedef enum : NSUInteger {
     [self.contentView addSubview:self.moreButton];
     [self.contentView sendSubviewToBack:self.moreButton];
     
+    UIColor *beigeColor = [UIColor colorWithRed:233.0/255.0 green:233.0/255.5 blue:233.0/255.0 alpha:1.0];
+    
     self.longDescriptionTextView = [UITextView new];
     self.longDescriptionTextView.translatesAutoresizingMaskIntoConstraints = NO;
     self.longDescriptionTextView.font = [UIFont systemFontOfSize:14.0];
-    self.longDescriptionTextView.backgroundColor = [UIColor colorWithRed:233.0/255.0 green:233.0/255.5 blue:233.0/255.0 alpha:1.0];
+    self.longDescriptionTextView.backgroundColor = beigeColor;
     self.longDescriptionTextView.scrollEnabled = NO;
     self.longDescriptionTextView.editable = NO;
     self.longDescriptionTextView.alpha = 0.0;
@@ -207,6 +218,41 @@ typedef enum : NSUInteger {
     [self.closeButton addTarget:self action:@selector(closeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.closeButton.alpha = 0.0;
     [self.containerView addSubview:self.closeButton];
+    
+    self.termsView = [UIView new];
+    self.termsView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.termsView.backgroundColor = beigeColor;
+    [self.contentView addSubview:self.termsView];
+    
+    self.termsLabel = [UILabel new];
+    self.termsLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.termsLabel.numberOfLines = 0;
+    self.termsLabel.font = [UIFont systemFontOfSize:12];
+    self.termsLabel.textAlignment = NSTextAlignmentJustified;
+    [self.termsView addSubview:self.termsLabel];
+    
+    self.termsTitleView = [UIView new];
+    self.termsTitleView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.termsView addSubview:self.termsTitleView];
+    
+    self.termsTitleLineLeft = [UIView new];
+    self.termsTitleLineLeft.translatesAutoresizingMaskIntoConstraints = NO;
+    self.termsTitleLineLeft.alpha = 0.5;
+    self.termsTitleLineLeft.backgroundColor = [UIColor blackColor];
+    [self.termsTitleView addSubview:self.termsTitleLineLeft];
+    
+    self.termsTitleLineRight = [UIView new];
+    self.termsTitleLineRight.translatesAutoresizingMaskIntoConstraints = NO;
+    self.termsTitleLineRight.alpha = 0.5;
+    self.termsTitleLineRight.backgroundColor = [UIColor blackColor];
+    [self.termsTitleView addSubview:self.termsTitleLineRight];
+    
+    self.termsTitle = [UILabel new];
+    self.termsTitle.translatesAutoresizingMaskIntoConstraints = NO;
+    self.termsTitle.font = [UIFont boldSystemFontOfSize:12.0];
+    self.termsTitle.textAlignment = NSTextAlignmentCenter;
+    self.termsTitle.text = @"Terms & Conditions";
+    [self.termsTitleView addSubview:self.termsTitle];
 }
 
 - (void)configureLayout
@@ -215,7 +261,13 @@ typedef enum : NSUInteger {
     
     NSDictionary *views = @{ @"moreButton": self.moreButton,
                              @"shadowView": self.shadowView,
-                             @"longDescriptionTextView": self.longDescriptionTextView};
+                             @"longDescriptionTextView": self.longDescriptionTextView,
+                             @"termsView": self.termsView,
+                             @"termsLabel": self.termsLabel,
+                             @"termsTitleLineLeft": self.termsTitleLineLeft,
+                             @"termsTitleLineRight": self.termsTitleLineRight,
+                             @"termsTitle": self.termsTitle,
+                             @"termsTitleView": self.termsTitleView};
     
     //----------------------------------------
     //  shadowView
@@ -247,7 +299,7 @@ typedef enum : NSUInteger {
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[longDescriptionTextView]|" options:0 metrics:nil views:views]];
     
     // Tie the bottom edge of longDescription to the contentView
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[longDescriptionTextView]|" options:0 metrics:nil views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[longDescriptionTextView][termsView]|" options:0 metrics:nil views:views]];
     
     // Set the longDescription's minimum height so it always extends to the bottom edge of the screen
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
@@ -256,6 +308,26 @@ typedef enum : NSUInteger {
     
     // Top position of longDescription
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.longDescriptionTextView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
+
+    //----------------------------------------
+    //  termsView
+    //----------------------------------------
+    
+    [self.termsView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[termsTitleView]-12-[termsLabel]-|" options:0 metrics:nil views:views]];
+    [self.termsView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[termsTitleView]|" options:0 metrics:nil views:views]];
+    
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[termsView]|" options:0 metrics:nil views:views]];
+    [self.termsView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-20-[termsLabel]-20-|" options:0 metrics:nil views:views]];
+    [self.termsView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[termsTitleView(20)]" options:0 metrics:nil views:views]];
+    
+    // terms title
+    [self.termsTitleView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[termsTitleLineLeft]-12-[termsTitle]-12-[termsTitleLineRight]|" options:0 metrics:nil views:views]];
+    [self.termsTitleView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[termsTitleLineLeft(1)]" options:0 metrics:nil views:views]];
+    [self.termsTitleView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[termsTitleLineRight(1)]" options:0 metrics:nil views:views]];
+    [self.termsTitleView addConstraint:[NSLayoutConstraint constraintWithItem:self.termsTitle attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.termsTitleView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0]];
+    [self.termsTitleView addConstraint:[NSLayoutConstraint constraintWithItem:self.termsTitleLineLeft attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.termsTitleView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    [self.termsTitleView addConstraint:[NSLayoutConstraint constraintWithItem:self.termsTitleLineRight attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.termsTitleView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
+    [self.termsTitleView addConstraint:[NSLayoutConstraint constraintWithItem:self.termsTitle attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.termsTitleView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
 }
 
 - (void)configureContainerLayout

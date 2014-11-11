@@ -180,6 +180,12 @@
     if (lastViewedBarcodeAt != (id)[NSNull null] && [lastViewedBarcodeAt length] > 0) {
         self.lastViewedBarcodeAt = [dateFormatter dateFromString:lastViewedBarcodeAt];
     }
+    
+    // terms
+    NSString *terms = [JSON objectForKey:@"terms"];
+    if (terms != (id)[NSNull null] && [terms length] > 0) {
+        self.terms = terms;
+    }
 }
 
 - (NSDictionary *)toJSON {
