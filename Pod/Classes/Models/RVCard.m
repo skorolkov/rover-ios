@@ -157,6 +157,12 @@
         self.barcode = barcode;
     }
     
+    // barcodeType
+    NSNumber *barcodeType = [JSON objectForKey:@"barcode_type"];
+    if (barcodeType != (id)[NSNull null]) {
+        self.barcodeType = barcodeType;
+    }
+    
     // barcodeInstructions
     NSString *barcodeInstructions = [JSON objectForKey:@"barcode_instructions"];
     if (barcodeInstructions != (id)[NSNull null] && [barcodeInstructions length] > 0) {

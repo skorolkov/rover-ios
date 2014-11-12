@@ -73,6 +73,10 @@
  */
 @property (strong, nonatomic) NSString *barcode;
 
+/** The barcode type.
+ */
+@property (strong, nonatomic) NSNumber *barcodeType;
+
 /** The instructions for the barcode.
  */
 @property (strong, nonatomic) NSString *barcodeInstructions;

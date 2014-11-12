@@ -134,7 +134,7 @@ typedef enum : NSUInteger {
         self.barcodeView.cardView = self;
         self.barcodeView.title = self.title;
         self.barcodeView.shortDescription = card.barcodeInstructions;
-        [self.barcodeView setBarcode:card.barcode withType:AVMetadataObjectTypeCode128Code];
+        [self.barcodeView setBarcode:card.barcode withType:card.barcodeType.integerValue == 1 ? AVMetadataObjectTypeCode128Code : @"PLU"];
     } else {
         self.barcodeView = nil;
     }

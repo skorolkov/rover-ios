@@ -27,6 +27,15 @@
 
 - (void)setBarcode:(NSString *)code withType:(NSString *)barcodeType
 {
+    if ([barcodeType isEqualToString:@"PLU"]) {
+        
+    } else {
+        [self setStandardBarcode:code withType:barcodeType];
+    }
+}
+
+- (void)setStandardBarcode:(NSString *)code withType:(NSString *)barcodeType
+{
     UIImage *codeImage = [CodeGen genCodeWithContents:code machineReadableCodeObjectType:barcodeType];
     
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(560, 350), YES, [UIScreen mainScreen].scale);
