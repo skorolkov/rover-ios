@@ -196,6 +196,17 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     if ([self.delegate respondsToSelector:@selector(modalViewController:didDisplayCard:)]) {
         [self.delegate modalViewController:self didDisplayCard:card];
     }
+    
+    // Onboarding animations
+    UIDynamicAnimator *animator = [[UIDynamicAnimator alloc] initWithReferenceView:cardDeck];
+    UIAttachmentBehavior *attachment = [[UIAttachmentBehavior alloc] initWithItem:cardView attachedToAnchor:CGPointMake(100, 100)];
+    [animator addBehavior:attachment];
+    [UIView animateWithDuration:0.2 animations:^{
+        attachment.anchorPoint = CGPointMake(150, 150);
+    } completion:^(BOOL finished) {
+        [animator removeAllBehaviors];
+        
+    }];
 }
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didLikeCard:(RVCardView *)cardView {
