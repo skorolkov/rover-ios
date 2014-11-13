@@ -47,7 +47,7 @@
     //self.view.useCloseButton = YES;
     self.view.delegate = self;
     [self configureView];
-    [self.view expandToFrame:self.view.frame animated:NO];
+    [self.view expandToFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height + 20) animated:NO];
 }
 
 - (void)configureView {
