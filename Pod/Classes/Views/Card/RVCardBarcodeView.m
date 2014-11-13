@@ -28,10 +28,31 @@
 - (void)setBarcode:(NSString *)code withType:(NSString *)barcodeType
 {
     if ([barcodeType isEqualToString:@"PLU"]) {
-        
+        [self setPLUCode:code];
     } else {
         [self setStandardBarcode:code withType:barcodeType];
     }
+}
+
+- (void)setPLUCode:(NSString *)code
+{
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(560, 350), YES, [UIScreen mainScreen].scale);
+
+    NSDictionary *textAttributes = @{
+                                     NSFontAttributeName: [UIFont boldSystemFontOfSize:126],
+                                     NSForegroundColorAttributeName: [UIColor whiteColor]
+                                     };
+    
+    CGSize textSize = [code boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:textAttributes context:nil].size;
+    
+    [code drawAtPoint:CGPointMake(280 - (textSize.width / 2), 110) withAttributes:textAttributes];
+    
+    [@"PLU" drawAtPoint:CGPointMake(245, 60) withAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:36],
+                                                              NSForegroundColorAttributeName: [UIColor lightGrayColor]}];
+	UIImage *PLUImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    [self setImage:PLUImage];
 }
 
 - (void)setStandardBarcode:(NSString *)code withType:(NSString *)barcodeType
@@ -39,12 +60,9 @@
     UIImage *codeImage = [CodeGen genCodeWithContents:code machineReadableCodeObjectType:barcodeType];
     
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(560, 350), YES, [UIScreen mainScreen].scale);
-    
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGContextSaveGState(context);
-    
-
     {
         //Set the stroke (pen) color
         CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
@@ -52,31 +70,16 @@
         CGContextSetLineWidth(context, 10.0);
         
         // Draw a line
-        //Start at this point
         CGContextMoveToPoint(context, 65.0, 75.0);
-        
-        //Give instructions to the CGContext
-        //(move "pen" around the screen)
         CGContextAddLineToPoint(context, 65.0, 275.0);
-        
-        
-        //Draw it
         CGContextStrokePath(context);
     }
     
     CGContextDrawImage(context, CGRectMake(70, 75, 420, 200), [codeImage CGImage]);
-    
     {
         // Draw a line
-        //Start at this point
         CGContextMoveToPoint(context, 495.0, 75.0);
-        
-        //Give instructions to the CGContext
-        //(move "pen" around the screen)
         CGContextAddLineToPoint(context, 495.0, 275.0);
-        
-        
-        //Draw it
         CGContextStrokePath(context);
     }
     
