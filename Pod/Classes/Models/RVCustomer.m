@@ -88,6 +88,12 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
     self.dirty = YES;
 }
 
+- (void)setHasSeenTutorial:(BOOL)hasSeenTutorial
+{
+    _hasSeenTutorial = hasSeenTutorial;
+    [self cache];
+}
+
 - (void)setDirty:(BOOL)dirty {
     _dirty = dirty;
     [self cache];
@@ -175,6 +181,7 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
         _name = [decoder decodeObjectForKey:@"name"];
         _email = [decoder decodeObjectForKey:@"email"];
         _dirty = [decoder decodeBoolForKey:@"dirty"];
+        _hasSeenTutorial = [decoder decodeBoolForKey:@"hasSeenTutorial"];
         
         NSMutableDictionary *attributes = [decoder decodeObjectForKey:@"attributes"];
         if (attributes != nil) {
@@ -191,6 +198,7 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
     [encoder encodeObject:self.email forKey:@"email"];
     [encoder encodeBool:self.dirty forKey:@"dirty"];
     [encoder encodeObject:self.attributes forKey:@"attributes"];
+    [encoder encodeBool:self.hasSeenTutorial forKey:@"hasSeenTutorial"];
 }
 
 #pragma mark - Overridden Methods
