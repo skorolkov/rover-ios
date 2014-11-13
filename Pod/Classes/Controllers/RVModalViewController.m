@@ -16,6 +16,8 @@
 #import "RVCloseButton.h"
 #import "RVModalView.h"
 #import "RVImageEffects.h"
+#import "RVHelper.h"
+#import "RVCustomerProject.h"
 
 NSString *const RVModalViewOptionsTag = @"Tags";
 NSString *const RVModalViewOptionsPredicate = @"Predicate";
@@ -129,7 +131,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     self.view.cardDeck.dataSource = self;
     
     self.visit = [[Rover shared] currentVisit];
-    //[self.view.cardDeck reloadData];
+    [RVCustomer cachedCustomer];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -196,17 +198,16 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     if ([self.delegate respondsToSelector:@selector(modalViewController:didDisplayCard:)]) {
         [self.delegate modalViewController:self didDisplayCard:card];
     }
-    
+
     // Onboarding animations
-    UIDynamicAnimator *animator = [[UIDynamicAnimator alloc] initWithReferenceView:cardDeck];
-    UIAttachmentBehavior *attachment = [[UIAttachmentBehavior alloc] initWithItem:cardView attachedToAnchor:CGPointMake(100, 100)];
-    [animator addBehavior:attachment];
-    [UIView animateWithDuration:0.2 animations:^{
-        attachment.anchorPoint = CGPointMake(150, 150);
-    } completion:^(BOOL finished) {
-        [animator removeAllBehaviors];
-        
-    }];
+    if (idx == 0 && ![RVCustomer cachedCustomer].hasSeenTutorial) {
+        [self demonstrateCardSwipeWithCardView:cardView completion:^(BOOL finished) {
+            [self demonstrateTapToExpandWithCompletion:^(BOOL finished) {
+                [RVCustomer cachedCustomer].hasSeenTutorial = YES;
+            }];
+        }];
+    }
+
 }
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didLikeCard:(RVCardView *)cardView {
@@ -256,6 +257,22 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     [cardView setCard:card];
     
     return cardView;
+}
+
+#pragma mark - Onboarding animations
+
+
+- (void)demonstrateCardSwipeWithCardView:(RVCardView *)cardView completion:( void (^)(BOOL) )completion
+{
+    [RVHelper showMessage:@"Swipe for the next card" holdFor:.77 delay:.7 duration:.4];
+    [RVHelper displaySwipeTutorialWithCardView:cardView completion:completion];
+
+}
+
+- (void)demonstrateTapToExpandWithCompletion:( void (^)(BOOL) )completion
+{
+    [RVHelper showMessage:@"Tap for more info" holdFor:.73 delay:.1 duration:.4];
+    [RVHelper displayTapTutorialAnimationAtPoint:self.view.cardDeck.topCard.center completion:completion];
 }
 
 @end

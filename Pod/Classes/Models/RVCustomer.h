@@ -36,4 +36,8 @@
  */
 - (id)get:(NSString *)attribute;
 
+/** Indicates weather the customer has seen the tutorial on this device.
+ */
+@property (nonatomic, assign) BOOL hasSeenTutorial;
+
 @end
