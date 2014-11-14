@@ -94,6 +94,7 @@ typedef enum : NSUInteger {
             [self.buttonBar setPressed:liked forButton:self.buttonBar.leftButton];
         }
     }
+    
     _liked = liked;
 }
 
@@ -193,9 +194,11 @@ typedef enum : NSUInteger {
     [self.buttonBar setPressedCaption:leftButtonActiveTitle forButton:self.buttonBar.leftButton];
     [self.buttonBar setPressedCaption:rightButtonActiveTitle forButton:self.buttonBar.rightButton];
     
-    self.liked = card.likedAt != nil;
     
     _card = card;
+    
+    self.liked = card.likedAt != nil;
+    
 }
 
 #pragma mark - Initialization
