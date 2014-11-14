@@ -33,6 +33,7 @@ typedef enum : NSUInteger {
 @property (strong, nonatomic) UIView *termsTitleLineRight;
 @property (strong, nonatomic) UILabel *termsTitle;
 @property (strong, nonatomic) UIView *termsTitleView;
+@property (strong, nonatomic) UIView *descriptionView;
 
 // Close button
 @property (strong, nonatomic) RVCloseButton *closeButton;
@@ -86,9 +87,13 @@ typedef enum : NSUInteger {
     if (liked) {
         self.discarded = NO;
     }
-    
-    [self.buttonBar setPressed:liked forButton:self.buttonBar.leftButton];
-    
+
+    if (self.card.buttons && self.card.buttons.count > 0 ) {
+        NSNumber *buttonType = [self.card.buttons[0] objectForKey:@"button_type"];
+        if (buttonType.integerValue == 1) {
+            [self.buttonBar setPressed:liked forButton:self.buttonBar.leftButton];
+        }
+    }
     _liked = liked;
 }
 
@@ -103,6 +108,17 @@ typedef enum : NSUInteger {
 - (void)setUseCloseButton:(BOOL)useCloseButton {
     _useCloseButton = useCloseButton;
     self.closeButton.hidden = !self.useCloseButton;
+}
+
+- (void)setTerms:(NSString *)terms
+{
+    _terms = terms;
+    
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    paragraphStyle.lineSpacing = 2;
+    NSAttributedString *attrText = [[NSAttributedString alloc] initWithString:terms attributes:@{NSParagraphStyleAttributeName: paragraphStyle}];
+    
+    self.termsLabel.attributedText = attrText;
 }
 
 - (void)setCard:(RVCard *)card
@@ -123,10 +139,10 @@ typedef enum : NSUInteger {
     self.discarded = card.discardedAt != nil;
     
     if (card.terms) {
-        self.termsLabel.text = card.terms;
+        self.terms = card.terms;
     } else {
         // This works for now because we aren't reusing cardViews
-        [self.termsView removeFromSuperview];
+        [self.termsTitleView removeFromSuperview];
     }
     
     if (card.barcode) {
@@ -202,16 +218,17 @@ typedef enum : NSUInteger {
     [self.contentView sendSubviewToBack:self.moreButton];
     
     UIColor *beigeColor = [UIColor colorWithRed:233.0/255.0 green:233.0/255.5 blue:233.0/255.0 alpha:1.0];
+    UIColor *bodyTextColor = [UIColor colorWithRed:124/255.f green:124/255.f blue:124/255.f alpha:1];
     
     self.longDescriptionTextView = [UITextView new];
     self.longDescriptionTextView.translatesAutoresizingMaskIntoConstraints = NO;
     self.longDescriptionTextView.font = [UIFont systemFontOfSize:14.0];
-    self.longDescriptionTextView.backgroundColor = beigeColor;
     self.longDescriptionTextView.scrollEnabled = NO;
     self.longDescriptionTextView.editable = NO;
     self.longDescriptionTextView.alpha = 0.0;
-    self.longDescriptionTextView.textContainerInset = UIEdgeInsetsMake(20.0, 20.0, 0.0, 20.0);
-    [self.contentView addSubview:self.longDescriptionTextView];
+    self.longDescriptionTextView.textContainerInset = UIEdgeInsetsMake(20.0, 26.0, 0.0, 26.0);
+    self.longDescriptionTextView.backgroundColor = [UIColor clearColor];
+    self.longDescriptionTextView.textColor = bodyTextColor;
     
     self.closeButton = [[RVCloseButton alloc] initWithFrame:CGRectMake(272.0, 24.0, 44.0, 44.0)];
     self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
@@ -221,38 +238,47 @@ typedef enum : NSUInteger {
     
     self.termsView = [UIView new];
     self.termsView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.termsView.backgroundColor = beigeColor;
-    [self.contentView addSubview:self.termsView];
     
     self.termsLabel = [UILabel new];
     self.termsLabel.translatesAutoresizingMaskIntoConstraints = NO;
     self.termsLabel.numberOfLines = 0;
-    self.termsLabel.font = [UIFont systemFontOfSize:12];
+    self.termsLabel.font = [UIFont systemFontOfSize:13];
     self.termsLabel.textAlignment = NSTextAlignmentJustified;
+    self.termsLabel.textColor = bodyTextColor;
     [self.termsView addSubview:self.termsLabel];
     
     self.termsTitleView = [UIView new];
     self.termsTitleView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.termsView addSubview:self.termsTitleView];
     
+    UIColor *titleBarColor = [UIColor colorWithRed:172/255.f green:172/255.f blue:172/255.f alpha:1.0];
+    
     self.termsTitleLineLeft = [UIView new];
     self.termsTitleLineLeft.translatesAutoresizingMaskIntoConstraints = NO;
     self.termsTitleLineLeft.alpha = 0.5;
-    self.termsTitleLineLeft.backgroundColor = [UIColor blackColor];
+    self.termsTitleLineLeft.backgroundColor = titleBarColor;
     [self.termsTitleView addSubview:self.termsTitleLineLeft];
     
     self.termsTitleLineRight = [UIView new];
     self.termsTitleLineRight.translatesAutoresizingMaskIntoConstraints = NO;
     self.termsTitleLineRight.alpha = 0.5;
-    self.termsTitleLineRight.backgroundColor = [UIColor blackColor];
+    self.termsTitleLineRight.backgroundColor = titleBarColor;
     [self.termsTitleView addSubview:self.termsTitleLineRight];
     
     self.termsTitle = [UILabel new];
     self.termsTitle.translatesAutoresizingMaskIntoConstraints = NO;
-    self.termsTitle.font = [UIFont boldSystemFontOfSize:12.0];
+    self.termsTitle.font = [UIFont boldSystemFontOfSize:13.0];
     self.termsTitle.textAlignment = NSTextAlignmentCenter;
     self.termsTitle.text = @"Terms & Conditions";
+    self.termsTitle.textColor = [UIColor colorWithRed:73/255.f green:73/255.f blue:73/255.f alpha:1];
     [self.termsTitleView addSubview:self.termsTitle];
+    
+    self.descriptionView = [UIView new];
+    self.descriptionView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.descriptionView.backgroundColor = beigeColor;
+    [self.descriptionView addSubview:self.longDescriptionTextView];
+    [self.descriptionView addSubview:self.termsView];
+    [self.contentView addSubview:self.descriptionView];
 }
 
 - (void)configureLayout
@@ -267,7 +293,8 @@ typedef enum : NSUInteger {
                              @"termsTitleLineLeft": self.termsTitleLineLeft,
                              @"termsTitleLineRight": self.termsTitleLineRight,
                              @"termsTitle": self.termsTitle,
-                             @"termsTitleView": self.termsTitleView};
+                             @"termsTitleView": self.termsTitleView,
+                             @"descriptionView": self.descriptionView};
     
     //----------------------------------------
     //  shadowView
@@ -295,29 +322,32 @@ typedef enum : NSUInteger {
     //  longDescription
     //----------------------------------------
     
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[descriptionView]|" options:0 metrics:nil views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[descriptionView]|" options:0 metrics:nil views:views]];
+    
     // Horizontal spacing of longDescription
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[longDescriptionTextView]|" options:0 metrics:nil views:views]];
+    [self.descriptionView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[longDescriptionTextView]|" options:0 metrics:nil views:views]];
     
     // Tie the bottom edge of longDescription to the contentView
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[longDescriptionTextView][termsView]|" options:0 metrics:nil views:views]];
+    [self.descriptionView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[longDescriptionTextView][termsView]|" options:0 metrics:nil views:views]];
     
     // Set the longDescription's minimum height so it always extends to the bottom edge of the screen
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
     CGFloat minHeight = screenBounds.size.height - 344.0;
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.longDescriptionTextView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:minHeight]];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.descriptionView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:minHeight]];
     
     // Top position of longDescription
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.longDescriptionTextView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.descriptionView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
 
     //----------------------------------------
     //  termsView
     //----------------------------------------
     
-    [self.termsView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[termsTitleView]-12-[termsLabel]-|" options:0 metrics:nil views:views]];
+    [self.termsView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[termsTitleView]-12-[termsLabel]->=12-|" options:0 metrics:nil views:views]];
     [self.termsView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[termsTitleView]|" options:0 metrics:nil views:views]];
     
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[termsView]|" options:0 metrics:nil views:views]];
-    [self.termsView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-20-[termsLabel]-20-|" options:0 metrics:nil views:views]];
+    [self.descriptionView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[termsView]|" options:0 metrics:nil views:views]];
+    [self.termsView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-26-[termsLabel]-26-|" options:0 metrics:nil views:views]];
     [self.termsView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[termsTitleView(20)]" options:0 metrics:nil views:views]];
     
     // terms title

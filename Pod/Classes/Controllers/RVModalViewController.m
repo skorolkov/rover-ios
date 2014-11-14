@@ -264,7 +264,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
 - (void)demonstrateCardSwipeWithCardView:(RVCardView *)cardView completion:( void (^)(BOOL) )completion
 {
-    [RVHelper showMessage:@"Swipe for the next card" holdFor:.77 delay:.7 duration:.4];
+    [RVHelper showMessage:@"Swipe for the next card" holdFor:1 delay:.7 duration:.4];
     [RVHelper displaySwipeTutorialWithCardView:cardView completion:completion];
 
 }

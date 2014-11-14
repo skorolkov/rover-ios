@@ -53,7 +53,7 @@
                      animations:^{
                          cardView.layer.transform = CATransform3DConcat(CATransform3DMakeTranslation(30, 5, 0), CATransform3DMakeRotation(-0.05, 0, 0, 1));
                      } completion:^(BOOL finished) {
-                         [UIView animateWithDuration:.5 delay:.77 usingSpringWithDamping:1 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseInOut
+                         [UIView animateWithDuration:.5 delay:1 usingSpringWithDamping:1 initialSpringVelocity:1 options:UIViewAnimationOptionCurveEaseInOut
                                           animations:^{
                                               cardView.layer.transform = CATransform3DIdentity;
                                           } completion:^(BOOL finished) {

@@ -46,6 +46,34 @@
     return _secondaryFontColor;
 }
 
+- (NSURL *)imageURL
+{
+    if (!_imageURL) {
+        return nil;
+    }
+    
+    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width * UIScreen.mainScreen.scale;
+    NSInteger screenHeight;
+    
+    switch (screenWidth) {
+        case 750:
+            screenHeight = 469;
+            break;
+        case 1242:
+            screenHeight = 776;
+            break;
+        default: {
+            screenWidth = 640;
+            screenHeight = 400;
+        }
+            break;
+    }
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?w=%ld&h=%ld&fit=crop&fm=jpg", _imageURL.absoluteString, screenWidth, screenHeight]];
+    
+    return url;
+}
+
 #pragma mark - Initialization
 
 - (id)initWithJSON:(NSDictionary *)JSON {
