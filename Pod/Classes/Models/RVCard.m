@@ -46,6 +46,34 @@
     return _secondaryFontColor;
 }
 
+- (NSURL *)imageURL
+{
+    if (!_imageURL) {
+        return nil;
+    }
+    
+    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width * UIScreen.mainScreen.scale;
+    NSInteger screenHeight;
+    
+    switch (screenWidth) {
+        case 750:
+            screenHeight = 469;
+            break;
+        case 1242:
+            screenHeight = 776;
+            break;
+        default: {
+            screenWidth = 640;
+            screenHeight = 400;
+        }
+            break;
+    }
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?w=%ld&h=%ld&fit=crop&fm=jpg", _imageURL.absoluteString, (long)screenWidth, (long)screenHeight]];
+    
+    return url;
+}
+
 #pragma mark - Initialization
 
 - (id)initWithJSON:(NSDictionary *)JSON {
@@ -157,6 +185,12 @@
         self.barcode = barcode;
     }
     
+    // barcodeType
+    NSNumber *barcodeType = [JSON objectForKey:@"barcode_type"];
+    if (barcodeType != (id)[NSNull null]) {
+        self.barcodeType = barcodeType;
+    }
+    
     // barcodeInstructions
     NSString *barcodeInstructions = [JSON objectForKey:@"barcode_instructions"];
     if (barcodeInstructions != (id)[NSNull null] && [barcodeInstructions length] > 0) {
@@ -179,6 +213,12 @@
     NSString *lastViewedBarcodeAt = [JSON objectForKey:@"last_viewed_barcode_at"];
     if (lastViewedBarcodeAt != (id)[NSNull null] && [lastViewedBarcodeAt length] > 0) {
         self.lastViewedBarcodeAt = [dateFormatter dateFromString:lastViewedBarcodeAt];
+    }
+    
+    // terms
+    NSString *terms = [JSON objectForKey:@"terms"];
+    if (terms != (id)[NSNull null] && [terms length] > 0) {
+        self.terms = terms;
     }
 }
 

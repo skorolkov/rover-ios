@@ -32,6 +32,7 @@
 
 @property (strong, nonatomic) NSURL *imageURL;
 @property (strong, nonatomic) NSString *longDescription;
+@property (strong, nonatomic) NSString *terms;
 @property (nonatomic) CGFloat shadow;
 @property (strong, nonatomic) UIColor *secondaryBackgroundColor;
 @property (strong, nonatomic) UIColor *secondaryFontColor;
