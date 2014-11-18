@@ -15,6 +15,7 @@
 #import "RVCard.h"
 
 #import <RSBarcodes/RSUnifiedCodeGenerator.h>
+#import <UIActivityIndicator-for-SDWebImage/UIImageView+UIActivityIndicatorForSDWebImage.h>
 
 typedef enum : NSUInteger {
     RVButtonActionNone      =   0,
@@ -52,15 +53,7 @@ typedef enum : NSUInteger {
 
 - (void)setImageURL:(NSURL *)imageURL
 {
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0);
-    dispatch_async(queue, ^{
-        NSData *data = [NSData dataWithContentsOfURL:imageURL];
-        UIImage *image = [UIImage imageWithData:data];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.image = image;
-        });
-    });
-    _imageURL = imageURL;
+    [self.imageView setImageWithURL:imageURL usingActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 }
 
 - (void)setShadow:(CGFloat)shadow

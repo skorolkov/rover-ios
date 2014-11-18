@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "Rover"
-  s.version          = "0.23"
+  s.version          = "0.23.1"
   s.summary          = "Rover iOS SDK for developing apps using the Rover platform."
   s.description      = <<-DESC
                        The Rover iOS SDK enables beacon detection and communication with the Rover platform. 
@@ -24,6 +24,7 @@ Pod::Spec.new do |s|
 
   s.frameworks = 'Accelerate', 'CoreLocation'
   s.dependency 'RSBarcodes', '~> 0.1'
+  s.dependency 'UIActivityIndicator-for-SDWebImage', '~> 1.2'
   
   # s.subspec 'Networking' do |ss|
   #   ss.dependency 'Rover/Models'

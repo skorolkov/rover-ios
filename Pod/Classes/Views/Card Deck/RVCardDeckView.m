@@ -33,7 +33,6 @@ typedef struct {
 @property (strong, nonatomic) NSMapTable *cardIndexMap;
 @property (strong, nonatomic) NSMutableArray *cards;
 @property (readonly, nonatomic) NSArray *otherCards;
-@property (strong, nonatomic) UIButton *invisibleButton;
 
 @property (strong, nonatomic) UIPanGestureRecognizer *panGesture;
 @property (strong, nonatomic) UIDynamicAnimator *animator;
@@ -77,11 +76,10 @@ typedef struct {
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.invisibleButton = [[UIButton alloc] initWithFrame:self.bounds];
-        [self.invisibleButton addTarget:self action:@selector(invisibleButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        [self addSubview:self.invisibleButton];
-        
         self.animator = [[UIDynamicAnimator alloc] initWithReferenceView:self];
+        
+        UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(didTapScreen:)];
+        [self addGestureRecognizer:tapGesture];
         
         self.panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(didPan:)];
         self.panGesture.delegate = (id <UIGestureRecognizerDelegate>)self;
@@ -145,15 +143,16 @@ typedef struct {
     self.cards = [NSMutableArray arrayWithCapacity:numCards];
     self.cardIndexMap = [NSMapTable weakToStrongObjectsMapTable];
     
-    // Create the cards and add them as subviews in reverse order so the first card is on top
-    for (int i = ((int)numCards - 1); i >= 0; i--) {
+    // Create the cards in order so the first image loads first
+    for (int i = 0, l = (int)numCards; i < l; i++) {
         RVCardView *cardView = [_dataSource cardDeck:self cardViewForItemAtIndex:i];
         cardView.delegate = self;
         cardView.frame = CGRectMake(0, 0, [RVCardView contractedWidth], [RVCardView contractedHeight]);
         cardView.alpha = 0.0;
-        [self.cards insertObject:cardView atIndex:0];
+        [self.cards insertObject:cardView atIndex:i];
         [self.cardIndexMap setObject:@(i) forKey:cardView];
         [self addSubview:cardView];
+        [self sendSubviewToBack:cardView];
     }
     
     if (self.topCard) {
@@ -280,7 +279,7 @@ typedef struct {
 
 #pragma mark - Actions
 
-- (void)invisibleButtonPressed:(UIButton *)button {
+- (void)didTapScreen:(UITapGestureRecognizer *)tapGesture {
     if ([self.delegate respondsToSelector:@selector(cardDeckDidPressBackground:)]) {
         [self.delegate cardDeckDidPressBackground:self];
     }
