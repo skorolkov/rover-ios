@@ -93,39 +93,6 @@ const CGFloat kRVCardViewImageRatio = .625;
 
 - (void)setImage:(UIImage *)image
 {
-    /*
-    CGFloat imageWidth = image.size.width;
-    CGFloat imageHeight = image.size.height;
-    CGFloat imageRatio = imageWidth / imageHeight;
-    
-    if (imageRatio == 1.6) {
-        self.imageView.image = image;
-        return;
-    }
-    
-    CGFloat cropHeight;
-    CGFloat cropWidth;
-    CGFloat cropX;
-    CGFloat cropY;
-    
-    if (imageRatio < kRVCardViewImageRatio) {
-        cropWidth = imageWidth;
-        cropHeight = imageWidth / kRVCardViewImageRatio;
-        cropX = 0.0;
-        cropY = (imageHeight - cropHeight) / 2;
-    } else {
-        cropWidth = imageHeight * kRVCardViewImageRatio;
-        cropHeight = imageHeight;
-        cropX = (imageWidth - cropWidth) / 2;
-        cropY = 0.0;
-    }
-    
-    CGRect crop = CGRectMake(cropX, cropY, cropWidth, cropHeight);
-    
-    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], crop);
-    self.imageView.image = [UIImage imageWithCGImage:imageRef];
-    CGImageRelease(imageRef);
-     */
     self.imageView.image = image;
 }
 
