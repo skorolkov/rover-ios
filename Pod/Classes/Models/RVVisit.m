@@ -149,6 +149,32 @@
         }];
         self.cards = cards;
     }
+    
+    
+    // organizationName
+    NSString *organizationName = [JSON objectForKey:@"organization_name"];
+    if (organizationName && organizationName != (id)[NSNull null] && [organizationName length] > 0) {
+        self.organizationName = organizationName;
+    }
+    
+    // organizationId
+    NSString *organizationId = [JSON objectForKey:@"organization_id"];
+    if (organizationId && organizationId != (id)[NSNull null] && [organizationId length] > 0) {
+        self.organizationId = organizationId;
+    }
+    
+    // locationName
+    NSString *locationName = [JSON objectForKey:@"location_name"];
+    if (locationName && organizationName != (id)[NSNull null] && [locationName length] > 0) {
+        self.locationName = locationName;
+    }
+    
+    // locationAddress
+    NSString *locationAddress = [JSON objectForKey:@"location_address"];
+    if (locationAddress && organizationName != (id)[NSNull null] && [locationAddress length] > 0) {
+        self.locationAddress = locationAddress;
+    }
+    
 }
 
 - (NSDictionary *)toJSON {

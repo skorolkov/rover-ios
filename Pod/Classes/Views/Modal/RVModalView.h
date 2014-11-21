@@ -18,10 +18,13 @@
 @property (strong, nonatomic) UIImageView *background;
 @property (strong, nonatomic) RVCardDeckView *cardDeck;
 
+- (void)animateIn;
+
 @end
 
 @protocol RVModalViewDelegate <NSObject>
 
 - (void)modalViewBackgroundPressed:(RVModalView *)modalView;
+- (void)modalViewCloseButtonPressed:(RVModalView *)modalView;
 
 @end

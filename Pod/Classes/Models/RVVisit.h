@@ -16,6 +16,11 @@
  */
 @property (strong, nonatomic) NSString *welcomeMessage;
 
+@property (strong, nonatomic) NSString *organizationName;
+@property (strong, nonatomic) NSString *organizationId;
+@property (strong, nonatomic) NSString *locationName;
+@property (strong, nonatomic) NSString *locationAddress;
+
 /** The date and time the customer entered the location.
  */
 @property (strong, nonatomic) NSDate *enteredAt;

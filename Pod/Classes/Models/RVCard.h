@@ -21,6 +21,10 @@
  */
 @property (strong, nonatomic) NSString *title;
 
+/** The id of the card. This is the same ID seen form the web console.
+ */
+@property (strong, nonatomic) NSNumber *cardId;
+
 /** The three-line short description of the card displayed directly below the title.
  */
 @property (strong, nonatomic) NSString *shortDescription;
