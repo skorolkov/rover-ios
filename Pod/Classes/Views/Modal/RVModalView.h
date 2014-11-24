@@ -17,6 +17,7 @@
 
 @property (strong, nonatomic) UIImageView *background;
 @property (strong, nonatomic) RVCardDeckView *cardDeck;
+@property (nonatomic, strong) RVCloseButton *closeButton;
 
 - (void)animateIn;
 

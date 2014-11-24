@@ -179,10 +179,6 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
 #pragma mark - RVCardDeckViewDelegate
 
-- (void)cardDeckDidPressBackground:(RVCardDeckView *)cardDeck {
-
-}
-
 - (void)cardDeck:(RVCardDeckView *)cardDeck didSwipeCard:(RVCardView *)cardView {
     NSUInteger idx = [cardDeck indexForCardView:cardView];
     RVCard *card = [self.cards objectAtIndex:idx];
@@ -244,9 +240,17 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 }
 
 - (void)cardDeckDidEnterFullScreen:(RVCardDeckView *)cardDeck {
+    self.view.closeButton.color = cardDeck.topCard.card.primaryFontColor;
+    [self.view.closeButton setNeedsDisplay];
     RVCard *card = cardDeck.topCard.card;
     card.lastExpandedAt = [NSDate date];
     [self saveCard:card];
+}
+
+- (void)cardDeckDidExitFullScreen:(RVCardDeckView *)cardDeck
+{
+    self.view.closeButton.color = [UIColor whiteColor];
+    [self.view.closeButton setNeedsDisplay];
 }
 
 - (void)cardDeckDidEnterBarcodeView:(RVCardDeckView *)cardDeck {

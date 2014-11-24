@@ -13,7 +13,7 @@
 
 + (void)showMessage:(NSString *)message holdFor:(NSTimeInterval)seconds delay:(NSTimeInterval)delay duration:(NSTimeInterval)duration
 {
-    UIWindow *mainWindow = [[UIApplication sharedApplication].delegate window];
+    UIWindow *mainWindow = [[UIApplication sharedApplication] keyWindow];
     
     UIView *messageContainer = [[UIView alloc] initWithFrame:CGRectMake(0, mainWindow.frame.size.height - 40, mainWindow.frame.size.width, 50)];
     messageContainer.alpha = 0;
@@ -66,7 +66,7 @@
 
 + (void)displayTapTutorialAnimationAtPoint:(CGPoint)point completion:( void (^)(BOOL finished))completion
 {
-    UIWindow *mainWindow = [[UIApplication sharedApplication].delegate window];
+    UIWindow *mainWindow = [[UIApplication sharedApplication] keyWindow];
     
     UIView *circleView = [[UIView alloc] initWithFrame:CGRectMake(-34, point.y - 50, 34, 34)];
     circleView.backgroundColor = [UIColor blackColor];
