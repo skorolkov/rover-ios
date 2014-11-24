@@ -179,6 +179,11 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
 #pragma mark - RVCardDeckViewDelegate
 
+- (void)cardDeckDidPressBackground:(RVCardDeckView *)cardDeck
+{
+    
+}
+
 - (void)cardDeck:(RVCardDeckView *)cardDeck didSwipeCard:(RVCardView *)cardView {
     NSUInteger idx = [cardDeck indexForCardView:cardView];
     RVCard *card = [self.cards objectAtIndex:idx];
