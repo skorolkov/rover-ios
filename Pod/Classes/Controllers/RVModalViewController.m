@@ -119,6 +119,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
 - (void)loadView {
     self.view = [[RVModalView alloc] initWithFrame:UIScreen.mainScreen.applicationFrame];
+    self.view.delegate = self;
 }
 
 - (void)viewDidLoad {
@@ -135,7 +136,9 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [self.view.cardDeck animateIn:nil];
+    [self.view.cardDeck animateIn:^{
+        [self.view animateIn];
+    }];
 }
 
 /* Create a blurred snapshot of current screen
@@ -148,8 +151,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    UIColor *tintColor = [UIColor colorWithWhite:0.0 alpha:0.15];
-    image = [RVImageEffects applyBlurWithRadius:3 tintColor:tintColor saturationDeltaFactor:1 maskImage:nil toImage:image];
+    image = [RVImageEffects applyBlurWithRadius:self.modalBlurRadius tintColor:self.modalTintColor saturationDeltaFactor:1 maskImage:nil toImage:image];
     
     self.view.background.image = image;
 }
@@ -163,17 +165,19 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
 #pragma mark - RVModalViewDelegate
 
-- (void)modalViewBackgroundPressed:(RVModalView *)modalView {
-    if (self.delegate) {
+- (void)modalViewCloseButtonPressed:(RVModalView *)modalView {
+    if (self.view.cardDeck.isFullScreen) {
+        [self.view.cardDeck exitFullScreen];
+    } else if (self.delegate) {
         [self.delegate modalViewControllerDidFinish:self];
     }
 }
 
-#pragma mark - RVCardDeckViewDelegate
+- (void)modalViewBackgroundPressed:(RVModalView *)modalView {
 
-- (void)cardDeckDidPressBackground:(RVCardDeckView *)cardDeck {
-    [self.delegate modalViewControllerDidFinish:self];
 }
+
+#pragma mark - RVCardDeckViewDelegate
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didSwipeCard:(RVCardView *)cardView {
     NSUInteger idx = [cardDeck indexForCardView:cardView];
@@ -201,9 +205,11 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
     // Onboarding animations
     if (idx == 0 && ![RVCustomer cachedCustomer].hasSeenTutorial) {
+        self.view.userInteractionEnabled = NO;
         [self demonstrateCardSwipeWithCardView:cardView completion:^(BOOL finished) {
             [self demonstrateTapToExpandWithCompletion:^(BOOL finished) {
                 [RVCustomer cachedCustomer].hasSeenTutorial = YES;
+                self.view.userInteractionEnabled = YES;
             }];
         }];
     }
@@ -234,9 +240,17 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 }
 
 - (void)cardDeckDidEnterFullScreen:(RVCardDeckView *)cardDeck {
+    self.view.closeButton.color = cardDeck.topCard.card.primaryFontColor;
+    [self.view.closeButton setNeedsDisplay];
     RVCard *card = cardDeck.topCard.card;
     card.lastExpandedAt = [NSDate date];
     [self saveCard:card];
+}
+
+- (void)cardDeckDidExitFullScreen:(RVCardDeckView *)cardDeck
+{
+    self.view.closeButton.color = [UIColor whiteColor];
+    [self.view.closeButton setNeedsDisplay];
 }
 
 - (void)cardDeckDidEnterBarcodeView:(RVCardDeckView *)cardDeck {

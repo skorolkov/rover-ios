@@ -8,6 +8,8 @@
 #import <Foundation/Foundation.h>
 #import "RVModel.h"
 
+@class RVLocation;
+
 /** Represents a vist to a real-world physical location by a customer. A visit object will be created by the Rover Platform and delivered to the SDK when a customer enters a location.
  */
 @interface RVVisit : RVModel
@@ -15,6 +17,15 @@
 /** When the customer enters a location while their phone is asleep, the app should deliver a push notification. The welcomeMessage property should be used for the text property of the notification.
  */
 @property (strong, nonatomic) NSString *welcomeMessage;
+
+@property (strong, nonatomic) NSString *organizationName;
+@property (strong, nonatomic) NSString *organizationId;
+@property (strong, nonatomic) NSString *locationName;
+@property (strong, nonatomic) NSString *locationAddress;
+
+/** The location which the customer has entered.
+ */
+@property (strong, nonatomic) RVLocation *location;
 
 /** The date and time the customer entered the location.
  */

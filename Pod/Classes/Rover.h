@@ -121,6 +121,14 @@ extern NSString *const kRoverDidSwipeCardNotification;
  */
 @property (nonatomic) BOOL autoPresentModal;
 
+/** Blur radius for the modal backdrop.
+ */
+@property (nonatomic) NSUInteger modalBackdropBlurRadius;
+
+/** Tint color for the modal backdrop.
+ */
+@property (nonatomic, strong) UIColor *modalBackdropTintColor;
+
 /** Don't change this.
  */
 @property (strong, nonatomic) NSString *serverURL;

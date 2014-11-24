@@ -65,6 +65,9 @@ NSString *const RVModalViewOptionsPredicate;
  */
 @property (nonatomic, strong) NSDictionary *options;
 
+@property (nonatomic, strong) UIColor *modalTintColor;
+@property (nonatomic) NSUInteger modalBlurRadius;
+
 @end
 
 /** Defines the delegate methods your app can implement in order to be notified of certain events during the view controller's lifecyle.

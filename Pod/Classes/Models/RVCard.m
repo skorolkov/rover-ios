@@ -105,6 +105,12 @@
         self.title = title;
     }
     
+    // cardId
+    NSNumber *cardId = [JSON objectForKey:@"card_id"];
+    if (cardId != (id)[NSNull null]) {
+        self.cardId = cardId;
+    }
+    
     // shortDescription
     NSString *shortDescription = [JSON objectForKey:@"short_description"];
     if (shortDescription != (id)[NSNull null] && [shortDescription length] > 0) {

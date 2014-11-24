@@ -10,6 +10,7 @@
 #import "RVVisitProject.h"
 #import "RVCardProject.h"
 #import "RVColorUtilities.h"
+#import "RVLocation.h"
 
 @implementation RVVisit
 
@@ -149,6 +150,14 @@
         }];
         self.cards = cards;
     }
+    
+    //location
+    NSDictionary *locationData = [JSON objectForKey:@"location"];
+    if (locationData) {
+        RVLocation *location = [[RVLocation alloc] initWithJSON:locationData];
+        self.location = location;
+    }
+    
 }
 
 - (NSDictionary *)toJSON {

@@ -195,6 +195,8 @@ static Rover *sharedInstance = nil;
     
     RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
     modalViewController.delegate = self;
+    modalViewController.modalBlurRadius = self.config.modalBackdropBlurRadius;
+    modalViewController.modalTintColor = self.config.modalBackdropTintColor;
     
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
@@ -208,6 +210,8 @@ static Rover *sharedInstance = nil;
     
     RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
     modalViewController.delegate = self;
+    modalViewController.modalBlurRadius = self.config.modalBackdropBlurRadius;
+    modalViewController.modalTintColor = self.config.modalBackdropTintColor;
     modalViewController.cardSet = cardSet;
     modalViewController.options = options;
     
@@ -306,6 +310,8 @@ static Rover *sharedInstance = nil;
     config.notificationSoundName = UILocalNotificationDefaultSoundName;
     config.autoPresentModal = YES;
     config.serverURL = @"http://api.roverlabs.co/mobileapi/v1/";
+    config.modalBackdropBlurRadius = 3;
+    config.modalBackdropTintColor = [UIColor colorWithWhite:0.0 alpha:0.5];
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Rover" ofType:@"plist"];
     NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:path];

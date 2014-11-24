@@ -114,9 +114,9 @@ typedef struct {
 
 - (RVCardViewLayout)layoutForCardAtIndex:(NSUInteger)idx
 {
-    CGPoint origin = CGPointMake(self.frame.size.width / 2, (self.frame.size.height  / 2) - (kCardSpacing * 2) );
+    CGPoint origin = CGPointMake(self.frame.size.width / 2, (self.frame.size.height  / 2) - (kCardSpacing * (self.frame.size.height > 560 ? 2 : 1)) );
     CGFloat spacing = kCardSpacing * idx;
-    CGFloat y = spacing * -1.0;
+    CGFloat y = 25 + spacing * -1.0;
     CGFloat z = spacing;
     
     RVCardViewLayout layout;
