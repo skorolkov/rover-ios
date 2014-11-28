@@ -137,7 +137,7 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)setupListeners {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidEnterLocation:) name:kRVVisitManagerDidEnterLocationNotification object:nil];
     [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidExitLocation:) name:kRVVisitManagerDidExitLocationNotification object:nil];
@@ -290,6 +290,7 @@ static Rover *sharedInstance = nil;
 
 - (void)applicationDidBecomeActive:(NSNotification *)note {
     if (self.currentVisit && !self.currentVisit.openedAt) {
+        
         [self updateVisitOpenTime];
         
         if (self.config.autoPresentModal) {

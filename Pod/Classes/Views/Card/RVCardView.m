@@ -36,6 +36,9 @@ typedef enum : NSUInteger {
 @property (strong, nonatomic) UIView *termsTitleView;
 @property (strong, nonatomic) UIView *descriptionView;
 
+// Close button
+@property (strong, nonatomic) RVCloseButton *closeButton;
+
 // BarcodeView
 @property (strong, nonatomic) RVCardBarcodeView *barcodeView;
 
@@ -96,6 +99,11 @@ typedef enum : NSUInteger {
     _discarded = discarded;
 }
 
+- (void)setUseCloseButton:(BOOL)useCloseButton {
+    _useCloseButton = useCloseButton;
+    self.closeButton.hidden = !self.useCloseButton;
+}
+
 - (void)setTerms:(NSString *)terms
 {
     _terms = terms;
@@ -118,6 +126,7 @@ typedef enum : NSUInteger {
     
     self.imageURL = card.imageURL;
     self.backgroundColor = card.primaryBackgroundColor;
+    self.closeButton.color = card.primaryFontColor;
     self.fontColor = card.primaryFontColor;
     self.secondaryBackgroundColor = card.secondaryBackgroundColor;
     self.secondaryFontColor = card.secondaryFontColor;
@@ -216,6 +225,12 @@ typedef enum : NSUInteger {
     self.longDescriptionTextView.textContainerInset = UIEdgeInsetsMake(20.0, 26.0, 0.0, 26.0);
     self.longDescriptionTextView.backgroundColor = [UIColor clearColor];
     self.longDescriptionTextView.textColor = bodyTextColor;
+    
+    self.closeButton = [[RVCloseButton alloc] initWithFrame:CGRectMake(272.0, 24.0, 44.0, 44.0)];
+    self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.closeButton addTarget:self action:@selector(closeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    self.closeButton.alpha = 0.0;
+    [self.containerView addSubview:self.closeButton];
     
     self.termsView = [UIView new];
     self.termsView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -341,6 +356,19 @@ typedef enum : NSUInteger {
     [self.termsTitleView addConstraint:[NSLayoutConstraint constraintWithItem:self.termsTitle attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.termsTitleView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
 }
 
+- (void)configureContainerLayout
+{
+    [super configureContainerLayout];
+    
+    NSDictionary *views = @{@"closeButton": self.closeButton};
+    
+    //----------------------------------------
+    //  closeButton
+    //----------------------------------------
+    
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[closeButton(44)]-8-|" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[closeButton(44)]" options:0 metrics:nil views:views]];
+}
 
 #pragma mark - RVCardViewBarButtonDelegate
 
@@ -431,9 +459,15 @@ typedef enum : NSUInteger {
 {
     self.moreButtonTopConstraint.constant = 0.0;
     
+    if (animated) {
+        [UIView animateWithDuration:0.15 animations:^{
+            self.closeButton.alpha = 0.0;
+        }];
+    }
+    
     [super contractToFrame:frame atCenter:center animated:animated];
     
-    if (self.barcodeView) {
+    if (self.barcodeView && animated) {
         [self.barcodeView contractToFrame:frame atCenter:center animated:NO];
     }
     
@@ -443,6 +477,13 @@ typedef enum : NSUInteger {
 {
     self.moreButton.alpha = 0.0;
     self.longDescriptionTextView.alpha = 1.0;
+}
+
+- (void)expandCompletion
+{
+    [UIView animateWithDuration:0.2 animations:^{
+        self.closeButton.alpha = 1.0;
+    }];
 }
 
 - (void)contractAnimations
