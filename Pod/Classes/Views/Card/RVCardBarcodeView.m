@@ -144,4 +144,14 @@
     [self.cardView configureContainerLayout];
 }
 
+- (void)contractToFrame:(CGRect)frame atCenter:(CGPoint)center animated:(BOOL)animated
+{
+    [UIView animateWithDuration:0.3 delay:0.0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        [super contractToFrame:frame atCenter:center animated:animated];
+        self.frame = self.cardView.bounds;
+    } completion:^(BOOL finished) {
+        
+    }];
+}
+
 @end
