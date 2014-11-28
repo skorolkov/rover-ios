@@ -147,6 +147,7 @@ typedef struct {
     for (int i = 0, l = (int)numCards; i < l; i++) {
         RVCardView *cardView = [_dataSource cardDeck:self cardViewForItemAtIndex:i];
         cardView.delegate = self;
+        cardView.useCloseButton = NO;
         cardView.frame = CGRectMake(0, 0, [RVCardView contractedWidth], [RVCardView contractedHeight]);
         cardView.alpha = 0.0;
         [self.cards insertObject:cardView atIndex:i];

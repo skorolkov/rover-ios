@@ -57,7 +57,8 @@
 #pragma mark - Application Notifications
 
 - (void)applicationDidBecomeActive {
-    if ([[Rover shared] currentVisit].unreadCards.count > 0) {
+    RVVisit *currentVisit = [[Rover shared] currentVisit];
+    if (currentVisit.unreadCards.count > 0 && !currentVisit.openedAt) {
         [self displayModal];
     }
 }
