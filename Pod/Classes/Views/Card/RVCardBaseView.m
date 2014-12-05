@@ -276,7 +276,7 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGContextSaveGState(context);
-    CGContextDrawImage(context, CGRectMake(70, 75, 420, 200), [codeImage CGImage]);
+    CGContextDrawImage(context, CGRectMake(20, 75, 520, 200), [codeImage CGImage]);
 
     // text
     NSDictionary *textAttributes = @{NSFontAttributeName: [UIFont systemFontOfSize:34],
