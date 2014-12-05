@@ -176,7 +176,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     }
 
     // Onboarding animations
-    if (idx == 0 && ![RVCustomer cachedCustomer].hasSeenTutorial) {
+    if (self.cardDeckView.cardSwipeEnabled && idx == 0 && ![RVCustomer cachedCustomer].hasSeenTutorial) {
         self.view.userInteractionEnabled = NO;
         [self demonstrateCardSwipeWithCardView:cardView completion:^(BOOL finished) {
             [self demonstrateTapToExpandWithCompletion:^(BOOL finished) {

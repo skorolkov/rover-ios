@@ -30,7 +30,6 @@ typedef enum {
 - (void)animateIn:(void (^)())completion;
 
 - (NSUInteger)indexForCardView:(RVCardBaseView *)cardView;
-- (RVCardView *)createCard;
 
 - (void)enterFullScreen;
 - (void)exitFullScreen;

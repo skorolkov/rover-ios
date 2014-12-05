@@ -85,6 +85,13 @@
     
 }
 
+- (void)cardDeckDidPressBackground:(RVCardDeckView *)cardDeck {}
+- (void)cardDeckWillEnterFullScreen:(RVCardDeckView *)cardDeck {}
+- (void)cardDeckDidEnterFullScreen:(RVCardDeckView *)cardDeck {}
+- (void)cardDeckWillExitFullScreen:(RVCardDeckView *)cardDeck {}
+- (void)cardDeckDidExitFullScreen:(RVCardDeckView *)cardDeck {}
+- (void)cardDeckDidEnterBarcodeView:(RVCardDeckView *)cardDeck {}
+
 #pragma mark - RVCardDeckViewDataSource
 
 - (NSUInteger)numberOfItemsInDeck:(RVCardDeckView *)cardDeck

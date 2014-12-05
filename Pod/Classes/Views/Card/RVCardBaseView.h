@@ -33,7 +33,6 @@
 // For subclass user only
 - (void)addSubviews;
 - (void)configureLayout;
-- (void)configureContainerLayout;
 - (BOOL)isExpanded;
 - (void)expandAnimations;
 - (void)contractAnimations;

@@ -11,6 +11,9 @@
 // Views
 #import "RVCardView.h"
 #import "RVCardBaseView.h"
+#import "RVCardDeckView.h"
+#import "RVCloseButton.h"
+#import "RVModalView.h"
 
 // Models
 #import "RVModel.h"

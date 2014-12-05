@@ -57,5 +57,8 @@
 @property (strong, nonatomic) UILabel *shortDescriptionTextView;
 @property (strong, nonatomic) UIView *footerView;
 
+@property (strong, nonatomic) UIFont *shortDescriptionFont;
+@property (strong, nonatomic) UIFont *longDescriptionFont;
+
 @end
 

@@ -11,7 +11,6 @@
 #import "RVCardViewCorner.h"
 #import "RVCardViewButtonIcon.h"
 #import "RVCloseButton.h"
-#import "RVCardBarcodeView.h"
 #import "RVCard.h"
 
 #import <RSBarcodes/RSUnifiedCodeGenerator.h>
@@ -52,6 +51,28 @@ const CGFloat kRVCardViewImageRatio = .625;
 @implementation RVCardView
 
 #pragma mark - Public Properties
+
+- (void)setShortDescriptionFont:(UIFont *)shortDescriptionFont
+{
+    self.shortDescriptionTextView.font = shortDescriptionFont;
+    [self setShortDescription:self.shortDescription];
+}
+
+- (UIFont *)shortDescriptionFont
+{
+    return self.shortDescriptionTextView.font;
+}
+
+- (void)setLongDescriptionFont:(UIFont *)longDescriptionFont
+{
+    self.longDescriptionTextView.font = longDescriptionFont;
+    [self setLongDescription:self.longDescription];
+}
+
+- (UIFont *)longDescriptionFont
+{
+    return self.longDescriptionTextView.font;
+}
 
 - (CGFloat)contractedHeight
 {
