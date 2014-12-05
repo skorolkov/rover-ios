@@ -181,29 +181,6 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
 }
 
-- (void)cardDeck:(RVCardDeckView *)cardDeck didLikeCard:(RVCardView *)cardView {
-    NSUInteger idx = [self.cardDeckView indexForCardView:cardView];
-    RVCard *card = [self.cards objectAtIndex:idx];
-    card.likedAt = [NSDate date];
-    card.discardedAt = nil;
-    [self saveCard:card];
-}
-
-- (void)cardDeck:(RVCardDeckView *)cardDeck didUnlikeCard:(RVCardView *)cardView {
-    NSUInteger idx = [self.cardDeckView indexForCardView:cardView];
-    RVCard *card = [self.cards objectAtIndex:idx];
-    card.likedAt = nil;
-    [self saveCard:card];
-}
-
-- (void)cardDeck:(RVCardDeckView *)cardDeck didDiscardCard:(RVCardView *)cardView {
-    NSUInteger idx = [self.cardDeckView indexForCardView:cardView];
-    RVCard *card = [self.cards objectAtIndex:idx];
-    card.likedAt = nil;
-    card.discardedAt = [NSDate date];
-    [self saveCard:card];
-}
-
 - (void)cardDeckWillEnterFullScreen:(RVCardDeckView *)cardDeck
 {
     [UIView animateWithDuration:0.3 animations:^{
@@ -230,9 +207,10 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     return self.cards.count;
 }
 
-- (RVCardView *)cardDeck:(RVCardDeckView *)cardDeck cardViewForItemAtIndex:(NSUInteger)index {
+- (RVCardBaseView *)cardDeck:(RVCardDeckView *)cardDeck cardViewForItemAtIndex:(NSUInteger)index {
     RVCard *card = [self.cards objectAtIndex:index];
-    RVCardView  *cardView = [[RVCardView alloc] initWithFrame:CGRectMake(0.0, 0.0, [RVCardView contractedWidth], [RVCardView contractedHeight])];
+    RVCardView  *cardView = [RVCardView new];
+    cardView.frame = CGRectMake(0.0, 0.0, [cardView contractedWidth], [cardView contractedHeight]);
     
     // customize the cardView here
     

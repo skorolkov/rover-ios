@@ -12,15 +12,19 @@
 
 @interface RVCardBaseView : UIView
 
-+ (CGFloat)contractedWidth;
-+ (CGFloat)contractedHeight;
 
 @property (weak, nonatomic) id <RVCardBaseViewDelegate> delegate;
+
+// Constraints
+@property (strong, nonatomic) NSLayoutConstraint *containerViewWidthConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *containerViewHeightConstraint;
 
 @property (strong, nonatomic) UIView *backgroundView;
 @property (strong, nonatomic) UIView *containerView;
 @property (nonatomic) CGFloat shadow;
 
+- (CGFloat)contractedWidth;
+- (CGFloat)contractedHeight;
 
 - (void)expandToFrame:(CGRect)frame animated:(BOOL)animated;
 - (void)contractToFrame:(CGRect)frame atCenter:(CGPoint)center animated:(BOOL)animated;

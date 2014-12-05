@@ -45,6 +45,7 @@ const CGFloat kRVCardViewImageRatio = .625;
 @property (strong, nonatomic) NSLayoutConstraint *imageViewHeightConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *shortDescriptionHeightConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *scrollViewBottomConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *descriptionViewMinHeightConstraint;
 
 @end
 
@@ -52,13 +53,22 @@ const CGFloat kRVCardViewImageRatio = .625;
 
 #pragma mark - Public Properties
 
+- (CGFloat)contractedHeight
+{
+    return super.contractedHeight + (self.footerHeight ? self.footerHeight - 10 : 0);
+}
+
 - (void)setFooterView:(UIView *)footerView
 {
     _footerView = footerView;
     
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    CGFloat minHeight = screenBounds.size.height - self.shortDescriptionHeightConstraint.constant - (screenBounds.size.width * kRVCardViewImageRatio);
+    
     if (!footerView) {
         self.footerHeight = 0;
-        self.scrollViewBottomConstraint.constant = -48;
+        self.scrollViewBottomConstraint.constant = -10;
+        self.descriptionViewMinHeightConstraint.constant = minHeight;
         return;
     }
     
@@ -71,7 +81,14 @@ const CGFloat kRVCardViewImageRatio = .625;
     
     [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:[footerView(%f)]|", self.footerHeight] options:0 metrics:nil views:views]];
     [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[footerView]|" options:0 metrics:nil views:views]];
-    self.scrollViewBottomConstraint.constant = -self.footerHeight;
+    self.scrollViewBottomConstraint.constant = - MAX(10, self.footerHeight);
+    self.containerViewHeightConstraint.constant = self.contractedHeight;
+    
+    minHeight -= self.footerHeight;
+
+    self.descriptionViewMinHeightConstraint.constant = minHeight;
+    
+    [self layoutIfNeeded];
 }
 
 - (void)setShortDescription:(NSString *)shortDescription
@@ -212,7 +229,6 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.scrollView addSubview:self.contentView];
     
-    
     self.shortDescriptionTextView = [UILabel new];
     self.shortDescriptionTextView.numberOfLines = 4;
     self.shortDescriptionTextView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -325,7 +341,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[scrollView]|" options:0 metrics:nil views:views]];
     [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]" options:0 metrics:nil views:views]];
     
-    self.scrollViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-48];
+    self.scrollViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-10];
     [self.containerView addConstraint:self.scrollViewBottomConstraint];
     
     
@@ -338,7 +354,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentView]|" options:0 metrics:nil views:views]];
     
     // Set the contentView's width
-    self.contentViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[RVCardBaseView contractedWidth]];
+    self.contentViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[self contractedWidth]];
     [self.scrollView addConstraint:self.contentViewWidthConstraint];
     
     
@@ -348,10 +364,10 @@ const CGFloat kRVCardViewImageRatio = .625;
     
     // Horizontal spacing of shortDescription
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.shortDescriptionTextView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[shortDescriptionTextView(260)]" options:0 metrics:nil views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[shortDescriptionTextView(250)]" options:0 metrics:nil views:views]];
     
     // Height of shortDescription
-    CGFloat height = IS_WIDESCREEN ? 109.0 : 87.0;
+    CGFloat height = 109;
     self.shortDescriptionHeightConstraint = [NSLayoutConstraint constraintWithItem:self.shortDescriptionTextView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:height];
     [self.contentView addConstraint:self.shortDescriptionHeightConstraint];
     
@@ -389,8 +405,9 @@ const CGFloat kRVCardViewImageRatio = .625;
     
     // Set the longDescription's minimum height so it always extends to the bottom edge of the screen
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    CGFloat minHeight = screenBounds.size.height - 344.0;
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.descriptionView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:minHeight]];
+    CGFloat minHeight = screenBounds.size.height - height - (screenBounds.size.width * kRVCardViewImageRatio);
+    self.descriptionViewMinHeightConstraint = [NSLayoutConstraint constraintWithItem:self.descriptionView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:minHeight];
+    [self.contentView addConstraint:self.descriptionViewMinHeightConstraint];
     
     // Top position of longDescription
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.descriptionView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
@@ -425,13 +442,8 @@ const CGFloat kRVCardViewImageRatio = .625;
     //  closeButton
     //----------------------------------------
     
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[closeButton(44)]-8-|" options:0 metrics:nil views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[closeButton(44)]-0-|" options:0 metrics:nil views:views]];
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[closeButton(44)]" options:0 metrics:nil views:views]];
-}
-
-- (CGFloat)cardHeight
-{
-    return [RVCardBaseView contractedHeight] + MAX(48, self.footerHeight);
 }
 
 #pragma mark - Button Actions
@@ -471,7 +483,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.contentViewWidthConstraint.constant = frame.size.width;
     self.imageViewHeightConstraint.constant = 175.0;
     self.shortDescriptionTopConstraint.constant = 18;
-    self.scrollViewBottomConstraint.constant = -48;
+    self.scrollViewBottomConstraint.constant = -MAX(10, self.footerHeight);
     
     if (animated) {
         [UIView animateWithDuration:0.15 animations:^{

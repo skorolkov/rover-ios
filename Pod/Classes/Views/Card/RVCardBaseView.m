@@ -23,23 +23,19 @@
 
 @property (strong, nonatomic) UIView *shadowView;
 
-// Constraints
-@property (strong, nonatomic) NSLayoutConstraint *containerViewWidthConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *containerViewHeightConstraint;
-
 @end
 
 @implementation RVCardBaseView
 
 
-#pragma mark - Class Methods
+#pragma mark - Size Methods
 
-+ (CGFloat)contractedWidth {
+- (CGFloat)contractedWidth {
     return 280.0;
 }
 
-+ (CGFloat)contractedHeight {
-    return IS_WIDESCREEN ? 330.0 : 308.0;
+- (CGFloat)contractedHeight {
+    return 292.0;
 }
 
 #pragma mark - Public Properties
@@ -106,8 +102,14 @@
     //  containerView
     //----------------------------------------
     
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[containerView]|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[containerView]|" options:0 metrics:nil views:views]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+    
+    self.containerViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:self.isExpanded ? _expandedFrame.size.width : self.contractedWidth];
+    [self addConstraint:self.containerViewWidthConstraint];
+    
+    self.containerViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:self.isExpanded ? _expandedFrame.size.height : self.contractedHeight];
+    [self addConstraint:self.containerViewHeightConstraint];
     
     //----------------------------------------
     //  shadowView
@@ -166,8 +168,6 @@
 }
 - (void)contractToFrame:(CGRect)frame atCenter:(CGPoint)center animated:(BOOL)animated
 {
-    //[self.scrollView setContentOffset:CGPointMake(0.0, 0.0) animated:animated];
-    
     self.containerViewHeightConstraint.constant = frame.size.height;
     self.containerViewWidthConstraint.constant = frame.size.width;
 
@@ -276,26 +276,8 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     
     CGContextSaveGState(context);
-//    {
-//        //Set the stroke (pen) color
-//        CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
-//        //Set the width of the pen mark
-//        CGContextSetLineWidth(context, 10.0);
-//        
-//        // Draw a line
-//        CGContextMoveToPoint(context, 65.0, 75.0);
-//        CGContextAddLineToPoint(context, 65.0, 275.0);
-//        CGContextStrokePath(context);
-//    }
-    
     CGContextDrawImage(context, CGRectMake(70, 75, 420, 200), [codeImage CGImage]);
-//    {
-//        // Draw a line
-//        CGContextMoveToPoint(context, 495.0, 75.0);
-//        CGContextAddLineToPoint(context, 495.0, 275.0);
-//        CGContextStrokePath(context);
-//    }
-    
+
     // text
     NSDictionary *textAttributes = @{NSFontAttributeName: [UIFont systemFontOfSize:34],
                                      NSForegroundColorAttributeName: [UIColor darkGrayColor],

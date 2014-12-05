@@ -155,7 +155,7 @@ typedef struct {
         RVCardBaseView *cardView = [_dataSource cardDeck:self cardViewForItemAtIndex:i];
         cardView.delegate = self;
         //cardView.useCloseButton = NO;
-        cardView.frame = CGRectMake(0, 0, [RVCardView contractedWidth], [RVCardView contractedHeight]);
+        cardView.frame = CGRectMake(0, 0, cardView.contractedWidth, cardView.contractedHeight);
         
         cardView.alpha = 0.0;
         [self.cards insertObject:cardView atIndex:i];
@@ -167,11 +167,6 @@ typedef struct {
     if (self.topCard) {
         [self.topCard addGestureRecognizer:self.panGesture];
     }
-}
-
-- (RVCardView *)createCard
-{
-    return [[RVCardView alloc] initWithFrame:CGRectMake(0.0, 0.0, [RVCardView contractedWidth], [RVCardView contractedHeight])];
 }
 
 - (void)animateIn:(void (^)())completion
@@ -231,7 +226,7 @@ typedef struct {
         }
         self.animating = YES;
         RVCardViewLayout layout = [self layoutForCardAtIndex:0];
-        [self.topCard contractToFrame:CGRectMake(0, 0, [RVCardView contractedWidth], [RVCardView contractedHeight]) atCenter:layout.center animated:YES];
+        [self.topCard contractToFrame:CGRectMake(0, 0, self.topCard.contractedWidth, self.topCard.contractedHeight) atCenter:layout.center animated:YES];
     }
 }
 
