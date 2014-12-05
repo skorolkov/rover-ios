@@ -220,10 +220,6 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     cardView.frame = CGRectMake(0.0, 0.0, [cardView contractedWidth], [cardView contractedHeight]);
     
     // customize the cardView here
-    UIView *bgview = [UIView new];
-    bgview.backgroundColor = [UIColor yellowColor];
-    
-    cardView.backgroundView = bgview;
     
     [cardView setCard:card];
     
