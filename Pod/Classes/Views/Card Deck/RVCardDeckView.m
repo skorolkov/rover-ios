@@ -386,7 +386,7 @@ typedef struct {
 #pragma mark - RVCardViewDelegate
 
 - (void)cardViewMoreButtonPressed:(RVCardBaseView *)cardView {
-    if (cardView == self.topCard) {
+    if (cardView == self.topCard && self.topCard.expandable) {
         cardView.isExpanded ? [self exitFullScreen] : [self enterFullScreen];
     }
 }

@@ -22,6 +22,7 @@
 @property (strong, nonatomic) UIView *backgroundView;
 @property (strong, nonatomic) UIView *containerView;
 @property (nonatomic) CGFloat shadow;
+@property (nonatomic, assign) BOOL expandable;
 
 - (CGFloat)contractedWidth;
 - (CGFloat)contractedHeight;

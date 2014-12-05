@@ -55,7 +55,9 @@ const CGFloat kRVCardViewImageRatio = .625;
 - (void)setShortDescriptionFont:(UIFont *)shortDescriptionFont
 {
     self.shortDescriptionTextView.font = shortDescriptionFont;
-    [self setShortDescription:self.shortDescription];
+    if (self.shortDescription != nil) {
+        [self setShortDescription:self.shortDescription];
+    }
 }
 
 - (UIFont *)shortDescriptionFont
@@ -66,7 +68,10 @@ const CGFloat kRVCardViewImageRatio = .625;
 - (void)setLongDescriptionFont:(UIFont *)longDescriptionFont
 {
     self.longDescriptionTextView.font = longDescriptionFont;
-    [self setLongDescription:self.longDescription];
+    if (self.longDescription != nil) {
+        [self setLongDescription:self.longDescription];
+
+    }
 }
 
 - (UIFont *)longDescriptionFont

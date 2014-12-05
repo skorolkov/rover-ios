@@ -68,6 +68,7 @@
         [self configureLayout];
         
         self.expanded = NO;
+        self.expandable = YES;
         //self.useCloseButton = NO;
         self.backgroundColor = [UIColor colorWithRed:37.0/255.0 green:111.0/255.0 blue:203.0/255.0 alpha:1.0];
         

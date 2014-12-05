@@ -196,9 +196,11 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 }
 
 - (void)cardDeckDidEnterFullScreen:(RVCardDeckView *)cardDeck {
-    RVCard *card = cardDeck.topCard.card;
-    card.lastExpandedAt = [NSDate date];
-    [self saveCard:card];
+    if ([cardDeck.topCard isKindOfClass:[RVCardView class]]) {
+        RVCard *card = cardDeck.topCard.card;
+        card.lastExpandedAt = [NSDate date];
+        [self saveCard:card];
+    }
 }
 
 - (void)cardDeckDidExitFullScreen:(RVCardDeckView *)cardDeck
