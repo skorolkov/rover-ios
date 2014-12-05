@@ -35,6 +35,8 @@ typedef enum {
 - (void)enterFullScreen;
 - (void)exitFullScreen;
 
+- (void)swipeToNextCard;
+
 @end
 
 #pragma mark - CardDeckDataSourceDelegate

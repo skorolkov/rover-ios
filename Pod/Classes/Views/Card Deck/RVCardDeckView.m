@@ -410,4 +410,38 @@ typedef struct {
     }
 }
 
+- (void)swipeToNextCard
+{
+    self.animating = YES;
+    [self.animator removeAllBehaviors];
+    
+    CGPoint velocity = CGPointMake(2000, -1000);
+    
+    UIDynamicItemBehavior *dynamic = [[UIDynamicItemBehavior alloc] initWithItems:@[self.topCard]];
+    [dynamic addLinearVelocity:velocity forItem:self.topCard];
+    //dynamic.resistance = 10.f;
+    //dynamic.friction =10;
+    [dynamic addAngularVelocity:-5 forItem:self.topCard];
+    [dynamic setAngularResistance:10];
+    
+    // when the view no longer intersects with its superview, go ahead and remove it
+    
+    CGRect originalFrame = self.topCard.frame;
+    
+    dynamic.action = ^{
+        if (!CGRectIntersectsRect(self.topCard.frame, originalFrame)) {
+            [self.animator removeAllBehaviors];
+            [self nextCard];
+        }
+    };
+    [self.animator addBehavior:dynamic];
+    
+    // add a little gravity so it accelerates off the screen (in case user gesture was slow)
+    
+    UIGravityBehavior *gravity = [[UIGravityBehavior alloc] initWithItems:@[self.topCard]];
+    gravity.magnitude = 2.7;
+    //[self.animator addBehavior:gravity];
+
+}
+
 @end
