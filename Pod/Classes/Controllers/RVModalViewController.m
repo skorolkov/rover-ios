@@ -145,7 +145,11 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didSwipeCard:(RVCardBaseView *)cardView {
     NSUInteger idx = [cardDeck indexForCardView:cardView];
-    RVCard *card = ((RVCardView *)cardView).card;
+    RVCard *card = nil;
+    
+    if ([cardView isKindOfClass:[RVCardView class]]) {
+        card = ((RVCardView *)cardView).card;
+    }
     
     if ([self.delegate respondsToSelector:@selector(modalViewController:didSwipeCard:)]) {
         [self.delegate modalViewController:self didSwipeCard:card];
@@ -158,10 +162,14 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didShowCard:(RVCardBaseView *)cardView {
     NSUInteger idx = [self.cardDeckView indexForCardView:cardView];
-    RVCard *card = ((RVCardView *)cardView).card;
-    card.isUnread = NO;
-    card.viewedAt = [NSDate date];
-    [self saveCard:card];
+    RVCard *card = nil;
+    
+    if ([cardView isKindOfClass:[RVCardView class]]) {
+        card = ((RVCardView *)cardView).card;
+        card.isUnread = NO;
+        card.viewedAt = [NSDate date];
+        [self saveCard:card];
+    }
     
     if ([self.delegate respondsToSelector:@selector(modalViewController:didDisplayCard:)]) {
         [self.delegate modalViewController:self didDisplayCard:card];
