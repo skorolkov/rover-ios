@@ -19,12 +19,13 @@
 #import "RVHelper.h"
 #import "RVCustomerProject.h"
 
+#import "UIImageView+UIActivityIndicatorForSDWebImage.h"
+
 NSString *const RVModalViewOptionsTag = @"Tags";
 NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
-@interface RVModalViewController () <RVModalViewDelegate, RVCardDeckViewDelegate, RVCardDeckViewDataSourceDelegate>
+@interface RVModalViewController ()
 
-@property (strong, nonatomic) RVModalView *view;
 @property (strong, nonatomic) RVVisit *visit;
 @property (readonly, nonatomic) NSArray *cards;
 
@@ -42,7 +43,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 - (void)setVisit:(RVVisit *)visit {
     _visit = visit;
     _cards = nil;
-    [self.view.cardDeck reloadData];
+    [self.cardDeckView reloadData];
 }
 
 - (void)setCardSet:(ModalViewCardSet)cardSet {
@@ -117,44 +118,13 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     return self;
 }
 
-- (void)loadView {
-    self.view = [[RVModalView alloc] initWithFrame:UIScreen.mainScreen.applicationFrame];
-    self.view.delegate = self;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    [self createBlur];
-    
-    self.view.delegate = self;
-    self.view.cardDeck.delegate = self;
-    self.view.cardDeck.dataSource = self;
     
     self.visit = [[Rover shared] currentVisit];
     [RVCustomer cachedCustomer];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [self.view.cardDeck animateIn:^{
-        [self.view animateIn];
-    }];
-}
-
-/* Create a blurred snapshot of current screen
- */
-- (void)createBlur {
-    UIViewController* rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
-    UIView *view = rootViewController.view;
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, 0);
-    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    image = [RVImageEffects applyBlurWithRadius:self.modalBlurRadius tintColor:self.modalTintColor saturationDeltaFactor:1 maskImage:nil toImage:image];
-    
-    self.view.background.image = image;
-}
 
 - (void)saveCard:(RVCard *)card {
     NSUInteger idx = [self.cards indexOfObject:card];
@@ -166,25 +136,15 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 #pragma mark - RVModalViewDelegate
 
 - (void)modalViewCloseButtonPressed:(RVModalView *)modalView {
-    if (self.view.cardDeck.isFullScreen) {
-        [self.view.cardDeck exitFullScreen];
-    } else if (self.delegate) {
+    [super modalViewCloseButtonPressed:modalView];
+    if (!self.cardDeckView.isFullScreen && self.delegate) {
         [self.delegate modalViewControllerDidFinish:self];
     }
 }
 
-- (void)modalViewBackgroundPressed:(RVModalView *)modalView {
-
-}
-
 #pragma mark - RVCardDeckViewDelegate
 
-- (void)cardDeckDidPressBackground:(RVCardDeckView *)cardDeck
-{
-    
-}
-
-- (void)cardDeck:(RVCardDeckView *)cardDeck didSwipeCard:(RVCardView *)cardView {
+- (void)cardDeck:(RVCardDeckView *)cardDeck didSwipeCard:(RVCardBaseView *)cardView {
     NSUInteger idx = [cardDeck indexForCardView:cardView];
     RVCard *card = [self.cards objectAtIndex:idx];
     
@@ -197,8 +157,8 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     }
 }
 
-- (void)cardDeck:(RVCardDeckView *)cardDeck didShowCard:(RVCardView *)cardView {
-    NSUInteger idx = [self.view.cardDeck indexForCardView:cardView];
+- (void)cardDeck:(RVCardDeckView *)cardDeck didShowCard:(RVCardBaseView *)cardView {
+    NSUInteger idx = [self.cardDeckView indexForCardView:cardView];
     RVCard *card = [self.cards objectAtIndex:idx];
     card.isUnread = NO;
     card.viewedAt = [NSDate date];
@@ -222,7 +182,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 }
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didLikeCard:(RVCardView *)cardView {
-    NSUInteger idx = [self.view.cardDeck indexForCardView:cardView];
+    NSUInteger idx = [self.cardDeckView indexForCardView:cardView];
     RVCard *card = [self.cards objectAtIndex:idx];
     card.likedAt = [NSDate date];
     card.discardedAt = nil;
@@ -230,23 +190,28 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 }
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didUnlikeCard:(RVCardView *)cardView {
-    NSUInteger idx = [self.view.cardDeck indexForCardView:cardView];
+    NSUInteger idx = [self.cardDeckView indexForCardView:cardView];
     RVCard *card = [self.cards objectAtIndex:idx];
     card.likedAt = nil;
     [self saveCard:card];
 }
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didDiscardCard:(RVCardView *)cardView {
-    NSUInteger idx = [self.view.cardDeck indexForCardView:cardView];
+    NSUInteger idx = [self.cardDeckView indexForCardView:cardView];
     RVCard *card = [self.cards objectAtIndex:idx];
     card.likedAt = nil;
     card.discardedAt = [NSDate date];
     [self saveCard:card];
 }
 
+- (void)cardDeckWillEnterFullScreen:(RVCardDeckView *)cardDeck
+{
+    [UIView animateWithDuration:0.3 animations:^{
+        self.modalView.closeButton.alpha = 0;
+    }];
+}
+
 - (void)cardDeckDidEnterFullScreen:(RVCardDeckView *)cardDeck {
-    self.view.closeButton.color = cardDeck.topCard.card.primaryFontColor;
-    [self.view.closeButton setNeedsDisplay];
     RVCard *card = cardDeck.topCard.card;
     card.lastExpandedAt = [NSDate date];
     [self saveCard:card];
@@ -254,14 +219,9 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
 - (void)cardDeckDidExitFullScreen:(RVCardDeckView *)cardDeck
 {
-    self.view.closeButton.color = [UIColor whiteColor];
-    [self.view.closeButton setNeedsDisplay];
-}
-
-- (void)cardDeckDidEnterBarcodeView:(RVCardDeckView *)cardDeck {
-    RVCard *card = cardDeck.topCard.card;
-    card.lastViewedBarcodeAt = [NSDate date];
-    [self saveCard:card];
+    [UIView animateWithDuration:0.3 animations:^{
+        self.modalView.closeButton.alpha = 1;
+    }];
 }
 
 #pragma mark - RVCardDeckViewDataSourceDelegate
@@ -272,8 +232,13 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
 - (RVCardView *)cardDeck:(RVCardDeckView *)cardDeck cardViewForItemAtIndex:(NSUInteger)index {
     RVCard *card = [self.cards objectAtIndex:index];
-    RVCardView  *cardView = [cardDeck createCard];
+    RVCardView  *cardView = [[RVCardView alloc] initWithFrame:CGRectMake(0.0, 0.0, [RVCardView contractedWidth], [RVCardView contractedHeight])];
+    
+    // customize the cardView here
+    
     [cardView setCard:card];
+    
+    // customize the cardView further after offer data has been set
     
     return cardView;
 }
@@ -281,7 +246,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 #pragma mark - Onboarding animations
 
 
-- (void)demonstrateCardSwipeWithCardView:(RVCardView *)cardView completion:( void (^)(BOOL) )completion
+- (void)demonstrateCardSwipeWithCardView:(RVCardBaseView *)cardView completion:( void (^)(BOOL) )completion
 {
     [RVHelper showMessage:@"Swipe for the next card" holdFor:1 delay:.7 duration:.4];
     [RVHelper displaySwipeTutorialWithCardView:cardView completion:completion];
@@ -291,7 +256,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 - (void)demonstrateTapToExpandWithCompletion:( void (^)(BOOL) )completion
 {
     [RVHelper showMessage:@"Tap for more info" holdFor:.73 delay:.1 duration:.4];
-    [RVHelper displayTapTutorialAnimationAtPoint:self.view.cardDeck.topCard.center completion:completion];
+    [RVHelper displayTapTutorialAnimationAtPoint:self.cardDeckView.topCard.center completion:completion];
 }
 
 @end

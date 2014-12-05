@@ -9,12 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@class RVCardView;
+@class RVCardBaseView;
 
 @interface RVHelper : NSObject
 
 + (void)showMessage:(NSString *)message holdFor:(NSTimeInterval)seconds delay:(NSTimeInterval)delay duration:(NSTimeInterval)duration;
-+ (void)displaySwipeTutorialWithCardView:(RVCardView *)cardView completion:( void (^)(BOOL finished) )completion;
++ (void)displaySwipeTutorialWithCardView:(RVCardBaseView *)cardView completion:( void (^)(BOOL finished) )completion;
 + (void)displayTapTutorialAnimationAtPoint:(CGPoint)point completion:( void (^)(BOOL finished))completion;
 
 @end

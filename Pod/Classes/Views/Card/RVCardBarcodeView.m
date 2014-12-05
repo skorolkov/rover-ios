@@ -18,8 +18,8 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor colorWithRed:41/255.f green:41/255.f blue:41/255.f alpha:1];
-        [self setTitle:@"use this offer"];
-        [self.buttonBar setLeftButtonTitle:@"Back" andRightButtonTitle:nil];
+             //[self setTitle:@"use this offer"];
+             //[self.buttonBar setLeftButtonTitle:@"Back" andRightButtonTitle:nil];
         //[self.longDescriptionTextView setBackgroundColor:[UIColor blackColor]];
     }
     return self;
@@ -52,7 +52,7 @@
 	UIImage *PLUImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    [self setImage:PLUImage];
+     //[self setImage:PLUImage];
 }
 
 - (void)setStandardBarcode:(NSString *)code withType:(NSString *)barcodeType
@@ -96,7 +96,7 @@
     
     UIGraphicsEndImageContext();
     
-    [self setImage:newImage];
+     //[self setImage:newImage];
 }
 
 - (void)cardTapped

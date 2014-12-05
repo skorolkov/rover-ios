@@ -17,75 +17,112 @@
 #import <RSBarcodes/RSUnifiedCodeGenerator.h>
 #import <UIActivityIndicator-for-SDWebImage/UIImageView+UIActivityIndicatorForSDWebImage.h>
 
-typedef enum : NSUInteger {
-    RVButtonActionNone      =   0,
-    RVButtonActionFavortie  =   1,
-    RVButtonActionBarcode   =   2
-} RVButtonAction;
+#define IS_WIDESCREEN ([[UIScreen mainScreen] bounds].size.height == 568.0)
+
+const CGFloat kRVCardViewImageRatio = .625;
+
 
 @interface RVCardView()
 
-@property (strong, nonatomic) UIView *shadowView;
-@property (strong, nonatomic) RVMoreButton *moreButton;
-@property (strong, nonatomic) UITextView *longDescriptionTextView;
-@property (strong, nonatomic) UIView *termsView;
-@property (strong, nonatomic) UILabel *termsLabel;
+
+
 @property (strong, nonatomic) UIView *termsTitleLineLeft;
 @property (strong, nonatomic) UIView *termsTitleLineRight;
-@property (strong, nonatomic) UILabel *termsTitle;
-@property (strong, nonatomic) UIView *termsTitleView;
-@property (strong, nonatomic) UIView *descriptionView;
+
+@property (strong, nonatomic) UIScrollView *scrollView;
 
 // Close button
 @property (strong, nonatomic) RVCloseButton *closeButton;
 
-// BarcodeView
-@property (strong, nonatomic) RVCardBarcodeView *barcodeView;
+@property (assign, nonatomic) CGFloat footerHeight;
 
 // Constraints
 @property (strong, nonatomic) NSLayoutConstraint *cornerTopConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *cornerRightConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *moreButtonTopConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *shortDescriptionTopConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *contentViewWidthConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *imageViewHeightConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *shortDescriptionHeightConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *scrollViewBottomConstraint;
 
 @end
 
 @implementation RVCardView
+
+#pragma mark - Public Properties
+
+- (void)setFooterView:(UIView *)footerView
+{
+    _footerView = footerView;
+    
+    if (!footerView) {
+        self.footerHeight = 0;
+        self.scrollViewBottomConstraint.constant = -48;
+        return;
+    }
+    
+    footerView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.containerView addSubview:footerView];
+    
+    NSDictionary *views = @{@"footerView": footerView};
+
+    self.footerHeight = footerView.frame.size.height;
+    
+    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:[footerView(%f)]|", self.footerHeight] options:0 metrics:nil views:views]];
+    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[footerView]|" options:0 metrics:nil views:views]];
+    self.scrollViewBottomConstraint.constant = -self.footerHeight;
+}
+
+- (void)setShortDescription:(NSString *)shortDescription
+{
+    self.shortDescriptionTextView.attributedText = [self attributedTextFromHTMLString:shortDescription withFont:self.shortDescriptionTextView.font styles:@[@"text-align: center;"]];
+    _shortDescription = shortDescription;
+}
+
+- (void)setFontColor:(UIColor *)fontColor
+{
+    self.shortDescriptionTextView.textColor = fontColor;
+    _fontColor = fontColor;
+}
+
+- (void)setImage:(UIImage *)image
+{
+    self.imageView.image = image;
+}
+
+- (UIImage *)image
+{
+    return self.imageView.image;
+}
 
 - (void)setImageURL:(NSURL *)imageURL
 {
     [self.imageView setImageWithURL:imageURL usingActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
 }
 
-- (void)setShadow:(CGFloat)shadow
+- (NSAttributedString *)attributedTextFromHTMLString:(NSString *)htmlString withFont:(UIFont *)font styles:(NSArray *)styles
 {
-    self.shadowView.layer.opacity = shadow;
-    _shadow = shadow;
+    NSMutableArray *mutableStyles = [NSMutableArray arrayWithObjects:[NSString stringWithFormat:@"font-family: '%@';", font.fontName],
+                         [NSString stringWithFormat:@"font-size: %0.1fpx;", roundf(font.pointSize)],
+                         @"line-height: 21px;", nil];
+    [mutableStyles addObjectsFromArray:styles];
+    
+    NSString *html = [NSString stringWithFormat:@"<div style=\"%@\">%@<div>", [mutableStyles componentsJoinedByString:@" "], htmlString];
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[html dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} documentAttributes:nil error:nil];
+    
+    return attributedString;
 }
 
 - (void)setLongDescription:(NSString *)longDescription
 {
-    NSArray *styles = @[ @"font: -apple-system-body;",
-                         @"font-size: 14px;",
-                         @"line-height: 21px;"];
-    
-    NSString *html = [NSString stringWithFormat:@"<div style=\"%@\">%@<div>", [styles componentsJoinedByString:@" "], longDescription];
-    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithData:[html dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType } documentAttributes:nil error:nil];
-    
-    self.longDescriptionTextView.attributedText = attributedString;
-    
+    self.longDescriptionTextView.attributedText = [self attributedTextFromHTMLString:longDescription withFont:self.longDescriptionTextView.font styles:nil];
     _longDescription = longDescription;
 }
 
 - (void)setLiked:(BOOL)liked {
     if (liked) {
         self.discarded = NO;
-    }
-
-    if (self.card.buttons && self.card.buttons.count > 0 ) {
-        NSNumber *buttonType = [self.card.buttons[0] objectForKey:@"button_type"];
-        if (buttonType.integerValue == 1) {
-            [self.buttonBar setPressed:liked forButton:self.buttonBar.leftButton];
-        }
     }
     
     _liked = liked;
@@ -132,61 +169,17 @@ typedef enum : NSUInteger {
     self.secondaryFontColor = card.secondaryFontColor;
     self.discarded = card.discardedAt != nil;
     
+    // TODO: make this behave more like the barcode stuff
     if (card.terms) {
         self.terms = card.terms;
     } else {
         // This works for now because we aren't reusing cardViews
         [self.termsTitleView removeFromSuperview];
     }
-    
-    if (card.barcode) {
-        self.barcodeView = [[RVCardBarcodeView alloc] initWithFrame:self.frame];
-        self.barcodeView.cardView = self;
-        self.barcodeView.title = self.title;
-        self.barcodeView.shortDescription = card.barcodeInstructions;
-        [self.barcodeView setBarcode:card.barcode withType:card.barcodeType.integerValue == 1 ? AVMetadataObjectTypeCode128Code : @"PLU"];
-    } else {
-        self.barcodeView = nil;
-    }
-    
-    
-    // Buttons
-    
-    NSString *leftButtonTitle, *rightButtonTitle;
-    NSString *leftButtonActiveTitle, *rightButtonActiveTitle;
-    
-    if (card.buttons && card.buttons.count > 0) {
-        leftButtonTitle = [card.buttons[0] objectForKey:@"title"];
-        leftButtonActiveTitle = [card.buttons[0] objectForKey:@"active_title"];
-        
-        if (card.buttons.count > 1) {
-            rightButtonTitle = [card.buttons[1] objectForKey:@"title"];
-            rightButtonActiveTitle = [card.buttons[1] objectForKey:@"active_title"];
-        }
-    }
-    
-    if ([leftButtonTitle isKindOfClass:[NSNull class]]) {
-        leftButtonTitle = nil;
-    }
-    
-    if ([rightButtonTitle isKindOfClass:[NSNull class]]) {
-        rightButtonTitle = nil;
-    }
 
-    if ([rightButtonActiveTitle isKindOfClass:[NSNull class]]) {
-        rightButtonActiveTitle = nil;
+    if (card.barcode) {
+        [self addBarcode:card.barcode type:card.barcodeType.integerValue instructions:card.barcodeInstructions];
     }
-    
-    if ([leftButtonActiveTitle isKindOfClass:[NSNull class]]) {
-        leftButtonActiveTitle = leftButtonTitle;
-    }
-    
-    [self.buttonBar setLeftButtonTitle:leftButtonTitle andRightButtonTitle:rightButtonTitle];
-    [self.buttonBar setFontColor:card.primaryFontColor];
-    
-    [self.buttonBar setPressedCaption:leftButtonActiveTitle forButton:self.buttonBar.leftButton];
-    [self.buttonBar setPressedCaption:rightButtonActiveTitle forButton:self.buttonBar.rightButton];
-    
     
     _card = card;
     
@@ -196,22 +189,45 @@ typedef enum : NSUInteger {
 
 #pragma mark - Initialization
 
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        self.fontColor = [UIColor whiteColor];
+        self.footerHeight = 0;
+    }
+    return self;
+}
+
 - (void)addSubviews
 {
     [super addSubviews];
     
-    self.shadowView = [[UIView alloc] initWithFrame:self.frame];
-    self.shadowView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.shadowView.backgroundColor = [UIColor blackColor];
-    self.shadowView.alpha = 0.0;
-    self.shadowView.userInteractionEnabled = NO;
-    [self addSubview:self.shadowView];
+    self.scrollView = [UIScrollView new];
+    self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.scrollView.scrollEnabled = NO;
+    [self.containerView addSubview:self.scrollView];
     
-    self.moreButton = [RVMoreButton new];
-    self.moreButton.translatesAutoresizingMaskIntoConstraints = NO;
-    self.moreButton.alpha = 1.0;
-    [self.contentView addSubview:self.moreButton];
-    [self.contentView sendSubviewToBack:self.moreButton];
+    self.contentView = [UIView new];
+    self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
+    [self.scrollView addSubview:self.contentView];
+    
+    
+    self.shortDescriptionTextView = [UILabel new];
+    self.shortDescriptionTextView.numberOfLines = 4;
+    self.shortDescriptionTextView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.shortDescriptionTextView.font = [UIFont systemFontOfSize:16.0];
+    self.shortDescriptionTextView.textAlignment = NSTextAlignmentCenter;
+    self.shortDescriptionTextView.alpha = 0.7;
+    self.shortDescriptionTextView.backgroundColor = [UIColor clearColor];
+    [self.contentView addSubview:self.shortDescriptionTextView];
+    
+    self.imageView = [UIImageView new];
+    self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.imageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.imageView.clipsToBounds = YES;
+    self.imageView.backgroundColor = [UIColor whiteColor];
+    [self.contentView addSubview:self.imageView];
     
     UIColor *beigeColor = [UIColor colorWithRed:233.0/255.0 green:233.0/255.5 blue:233.0/255.0 alpha:1.0];
     UIColor *bodyTextColor = [UIColor colorWithRed:124/255.f green:124/255.f blue:124/255.f alpha:1];
@@ -230,7 +246,7 @@ typedef enum : NSUInteger {
     self.closeButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self.closeButton addTarget:self action:@selector(closeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.closeButton.alpha = 0.0;
-    [self.containerView addSubview:self.closeButton];
+    [self.contentView addSubview:self.closeButton];
     
     self.termsView = [UIView new];
     self.termsView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -275,14 +291,21 @@ typedef enum : NSUInteger {
     [self.descriptionView addSubview:self.longDescriptionTextView];
     [self.descriptionView addSubview:self.termsView];
     [self.contentView addSubview:self.descriptionView];
+    
+    self.barcodeView = [UIView new];
+    self.barcodeView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.barcodeView.backgroundColor = [UIColor whiteColor];
+    [self.descriptionView addSubview:self.barcodeView];
 }
 
 - (void)configureLayout
 {
     [super configureLayout];
     
-    NSDictionary *views = @{ @"moreButton": self.moreButton,
-                             @"shadowView": self.shadowView,
+    NSDictionary *views = @{ @"contentView": self.contentView,
+                             @"scrollView": self.scrollView,
+                             @"shortDescriptionTextView": self.shortDescriptionTextView,
+                             @"imageView": self.imageView,
                              @"longDescriptionTextView": self.longDescriptionTextView,
                              @"termsView": self.termsView,
                              @"termsLabel": self.termsLabel,
@@ -290,29 +313,66 @@ typedef enum : NSUInteger {
                              @"termsTitleLineRight": self.termsTitleLineRight,
                              @"termsTitle": self.termsTitle,
                              @"termsTitleView": self.termsTitleView,
-                             @"descriptionView": self.descriptionView};
+                             @"descriptionView": self.descriptionView,
+                             @"barcodeView": self.barcodeView,
+                             @"closeButton": self.closeButton
+                             };
     
     //----------------------------------------
-    //  shadowView
+    //  scrollView
     //----------------------------------------
     
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[shadowView]|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[shadowView]|" options:0 metrics:nil views:views]];
+    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[scrollView]|" options:0 metrics:nil views:views]];
+    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]" options:0 metrics:nil views:views]];
+    
+    self.scrollViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-48];
+    [self.containerView addConstraint:self.scrollViewBottomConstraint];
+    
     
     //----------------------------------------
-    //  moreButton
+    //  contentView
     //----------------------------------------
     
-    // Width and height of moreButton
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[moreButton(50)]" options:0 metrics:nil views:views]];
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[moreButton(25)]" options:0 metrics:nil views:views]];
-
-    // Horizontally center moreButton
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.moreButton attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0]];
-
-    // Tie bottom edge of moreButton to top edge of imageView
-    self.moreButtonTopConstraint = [NSLayoutConstraint constraintWithItem:self.moreButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeTop multiplier:1.0 constant:25.0];
-    [self.contentView addConstraint:self.moreButtonTopConstraint];
+    // Content view fills the scroll view and inherintly sets the scroll view's content size
+    [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[contentView]|" options:0 metrics:nil views:views]];
+    [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentView]|" options:0 metrics:nil views:views]];
+    
+    // Set the contentView's width
+    self.contentViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[RVCardBaseView contractedWidth]];
+    [self.scrollView addConstraint:self.contentViewWidthConstraint];
+    
+    
+    //----------------------------------------
+    //  shortDescription
+    //----------------------------------------
+    
+    // Horizontal spacing of shortDescription
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.shortDescriptionTextView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[shortDescriptionTextView(260)]" options:0 metrics:nil views:views]];
+    
+    // Height of shortDescription
+    CGFloat height = IS_WIDESCREEN ? 109.0 : 87.0;
+    self.shortDescriptionHeightConstraint = [NSLayoutConstraint constraintWithItem:self.shortDescriptionTextView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:height];
+    [self.contentView addConstraint:self.shortDescriptionHeightConstraint];
+    
+    // Pin the short description to the title bar
+    self.shortDescriptionTopConstraint = [NSLayoutConstraint constraintWithItem:self.shortDescriptionTextView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeBottom multiplier:1.0 constant:18.0];
+    [self.contentView addConstraint:self.shortDescriptionTopConstraint];
+    
+    //----------------------------------------
+    //  imageView
+    //----------------------------------------
+    
+    // Horizontal spacing of imageView
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[imageView]|" options:0 metrics:nil views:views]];
+    
+    // Height of imageView
+    self.imageViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:175.0];
+    [self.contentView addConstraint:self.imageViewHeightConstraint];
+    
+    // Top position of imageView
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.shortDescriptionTextView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-20.0]];
+    
     
     //----------------------------------------
     //  longDescription
@@ -325,7 +385,7 @@ typedef enum : NSUInteger {
     [self.descriptionView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[longDescriptionTextView]|" options:0 metrics:nil views:views]];
     
     // Tie the bottom edge of longDescription to the contentView
-    [self.descriptionView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[longDescriptionTextView][termsView]|" options:0 metrics:nil views:views]];
+    [self.descriptionView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[barcodeView][longDescriptionTextView][termsView]|" options:0 metrics:nil views:views]];
     
     // Set the longDescription's minimum height so it always extends to the bottom edge of the screen
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
@@ -335,6 +395,12 @@ typedef enum : NSUInteger {
     // Top position of longDescription
     [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.descriptionView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.imageView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0]];
 
+    //----------------------------------------
+    //  barcodeView
+    //----------------------------------------
+    
+    [self.descriptionView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[barcodeView]|" options:0 metrics:nil views:views]];
+    
     //----------------------------------------
     //  termsView
     //----------------------------------------
@@ -354,77 +420,21 @@ typedef enum : NSUInteger {
     [self.termsTitleView addConstraint:[NSLayoutConstraint constraintWithItem:self.termsTitleLineLeft attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.termsTitleView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
     [self.termsTitleView addConstraint:[NSLayoutConstraint constraintWithItem:self.termsTitleLineRight attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.termsTitleView attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0]];
     [self.termsTitleView addConstraint:[NSLayoutConstraint constraintWithItem:self.termsTitle attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.termsTitleView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-}
-
-- (void)configureContainerLayout
-{
-    [super configureContainerLayout];
-    
-    NSDictionary *views = @{@"closeButton": self.closeButton};
     
     //----------------------------------------
     //  closeButton
     //----------------------------------------
     
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[closeButton(44)]-8-|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[closeButton(44)]" options:0 metrics:nil views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[closeButton(44)]-8-|" options:0 metrics:nil views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[closeButton(44)]" options:0 metrics:nil views:views]];
 }
 
-#pragma mark - RVCardViewBarButtonDelegate
-
-- (void)buttonBarLeftButtonPressed:(RVCardViewButtonBar *)buttonBar {
-    if (self.card.buttons.count < 1) {
-        return;
-    }
-    
-    NSNumber *buttonType = [self.card.buttons[0] objectForKey:@"button_type"];
-    [self performAction:buttonType.integerValue];
-}
-
-- (void)buttonBarRightButtonPressed:(RVCardViewButtonBar *)buttonBar {
-    if (self.card.buttons.count < 2) {
-        return;
-    }
-    
-    NSNumber *buttonType = [self.card.buttons[1] objectForKey:@"button_type"];
-    [self performAction:buttonType.integerValue];
+- (CGFloat)cardHeight
+{
+    return [RVCardBaseView contractedHeight] + MAX(48, self.footerHeight);
 }
 
 #pragma mark - Button Actions
-
-- (void)performAction:(RVButtonAction)action
-{
-    switch (action) {
-        case RVButtonActionFavortie:
-            [self likeButtonPressed];
-            break;
-        case RVButtonActionBarcode:
-            [self barcodeButtonPressed];
-            break;
-        default:
-            break;
-    }
-}
-
-- (void)likeButtonPressed
-{
-    if (self.delegate) {
-        [self.delegate cardViewLikeButtonPressed:self];
-    }
-}
-
-- (void)barcodeButtonPressed
-{
-    if (self.isExpanded) {
-        [self slideInBarcodeView];
-    } else {
-        [self flipCardToBarcodeView];
-    }
-    
-    if ([self.delegate respondsToSelector:@selector(cardViewBarcodeButtonPressed:)]) {
-        [self.delegate cardViewBarcodeButtonPressed:self];
-    }
-}
 
 - (void)closeButtonPressed {
     if ([self.delegate respondsToSelector:@selector(cardViewCloseButtonPressed:)]) {
@@ -447,17 +457,21 @@ typedef enum : NSUInteger {
 - (void)expandToFrame:(CGRect)frame animated:(BOOL)animated
 {
     self.moreButtonTopConstraint.constant = 25.0;
+    self.contentViewWidthConstraint.constant = frame.size.width;
+    self.imageViewHeightConstraint.constant = frame.size.width * kRVCardViewImageRatio;
+    self.shortDescriptionTopConstraint.constant = 25;
+    self.scrollViewBottomConstraint.constant = -self.footerHeight;
     
     [super expandToFrame:frame animated:animated];
-    
-    if (self.barcodeView) {
-        [self.barcodeView expandToFrame:frame animated:NO];
-    }
 }
 
 - (void)contractToFrame:(CGRect)frame atCenter:(CGPoint)center animated:(BOOL)animated
 {
     self.moreButtonTopConstraint.constant = 0.0;
+    self.contentViewWidthConstraint.constant = frame.size.width;
+    self.imageViewHeightConstraint.constant = 175.0;
+    self.shortDescriptionTopConstraint.constant = 18;
+    self.scrollViewBottomConstraint.constant = -48;
     
     if (animated) {
         [UIView animateWithDuration:0.15 animations:^{
@@ -465,22 +479,23 @@ typedef enum : NSUInteger {
         }];
     }
     
-    [super contractToFrame:frame atCenter:center animated:animated];
+    [self.scrollView setContentOffset:CGPointMake(0.0, 0.0) animated:animated];
     
-    if (self.barcodeView && animated) {
-        [self.barcodeView contractToFrame:frame atCenter:center animated:NO];
-    }
+    [super contractToFrame:frame atCenter:center animated:animated];
     
 }
 
+// TODO: use blocks for these
+
 - (void)expandAnimations
 {
-    self.moreButton.alpha = 0.0;
     self.longDescriptionTextView.alpha = 1.0;
 }
 
 - (void)expandCompletion
 {
+    self.scrollView.scrollEnabled = YES;
+    
     [UIView animateWithDuration:0.2 animations:^{
         self.closeButton.alpha = 1.0;
     }];
@@ -488,37 +503,43 @@ typedef enum : NSUInteger {
 
 - (void)contractAnimations
 {
-    self.moreButton.alpha = 1.0;
     self.longDescriptionTextView.alpha = 0.0;
 }
 
-
-#pragma mark - Barcode Transitions
-
-- (void)flipCardToBarcodeView
+- (void)contractCompletion
 {
-    self.barcodeView.frame = self.bounds;
-    [UIView transitionWithView:self duration:0.4 options:UIViewAnimationOptionTransitionFlipFromRight
-                    animations:^{
-                        [self.containerView removeFromSuperview];
-                        [self addSubview:self.barcodeView];
-                    }
-                    completion:NULL];
+    self.scrollView.scrollEnabled = NO;
 }
 
-- (void)slideInBarcodeView
+#pragma mark - Barcode
+
+- (void)addBarcode:(NSString *)barcode type:(NSUInteger)type instructions:(NSString *)instructions
 {
-    CATransition *transition = [CATransition animation];
-    transition.duration = 0.25;
-    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
-    transition.type = kCATransitionPush;
-    transition.subtype = kCATransitionFromRight;
-    [self.layer addAnimation:transition forKey:nil];
+    UIImage *barcodeImage = [RVCardView barcodeImageForCode:barcode type:type == 1 ? AVMetadataObjectTypeCode128Code : @"PLU"];
+    UIImageView *barcodeImageView = [[UIImageView alloc] initWithImage:barcodeImage];
+    barcodeImageView.translatesAutoresizingMaskIntoConstraints = NO;
+    barcodeImageView.contentMode = UIViewContentModeScaleAspectFit;
     
-    self.barcodeView.frame = self.bounds;
-    [self.containerView removeFromSuperview];
-    [self.barcodeView configureContainerLayout];
-    [self addSubview:self.barcodeView];
+    UILabel *barcodeInstructionLabel = [UILabel new];
+    barcodeInstructionLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    barcodeInstructionLabel.text = instructions;
+    barcodeInstructionLabel.font = self.longDescriptionTextView.font;
+    barcodeInstructionLabel.textColor = [UIColor blackColor];
+    barcodeInstructionLabel.numberOfLines = 1;
+    barcodeInstructionLabel.textAlignment = NSTextAlignmentCenter;
+    
+
+    NSDictionary *views = @{@"barcodeImageView": barcodeImageView,
+                            @"barcodeInstructionLabel": barcodeInstructionLabel};
+    
+    [self.barcodeView addSubview:barcodeInstructionLabel];
+    [self.barcodeView addSubview:barcodeImageView];
+    
+    [self.barcodeView addConstraint:[NSLayoutConstraint constraintWithItem:barcodeInstructionLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.barcodeView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [self.barcodeView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-15-[barcodeInstructionLabel]-(-20)-[barcodeImageView(140)]|" options:0 metrics:nil views:views]];
+    [self.barcodeView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[barcodeImageView]|" options:0 metrics:nil views:views]];
+    //[self.barcodeView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[barcodeInstructionLabel]|" options:0 metrics:nil views:views]];
+
 }
 
 @end

@@ -42,6 +42,7 @@
 		3B58F02582723BD5140E14B4 /* RVCardProject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AE43F0ABCA022805A6150E8 /* RVCardProject.h */; };
 		3BB652B9B2FE7BE1FBAC1750 /* RSCornersView.h in Headers */ = {isa = PBXBuildFile; fileRef = FAD136FBBBB70E98C50AA9F9 /* RSCornersView.h */; };
 		3D41A4FE1A23BE7B0075BA28 /* RVLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D41A4FD1A23BE7B0075BA28 /* RVLocation.m */; };
+		3D41A5011A30FBAB0075BA28 /* RVCardDeckViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D41A5001A30FBAB0075BA28 /* RVCardDeckViewController.m */; };
 		459BFB5C2068803F7DD5D04E /* RVCustomer.m in Sources */ = {isa = PBXBuildFile; fileRef = A36498D09C70DAC4F3E52C20 /* RVCustomer.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		46CF42ACEC038DC385052D1F /* RSExtendedCode39Generator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A424CF572DAD15C0B51382A /* RSExtendedCode39Generator.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		4715C948ED55241275295AB6 /* RSCodeGen.h in Headers */ = {isa = PBXBuildFile; fileRef = E0C28A5BA22EE018A2F38491 /* RSCodeGen.h */; };
@@ -258,6 +259,8 @@
 		3BF598E02CC8ADE0204C5C2D /* RVModalView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RVModalView.h; path = Pod/Classes/Views/Modal/RVModalView.h; sourceTree = "<group>"; };
 		3D41A4FC1A23BE7B0075BA28 /* RVLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RVLocation.h; path = Pod/Classes/Models/RVLocation.h; sourceTree = "<group>"; };
 		3D41A4FD1A23BE7B0075BA28 /* RVLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RVLocation.m; path = Pod/Classes/Models/RVLocation.m; sourceTree = "<group>"; };
+		3D41A4FF1A30FBAB0075BA28 /* RVCardDeckViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RVCardDeckViewController.h; path = Pod/Classes/Controllers/RVCardDeckViewController.h; sourceTree = "<group>"; };
+		3D41A5001A30FBAB0075BA28 /* RVCardDeckViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RVCardDeckViewController.m; path = Pod/Classes/Controllers/RVCardDeckViewController.m; sourceTree = "<group>"; };
 		3FCBA85BA70D9AFF4C95AE83 /* RVCustomerProject.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RVCustomerProject.h; path = Pod/Classes/Models/RVCustomerProject.h; sourceTree = "<group>"; };
 		40F5ACFA7373410124AE246B /* libPods-Rover-RSBarcodes.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rover-RSBarcodes.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		453588D03EF794EB4481F8CA /* UIImageView+UIActivityIndicatorForSDWebImage.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "UIImageView+UIActivityIndicatorForSDWebImage.h"; sourceTree = "<group>"; };
@@ -556,6 +559,8 @@
 				705E088700682E797330705C /* RVModalView.m */,
 				F7113C53438982E79662470B /* RVModalViewController.h */,
 				4DCBE72F42074D8536CE8E56 /* RVModalViewController.m */,
+				3D41A4FF1A30FBAB0075BA28 /* RVCardDeckViewController.h */,
+				3D41A5001A30FBAB0075BA28 /* RVCardDeckViewController.m */,
 				6AE7CF4AF0C293B41195C53F /* RVModel.h */,
 				A0228AD9CDBDDB6ABEA30E96 /* RVModel.m */,
 				2FDB1D3BD1686133F70A9CF6 /* RVModelProject.h */,
@@ -1019,6 +1024,7 @@
 			files = (
 				3D41A4FE1A23BE7B0075BA28 /* RVLocation.m in Sources */,
 				0E7FD042635674368A37A401 /* Pods-Rover-dummy.m in Sources */,
+				3D41A5011A30FBAB0075BA28 /* RVCardDeckViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

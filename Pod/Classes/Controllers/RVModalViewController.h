@@ -6,6 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RVCardDeckViewController.h"
 
 /** Defines the options for the view controller's card set property.
  */
@@ -49,7 +50,7 @@ NSString *const RVModalViewOptionsPredicate;
  
  This view controller contains a lot of useful functionality out of the box. By using the RVModalViewController you can get your app up and running with the Rover Platform quickly.
  */
-@interface RVModalViewController : UIViewController
+@interface RVModalViewController : RVCardDeckViewController
 
 /** The view controller's delegate. You should assign your view controller that instantiated the RVModalViewController to this property in order to be notified of certain events in the controller's lifecycle.
  */
@@ -65,8 +66,6 @@ NSString *const RVModalViewOptionsPredicate;
  */
 @property (nonatomic, strong) NSDictionary *options;
 
-@property (nonatomic, strong) UIColor *modalTintColor;
-@property (nonatomic) NSUInteger modalBlurRadius;
 
 @end
 

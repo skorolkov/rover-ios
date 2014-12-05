@@ -65,9 +65,15 @@ typedef struct {
 
 - (void)setFullScreen:(BOOL)fullScreen
 {
-    self.panGesture.enabled = !fullScreen;
+    self.panGesture.enabled = self.cardSwipeEnabled && !fullScreen;
     
     _fullScreen = fullScreen;
+}
+
+- (void)setCardSwipeEnabled:(BOOL)cardSwipeEnabled
+{
+    self.panGesture.enabled = cardSwipeEnabled && !self.fullScreen;
+    _cardSwipeEnabled = cardSwipeEnabled;
 }
 
 #pragma mark - Initialization
@@ -87,6 +93,7 @@ typedef struct {
         
         self.fullScreen = NO;
         self.animating = NO;
+        self.cardSwipeEnabled = YES;
     }
     return self;
 }
@@ -145,10 +152,11 @@ typedef struct {
     
     // Create the cards in order so the first image loads first
     for (int i = 0, l = (int)numCards; i < l; i++) {
-        RVCardView *cardView = [_dataSource cardDeck:self cardViewForItemAtIndex:i];
+        RVCardBaseView *cardView = [_dataSource cardDeck:self cardViewForItemAtIndex:i];
         cardView.delegate = self;
-        cardView.useCloseButton = NO;
+        //cardView.useCloseButton = NO;
         cardView.frame = CGRectMake(0, 0, [RVCardView contractedWidth], [RVCardView contractedHeight]);
+        
         cardView.alpha = 0.0;
         [self.cards insertObject:cardView atIndex:i];
         [self.cardIndexMap setObject:@(i) forKey:cardView];
@@ -227,7 +235,7 @@ typedef struct {
     }
 }
 
-- (NSUInteger)indexForCardView:(RVCardView *)cardView
+- (NSUInteger)indexForCardView:(RVCardBaseView *)cardView
 {
     NSNumber *idx = [self.cardIndexMap objectForKey:cardView];
     return [idx unsignedIntegerValue];
@@ -382,45 +390,14 @@ typedef struct {
 
 #pragma mark - RVCardViewDelegate
 
-- (void)cardViewMoreButtonPressed:(RVCardView *)cardView {
+- (void)cardViewMoreButtonPressed:(RVCardBaseView *)cardView {
     if (cardView == self.topCard) {
         cardView.isExpanded ? [self exitFullScreen] : [self enterFullScreen];
     }
 }
 
-- (void)cardViewLikeButtonPressed:(RVCardView *)cardView {
-    if (cardView.liked) {
-        cardView.liked = NO;
-        
-        if (self.delegate) {
-            [self.delegate cardDeck:self didUnlikeCard:cardView];
-        }
-    } else {
-        cardView.liked = YES;
-        
-        if (self.delegate) {
-            [self.delegate cardDeck:self didLikeCard:cardView];
-        }
-    }
-}
 
-- (void)cardViewDiscardButtonPressed:(RVCardView *)cardView {
-    if (!cardView.discarded) {
-        cardView.discarded = YES;
-        
-        if (self.delegate) {
-            [self.delegate cardDeck:self didDiscardCard:cardView];
-        }
-    }
-}
-
-- (void)cardViewBarcodeButtonPressed:(RVCardView *)cardView {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(cardDeckDidEnterBarcodeView:)]) {
-        [self.delegate cardDeckDidEnterBarcodeView:self];
-    }
-}
-
-- (void)cardViewDidExpand:(RVCardView *)cardView {
+- (void)cardViewDidExpand:(RVCardBaseView *)cardView {
     self.animating = NO;
     self.fullScreen = YES;
     
@@ -429,7 +406,7 @@ typedef struct {
     }
 }
 
-- (void)cardViewDidContract:(RVCardView *)cardView {
+- (void)cardViewDidContract:(RVCardBaseView *)cardView {
     self.animating = NO;
     self.fullScreen = NO;
     
