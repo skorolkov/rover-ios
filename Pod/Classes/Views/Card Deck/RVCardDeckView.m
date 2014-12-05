@@ -415,6 +415,18 @@ typedef struct {
     self.animating = YES;
     [self.animator removeAllBehaviors];
     
+    if (self.topCard.isExpanded) {
+        if ([self.delegate respondsToSelector:@selector(cardDeckWillExitFullScreen:)]) {
+            [self.delegate cardDeckWillExitFullScreen:self];
+        }
+        
+        [self.topCard contractToFrame:CGRectMake(0, 0, self.topCard.contractedWidth, self.topCard.contractedHeight) atCenter:self.topCard.center animated:YES];
+        
+        if ([self.delegate respondsToSelector:@selector(cardDeckDidExitFullScreen:)]) {
+            [self.delegate cardDeckDidExitFullScreen:self];
+        }
+    }
+    
     CGPoint velocity = CGPointMake(2000, -1000);
     
     UIDynamicItemBehavior *dynamic = [[UIDynamicItemBehavior alloc] initWithItems:@[self.topCard]];
