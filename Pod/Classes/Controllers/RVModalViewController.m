@@ -27,7 +27,6 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 @interface RVModalViewController ()
 
 @property (strong, nonatomic) RVVisit *visit;
-@property (readonly, nonatomic) NSArray *cards;
 
 @end
 
@@ -146,20 +145,20 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didSwipeCard:(RVCardBaseView *)cardView {
     NSUInteger idx = [cardDeck indexForCardView:cardView];
-    RVCard *card = [self.cards objectAtIndex:idx];
+    RVCard *card = ((RVCardView *)cardView).card;
     
     if ([self.delegate respondsToSelector:@selector(modalViewController:didSwipeCard:)]) {
         [self.delegate modalViewController:self didSwipeCard:card];
     }
     
-    if (idx == [self.cards count] - 1 && self.delegate) {
+    if (idx == [self numberOfItemsInDeck:cardDeck] - 1 && self.delegate) {
         [self.delegate modalViewControllerDidFinish:self];
     }
 }
 
 - (void)cardDeck:(RVCardDeckView *)cardDeck didShowCard:(RVCardBaseView *)cardView {
     NSUInteger idx = [self.cardDeckView indexForCardView:cardView];
-    RVCard *card = [self.cards objectAtIndex:idx];
+    RVCard *card = ((RVCardView *)cardView).card;
     card.isUnread = NO;
     card.viewedAt = [NSDate date];
     [self saveCard:card];
@@ -213,6 +212,10 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     cardView.frame = CGRectMake(0.0, 0.0, [cardView contractedWidth], [cardView contractedHeight]);
     
     // customize the cardView here
+    UIView *bgview = [UIView new];
+    bgview.backgroundColor = [UIColor yellowColor];
+    
+    cardView.backgroundView = bgview;
     
     [cardView setCard:card];
     

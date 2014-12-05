@@ -50,6 +50,7 @@
 {
     [self addSubview:backgroundView];
     [self sendSubviewToBack:backgroundView];
+    backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
     _backgroundView = backgroundView;
     [self configureBackgroundViewLayout];
 }

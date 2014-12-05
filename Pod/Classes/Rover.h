@@ -8,6 +8,10 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+// Views
+#import "RVCardView.h"
+#import "RVCardBaseView.h"
+
 // Models
 #import "RVModel.h"
 #import "RVCustomer.h"
