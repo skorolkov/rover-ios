@@ -27,7 +27,7 @@ const CGFloat kRVCardViewImageRatio = .625;
 
 @property (strong, nonatomic) UIView *termsTitleLineLeft;
 @property (strong, nonatomic) UIView *termsTitleLineRight;
-
+@property (strong, nonatomic) UILabel *barcodeInstructionLabel;
 @property (strong, nonatomic) UIScrollView *scrollView;
 
 // Close button
@@ -51,6 +51,14 @@ const CGFloat kRVCardViewImageRatio = .625;
 @implementation RVCardView
 
 #pragma mark - Public Properties
+
+- (void)setBarcodeInstructionFont:(UIFont *)barcodeInstructionFont
+{
+    if (self.barcodeInstructionLabel) {
+        self.barcodeInstructionLabel.font = barcodeInstructionFont;
+    }
+    _barcodeInstructionFont = barcodeInstructionFont;
+}
 
 - (void)setShortDescriptionFont:(UIFont *)shortDescriptionFont
 {
@@ -558,22 +566,26 @@ const CGFloat kRVCardViewImageRatio = .625;
     barcodeImageView.translatesAutoresizingMaskIntoConstraints = NO;
     barcodeImageView.contentMode = UIViewContentModeScaleAspectFit;
     
-    UILabel *barcodeInstructionLabel = [UILabel new];
-    barcodeInstructionLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    barcodeInstructionLabel.text = instructions;
-    barcodeInstructionLabel.font = self.longDescriptionTextView.font;
-    barcodeInstructionLabel.textColor = [UIColor blackColor];
-    barcodeInstructionLabel.numberOfLines = 1;
-    barcodeInstructionLabel.textAlignment = NSTextAlignmentCenter;
+    self.barcodeInstructionLabel = [UILabel new];
+    self.barcodeInstructionLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.barcodeInstructionLabel.text = instructions;
+    if (self.barcodeInstructionFont) {
+        self.barcodeInstructionLabel.font = self.barcodeInstructionFont;
+    } else {
+        self.barcodeInstructionLabel.font = self.longDescriptionTextView.font;
+    }
+    self.barcodeInstructionLabel.textColor = [UIColor blackColor];
+    self.barcodeInstructionLabel.numberOfLines = 1;
+    self.barcodeInstructionLabel.textAlignment = NSTextAlignmentCenter;
     
 
     NSDictionary *views = @{@"barcodeImageView": barcodeImageView,
-                            @"barcodeInstructionLabel": barcodeInstructionLabel};
+                            @"barcodeInstructionLabel": self.barcodeInstructionLabel};
     
-    [self.barcodeView addSubview:barcodeInstructionLabel];
+    [self.barcodeView addSubview:self.barcodeInstructionLabel];
     [self.barcodeView addSubview:barcodeImageView];
     
-    [self.barcodeView addConstraint:[NSLayoutConstraint constraintWithItem:barcodeInstructionLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.barcodeView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
+    [self.barcodeView addConstraint:[NSLayoutConstraint constraintWithItem:self.barcodeInstructionLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.barcodeView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
     [self.barcodeView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-15-[barcodeInstructionLabel]-(-20)-[barcodeImageView(140)]|" options:0 metrics:nil views:views]];
     [self.barcodeView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[barcodeImageView]|" options:0 metrics:nil views:views]];
     //[self.barcodeView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[barcodeInstructionLabel]|" options:0 metrics:nil views:views]];

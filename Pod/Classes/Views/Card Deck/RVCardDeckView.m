@@ -425,6 +425,7 @@ typedef struct {
         if ([self.delegate respondsToSelector:@selector(cardDeckDidExitFullScreen:)]) {
             [self.delegate cardDeckDidExitFullScreen:self];
         }
+        [NSThread sleepForTimeInterval:.3f];
     }
     
     CGPoint velocity = CGPointMake(2000, -1000);
@@ -450,8 +451,8 @@ typedef struct {
     
     // add a little gravity so it accelerates off the screen (in case user gesture was slow)
     
-    UIGravityBehavior *gravity = [[UIGravityBehavior alloc] initWithItems:@[self.topCard]];
-    gravity.magnitude = 2.7;
+//    UIGravityBehavior *gravity = [[UIGravityBehavior alloc] initWithItems:@[self.topCard]];
+//    gravity.magnitude = 2.7;
     //[self.animator addBehavior:gravity];
 
 }

@@ -59,6 +59,7 @@
 
 @property (strong, nonatomic) UIFont *shortDescriptionFont;
 @property (strong, nonatomic) UIFont *longDescriptionFont;
+@property (strong, nonatomic) UIFont *barcodeInstructionFont;
 
 @end
 
