@@ -93,6 +93,11 @@ extern NSString *const kRoverDidSwipeCardNotification;
  */
 - (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major;
 
+/** Convenience method to find the current view controller
+ */
+
++ (UIViewController *)findCurrentViewController:(UIViewController *)vc;
+
 @end
 
 

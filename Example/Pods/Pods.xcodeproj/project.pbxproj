@@ -42,7 +42,8 @@
 		3B58F02582723BD5140E14B4 /* RVCardProject.h in Headers */ = {isa = PBXBuildFile; fileRef = 8AE43F0ABCA022805A6150E8 /* RVCardProject.h */; };
 		3BB652B9B2FE7BE1FBAC1750 /* RSCornersView.h in Headers */ = {isa = PBXBuildFile; fileRef = FAD136FBBBB70E98C50AA9F9 /* RSCornersView.h */; };
 		3D41A4FE1A23BE7B0075BA28 /* RVLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D41A4FD1A23BE7B0075BA28 /* RVLocation.m */; };
-		3D41A5011A30FBAB0075BA28 /* RVCardDeckViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D41A5001A30FBAB0075BA28 /* RVCardDeckViewController.m */; };
+		3D8802881A324C5E0036B8C3 /* RVCardDeckViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D41A5001A30FBAB0075BA28 /* RVCardDeckViewController.m */; };
+		3D8802891A324C620036B8C3 /* RVCardDeckViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D41A4FF1A30FBAB0075BA28 /* RVCardDeckViewController.h */; };
 		459BFB5C2068803F7DD5D04E /* RVCustomer.m in Sources */ = {isa = PBXBuildFile; fileRef = A36498D09C70DAC4F3E52C20 /* RVCustomer.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		46CF42ACEC038DC385052D1F /* RSExtendedCode39Generator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5A424CF572DAD15C0B51382A /* RSExtendedCode39Generator.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		4715C948ED55241275295AB6 /* RSCodeGen.h in Headers */ = {isa = PBXBuildFile; fileRef = E0C28A5BA22EE018A2F38491 /* RSCodeGen.h */; };
@@ -780,6 +781,7 @@
 				34DD30915D8518B613952B06 /* RVCardView.h in Headers */,
 				A5760416C0923EF80DDB426F /* RVCardViewButton.h in Headers */,
 				2BB77C811D767B5631B18FF0 /* RVCardViewButtonBar.h in Headers */,
+				3D8802891A324C620036B8C3 /* RVCardDeckViewController.h in Headers */,
 				29A1AC5B1094984E919BF780 /* RVCardViewButtonIcon.h in Headers */,
 				E0DCF79B35FDBA43B7982F78 /* RVCardViewController.h in Headers */,
 				D8BFDE7E1BD8057186848659 /* RVCardViewCorner.h in Headers */,
@@ -1024,7 +1026,6 @@
 			files = (
 				3D41A4FE1A23BE7B0075BA28 /* RVLocation.m in Sources */,
 				0E7FD042635674368A37A401 /* Pods-Rover-dummy.m in Sources */,
-				3D41A5011A30FBAB0075BA28 /* RVCardDeckViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1063,6 +1064,7 @@
 				2DF38EAC72D221AC6DB2D90D /* RVModel.m in Sources */,
 				6088D0F9A068CAE99AC7A8A1 /* RVMoreButton.m in Sources */,
 				55055F37606426EC6044BF5D /* RVNetworkingManager.m in Sources */,
+				3D8802881A324C5E0036B8C3 /* RVCardDeckViewController.m in Sources */,
 				4885E609AFCCB7640FA5C2D7 /* RVNextButton.m in Sources */,
 				1BCDC5071BA9CC95CEF41116 /* RVNotificationCenter.m in Sources */,
 				CAC333F4BA6ADD30BBC4748F /* RVRegionManager.m in Sources */,

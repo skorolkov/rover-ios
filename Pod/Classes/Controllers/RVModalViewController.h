@@ -8,6 +8,8 @@
 #import <UIKit/UIKit.h>
 #import "RVCardDeckViewController.h"
 
+@class RVCard;
+
 /** Defines the options for the view controller's card set property.
  */
 typedef enum {
