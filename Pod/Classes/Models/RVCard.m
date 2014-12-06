@@ -112,7 +112,7 @@
     }
     
     // shortDescription
-    NSString *shortDescription = [JSON objectForKey:@"short_description"];
+    NSString *shortDescription = [JSON objectForKey:@"short_description_html"];
     if (shortDescription != (id)[NSNull null] && [shortDescription length] > 0) {
         self.shortDescription = shortDescription;
     }

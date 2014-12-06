@@ -8,6 +8,7 @@
 
 #import "RVHelper.h"
 #import "RVCardView.h"
+#import <RSBarcodes/RSCodeGen.h>
 
 @implementation RVHelper
 
@@ -47,7 +48,7 @@
     
 }
 
-+ (void)displaySwipeTutorialWithCardView:(RVCardView *)cardView completion:( void (^)(BOOL finished) )completion
++ (void)displaySwipeTutorialWithCardView:(RVCardBaseView *)cardView completion:( void (^)(BOOL finished) )completion
 {
     [UIView animateWithDuration:.4 delay:0.7 options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
@@ -144,5 +145,7 @@
                          
                      }];
 }
+
+
 
 @end

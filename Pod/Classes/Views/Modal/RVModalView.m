@@ -59,7 +59,7 @@
     
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-22-[closeButton(40)]" options:0 metrics:nil views:views]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[closeButton(44)]" options:0 metrics:nil views:views]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.closeButton attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:-8]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.closeButton attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0]];
 }
 
 - (void)animateIn

@@ -65,9 +65,15 @@ typedef struct {
 
 - (void)setFullScreen:(BOOL)fullScreen
 {
-    self.panGesture.enabled = !fullScreen;
+    self.panGesture.enabled = self.cardSwipeEnabled && !fullScreen;
     
     _fullScreen = fullScreen;
+}
+
+- (void)setCardSwipeEnabled:(BOOL)cardSwipeEnabled
+{
+    self.panGesture.enabled = cardSwipeEnabled && !self.fullScreen;
+    _cardSwipeEnabled = cardSwipeEnabled;
 }
 
 #pragma mark - Initialization
@@ -87,6 +93,7 @@ typedef struct {
         
         self.fullScreen = NO;
         self.animating = NO;
+        self.cardSwipeEnabled = YES;
     }
     return self;
 }
@@ -145,10 +152,11 @@ typedef struct {
     
     // Create the cards in order so the first image loads first
     for (int i = 0, l = (int)numCards; i < l; i++) {
-        RVCardView *cardView = [_dataSource cardDeck:self cardViewForItemAtIndex:i];
+        RVCardBaseView *cardView = [_dataSource cardDeck:self cardViewForItemAtIndex:i];
         cardView.delegate = self;
-        cardView.useCloseButton = NO;
-        cardView.frame = CGRectMake(0, 0, [RVCardView contractedWidth], [RVCardView contractedHeight]);
+        //cardView.useCloseButton = NO;
+        cardView.frame = CGRectMake(0, 0, cardView.contractedWidth, cardView.contractedHeight);
+        
         cardView.alpha = 0.0;
         [self.cards insertObject:cardView atIndex:i];
         [self.cardIndexMap setObject:@(i) forKey:cardView];
@@ -159,11 +167,6 @@ typedef struct {
     if (self.topCard) {
         [self.topCard addGestureRecognizer:self.panGesture];
     }
-}
-
-- (RVCardView *)createCard
-{
-    return [[RVCardView alloc] initWithFrame:CGRectMake(0.0, 0.0, [RVCardView contractedWidth], [RVCardView contractedHeight])];
 }
 
 - (void)animateIn:(void (^)())completion
@@ -223,11 +226,11 @@ typedef struct {
         }
         self.animating = YES;
         RVCardViewLayout layout = [self layoutForCardAtIndex:0];
-        [self.topCard contractToFrame:CGRectMake(0, 0, [RVCardView contractedWidth], [RVCardView contractedHeight]) atCenter:layout.center animated:YES];
+        [self.topCard contractToFrame:CGRectMake(0, 0, self.topCard.contractedWidth, self.topCard.contractedHeight) atCenter:layout.center animated:YES];
     }
 }
 
-- (NSUInteger)indexForCardView:(RVCardView *)cardView
+- (NSUInteger)indexForCardView:(RVCardBaseView *)cardView
 {
     NSNumber *idx = [self.cardIndexMap objectForKey:cardView];
     return [idx unsignedIntegerValue];
@@ -382,45 +385,14 @@ typedef struct {
 
 #pragma mark - RVCardViewDelegate
 
-- (void)cardViewMoreButtonPressed:(RVCardView *)cardView {
-    if (cardView == self.topCard) {
+- (void)cardViewMoreButtonPressed:(RVCardBaseView *)cardView {
+    if (cardView == self.topCard && self.topCard.expandable) {
         cardView.isExpanded ? [self exitFullScreen] : [self enterFullScreen];
     }
 }
 
-- (void)cardViewLikeButtonPressed:(RVCardView *)cardView {
-    if (cardView.liked) {
-        cardView.liked = NO;
-        
-        if (self.delegate) {
-            [self.delegate cardDeck:self didUnlikeCard:cardView];
-        }
-    } else {
-        cardView.liked = YES;
-        
-        if (self.delegate) {
-            [self.delegate cardDeck:self didLikeCard:cardView];
-        }
-    }
-}
 
-- (void)cardViewDiscardButtonPressed:(RVCardView *)cardView {
-    if (!cardView.discarded) {
-        cardView.discarded = YES;
-        
-        if (self.delegate) {
-            [self.delegate cardDeck:self didDiscardCard:cardView];
-        }
-    }
-}
-
-- (void)cardViewBarcodeButtonPressed:(RVCardView *)cardView {
-    if (self.delegate && [self.delegate respondsToSelector:@selector(cardDeckDidEnterBarcodeView:)]) {
-        [self.delegate cardDeckDidEnterBarcodeView:self];
-    }
-}
-
-- (void)cardViewDidExpand:(RVCardView *)cardView {
+- (void)cardViewDidExpand:(RVCardBaseView *)cardView {
     self.animating = NO;
     self.fullScreen = YES;
     
@@ -429,13 +401,59 @@ typedef struct {
     }
 }
 
-- (void)cardViewDidContract:(RVCardView *)cardView {
+- (void)cardViewDidContract:(RVCardBaseView *)cardView {
     self.animating = NO;
     self.fullScreen = NO;
     
     if (self.delegate && [self.delegate respondsToSelector:@selector(cardDeckDidExitFullScreen:)]) {
         [self.delegate cardDeckDidExitFullScreen:self];
     }
+}
+
+- (void)swipeToNextCard
+{
+    self.animating = YES;
+    [self.animator removeAllBehaviors];
+    
+    if (self.topCard.isExpanded) {
+        if ([self.delegate respondsToSelector:@selector(cardDeckWillExitFullScreen:)]) {
+            [self.delegate cardDeckWillExitFullScreen:self];
+        }
+        
+        [self.topCard contractToFrame:CGRectMake(0, 0, self.topCard.contractedWidth, self.topCard.contractedHeight) atCenter:self.topCard.center animated:YES];
+        
+        if ([self.delegate respondsToSelector:@selector(cardDeckDidExitFullScreen:)]) {
+            [self.delegate cardDeckDidExitFullScreen:self];
+        }
+    }
+    
+    CGPoint velocity = CGPointMake(2000, -1000);
+    
+    UIDynamicItemBehavior *dynamic = [[UIDynamicItemBehavior alloc] initWithItems:@[self.topCard]];
+    [dynamic addLinearVelocity:velocity forItem:self.topCard];
+    //dynamic.resistance = 10.f;
+    //dynamic.friction =10;
+    [dynamic addAngularVelocity:-5 forItem:self.topCard];
+    [dynamic setAngularResistance:10];
+    
+    // when the view no longer intersects with its superview, go ahead and remove it
+    
+    CGRect originalFrame = self.topCard.frame;
+    
+    dynamic.action = ^{
+        if (!CGRectIntersectsRect(self.topCard.frame, originalFrame)) {
+            [self.animator removeAllBehaviors];
+            [self nextCard];
+        }
+    };
+    [self.animator addBehavior:dynamic];
+    
+    // add a little gravity so it accelerates off the screen (in case user gesture was slow)
+    
+//    UIGravityBehavior *gravity = [[UIGravityBehavior alloc] initWithItems:@[self.topCard]];
+//    gravity.magnitude = 2.7;
+    //[self.animator addBehavior:gravity];
+
 }
 
 @end

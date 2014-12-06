@@ -24,15 +24,17 @@ typedef enum {
 
 @property (readonly, nonatomic) RVCardView *topCard;
 @property (readonly, nonatomic) BOOL isFullScreen;
+@property (assign, nonatomic) BOOL cardSwipeEnabled;
 
 - (void)reloadData;
 - (void)animateIn:(void (^)())completion;
 
-- (NSUInteger)indexForCardView:(RVCardView *)cardView;
-- (RVCardView *)createCard;
+- (NSUInteger)indexForCardView:(RVCardBaseView *)cardView;
 
 - (void)enterFullScreen;
 - (void)exitFullScreen;
+
+- (void)swipeToNextCard;
 
 @end
 
@@ -41,7 +43,7 @@ typedef enum {
 @protocol RVCardDeckViewDataSourceDelegate
 
 - (NSUInteger)numberOfItemsInDeck:(RVCardDeckView *)cardDeck;
-- (RVCardView *)cardDeck:(RVCardDeckView *)cardDeck cardViewForItemAtIndex:(NSUInteger)index;
+- (RVCardBaseView *)cardDeck:(RVCardDeckView *)cardDeck cardViewForItemAtIndex:(NSUInteger)index;
 
 @end
 
@@ -49,16 +51,13 @@ typedef enum {
 
 @protocol RVCardDeckViewDelegate <NSObject>
 
-- (void)cardDeckDidPressBackground:(RVCardDeckView *)cardDeck;
 
-- (void)cardDeck:(RVCardDeckView *)cardDeck didSwipeCard:(RVCardView *)cardView;
-- (void)cardDeck:(RVCardDeckView *)cardDeck didShowCard:(RVCardView *)cardView;
-- (void)cardDeck:(RVCardDeckView *)cardDeck didLikeCard:(RVCardView *)cardView;
-- (void)cardDeck:(RVCardDeckView *)cardDeck didUnlikeCard:(RVCardView *)cardView;
-- (void)cardDeck:(RVCardDeckView *)cardDeck didDiscardCard:(RVCardView *)cardView;
+- (void)cardDeck:(RVCardDeckView *)cardDeck didSwipeCard:(RVCardBaseView *)cardView;
+- (void)cardDeck:(RVCardDeckView *)cardDeck didShowCard:(RVCardBaseView *)cardView;
 
 @optional
 
+- (void)cardDeckDidPressBackground:(RVCardDeckView *)cardDeck;
 - (void)cardDeckWillEnterFullScreen:(RVCardDeckView *)cardDeck;
 - (void)cardDeckDidEnterFullScreen:(RVCardDeckView *)cardDeck;
 - (void)cardDeckWillExitFullScreen:(RVCardDeckView *)cardDeck;
