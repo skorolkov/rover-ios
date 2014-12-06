@@ -255,7 +255,7 @@
     
     NSDictionary *textAttributes = @{
                                      NSFontAttributeName: [UIFont boldSystemFontOfSize:126],
-                                     NSForegroundColorAttributeName: [UIColor whiteColor]
+                                     NSForegroundColorAttributeName: [UIColor blackColor]
                                      };
     
     CGSize textSize = [code boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:textAttributes context:nil].size;
