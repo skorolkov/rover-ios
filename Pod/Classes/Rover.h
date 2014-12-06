@@ -8,6 +8,13 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+// Views
+#import "RVCardView.h"
+#import "RVCardBaseView.h"
+#import "RVCardDeckView.h"
+#import "RVCloseButton.h"
+#import "RVModalView.h"
+
 // Models
 #import "RVModel.h"
 #import "RVCustomer.h"
@@ -92,6 +99,11 @@ extern NSString *const kRoverDidSwipeCardNotification;
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
  */
 - (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major;
+
+/** Convenience method to find the current view controller
+ */
+
++ (UIViewController *)findCurrentViewController:(UIViewController *)vc;
 
 @end
 

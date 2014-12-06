@@ -9,9 +9,11 @@
 #import "RVCardBaseView.h"
 #import "RVCardViewButtonBar.h"
 
+#import <RSBarcodes/RSBarcodes.h>
+
 #define IS_WIDESCREEN ([[UIScreen mainScreen] bounds].size.height == 568.0)
 
-const CGFloat kRVCardViewImageRatio = .625;
+
 
 @interface RVCardBaseView () {
     CGRect _expandedFrame;
@@ -19,93 +21,38 @@ const CGFloat kRVCardViewImageRatio = .625;
 
 @property (nonatomic, getter=isExpanded) BOOL expanded;
 
-@property (strong, nonatomic) UIScrollView *scrollView;
-
-@property (strong, nonatomic) UILabel *shortDescriptionTextView;
-
-// Title bar
-@property (strong, nonatomic) UIView *titleBar;
-@property (strong, nonatomic) UILabel *titleLabel;
-@property (strong, nonatomic) UIView *titleLineLeft;
-@property (strong, nonatomic) UIView *titleLineRight;
-
-// Constraints
-@property (strong, nonatomic) NSLayoutConstraint *containerViewWidthConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *containerViewHeightConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *contentViewWidthConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *titleBarHeightConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *imageViewHeightConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *imageViewTopConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *shortDescriptionHeightConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *titleLineLeftTrailConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *titleLineRightLeftConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *titleLineLeftExpandedConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *titleLineRightExpandedConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *titleLabelCenterYConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *titleLineLeftBottomConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *titleLineRightBottomConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *titleBarTopConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *buttonBarHeightConstraint;
+@property (strong, nonatomic) UIView *shadowView;
 
 @end
 
 @implementation RVCardBaseView
 
 
-#pragma mark - Class Methods
+#pragma mark - Size Methods
 
-+ (CGFloat)contractedWidth {
+- (CGFloat)contractedWidth {
     return 280.0;
 }
 
-+ (CGFloat)contractedHeight {
-    return IS_WIDESCREEN ? 369.0 : 347.0;
+- (CGFloat)contractedHeight {
+    return 292.0;
 }
 
 #pragma mark - Public Properties
 
-- (void)setTitle:(NSString *)title
+- (void)setShadow:(CGFloat)shadow
 {
-    self.titleLabel.text = [title uppercaseString];
-    _title = title;
+    self.shadowView.layer.opacity = shadow;
+    _shadow = shadow;
 }
 
-- (void)setShortDescription:(NSString *)shortDescription
+- (void)setBackgroundView:(UIView *)backgroundView
 {
-    self.shortDescriptionTextView.text = shortDescription;
-    _shortDescription = shortDescription;
-}
-
-- (void)setBackgroundColor:(UIColor *)backgroundColor
-{
-    [super setBackgroundColor:backgroundColor];
-}
-
-- (void)setFontColor:(UIColor *)fontColor
-{
-    self.titleLineLeft.backgroundColor = fontColor;
-    self.titleLineRight.backgroundColor = fontColor;
-    self.titleLabel.textColor = fontColor;
-    self.shortDescriptionTextView.textColor = fontColor;
-    self.buttonBar.fontColor = fontColor;
-    _fontColor = fontColor;
-}
-
-- (void)setImage:(UIImage *)image
-{
-    self.imageView.image = image;
-}
-
-- (UIImage *)image
-{
-    return self.imageView.image;
-}
-
-#pragma mark - Private Properties
-
-- (void)setExpanded:(BOOL)expanded {
-    self.scrollView.scrollEnabled = expanded;
-    _expanded = expanded;
+    [self addSubview:backgroundView];
+    [self sendSubviewToBack:backgroundView];
+    backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+    _backgroundView = backgroundView;
+    [self configureBackgroundViewLayout];
 }
 
 #pragma mark - Initialization
@@ -121,9 +68,11 @@ const CGFloat kRVCardViewImageRatio = .625;
         [self configureLayout];
         
         self.expanded = NO;
+        self.expandable = YES;
         //self.useCloseButton = NO;
         self.backgroundColor = [UIColor colorWithRed:37.0/255.0 green:111.0/255.0 blue:203.0/255.0 alpha:1.0];
-        self.fontColor = [UIColor whiteColor];
+        
+        [self layoutIfNeeded];
     }
     return self;
 }
@@ -133,202 +82,52 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.containerView = [UIView new];
     self.containerView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:self.containerView];
-    
-    self.scrollView = [UIScrollView new];
-    self.scrollView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.containerView addSubview:self.scrollView];
-    
-    self.contentView = [UIView new];
-    self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.scrollView addSubview:self.contentView];
-    
-    self.titleBar = [UIView new];
-    self.titleBar.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.containerView addSubview:self.titleBar];
-    
-    self.titleLineLeft = [UIView new];
-    self.titleLineLeft.translatesAutoresizingMaskIntoConstraints = NO;
-    self.titleLineLeft.alpha = 0.5;
-    [self.titleBar addSubview:self.titleLineLeft];
-    
-    self.titleLineRight = [UIView new];
-    self.titleLineRight.translatesAutoresizingMaskIntoConstraints = NO;
-    self.titleLineRight.alpha = 0.5;
-    [self.titleBar addSubview:self.titleLineRight];
-    
-    self.titleLabel = [UILabel new];
-    self.titleLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    self.titleLabel.font = [UIFont boldSystemFontOfSize:12.0];
-    self.titleLabel.textAlignment = NSTextAlignmentCenter;
-    [self.titleBar addSubview:self.titleLabel];
-    
-    self.shortDescriptionTextView = [UILabel new];
-    self.shortDescriptionTextView.numberOfLines = IS_WIDESCREEN ? 3 : 2;
-    self.shortDescriptionTextView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.shortDescriptionTextView.font = [UIFont systemFontOfSize:16.0];
-    self.shortDescriptionTextView.textAlignment = NSTextAlignmentCenter;
-    self.shortDescriptionTextView.alpha = 0.7;
-    self.shortDescriptionTextView.backgroundColor = [UIColor clearColor];
-    [self.contentView addSubview:self.shortDescriptionTextView];
-    
-    self.buttonBar = [RVCardViewButtonBar new];
-    self.buttonBar.translatesAutoresizingMaskIntoConstraints = NO;
-    self.buttonBar.delegate = self;
-    [self.containerView addSubview:self.buttonBar];
-    
-    self.imageView = [UIImageView new];
-    self.imageView.translatesAutoresizingMaskIntoConstraints = NO;
-    self.imageView.contentMode = UIViewContentModeScaleAspectFill;
-    self.imageView.clipsToBounds = YES;
-    self.imageView.backgroundColor = [UIColor whiteColor];
-    [self.contentView addSubview:self.imageView];
+
+    self.shadowView = [[UIView alloc] initWithFrame:self.frame];
+    self.shadowView.translatesAutoresizingMaskIntoConstraints = NO;
+    self.shadowView.backgroundColor = [UIColor blackColor];
+    self.shadowView.alpha = 0.0;
+    self.shadowView.userInteractionEnabled = NO;
+    [self addSubview:self.shadowView];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cardTapped)];
     [self.containerView addGestureRecognizer:tapGestureRecognizer];
     
 }
 
-- (void)configureContainerLayout
-{
-    [self removeConstraints:self.containerView.constraints];
-    
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
-    
-    [self removeConstraint:self.containerViewWidthConstraint];
-    self.containerViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:self.isExpanded ? _expandedFrame.size.width : RVCardBaseView.contractedWidth];
-    [self addConstraint:self.containerViewWidthConstraint];
-    
-    [self removeConstraint:self.containerViewHeightConstraint];
-    self.containerViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:self.isExpanded ? _expandedFrame.size.height : RVCardBaseView.contractedHeight];
-    [self addConstraint:self.containerViewHeightConstraint];
-}
-
 - (void)configureLayout
 {
-    NSDictionary *views = @{ @"contentView": self.contentView,
-                             @"scrollView": self.scrollView,
-                             @"titleBar": self.titleBar,
-                             @"titleLabel": self.titleLabel,
-                             @"titleLineLeft": self.titleLineLeft,
-                             @"titleLineRight": self.titleLineRight,
-                             @"shortDescriptionTextView": self.shortDescriptionTextView,
-                             @"imageView": self.imageView,
-                             @"buttonBar": self.buttonBar
-                             };
+    NSDictionary *views = @{@"shadowView": self.shadowView,
+                            @"containerView": self.containerView};
     
     //----------------------------------------
     //  containerView
     //----------------------------------------
+    
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:0]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0]];
+    
+    self.containerViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:self.isExpanded ? _expandedFrame.size.width : self.contractedWidth];
+    [self addConstraint:self.containerViewWidthConstraint];
+    
+    self.containerViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.containerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:self.isExpanded ? _expandedFrame.size.height : self.contractedHeight];
+    [self addConstraint:self.containerViewHeightConstraint];
+    
+    //----------------------------------------
+    //  shadowView
+    //----------------------------------------
+    
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[shadowView]|" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[shadowView]|" options:0 metrics:nil views:views]];
 
-    [self configureContainerLayout];
-    
-    //----------------------------------------
-    //  scrollView
-    //----------------------------------------
-    
-    // scrollView fills the frame
-    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[scrollView]|" options:0 metrics:nil views:views]];
-    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[titleBar][scrollView][buttonBar]|" options:0 metrics:nil views:views]];
+}
 
-    //----------------------------------------
-    //  contentView
-    //----------------------------------------
+- (void)configureBackgroundViewLayout
+{
+    NSDictionary *views = @{@"backgroundView": self.backgroundView};
     
-    // Content view fills the scroll view and inherintly sets the scroll view's content size
-    [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[contentView]|" options:0 metrics:nil views:views]];
-    [self.scrollView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[contentView]|" options:0 metrics:nil views:views]];
-    
-    // Set the contentView's width
-    self.contentViewWidthConstraint = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[RVCardBaseView contractedWidth]];
-    [self.scrollView addConstraint:self.contentViewWidthConstraint];
-    
-    //----------------------------------------
-    //  titleBar
-    //----------------------------------------
-    
-    // Pin the title bar to the left and right edges
-    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[titleBar]|" options:0 metrics:nil views:views]];
-    
-    // Set the height of the title bar
-    self.titleBarHeightConstraint = [NSLayoutConstraint constraintWithItem:self.titleBar attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:20];
-    [self.titleBar addConstraint:self.titleBarHeightConstraint];
-    
-    // Pin the title bar to the top edge
-    self.titleBarTopConstraint = [NSLayoutConstraint constraintWithItem:self.titleBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeTop multiplier:1.0 constant:26.0];
-    [self.containerView addConstraint:self.titleBarTopConstraint];
-    
-    // Layout the title label and title line
-    [self.titleBar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[titleLineLeft]" options:0 metrics:0 views:views]];
-    [self.titleBar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[titleLineRight]|" options:0 metrics:0 views:views]];
-    
-    self.titleLineLeftTrailConstraint = [NSLayoutConstraint constraintWithItem:self.titleLineLeft attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.titleLabel attribute:NSLayoutAttributeLeft multiplier:1.0 constant:-12];
-    [self.titleBar addConstraint:self.titleLineLeftTrailConstraint];
-    
-    self.titleLineRightLeftConstraint = [NSLayoutConstraint constraintWithItem:self.titleLineRight attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.titleLabel attribute:NSLayoutAttributeRight multiplier:1.0 constant:12];
-    [self.titleBar addConstraint:self.titleLineRightLeftConstraint];
-    
-    self.titleLineLeftExpandedConstraint = [NSLayoutConstraint constraintWithItem:self.titleLineLeft attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.titleBar attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
-    self.titleLineRightExpandedConstraint = [NSLayoutConstraint constraintWithItem:self.titleLineRight attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.titleBar attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0];
-    
-    // Horizontally center titleLabel
-    [self.titleBar addConstraint:[NSLayoutConstraint constraintWithItem:self.titleLabel attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self.titleBar attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0.0]];
-    
-    // Set the heights of the title line
-    [self.titleBar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[titleLineLeft(1)]" options:0 metrics:nil views:views]];
-    [self.titleBar addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[titleLineRight(1)]" options:0 metrics:nil views:views]];
-    
-    // Vertically align the title label
-    self.titleLabelCenterYConstraint = [NSLayoutConstraint constraintWithItem:self.titleLabel attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.titleBar attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:0.0];
-    [self.titleBar addConstraint:self.titleLabelCenterYConstraint];
-    
-    // Verticall align the title lines
-    self.titleLineLeftBottomConstraint = [NSLayoutConstraint constraintWithItem:self.titleLineLeft attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.titleBar attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-10.0];
-    [self.titleBar addConstraint:self.titleLineLeftBottomConstraint];
-    self.titleLineRightBottomConstraint = [NSLayoutConstraint constraintWithItem:self.titleLineRight attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.titleBar attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-10.0];
-    [self.titleBar addConstraint:self.titleLineRightBottomConstraint];
-    
-    //----------------------------------------
-    //  shortDescription
-    //----------------------------------------
-    
-    // Horizontal spacing of shortDescription
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-[shortDescriptionTextView]-|" options:0 metrics:nil views:views]];
-    
-    // Height of shortDescription
-    CGFloat height = IS_WIDESCREEN ? 63.0 : 41.0;
-    self.shortDescriptionHeightConstraint = [NSLayoutConstraint constraintWithItem:self.shortDescriptionTextView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:height];
-    [self.contentView addConstraint:self.shortDescriptionHeightConstraint];
-    
-    // Pin the short description to the title bar
-    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.shortDescriptionTextView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeBottom multiplier:1.0 constant:7.0]];
-    
-    //----------------------------------------
-    //  imageView
-    //----------------------------------------
-    
-    // Horizontal spacing of imageView
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[imageView]|" options:0 metrics:nil views:views]];
-    
-    // Height of imageView
-    self.imageViewHeightConstraint = [NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:175.0];
-    [self.contentView addConstraint:self.imageViewHeightConstraint];
-    
-    // Top position of imageView
-    self.imageViewTopConstraint = [NSLayoutConstraint constraintWithItem:self.imageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.shortDescriptionTextView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:30.0];
-    [self.contentView addConstraint:self.imageViewTopConstraint];
-    
-    //----------------------------------------
-    //  buttonBar
-    //----------------------------------------
-    
-    // Pin the button bar to the left and right edges
-    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[buttonBar]|" options:0 metrics:nil views:views]];
-    
-    // Set the height of the button bar
-    self.buttonBarHeightConstraint = [NSLayoutConstraint constraintWithItem:self.buttonBar attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:48];
-    [self.containerView addConstraint:self.buttonBarHeightConstraint];
-
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[backgroundView]|" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundView]|" options:0 metrics:nil views:views]];
 }
 
 #pragma mark - Expand/Contract
@@ -342,25 +141,6 @@ const CGFloat kRVCardViewImageRatio = .625;
 {
     self.containerViewHeightConstraint.constant = frame.size.height;
     self.containerViewWidthConstraint.constant = frame.size.width;
-    self.contentViewWidthConstraint.constant = frame.size.width;
-    self.titleBarTopConstraint.constant = 20.0;
-    self.imageViewHeightConstraint.constant = frame.size.width * kRVCardViewImageRatio;
-    self.imageViewTopConstraint.constant = 15.0;
-    self.titleLineLeftBottomConstraint.constant = 0;
-    self.titleLineRightBottomConstraint.constant = 0;
-    self.titleBarHeightConstraint.constant = 44;
-    [self.titleBar removeConstraints:@[self.titleLineLeftTrailConstraint, self.titleLineRightLeftConstraint]];
-    [self.titleBar addConstraints:@[self.titleLineLeftExpandedConstraint, self.titleLineRightExpandedConstraint]];
-    
-    if (!self.buttonBar.leftButton && !self.buttonBar.rightButton) {
-        self.buttonBarHeightConstraint.constant = 0;
-    }
-    
-    if (!IS_WIDESCREEN) {
-        self.shortDescriptionTextView.numberOfLines = 3;
-        self.shortDescriptionHeightConstraint.constant = 63.0;
-    }
-    
     
     void (^animations)(void) = ^{
         self.frame = frame;
@@ -390,26 +170,9 @@ const CGFloat kRVCardViewImageRatio = .625;
 }
 - (void)contractToFrame:(CGRect)frame atCenter:(CGPoint)center animated:(BOOL)animated
 {
-    [self.scrollView setContentOffset:CGPointMake(0.0, 0.0) animated:animated];
-    
     self.containerViewHeightConstraint.constant = frame.size.height;
     self.containerViewWidthConstraint.constant = frame.size.width;
-    self.contentViewWidthConstraint.constant = frame.size.width;
-    self.titleBarTopConstraint.constant = 26.0;
-    self.imageViewHeightConstraint.constant = 175.0;
-    self.imageViewTopConstraint.constant = 31.0;
-    self.titleLineRightBottomConstraint.constant = -10;
-    self.titleLineLeftBottomConstraint.constant = -10;
-    self.titleBarHeightConstraint.constant = 20;
-    [self.titleBar removeConstraints:@[self.titleLineLeftExpandedConstraint, self.titleLineRightExpandedConstraint]];
-    [self.titleBar addConstraints:@[self.titleLineLeftTrailConstraint, self.titleLineRightLeftConstraint]];
-    
-    self.buttonBarHeightConstraint.constant = 48;
-    
-    if (!IS_WIDESCREEN) {
-        self.shortDescriptionTextView.numberOfLines = 2;
-        self.shortDescriptionHeightConstraint.constant = 41.0;
-    }
+
     
     void (^animations)(void) = ^{
         self.bounds = frame;
@@ -473,6 +236,64 @@ const CGFloat kRVCardViewImageRatio = .625;
 
 - (void)buttonBarRightButtonPressed:(RVCardViewButtonBar *)buttonBar {
     // Implement in subclass
+}
+
+#pragma mark - Barcode Helpers
+
++ (UIImage *)barcodeImageForCode:(NSString *)code type:(NSString *)type
+{
+    if ([type isEqualToString:@"PLU"]) {
+        return [RVCardBaseView imageWithPLUCode:code];
+    } else {
+        return [RVCardBaseView imageWithStandardBarcode:code withType:type];
+    }
+}
+
++ (UIImage *)imageWithPLUCode:(NSString *)code
+{
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(560, 350), NO, [UIScreen mainScreen].scale);
+    
+    NSDictionary *textAttributes = @{
+                                     NSFontAttributeName: [UIFont boldSystemFontOfSize:126],
+                                     NSForegroundColorAttributeName: [UIColor whiteColor]
+                                     };
+    
+    CGSize textSize = [code boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:textAttributes context:nil].size;
+    
+    [code drawAtPoint:CGPointMake(280 - (textSize.width / 2), 110) withAttributes:textAttributes];
+    
+    [@"PLU" drawAtPoint:CGPointMake(245, 60) withAttributes:@{NSFontAttributeName: [UIFont systemFontOfSize:36],
+                                                              NSForegroundColorAttributeName: [UIColor darkGrayColor]}];
+    UIImage *PLUImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return PLUImage;
+}
+
++ (UIImage *)imageWithStandardBarcode:(NSString *)code withType:(NSString *)barcodeType
+{
+    UIImage *codeImage = [CodeGen genCodeWithContents:code machineReadableCodeObjectType:barcodeType];
+    
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(560, 350), NO, [UIScreen mainScreen].scale);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSaveGState(context);
+    CGContextDrawImage(context, CGRectMake(20, 75, 520, 200), [codeImage CGImage]);
+
+    // text
+    NSDictionary *textAttributes = @{NSFontAttributeName: [UIFont systemFontOfSize:34],
+                                     NSForegroundColorAttributeName: [UIColor darkGrayColor],
+                                     NSKernAttributeName: @10.f};
+    CGSize textSize = [code boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX) options:NSStringDrawingUsesFontLeading attributes:textAttributes context:nil].size;
+    [code drawAtPoint:CGPointMake(280 - (textSize.width / 2), 280) withAttributes:textAttributes];
+    
+    CGContextRestoreGState(context);
+    
+    UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+    return newImage;
 }
 
 @end

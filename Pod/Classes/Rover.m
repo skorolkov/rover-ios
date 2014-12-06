@@ -195,8 +195,8 @@ static Rover *sharedInstance = nil;
     
     RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
     modalViewController.delegate = self;
-    modalViewController.modalBlurRadius = self.config.modalBackdropBlurRadius;
-    modalViewController.modalTintColor = self.config.modalBackdropTintColor;
+    modalViewController.backdropBlurRadius = self.config.modalBackdropBlurRadius;
+    modalViewController.backdropTintColor = self.config.modalBackdropTintColor;
     
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
@@ -210,8 +210,8 @@ static Rover *sharedInstance = nil;
     
     RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
     modalViewController.delegate = self;
-    modalViewController.modalBlurRadius = self.config.modalBackdropBlurRadius;
-    modalViewController.modalTintColor = self.config.modalBackdropTintColor;
+    modalViewController.backdropBlurRadius = self.config.modalBackdropBlurRadius;
+    modalViewController.backdropTintColor = self.config.modalBackdropTintColor;
     modalViewController.cardSet = cardSet;
     modalViewController.options = options;
     

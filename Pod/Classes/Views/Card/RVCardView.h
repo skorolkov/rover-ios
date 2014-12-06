@@ -18,10 +18,7 @@
 
 @optional
 
-- (void)cardViewLikeButtonPressed:(RVCardView *)cardView;
-- (void)cardViewDiscardButtonPressed:(RVCardView *)cardView;
 - (void)cardViewCloseButtonPressed:(RVCardView *)cardView;
-- (void)cardViewBarcodeButtonPressed:(RVCardView *)cardView;
 
 @end
 
@@ -30,10 +27,15 @@
 
 @property (weak, nonatomic) id <RVCardViewDelegate> delegate;
 
+@property (strong, nonatomic) UIView *contentView;
+@property (strong, nonatomic) UIColor *fontColor;
+@property (strong, nonatomic) NSString *title;
+@property (strong, nonatomic) NSString *shortDescription;
+@property (strong, nonatomic) UIImageView *imageView;
+@property (strong, nonatomic) UIImage *image;
 @property (strong, nonatomic) NSURL *imageURL;
 @property (strong, nonatomic) NSString *longDescription;
 @property (strong, nonatomic) NSString *terms;
-@property (nonatomic) CGFloat shadow;
 @property (strong, nonatomic) UIColor *secondaryBackgroundColor;
 @property (strong, nonatomic) UIColor *secondaryFontColor;
 
@@ -43,6 +45,21 @@
 @property (nonatomic) BOOL useCloseButton;
 
 @property (nonatomic, strong) RVCard *card;
+
+// Subviews
+@property (strong, nonatomic) UITextView *longDescriptionTextView;
+@property (strong, nonatomic) UIView *termsView;
+@property (strong, nonatomic) UILabel *termsLabel;
+@property (strong, nonatomic) UILabel *termsTitle;
+@property (strong, nonatomic) UIView *termsTitleView;
+@property (strong, nonatomic) UIView *descriptionView;
+@property (strong, nonatomic) UIView *barcodeView;
+@property (strong, nonatomic) UILabel *shortDescriptionTextView;
+@property (strong, nonatomic) UIView *footerView;
+
+@property (strong, nonatomic) UIFont *shortDescriptionFont;
+@property (strong, nonatomic) UIFont *longDescriptionFont;
+@property (strong, nonatomic) UIFont *barcodeInstructionFont;
 
 @end
 
