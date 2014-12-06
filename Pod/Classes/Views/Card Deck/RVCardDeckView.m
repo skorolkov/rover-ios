@@ -425,7 +425,6 @@ typedef struct {
         if ([self.delegate respondsToSelector:@selector(cardDeckDidExitFullScreen:)]) {
             [self.delegate cardDeckDidExitFullScreen:self];
         }
-        [NSThread sleepForTimeInterval:.3f];
     }
     
     CGPoint velocity = CGPointMake(2000, -1000);
