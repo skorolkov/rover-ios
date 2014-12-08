@@ -9,7 +9,6 @@
 #import "RVModalView.h"
 #import "RVCardDeckView.h"
 #import "RVCloseButton.h"
-#import "RVNextButton.h"
 
 
 @implementation RVModalView

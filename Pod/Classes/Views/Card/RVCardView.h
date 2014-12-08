@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RVCardViewButtonBar.h"
 #import "RVCardBaseView.h"
 
 @class RVMoreButton;
@@ -22,10 +21,18 @@
 
 @end
 
+@protocol RVCardViewActionDelegate <NSObject>
+
+- (void)cardView:(RVCardView *)cardView clickedButtonAtIndex:(NSInteger)buttonIndex;
+
+@end
+
+
 @interface RVCardView : RVCardBaseView
 
 
 @property (weak, nonatomic) id <RVCardViewDelegate> delegate;
+@property (weak, nonatomic) id <RVCardViewActionDelegate> actionDelegate;
 
 @property (strong, nonatomic) UIView *contentView;
 @property (strong, nonatomic) UIColor *fontColor;
@@ -60,6 +67,11 @@
 @property (strong, nonatomic) UIFont *shortDescriptionFont;
 @property (strong, nonatomic) UIFont *longDescriptionFont;
 @property (strong, nonatomic) UIFont *barcodeInstructionFont;
+@property (strong, nonatomic) UIFont *buttonTitleFont;
+
+- (void)addButtonsWithTitles:(NSString *)firstButtonTitle, ... NS_REQUIRES_NIL_TERMINATION;
+- (NSInteger)addButtonWithTitle:(NSString *)buttonTitle;
+- (NSString *)buttonTitleAtIndex:(NSInteger)buttonIndex;
 
 @end
 

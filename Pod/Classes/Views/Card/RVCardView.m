@@ -8,8 +8,6 @@
 
 #import "RVCardView.h"
 #import "RVMoreButton.h"
-#import "RVCardViewCorner.h"
-#import "RVCardViewButtonIcon.h"
 #import "RVCloseButton.h"
 #import "RVCard.h"
 
@@ -29,6 +27,7 @@ const CGFloat kRVCardViewImageRatio = .625;
 @property (strong, nonatomic) UIView *termsTitleLineRight;
 @property (strong, nonatomic) UILabel *barcodeInstructionLabel;
 @property (strong, nonatomic) UIScrollView *scrollView;
+@property (strong, nonatomic) UIToolbar *buttonBar;
 
 // Close button
 @property (strong, nonatomic) RVCloseButton *closeButton;
@@ -480,13 +479,66 @@ const CGFloat kRVCardViewImageRatio = .625;
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[closeButton(44)]" options:0 metrics:nil views:views]];
 }
 
-#pragma mark - Button Actions
+#pragma mark - Buttons
 
 - (void)closeButtonPressed {
     if ([self.delegate respondsToSelector:@selector(cardViewCloseButtonPressed:)]) {
         [self.delegate cardViewCloseButtonPressed:self];
     } else if ([self.delegate respondsToSelector:@selector(cardViewMoreButtonPressed:)]) {
         [self.delegate cardViewMoreButtonPressed:self];
+    }
+}
+
+- (void)addButtonsWithTitles:(NSString *)firstButtonTitle, ...
+{
+    va_list args;
+    va_start(args, firstButtonTitle);
+    for (NSString *arg = firstButtonTitle; arg != nil; arg = va_arg(args, NSString*))
+    {
+        [self addButtonWithTitle:arg];
+    }
+    va_end(args);
+}
+
+- (NSInteger)addButtonWithTitle:(NSString *)buttonTitle
+{
+    static UIBarButtonItem *divider;
+    
+    if (self.footerView != self.buttonBar || !self.buttonBar) {
+        self.buttonBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 10, 44)];
+        self.buttonBar.barStyle = UIBarStyleBlack;
+        self.buttonBar.barTintColor = self.backgroundColor;
+        self.buttonBar.tintColor = self.fontColor;
+        self.footerView = self.buttonBar;
+        
+        divider = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    }
+    
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:buttonTitle style:UIBarButtonItemStylePlain target:self action:@selector(buttonPressed:)];
+    if (self.buttonTitleFont) {
+        [barButton setTitleTextAttributes:@{NSFontAttributeName: self.buttonTitleFont} forState:UIControlStateNormal];
+    }
+    
+    NSArray *newItemArray;
+    NSArray *currentItems = self.buttonBar.items;
+    
+    if (!currentItems) {
+        currentItems = @[];
+        newItemArray = @[divider, barButton, divider];
+    } else {
+        newItemArray = @[barButton, divider];
+    }
+    
+    [self.buttonBar setItems:[currentItems arrayByAddingObjectsFromArray:newItemArray]];
+    
+    return 1;
+}
+
+- (void)buttonPressed:(UIBarButtonItem *)sender
+{
+    NSInteger buttonIndex = [self.buttonBar.items indexOfObject:sender] / 2;
+    if ([self.actionDelegate respondsToSelector:@selector(cardView:clickedButtonAtIndex:)]) {
+        [self.actionDelegate cardView:self clickedButtonAtIndex:buttonIndex];
     }
 }
 

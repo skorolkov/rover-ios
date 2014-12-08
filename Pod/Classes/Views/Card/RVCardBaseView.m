@@ -7,7 +7,6 @@
 //
 
 #import "RVCardBaseView.h"
-#import "RVCardViewButtonBar.h"
 
 #import <RSBarcodes/RSBarcodes.h>
 
@@ -226,16 +225,6 @@
     if ([self.delegate respondsToSelector:@selector(cardViewMoreButtonPressed:)]) {
         [self.delegate cardViewMoreButtonPressed:self];
     }
-}
-
-#pragma mark - RVCardViewBarButtonDelegate
-
-- (void)buttonBarLeftButtonPressed:(RVCardViewButtonBar *)buttonBar {
-    // Implement in subclass
-}
-
-- (void)buttonBarRightButtonPressed:(RVCardViewButtonBar *)buttonBar {
-    // Implement in subclass
 }
 
 #pragma mark - Barcode Helpers

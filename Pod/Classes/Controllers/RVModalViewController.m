@@ -220,13 +220,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     RVCard *card = [self.cards objectAtIndex:index];
     RVCardView  *cardView = [RVCardView new];
     cardView.frame = CGRectMake(0.0, 0.0, [cardView contractedWidth], [cardView contractedHeight]);
-    
-    // customize the cardView here
-    
     [cardView setCard:card];
-    
-    // customize the cardView further after offer data has been set
-    
     return cardView;
 }
 

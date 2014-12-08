@@ -8,7 +8,6 @@
 
 #import "RVCardDeckView.h"
 #import "RVCardView.h"
-#import "RVCardViewButton.h"
 
 // Space between the top of the card and the top of the screen
 //const CGFloat kCardMarginTop = 67.0;
