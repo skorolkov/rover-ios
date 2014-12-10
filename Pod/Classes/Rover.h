@@ -67,6 +67,10 @@ extern NSString *const kRoverDidSwipeCardNotification;
  */
 + (Rover *)shared;
 
+/** Rover framework configuration
+ */
+@property (readonly, strong, nonatomic) RVConfig *config;
+
 /** After a customer enters a location a new RVVisit object will be retrieved from the Rover platform and can be accessed through this property.
  */
 @property (readonly, strong, nonatomic) RVVisit *currentVisit;

@@ -69,6 +69,8 @@
 @property (strong, nonatomic) UIFont *barcodeInstructionFont;
 @property (strong, nonatomic) UIFont *buttonTitleFont;
 
+@property (nonatomic, readonly) CGFloat shortDescriptionHeight;
+
 - (void)addButtonsWithTitles:(NSString *)firstButtonTitle, ... NS_REQUIRES_NIL_TERMINATION;
 - (NSInteger)addButtonWithTitle:(NSString *)buttonTitle;
 - (NSString *)buttonTitleAtIndex:(NSInteger)buttonIndex;

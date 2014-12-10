@@ -113,6 +113,8 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     if (self = [super init]) {
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         self.cardSet = ModalViewCardSetAll;
+        self.backdropBlurRadius = [Rover shared].config.modalBackdropBlurRadius;
+        self.backdropTintColor = [Rover shared].config.modalBackdropTintColor;
     }
     return self;
 }
@@ -221,6 +223,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     RVCardView  *cardView = [RVCardView new];
     cardView.frame = CGRectMake(0.0, 0.0, [cardView contractedWidth], [cardView contractedHeight]);
     [cardView setCard:card];
+    
     return cardView;
 }
 

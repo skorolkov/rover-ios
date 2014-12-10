@@ -411,6 +411,11 @@ typedef struct {
 
 - (void)swipeToNextCard
 {
+    [self swipeToNextCardWithVelocity:CGPointMake(2000, -1000)];
+}
+
+- (void)swipeToNextCardWithVelocity:(CGPoint)velocity
+{
     self.animating = YES;
     [self.animator removeAllBehaviors];
     
@@ -425,8 +430,6 @@ typedef struct {
             [self.delegate cardDeckDidExitFullScreen:self];
         }
     }
-    
-    CGPoint velocity = CGPointMake(2000, -1000);
     
     UIDynamicItemBehavior *dynamic = [[UIDynamicItemBehavior alloc] initWithItems:@[self.topCard]];
     [dynamic addLinearVelocity:velocity forItem:self.topCard];

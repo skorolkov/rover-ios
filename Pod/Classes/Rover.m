@@ -24,11 +24,6 @@ NSString *const kRoverDidDismissModalNotification = @"RoverDidDismissModalNotifi
 NSString *const kRoverDidDisplayCardNotification = @"RoverDidDisplayCardNotification";
 NSString *const kRoverDidSwipeCardNotification = @"RoverDidSwipeCardNotification";
 
-@interface Rover()
-
-@property (strong, nonatomic) RVConfig *config;
-
-@end
 
 @implementation Rover {
     RVCustomer *_customer;
@@ -42,7 +37,10 @@ static Rover *sharedInstance = nil;
     
     UIApplication *application = [UIApplication sharedApplication];
     if ([application respondsToSelector:@selector(registerUserNotificationSettings:)]) {
-        [application registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:config.allowedUserNotificationTypes categories:nil]];
+        Class userSettingClass = NSClassFromString(@"UIUserNotificationSettings");
+        if (userSettingClass) {
+            [application registerUserNotificationSettings:[userSettingClass settingsForTypes:config.allowedUserNotificationTypes categories:nil]];
+        }
     }
     
     static dispatch_once_t onceToken;
@@ -105,7 +103,7 @@ static Rover *sharedInstance = nil;
 - (instancetype)initWithConfig:(RVConfig *)config {
     self = [super init];
     if (self) {
-        self.config = config;
+        _config = config;
         
         if (config.serverURL) {
             RVNetworkingManager *networkingManager = [RVNetworkingManager sharedManager];
@@ -137,7 +135,7 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)setupListeners {
-    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     
     [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidEnterLocation:) name:kRVVisitManagerDidEnterLocationNotification object:nil];
     [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidExitLocation:) name:kRVVisitManagerDidExitLocationNotification object:nil];
@@ -186,6 +184,11 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)presentModal {
+    [self presentModalForCardSet:ModalViewCardSetAll withOptions:nil];
+}
+
+- (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options {
+    
     if (!self.currentVisit || self.currentVisit.cards.count < 1) {
         NSLog(@"%@ warning showModal called but there are no cards to display", self);
         return;
@@ -195,23 +198,6 @@ static Rover *sharedInstance = nil;
     
     RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
     modalViewController.delegate = self;
-    modalViewController.backdropBlurRadius = self.config.modalBackdropBlurRadius;
-    modalViewController.backdropTintColor = self.config.modalBackdropTintColor;
-    
-    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-    [currentViewController presentViewController:modalViewController animated:YES completion:nil];
-    
-    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidPresentModalNotification object:self];
-}
-
-- (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options {
-    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillPresentModalNotification object:self];
-    
-    RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
-    modalViewController.delegate = self;
-    modalViewController.backdropBlurRadius = self.config.modalBackdropBlurRadius;
-    modalViewController.backdropTintColor = self.config.modalBackdropTintColor;
     modalViewController.cardSet = cardSet;
     modalViewController.options = options;
     
