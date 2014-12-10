@@ -7,7 +7,6 @@
 //
 
 #import "RVCardBaseView.h"
-#import "RVCardViewButtonBar.h"
 
 #import <RSBarcodes/RSBarcodes.h>
 
@@ -15,7 +14,7 @@
 
 
 
-@interface RVCardBaseView () {
+@interface RVCardBaseView () <UIGestureRecognizerDelegate> {
     CGRect _expandedFrame;
 }
 
@@ -91,6 +90,7 @@
     [self addSubview:self.shadowView];
     
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cardTapped)];
+    tapGestureRecognizer.delegate = self;
     [self.containerView addGestureRecognizer:tapGestureRecognizer];
     
 }
@@ -228,14 +228,12 @@
     }
 }
 
-#pragma mark - RVCardViewBarButtonDelegate
-
-- (void)buttonBarLeftButtonPressed:(RVCardViewButtonBar *)buttonBar {
-    // Implement in subclass
-}
-
-- (void)buttonBarRightButtonPressed:(RVCardViewButtonBar *)buttonBar {
-    // Implement in subclass
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if ([touch.view.superview isKindOfClass:[UIToolbar class]]) {
+        return NO;
+    }
+    return YES;
 }
 
 #pragma mark - Barcode Helpers

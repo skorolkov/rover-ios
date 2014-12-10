@@ -8,8 +8,6 @@
 
 #import "RVCardView.h"
 #import "RVMoreButton.h"
-#import "RVCardViewCorner.h"
-#import "RVCardViewButtonIcon.h"
 #import "RVCloseButton.h"
 #import "RVCard.h"
 
@@ -28,7 +26,7 @@ const CGFloat kRVCardViewImageRatio = .625;
 @property (strong, nonatomic) UIView *termsTitleLineLeft;
 @property (strong, nonatomic) UIView *termsTitleLineRight;
 @property (strong, nonatomic) UILabel *barcodeInstructionLabel;
-@property (strong, nonatomic) UIScrollView *scrollView;
+@property (strong, nonatomic) UIToolbar *buttonBar;
 
 // Close button
 @property (strong, nonatomic) RVCloseButton *closeButton;
@@ -42,15 +40,20 @@ const CGFloat kRVCardViewImageRatio = .625;
 @property (strong, nonatomic) NSLayoutConstraint *shortDescriptionTopConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *contentViewWidthConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *imageViewHeightConstraint;
-@property (strong, nonatomic) NSLayoutConstraint *shortDescriptionHeightConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *scrollViewBottomConstraint;
 @property (strong, nonatomic) NSLayoutConstraint *descriptionViewMinHeightConstraint;
+@property (strong, nonatomic) NSLayoutConstraint *scrollViewTopConstraint;
 
 @end
 
 @implementation RVCardView
 
 #pragma mark - Public Properties
+
+- (CGFloat)shortDescriptionHeight
+{
+    return 109;
+}
 
 - (void)setBarcodeInstructionFont:(UIFont *)barcodeInstructionFont
 {
@@ -65,6 +68,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.shortDescriptionTextView.font = shortDescriptionFont;
     if (self.shortDescription != nil) {
         [self setShortDescription:self.shortDescription];
+        self.shortDescriptionTextView.textColor = self.fontColor;
     }
 }
 
@@ -78,7 +82,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.longDescriptionTextView.font = longDescriptionFont;
     if (self.longDescription != nil) {
         [self setLongDescription:self.longDescription];
-
+        self.longDescriptionTextView.textColor = [UIColor colorWithRed:124/255.f green:124/255.f blue:124/255.f alpha:1];
     }
 }
 
@@ -97,7 +101,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     _footerView = footerView;
     
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    CGFloat minHeight = screenBounds.size.height - self.shortDescriptionHeightConstraint.constant - (screenBounds.size.width * kRVCardViewImageRatio);
+    CGFloat minHeight = screenBounds.size.height - [self shortDescriptionHeight] - (screenBounds.size.width * kRVCardViewImageRatio);
     
     if (!footerView) {
         self.footerHeight = 0;
@@ -373,7 +377,9 @@ const CGFloat kRVCardViewImageRatio = .625;
     //----------------------------------------
     
     [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[scrollView]|" options:0 metrics:nil views:views]];
-    [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[scrollView]" options:0 metrics:nil views:views]];
+    
+    self.scrollViewTopConstraint = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
+    [self.containerView addConstraint:self.scrollViewTopConstraint];
     
     self.scrollViewBottomConstraint = [NSLayoutConstraint constraintWithItem:self.scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.containerView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:-10];
     [self.containerView addConstraint:self.scrollViewBottomConstraint];
@@ -401,9 +407,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[shortDescriptionTextView(250)]" options:0 metrics:nil views:views]];
     
     // Height of shortDescription
-    CGFloat height = 109;
-    self.shortDescriptionHeightConstraint = [NSLayoutConstraint constraintWithItem:self.shortDescriptionTextView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:height];
-    [self.contentView addConstraint:self.shortDescriptionHeightConstraint];
+    [self.contentView addConstraint:[NSLayoutConstraint constraintWithItem:self.shortDescriptionTextView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1.0 constant:[self shortDescriptionHeight]]];
     
     // Pin the short description to the title bar
     self.shortDescriptionTopConstraint = [NSLayoutConstraint constraintWithItem:self.shortDescriptionTextView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeBottom multiplier:1.0 constant:18.0];
@@ -439,7 +443,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     
     // Set the longDescription's minimum height so it always extends to the bottom edge of the screen
     CGRect screenBounds = [[UIScreen mainScreen] bounds];
-    CGFloat minHeight = screenBounds.size.height - height - (screenBounds.size.width * kRVCardViewImageRatio);
+    CGFloat minHeight = screenBounds.size.height - [self shortDescriptionHeight] - (screenBounds.size.width * kRVCardViewImageRatio);
     self.descriptionViewMinHeightConstraint = [NSLayoutConstraint constraintWithItem:self.descriptionView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:nil attribute:0 multiplier:1.0 constant:minHeight];
     [self.contentView addConstraint:self.descriptionViewMinHeightConstraint];
     
@@ -477,16 +481,75 @@ const CGFloat kRVCardViewImageRatio = .625;
     //----------------------------------------
     
     [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"[closeButton(44)]-0-|" options:0 metrics:nil views:views]];
-    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[closeButton(44)]" options:0 metrics:nil views:views]];
+    [self.contentView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[closeButton(44)]" options:0 metrics:nil views:views]];
 }
 
-#pragma mark - Button Actions
+#pragma mark - Buttons
 
 - (void)closeButtonPressed {
     if ([self.delegate respondsToSelector:@selector(cardViewCloseButtonPressed:)]) {
         [self.delegate cardViewCloseButtonPressed:self];
     } else if ([self.delegate respondsToSelector:@selector(cardViewMoreButtonPressed:)]) {
         [self.delegate cardViewMoreButtonPressed:self];
+    }
+}
+
+- (void)addButtonsWithTitles:(NSString *)firstButtonTitle, ...
+{
+    va_list args;
+    va_start(args, firstButtonTitle);
+    for (NSString *arg = firstButtonTitle; arg != nil; arg = va_arg(args, NSString*))
+    {
+        [self addButtonWithTitle:arg];
+    }
+    va_end(args);
+}
+
+- (NSInteger)addButtonWithTitle:(NSString *)buttonTitle
+{
+    static UIBarButtonItem *divider;
+    
+    if (self.footerView != self.buttonBar || !self.buttonBar) {
+        self.buttonBar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, 10, 44)];
+        self.buttonBar.barStyle = UIBarStyleBlack;
+        self.buttonBar.barTintColor = self.backgroundColor;
+        self.buttonBar.tintColor = self.fontColor;
+        self.footerView = self.buttonBar;
+        
+        divider = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    }
+    
+    UIBarButtonItem *barButton = [[UIBarButtonItem alloc] initWithTitle:buttonTitle style:UIBarButtonItemStylePlain target:self action:@selector(buttonPressed:)];
+    if (self.buttonTitleFont) {
+        [barButton setTitleTextAttributes:@{NSFontAttributeName: self.buttonTitleFont} forState:UIControlStateNormal];
+    }
+    
+    NSArray *newItemArray;
+    NSArray *currentItems = self.buttonBar.items;
+    
+    if (!currentItems) {
+        currentItems = @[];
+        newItemArray = @[divider, barButton, divider];
+    } else {
+        newItemArray = @[barButton, divider];
+    }
+    
+    [self.buttonBar setItems:[currentItems arrayByAddingObjectsFromArray:newItemArray]];
+    
+    return 1;
+}
+
+- (NSString *)buttonTitleAtIndex:(NSInteger)buttonIndex
+{
+    UIBarButtonItem *barButtonItem = [[self.buttonBar items] objectAtIndex:(buttonIndex * 2) + 1];
+    return barButtonItem.title;
+}
+
+- (void)buttonPressed:(UIBarButtonItem *)sender
+{
+    NSInteger buttonIndex = [self.buttonBar.items indexOfObject:sender] / 2;
+    if ([self.actionDelegate respondsToSelector:@selector(cardView:clickedButtonAtIndex:)]) {
+        [self.actionDelegate cardView:self clickedButtonAtIndex:buttonIndex];
     }
 }
 
@@ -505,8 +568,9 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.moreButtonTopConstraint.constant = 25.0;
     self.contentViewWidthConstraint.constant = frame.size.width;
     self.imageViewHeightConstraint.constant = frame.size.width * kRVCardViewImageRatio;
-    self.shortDescriptionTopConstraint.constant = 25;
+    self.shortDescriptionTopConstraint.constant = 5;
     self.scrollViewBottomConstraint.constant = -self.footerHeight;
+    self.scrollViewTopConstraint.constant = 20; // status bar
     
     [super expandToFrame:frame animated:animated];
 }
@@ -518,6 +582,7 @@ const CGFloat kRVCardViewImageRatio = .625;
     self.imageViewHeightConstraint.constant = 175.0;
     self.shortDescriptionTopConstraint.constant = 18;
     self.scrollViewBottomConstraint.constant = -MAX(10, self.footerHeight);
+    self.scrollViewTopConstraint.constant = 0;
     
     if (animated) {
         [UIView animateWithDuration:0.15 animations:^{

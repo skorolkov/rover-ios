@@ -113,6 +113,8 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     if (self = [super init]) {
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         self.cardSet = ModalViewCardSetAll;
+        self.backdropBlurRadius = [Rover shared].config.modalBackdropBlurRadius;
+        self.backdropTintColor = [Rover shared].config.modalBackdropTintColor;
     }
     return self;
 }
@@ -220,12 +222,7 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
     RVCard *card = [self.cards objectAtIndex:index];
     RVCardView  *cardView = [RVCardView new];
     cardView.frame = CGRectMake(0.0, 0.0, [cardView contractedWidth], [cardView contractedHeight]);
-    
-    // customize the cardView here
-    
     [cardView setCard:card];
-    
-    // customize the cardView further after offer data has been set
     
     return cardView;
 }

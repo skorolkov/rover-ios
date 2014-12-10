@@ -8,7 +8,6 @@
 
 #import "RVCardDeckView.h"
 #import "RVCardView.h"
-#import "RVCardViewButton.h"
 
 // Space between the top of the card and the top of the screen
 //const CGFloat kCardMarginTop = 67.0;
@@ -412,6 +411,11 @@ typedef struct {
 
 - (void)swipeToNextCard
 {
+    [self swipeToNextCardWithLinearVelocity:CGPointMake(2000, -1000) angularVelocity:-5];
+}
+
+- (void)swipeToNextCardWithLinearVelocity:(CGPoint)velocity angularVelocity:(CGFloat)angularVelocity
+{
     self.animating = YES;
     [self.animator removeAllBehaviors];
     
@@ -427,13 +431,11 @@ typedef struct {
         }
     }
     
-    CGPoint velocity = CGPointMake(2000, -1000);
-    
     UIDynamicItemBehavior *dynamic = [[UIDynamicItemBehavior alloc] initWithItems:@[self.topCard]];
     [dynamic addLinearVelocity:velocity forItem:self.topCard];
     //dynamic.resistance = 10.f;
     //dynamic.friction =10;
-    [dynamic addAngularVelocity:-5 forItem:self.topCard];
+    [dynamic addAngularVelocity:angularVelocity forItem:self.topCard];
     [dynamic setAngularResistance:10];
     
     // when the view no longer intersects with its superview, go ahead and remove it

@@ -59,7 +59,8 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 #pragma mark - Utility methods
 
 - (BOOL)isCurrentRegion:(CLBeaconRegion *)beaconRegion {
-    return [self.latestVisit.UUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString];
+    return [self.latestVisit.UUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString]
+            && [self.latestVisit.major isEqualToNumber:beaconRegion.major];
 }
 
 #pragma mark - Region Manager Notifications
