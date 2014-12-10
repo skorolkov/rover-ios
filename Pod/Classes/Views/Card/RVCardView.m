@@ -26,7 +26,6 @@ const CGFloat kRVCardViewImageRatio = .625;
 @property (strong, nonatomic) UIView *termsTitleLineLeft;
 @property (strong, nonatomic) UIView *termsTitleLineRight;
 @property (strong, nonatomic) UILabel *barcodeInstructionLabel;
-@property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) UIToolbar *buttonBar;
 
 // Close button
@@ -133,7 +132,6 @@ const CGFloat kRVCardViewImageRatio = .625;
 - (void)setShortDescription:(NSString *)shortDescription
 {
     self.shortDescriptionTextView.attributedText = [self attributedTextFromHTMLString:shortDescription withFont:self.shortDescriptionTextView.font styles:@[@"text-align: center;"]];
-    [self.shortDescriptionTextView sizeToFit];
     _shortDescription = shortDescription;
 }
 

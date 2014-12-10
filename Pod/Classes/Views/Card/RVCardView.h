@@ -34,6 +34,7 @@
 @property (weak, nonatomic) id <RVCardViewDelegate> delegate;
 @property (weak, nonatomic) id <RVCardViewActionDelegate> actionDelegate;
 
+@property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) UIView *contentView;
 @property (strong, nonatomic) UIColor *fontColor;
 @property (strong, nonatomic) NSString *title;

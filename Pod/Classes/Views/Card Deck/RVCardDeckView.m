@@ -411,10 +411,10 @@ typedef struct {
 
 - (void)swipeToNextCard
 {
-    [self swipeToNextCardWithVelocity:CGPointMake(2000, -1000)];
+    [self swipeToNextCardWithLinearVelocity:CGPointMake(2000, -1000) angularVelocity:-5];
 }
 
-- (void)swipeToNextCardWithVelocity:(CGPoint)velocity
+- (void)swipeToNextCardWithLinearVelocity:(CGPoint)velocity angularVelocity:(CGFloat)angularVelocity
 {
     self.animating = YES;
     [self.animator removeAllBehaviors];
@@ -435,7 +435,7 @@ typedef struct {
     [dynamic addLinearVelocity:velocity forItem:self.topCard];
     //dynamic.resistance = 10.f;
     //dynamic.friction =10;
-    [dynamic addAngularVelocity:-5 forItem:self.topCard];
+    [dynamic addAngularVelocity:angularVelocity forItem:self.topCard];
     [dynamic setAngularResistance:10];
     
     // when the view no longer intersects with its superview, go ahead and remove it

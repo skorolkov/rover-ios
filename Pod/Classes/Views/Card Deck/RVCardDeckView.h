@@ -35,7 +35,7 @@ typedef enum {
 - (void)exitFullScreen;
 
 - (void)swipeToNextCard;
-- (void)swipeToNextCardWithVelocity:(CGPoint)velocity;
+- (void)swipeToNextCardWithLinearVelocity:(CGPoint)velocity angularVelocity:(CGFloat)angularVelocity;
 
 @end
 
