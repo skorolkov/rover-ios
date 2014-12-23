@@ -9,6 +9,7 @@
 #import "RVModel.h"
 
 @class RVLocation;
+@class CLBeaconRegion;
 
 /** Represents a vist to a real-world physical location by a customer. A visit object will be created by the Rover Platform and delivered to the SDK when a customer enters a location.
  */
@@ -22,6 +23,8 @@
 @property (strong, nonatomic) NSString *organizationId;
 @property (strong, nonatomic) NSString *locationName;
 @property (strong, nonatomic) NSString *locationAddress;
+
+@property (strong, nonatomic) NSDate *beaconLastDetectedAt;
 
 /** The location which the customer has entered.
  */
@@ -50,5 +53,7 @@
 /** Only the cards the customer has saved to their list. 
  */
 @property (readonly, nonatomic) NSArray *savedCards;
+
+- (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
 
 @end

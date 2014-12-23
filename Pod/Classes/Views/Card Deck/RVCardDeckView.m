@@ -350,6 +350,13 @@ typedef struct {
         
         if (MAX(fabs(translation.x), fabs(translation.y)) < 20) { //fabs(atan2(velocity.y, velocity.x) - M_PI_2) > M_PI_4) {
             UISnapBehavior *snap = [[UISnapBehavior alloc] initWithItem:panGesture.view snapToPoint:startCenter];
+            snap.action = ^{
+                if (CGPointEqualToPoint(panGesture.view.center, startCenter)) {
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        [self.animator removeAllBehaviors];
+                    });
+                }
+            };
             [self.animator addBehavior:snap];
             
             return;
