@@ -81,6 +81,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         
         // Reset the timer
         self.latestVisit.beaconLastDetectedAt = now;
+        [self.latestVisit persistToDefaults];
         
         RVLog(kRoverAlreadyVisitingNotification, @{ @"elapsed": [NSNumber numberWithDouble:elapsed],
                                                     @"keepAlive": [NSNumber numberWithDouble:self.latestVisit.keepAlive] });

@@ -55,5 +55,6 @@
 @property (readonly, nonatomic) NSArray *savedCards;
 
 - (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
+- (void)persistToDefaults;
 
 @end

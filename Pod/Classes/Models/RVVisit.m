@@ -268,13 +268,18 @@
 - (void)save:(void (^)(void))success failure:(void (^)(NSString *))failure
 {
     [super save:^{
-        NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
-        [standardDefaults setObject:[NSKeyedArchiver archivedDataWithRootObject:self] forKey:@"_roverLatestVisit"];
-        [standardDefaults synchronize];
+        [self persistToDefaults];
         if (success) {
             success();
         }
     } failure:failure];
+}
+
+- (void)persistToDefaults
+{
+    NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
+    [standardDefaults setObject:[NSKeyedArchiver archivedDataWithRootObject:self] forKey:@"_roverLatestVisit"];
+    [standardDefaults synchronize];
 }
 
 #pragma mark - NSCoding
@@ -293,6 +298,7 @@
     [encoder encodeObject:self.enteredAt forKey:@"enteredAt"];
     [encoder encodeObject:self.exitedAt forKey:@"exitedAt"];
     [encoder encodeObject:self.openedAt forKey:@"openedAt"];
+    [encoder encodeObject:self.beaconLastDetectedAt forKey:@"beaconLastDetecedAt"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -310,6 +316,7 @@
         self.enteredAt = [decoder decodeObjectForKey:@"enteredAt"];
         self.exitedAt = [decoder decodeObjectForKey:@"exitedAt"];
         self.openedAt = [decoder decodeObjectForKey:@"openedAt"];
+        self.beaconLastDetectedAt = [decoder decodeObjectForKey:@"beaconLastDetecedAt"];
     }
     return self;
 }
