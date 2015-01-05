@@ -10,7 +10,7 @@
 
 @interface RVModel ()
 
-@property (strong, nonatomic) NSNumber *ID;
+@property (strong, nonatomic) NSString *ID;
 
 #pragma mark - Class Methods
 
