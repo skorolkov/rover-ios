@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "RVModel.h"
 
+@class RVTouchpoint;
 @class RVLocation;
 @class CLBeaconRegion;
 
@@ -54,7 +55,20 @@
  */
 @property (readonly, nonatomic) NSArray *savedCards;
 
+/** All touchpoints at current location
+ */
+@property (strong, nonatomic) NSArray *touchpoints;
+
+/** The current Touchpoint
+ */
+@property (strong, nonatomic) RVTouchpoint *currentTouchpoint;
+
 - (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
+
 - (void)persistToDefaults;
+
+- (RVTouchpoint *)touchpointForRegion:(CLBeaconRegion *)beaconRegion;
+- (RVTouchpoint *)touchpointForMinor:(NSNumber *)minor;
+
 
 @end

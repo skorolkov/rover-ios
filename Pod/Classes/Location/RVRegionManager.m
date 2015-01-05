@@ -84,7 +84,8 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 
 - (BOOL)isCurrentRegion:(CLBeacon *)beacon {
     return [self.nearestBeacon.proximityUUID.UUIDString isEqualToString:beacon.proximityUUID.UUIDString]
-            && [self.nearestBeacon.major isEqualToNumber:beacon.major];
+            && [self.nearestBeacon.major isEqualToNumber:beacon.major]
+            && [self.nearestBeacon.minor isEqualToNumber:beacon.minor];
 }
 
 #pragma mark - Region monitoring
@@ -106,7 +107,7 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 #pragma mark - Notifications
 
 - (void)postEnterNotification:(CLBeacon *)beacon {
-    CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beacon.proximityUUID major:beacon.major.integerValue identifier:beacon.proximityUUID.UUIDString];
+    CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beacon.proximityUUID major:beacon.major.integerValue minor:beacon.minor.integerValue identifier:beacon.proximityUUID.UUIDString];
     
     [[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidEnterRegionNotification object:self userInfo:@{ @"beaconRegion": beaconRegion }];
 }

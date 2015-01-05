@@ -11,6 +11,7 @@
 #import "RVCardProject.h"
 #import "RVColorUtilities.h"
 #import "RVLocation.h"
+#import "RVTouchpoint.h"
 
 @implementation RVVisit
 
@@ -62,6 +63,23 @@
 {
     return [self.UUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString]
         && [self.major isEqualToNumber:beaconRegion.major];
+}
+
+- (RVTouchpoint *)touchpointForRegion:(CLBeaconRegion *)beaconRegion
+{
+    return [self touchpointForMinor:beaconRegion.minor];
+}
+
+- (RVTouchpoint *)touchpointForMinor:(NSNumber *)minor
+{
+    __block RVTouchpoint *touchpoint = nil;
+    [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *tp, NSUInteger idx, BOOL *stop) {
+        if ([tp.minor isEqualToNumber:minor]) {
+            touchpoint = tp;
+            *stop = YES;
+        }
+    }];
+    return touchpoint;
 }
 
 #pragma mark - Initialization
@@ -169,6 +187,28 @@
         RVLocation *location = [[RVLocation alloc] initWithJSON:locationData];
         self.location = location;
     }
+    
+    //touchpoints
+    NSArray *touchpointsData = [JSON objectForKey:@"touchpoints"];
+    if (touchpointsData && touchpointsData != (id)[NSNull null]) {
+        NSMutableArray *touchpoints = [NSMutableArray arrayWithCapacity:[touchpointsData count]];
+        [touchpointsData enumerateObjectsUsingBlock:^(NSDictionary *touchpointData, NSUInteger idx, BOOL *stop) {
+            RVTouchpoint *touchpoint = [[RVTouchpoint alloc] init];
+            [touchpoints addObject:touchpoint];
+        }];
+        self.touchpoints = touchpoints;
+    }
+    // MOCK
+    
+    RVTouchpoint *tp1 = [RVTouchpoint new];
+    tp1.minor = @1;
+    
+    RVTouchpoint *tp2 = [RVTouchpoint new];
+    tp2.minor = @2;
+    
+    self.touchpoints = @[tp1, tp2];
+    
+    // END MOCK
     
 }
 
@@ -299,6 +339,7 @@
     [encoder encodeObject:self.exitedAt forKey:@"exitedAt"];
     [encoder encodeObject:self.openedAt forKey:@"openedAt"];
     [encoder encodeObject:self.beaconLastDetectedAt forKey:@"beaconLastDetecedAt"];
+    [encoder encodeObject:self.touchpoints forKey:@"touchpoints"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -317,6 +358,7 @@
         self.exitedAt = [decoder decodeObjectForKey:@"exitedAt"];
         self.openedAt = [decoder decodeObjectForKey:@"openedAt"];
         self.beaconLastDetectedAt = [decoder decodeObjectForKey:@"beaconLastDetecedAt"];
+        self.touchpoints = [decoder decodeObjectForKey:@"touchpoints"];
     }
     return self;
 }

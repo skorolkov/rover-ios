@@ -25,7 +25,13 @@
 #import "RVModalViewController.h"
 #import "RVCardViewController.h"
 
+
 extern NSString *const kRoverDidExpireVisitNotification;
+
+/** This notification will be posted when the customer enters a touchpoint.
+ */
+extern NSString *const kRoverDidEnterTouchpointNotification;
+
 
 /** This notification will be posted when the customer enters a location.
  */
@@ -104,7 +110,7 @@ extern NSString *const kRoverDidSwipeCardNotification;
 /** You can use this method to simulate your app coming in range of a particular beacon.
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
  */
-- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major;
+- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor;
 
 /** Convenience method to find the current view controller
  */

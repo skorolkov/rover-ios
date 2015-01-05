@@ -16,7 +16,9 @@
 #import "RVNotificationCenter.h"
 #import "RVRegionManager.h"
 #import "RVVisitProject.h"
+#import "RVTouchpoint.h"
 
+NSString *const kRVVisitManagerDidEnterTouchpointNotification = @"RVVisitManagerDidEnterTouchpointNotification";
 NSString *const kRVVisitManagerDidEnterLocationNotification = @"RVVisitManagerDidEnterLocationNotification";
 NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDidExitLocationNotification";
 
@@ -77,6 +79,19 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
     CLBeaconRegion *beaconRegion = [note.userInfo objectForKey:@"beaconRegion"];
 
     if (self.latestVisit && [self.latestVisit isInRegion:beaconRegion] && self.latestVisit.isAlive) {
+        
+        // Touchpoint check
+        if (!self.latestVisit.currentTouchpoint || ![self.latestVisit.currentTouchpoint isInRegion:beaconRegion]) {
+            RVTouchpoint *touchpoint = [self.latestVisit touchpointForRegion:beaconRegion];
+            if (touchpoint) {
+                self.latestVisit.currentTouchpoint = touchpoint;
+                [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self userInfo:@{ @"touchpoint": touchpoint }];
+                RVLog(kRoverDidEnterTouchpointNotification, nil);
+            } else {
+                NSLog(@"Invalid touchpoint");
+            }
+        }
+        
         NSDate *now = [NSDate date];
         NSTimeInterval elapsed = [now timeIntervalSinceDate:self.latestVisit.enteredAt];
 
@@ -92,10 +107,10 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
     RVCustomer *customer = [Rover shared].customer;
     if (customer.dirty) {
         [customer save:^{
-            [self createVisitWithUUID:beaconRegion.proximityUUID major:beaconRegion.major];
+            [self createVisitWithUUID:beaconRegion.proximityUUID major:beaconRegion.major minor:beaconRegion.minor];
         } failure:nil];
     } else {
-        [self createVisitWithUUID:beaconRegion.proximityUUID major:beaconRegion.major];
+        [self createVisitWithUUID:beaconRegion.proximityUUID major:beaconRegion.major minor:beaconRegion.minor];
     }
 }
 
@@ -114,7 +129,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 
 #pragma mark - Networking
 
-- (void)createVisitWithUUID:(NSUUID *)UUID major:(NSNumber *)major {
+- (void)createVisitWithUUID:(NSUUID *)UUID major:(NSNumber *)major minor:(NSNumber *)minor {
     RVLog(kRoverWillPostVisitNotification, nil);
     
     self.latestVisit = [RVVisit new];
@@ -126,6 +141,17 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
     [self.latestVisit save:^{
         [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterLocationNotification object:self userInfo:@{ @"visit": self.latestVisit }];
         RVLog(kRoverDidPostVisitNotification, nil);
+        
+        // Touchpoint
+        RVTouchpoint *touchpoint = [self.latestVisit touchpointForMinor:minor];
+        if (touchpoint) {
+            self.latestVisit.currentTouchpoint = touchpoint;
+            [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self userInfo:@{ @"touchpoint": touchpoint }];
+            //RVLog(kRoverDidEnterTouchpointNotification, nil);
+        } else {
+            NSLog(@"Invalid touchpoint");
+        }
+        
     } failure:^(NSString *reason) {
         RVLog(kRoverPostVisitFailedNotification, nil);
     }];

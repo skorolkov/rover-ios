@@ -43,6 +43,8 @@
 		3AF02B9A3D2A78A1FE106B64 /* UIImage+GIF.m in Sources */ = {isa = PBXBuildFile; fileRef = E1B07CD15EBE787B2993DBB5 /* UIImage+GIF.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
 		3B73E3D87A068F5B362F74C3 /* RVCard.m in Sources */ = {isa = PBXBuildFile; fileRef = BE8DA9711469D57DE96AD64F /* RVCard.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		3D0C6724697647DF36C20729 /* RSCodeGen.h in Headers */ = {isa = PBXBuildFile; fileRef = 26A8C149507044CFF31D2371 /* RSCodeGen.h */; };
+		3D8FC9161A49D8D2001628AE /* RVTouchpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8FC9131A49D277001628AE /* RVTouchpoint.h */; };
+		3D8FC9171A49D8F0001628AE /* RVTouchpoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8FC9141A49D277001628AE /* RVTouchpoint.m */; };
 		3DFE94AE8D276D7C6ECCB7E3 /* SDWebImageManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F041BD9A8203928C982C553 /* SDWebImageManager.h */; };
 		3EDE5269950502FCEE40EAF1 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16DA79AF1CD6F8A75A8616A5 /* AVFoundation.framework */; };
 		3F0C1487A438282207B5F076 /* RVModelProject.h in Headers */ = {isa = PBXBuildFile; fileRef = DDB95D8EC38AE5636BF71661 /* RVModelProject.h */; };
@@ -240,6 +242,8 @@
 		3A5986121E6797FAF5FB85D5 /* RVModalView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RVModalView.h; path = Pod/Classes/Views/Modal/RVModalView.h; sourceTree = "<group>"; };
 		3AEE9A69D4C0C1C61E1ACBCB /* RVMoreButton.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RVMoreButton.m; path = Pod/Classes/Views/Card/RVMoreButton.m; sourceTree = "<group>"; };
 		3B4E4714DA6A7046A992C895 /* RSITF14Generator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RSITF14Generator.h; path = RSBarcodes/RSITF14Generator.h; sourceTree = "<group>"; };
+		3D8FC9131A49D277001628AE /* RVTouchpoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RVTouchpoint.h; path = Pod/Classes/Models/RVTouchpoint.h; sourceTree = "<group>"; };
+		3D8FC9141A49D277001628AE /* RVTouchpoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RVTouchpoint.m; path = Pod/Classes/Models/RVTouchpoint.m; sourceTree = "<group>"; };
 		3E7A6E43178E17626832ED47 /* Pods-Rover-RSBarcodes-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Rover-RSBarcodes-dummy.m"; sourceTree = "<group>"; };
 		3EBEBC460154DF00F0DB015E /* RVCloseButton.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RVCloseButton.m; path = Pod/Classes/Views/Modal/RVCloseButton.m; sourceTree = "<group>"; };
 		4369D82A82E55A1590E34F6F /* RSCode93Generator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RSCode93Generator.h; path = RSBarcodes/RSCode93Generator.h; sourceTree = "<group>"; };
@@ -548,6 +552,8 @@
 				DE5DD75FED146B02215BC9AB /* Rover.h */,
 				C2F0ECC6065E8D64CA324551 /* Rover.m */,
 				4C19698C7A85B05F816F8701 /* Support Files */,
+				3D8FC9131A49D277001628AE /* RVTouchpoint.h */,
+				3D8FC9141A49D277001628AE /* RVTouchpoint.m */,
 			);
 			name = Rover;
 			path = ../..;
@@ -755,6 +761,7 @@
 				1A2CE75409DECB5427EAB405 /* RVLog.h in Headers */,
 				5E34EEF31856B13579AD03F6 /* RVModalView.h in Headers */,
 				DADE739C8ADD3363C8B2B53D /* RVModalViewController.h in Headers */,
+				3D8FC9161A49D8D2001628AE /* RVTouchpoint.h in Headers */,
 				8AB9D5C40E4B6C286092192B /* RVModel.h in Headers */,
 				3F0C1487A438282207B5F076 /* RVModelProject.h in Headers */,
 				BE9F7B858D6B97185E1B8672 /* RVMoreButton.h in Headers */,
@@ -988,6 +995,7 @@
 				B5965D27085D873EA7D36EB8 /* RVCardView.m in Sources */,
 				0A20D6D2BFFFE6A3CF033C4B /* RVCardViewController.m in Sources */,
 				EFBEBB107B2CAB17114E2A95 /* RVCloseButton.m in Sources */,
+				3D8FC9171A49D8F0001628AE /* RVTouchpoint.m in Sources */,
 				7870C44B5B56150EC245BB76 /* RVColorUtilities.m in Sources */,
 				02727702A5C6DBCA89D8FA29 /* RVCustomer.m in Sources */,
 				2AE7792B8BD4503D85502A70 /* RVHelper.m in Sources */,

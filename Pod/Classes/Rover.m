@@ -16,6 +16,7 @@
 #import "RVNotificationCenter.h"
 #import "RVModel.h"
 
+NSString *const kRoverDidEnterTouchpointNotification = @"RoverDidEnterTouchpointNotification";
 NSString *const kRoverDidEnterLocationNotification = @"RoverDidEnterLocationNotification";
 NSString *const kRoverDidExpireVisitNotification = @"RoverDidExpireVisitNotification";
 NSString *const kRoverWillPresentModalNotification = @"RoverWillPresentModalNotification";
@@ -162,6 +163,7 @@ static Rover *sharedInstance = nil;
     
     [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidEnterLocation:) name:kRVVisitManagerDidEnterLocationNotification object:nil];
     [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidExitLocation:) name:kRVVisitManagerDidExitLocationNotification object:nil];
+    [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidEnterTouchpoint:) name:kRoverDidEnterTouchpointNotification object:nil];
 }
 
 - (void)dealloc {
@@ -201,8 +203,9 @@ static Rover *sharedInstance = nil;
     [[RVRegionManager sharedManager] stopMonitoring];
 }
 
-- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major {
-    CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID major:major identifier:UUID.UUIDString];
+- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor
+{
+    CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID major:major minor:minor identifier:UUID.UUIDString];
     [[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidEnterRegionNotification object:[RVRegionManager sharedManager] userInfo:@{ @"beaconRegion": beaconRegion }];
 }
 
@@ -275,6 +278,12 @@ static Rover *sharedInstance = nil;
 
 - (void)visitManagerDidExitLocation:(NSNotification *)note {    
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidExpireVisitNotification object:self];
+}
+
+- (void)visitManagerDidEnterTouchpoint:(NSNotification *)note {
+    RVTouchpoint *currentTouchpoint = [note.userInfo objectForKey:@"touchpoint"];
+    
+    NSLog(@"Touchpoint Notification: %@", currentTouchpoint);
 }
 
 #pragma mark - RVModalViewControllerDelegate
