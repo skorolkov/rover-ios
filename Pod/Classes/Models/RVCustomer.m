@@ -215,7 +215,9 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
         success();
     } failure:^(NSString *reason) {
         RVLog(kRoverUpdateCustomerFailedNotification, nil);
-        failure(reason);
+        if (failure) {
+            failure(reason);
+        }
     }];
 }
 
