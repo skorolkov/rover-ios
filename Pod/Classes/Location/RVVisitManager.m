@@ -86,7 +86,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
             if (touchpoint) {
                 self.latestVisit.currentTouchpoint = touchpoint;
                 [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self userInfo:@{ @"touchpoint": touchpoint }];
-                RVLog(kRoverDidEnterTouchpointNotification, nil);
+                //RVLog(kRoverDidEnterTouchpointNotification, nil);
             } else {
                 NSLog(@"Invalid touchpoint");
             }
@@ -103,6 +103,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
     }
     
     _expirationTimer = nil;
+
 
     RVCustomer *customer = [Rover shared].customer;
     if (customer.dirty) {

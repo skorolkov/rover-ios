@@ -13,6 +13,12 @@
 #import "RVLocation.h"
 #import "RVTouchpoint.h"
 
+@interface RVVisit ()
+
+@property (nonatomic, strong) NSMutableArray *mVisitedTouchpoints;
+
+@end
+
 @implementation RVVisit
 
 #pragma mark - Overridden Properties
@@ -82,6 +88,19 @@
     return touchpoint;
 }
 
+- (NSArray *)visitedTouchpoints
+{
+    return _mVisitedTouchpoints;
+}
+
+- (void)setCurrentTouchpoint:(RVTouchpoint *)currentTouchpoint
+{
+    if (![_mVisitedTouchpoints containsObject:currentTouchpoint]) {
+        [_mVisitedTouchpoints insertObject:currentTouchpoint atIndex:0];
+    }
+    _currentTouchpoint = currentTouchpoint;
+}
+
 #pragma mark - Initialization
 
 - (id)init
@@ -89,6 +108,7 @@
     self = [super init];
     if (self) {
         self.cards = [NSMutableArray arrayWithCapacity:5];
+        _mVisitedTouchpoints = [NSMutableArray new];
     }
     return self;
 }

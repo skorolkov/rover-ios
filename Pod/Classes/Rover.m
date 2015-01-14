@@ -16,6 +16,8 @@
 #import "RVNotificationCenter.h"
 #import "RVModel.h"
 
+#import "RXModalViewController.h"
+
 NSString *const kRoverDidEnterTouchpointNotification = @"RoverDidEnterTouchpointNotification";
 NSString *const kRoverDidEnterLocationNotification = @"RoverDidEnterLocationNotification";
 NSString *const kRoverDidExpireVisitNotification = @"RoverDidExpireVisitNotification";
@@ -222,10 +224,12 @@ static Rover *sharedInstance = nil;
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillPresentModalNotification object:self];
     
-    RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
-    modalViewController.delegate = self;
-    modalViewController.cardSet = cardSet;
-    modalViewController.options = options;
+//    RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
+//    modalViewController.delegate = self;
+//    modalViewController.cardSet = cardSet;
+//    modalViewController.options = options;
+
+    RXModalViewController *modalViewController = [RXModalViewController new];
     
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
@@ -246,12 +250,14 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)sendNotification {
-    if (!_currentVisit || _currentVisit.cards.count < 1) {
+
+    if (!self.currentVisit || !_currentVisit.currentTouchpoint || self.currentVisit.cards.count < 1) {
         return;
     }
     
     UILocalNotification *note = [[UILocalNotification alloc] init];
-    note.alertBody = _currentVisit.welcomeMessage;
+    //note.alertBody = _currentVisit.currentTouchpoint.notification;
+
     if (self.config.notificationSoundName) {
         note.soundName = self.config.notificationSoundName;
     }
@@ -270,7 +276,7 @@ static Rover *sharedInstance = nil;
             [self presentModal];
         }
     } else {
-        [self sendNotification];
+        //[self sendNotification];
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidEnterLocationNotification object:self];
@@ -283,7 +289,15 @@ static Rover *sharedInstance = nil;
 - (void)visitManagerDidEnterTouchpoint:(NSNotification *)note {
     RVTouchpoint *currentTouchpoint = [note.userInfo objectForKey:@"touchpoint"];
     
-    NSLog(@"Touchpoint Notification: %@", currentTouchpoint);
+    if ([_currentVisit.visitedTouchpoints containsObject:currentTouchpoint]) {
+        return;
+    }
+    
+    if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+        [self sendNotification];
+    }
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidEnterTouchpointNotification object:self];
 }
 
 #pragma mark - RVModalViewControllerDelegate
@@ -307,7 +321,11 @@ static Rover *sharedInstance = nil;
 #pragma mark - Application Notifications
 
 - (void)applicationDidBecomeActive:(NSNotification *)note {
+<<<<<<< HEAD
     if (_currentVisit && !_currentVisit.openedAt) {
+=======
+    if (self.currentVisit && _currentVisit.currentTouchpoint && !self.currentVisit.openedAt) {
+>>>>>>> more touchpoint stuff
         
         [self updateVisitOpenTime];
         

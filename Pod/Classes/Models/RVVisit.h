@@ -63,6 +63,10 @@
  */
 @property (strong, nonatomic) RVTouchpoint *currentTouchpoint;
 
+/** All visited touchpoints
+ */
+@property (nonatomic, readonly) NSArray *visitedTouchpoints;
+
 - (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
 
 - (void)persistToDefaults;
