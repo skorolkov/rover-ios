@@ -13,15 +13,19 @@
 
 @interface RXModalViewController ()
 
-@property (weak, nonatomic) RVVisit *visit;
+@property (readonly) RVVisit *visit;
+@property (strong, nonatomic) UIButton *pillView;
 
 @end
 
 @implementation RXModalViewController
 
 static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
+
 static NSInteger maxIndexPathSection = 0;
 static NSInteger maxIndexPathRow = 0;
+static NSInteger minIndexPathSection = 0;
+static NSInteger minIndexPathRow = 0;
 
 - (instancetype)init
 {
@@ -32,6 +36,12 @@ static NSInteger maxIndexPathRow = 0;
         self.backdropTintColor = [Rover shared].config.modalBackdropTintColor;
         // Account for status bar
         [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
+        // TODO: make this customizable through the SDK
+        _pillView = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        _pillView.frame = CGRectMake(0, 0, 150, 60);
+        [_pillView setTitle:@"New Offers" forState:UIControlStateNormal];
+        [_pillView addTarget:self action:@selector(scrollToTop) forControlEvents:UIControlEventTouchUpInside];
+        
     }
     return self;
 }
@@ -39,12 +49,12 @@ static NSInteger maxIndexPathRow = 0;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[RXCardViewCell class] forCellReuseIdentifier:cellReuseIdentifier];
     
     [self createBlur];
     
-    self.visit = [[Rover shared] currentVisit];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roverDidEnterTouchpoint) name:kRoverDidEnterTouchpointNotification object:nil];
     
@@ -60,8 +70,14 @@ static NSInteger maxIndexPathRow = 0;
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+- (RVVisit *)visit
+{
+    return [[Rover shared] currentVisit];
+}
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [_pillView removeFromSuperview]; // To be safe
 }
 
 - (void)createBlur {
@@ -122,7 +138,9 @@ static NSInteger maxIndexPathRow = 0;
         return;
     }
     
-    if (indexPath.section == 0 && indexPath.row == 0) {
+    BOOL isNewCell = hasDisplayedInitialAnimation && ![self hasDisplayedCellAtIndexPath:indexPath];
+    
+    if (indexPath.section == 0 && (indexPath.row == 0 || isNewCell)) {
         
         cell.alpha = 0;
         cell.transform = CGAffineTransformMakeScale(0.3, 0.3);
@@ -137,6 +155,11 @@ static NSInteger maxIndexPathRow = 0;
                              cell.alpha = 1;
                          } completion:^(BOOL finished) {
                              hasDisplayedInitialAnimation = YES;
+                             minIndexPathSection = 0;
+                             minIndexPathRow = indexPath.row;
+                             if (minIndexPathRow == 0 && _pillView.superview) {
+                                 [self retractPill];
+                             }
                          }];
         return;
     }
@@ -146,7 +169,7 @@ static NSInteger maxIndexPathRow = 0;
         NSInteger cellIndex = (indexPath.section * [self tableView:tableView numberOfRowsInSection:indexPath.section]) + indexPath.row;
         cell.transform = CGAffineTransformMakeTranslation(0, self.tableView.frame.size.height - [self tableView:tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]);
         [UIView animateWithDuration:0.7
-                              delay:0.8 + cellIndex * (0.2)
+                              delay:(0 + (cellIndex * 0.2))
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              cell.transform = CGAffineTransformIdentity;
@@ -214,15 +237,18 @@ static NSInteger maxIndexPathRow = 0;
 
 - (BOOL)hasDisplayedCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    return (indexPath.section < maxIndexPathSection || (indexPath.section == maxIndexPathSection && indexPath.row <= maxIndexPathRow));
+    return ((indexPath.section < maxIndexPathSection && indexPath.section > minIndexPathSection) ||
+            (indexPath.section == maxIndexPathSection && indexPath.row <= maxIndexPathRow) ||
+            (indexPath.section == minIndexPathSection && indexPath.row >= minIndexPathRow));
 }
 
 - (void)roverDidEnterTouchpoint
 {
-    self.visit = [[Rover shared] currentVisit];
     NSLog(@"touchpoints: %@", self.visit.visitedTouchpoints);
     // get smarter
     maxIndexPathSection++;
+    minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:0];
+    minIndexPathSection = 1;
     
     
     CGPoint originalOffset = self.tableView.contentOffset;
@@ -234,6 +260,36 @@ static NSInteger maxIndexPathRow = 0;
         yOffset += [self tableView:self.tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
     }
     [self.tableView setContentOffset:CGPointMake(originalOffset.x, originalOffset.y + yOffset) animated:NO];
+    [self dropPill];
+}
+
+- (void)dropPill
+{
+    _pillView.center = CGPointMake(self.tableView.center.x, -_pillView.frame.size.height/2);
+    [self.tableView.superview addSubview:_pillView];
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _pillView.center = CGPointMake(_pillView.center.x, _pillView.frame.size.height/2 + 20);
+                     } completion:nil];
+}
+
+- (void)retractPill
+{
+    [UIView animateWithDuration:0.3
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseInOut
+                     animations:^{
+                         _pillView.center = CGPointMake(_pillView.center.x, -_pillView.frame.size.height/2);
+                     } completion:^(BOOL finished) {
+                         [_pillView removeFromSuperview];
+                     }];
+}
+
+- (void)scrollToTop
+{
+    [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
 }
 
 @end

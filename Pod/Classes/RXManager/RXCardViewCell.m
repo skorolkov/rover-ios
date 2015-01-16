@@ -11,8 +11,8 @@
 
 // Shadow constants
 #define kCardShadowColor [[UIColor blackColor] CGColor]
-#define kCardShadowOffset CGSizeMake(0, 10)
-#define kCardShadowOpacity 0.7
+#define kCardShadowOffset CGSizeMake(0, 2)
+#define kCardShadowOpacity 0.2
 #define kCardShadowRadius 0
 
 
