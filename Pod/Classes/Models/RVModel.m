@@ -53,9 +53,14 @@
 }
 
 - (void)updateWithJSON:(NSDictionary *)JSON {
-    NSNumber *ID = [JSON objectForKey:@"id"];
+    id ID = [JSON objectForKey:@"id"];
     if (ID != (id)[NSNull null]) {
-        self.ID = ID;
+        if ([ID isKindOfClass:[NSString class]]) {
+            self.ID = ID;
+        } else {
+            // Number
+            self.ID = [ID stringValue];
+        }
     }
 }
 

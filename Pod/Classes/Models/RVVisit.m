@@ -24,7 +24,7 @@
 
 - (BOOL)isAlive {
     NSDate *now = [NSDate date];
-    NSTimeInterval elapsed = [now timeIntervalSinceDate:self.enteredAt];
+    NSTimeInterval elapsed = [now timeIntervalSinceDate:self.beaconLastDetectedAt];
     return elapsed < self.keepAlive;
 }
 
@@ -50,6 +50,18 @@
         return card.likedAt ? YES : NO;
     }];
     return [self.cards objectsAtIndexes:indexes];
+}
+
+- (void)setEnteredAt:(NSDate *)enteredAt
+{
+    self.beaconLastDetectedAt = enteredAt;
+    _enteredAt = enteredAt;
+}
+
+- (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion
+{
+    return [self.UUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString]
+        && [self.major isEqualToNumber:beaconRegion.major];
 }
 
 #pragma mark - Initialization
@@ -250,6 +262,69 @@
     }
     
     return JSON;
+}
+
+
+- (void)save:(void (^)(void))success failure:(void (^)(NSString *))failure
+{
+    [super save:^{
+        [self persistToDefaults];
+        if (success) {
+            success();
+        }
+    } failure:failure];
+}
+
+- (void)persistToDefaults
+{
+    NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
+    [standardDefaults setObject:[NSKeyedArchiver archivedDataWithRootObject:self] forKey:@"_roverLatestVisit"];
+    [standardDefaults synchronize];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    //Encode properties, other class variables, etc
+    [encoder encodeObject:self.UUID forKey:@"UUID"];
+    [encoder encodeObject:self.major forKey:@"major"];
+    [encoder encodeObject:self.customerID forKey:@"customerID"];
+    [encoder encodeObject:self.welcomeMessage forKey:@"welcomeMessage"];
+    [encoder encodeObject:[NSNumber numberWithDouble:self.keepAlive] forKey:@"keepAlive"];
+    [encoder encodeObject:self.primaryBackgroundColor forKey:@"primaryBackgroundColor"];
+    [encoder encodeObject:self.primaryFontColor forKey:@"primaryFontColor"];
+    [encoder encodeObject:self.secondaryBackgroundColor forKey:@"secondaryBackgroundColor"];
+    [encoder encodeObject:self.secondaryFontColor forKey:@"secondaryFontColor"];
+    [encoder encodeObject:self.enteredAt forKey:@"enteredAt"];
+    [encoder encodeObject:self.exitedAt forKey:@"exitedAt"];
+    [encoder encodeObject:self.openedAt forKey:@"openedAt"];
+    [encoder encodeObject:self.beaconLastDetectedAt forKey:@"beaconLastDetecedAt"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    if((self = [super init])) {
+        //decode properties, other class vars
+        self.UUID = [decoder decodeObjectForKey:@"UUID"];
+        self.major = [decoder decodeObjectForKey:@"major"];
+        self.customerID = [decoder decodeObjectForKey:@"customerID"];
+        self.welcomeMessage = [decoder decodeObjectForKey:@"welcomeMessage"];
+        self.keepAlive = [[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
+        self.primaryBackgroundColor = [decoder decodeObjectForKey:@"primaryBackgroundColor"];
+        self.primaryFontColor = [decoder decodeObjectForKey:@"primaryFontColor"];
+        self.secondaryBackgroundColor = [decoder decodeObjectForKey:@"secondaryBackgroundColor"];
+        self.secondaryFontColor = [decoder decodeObjectForKey:@"secondaryFontColor"];
+        self.enteredAt = [decoder decodeObjectForKey:@"enteredAt"];
+        self.exitedAt = [decoder decodeObjectForKey:@"exitedAt"];
+        self.openedAt = [decoder decodeObjectForKey:@"openedAt"];
+        self.beaconLastDetectedAt = [decoder decodeObjectForKey:@"beaconLastDetecedAt"];
+    }
+    return self;
+}
+
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"<RVVisit: UUID: %@, Major: %@, enteredAt: %@, beaconLastDetectedAt: %@, keepAlive: %f>",
+            self.UUID, self.major, self.enteredAt, self.beaconLastDetectedAt, self.keepAlive];
 }
 
 @end

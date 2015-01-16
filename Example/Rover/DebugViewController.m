@@ -84,8 +84,8 @@
 }
 
 - (IBAction)simulateButtonPressed:(id)sender {
-    NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"84F3A8E6-FB2D-4A4F-9C36-A1BCFAA93EEA"];
-    [[Rover shared] simulateBeaconWithUUID:UUID major:54378];
+    NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"EB9F29E9-26A0-4414-A68D-D0CC7965FEDD"];
+    [[Rover shared] simulateBeaconWithUUID:UUID major:52643];
 }
 
 @end

@@ -56,21 +56,32 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
     [[RVNotificationCenter defaultCenter] removeObserver:self];
 }
 
-#pragma mark - Utility methods
+#pragma mark - Instance methods
 
-- (BOOL)isCurrentRegion:(CLBeaconRegion *)beaconRegion {
-    return [self.latestVisit.UUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString]
-            && [self.latestVisit.major isEqualToNumber:beaconRegion.major];
+- (RVVisit *)latestVisit
+{
+    if (_latestVisit) {
+        return _latestVisit;
+    }
+    
+    NSUserDefaults *standardDefault = [NSUserDefaults standardUserDefaults];
+    _latestVisit = [NSKeyedUnarchiver unarchiveObjectWithData:[standardDefault objectForKey:@"_roverLatestVisit"]];
+    return _latestVisit;
 }
+
 
 #pragma mark - Region Manager Notifications
 
 - (void)regionManagerDidEnterRegion:(NSNotification *)note {
     CLBeaconRegion *beaconRegion = [note.userInfo objectForKey:@"beaconRegion"];
     
-    if (self.latestVisit && [self isCurrentRegion:beaconRegion] && self.latestVisit.isAlive) {
+    if (self.latestVisit && [self.latestVisit isInRegion:beaconRegion] && self.latestVisit.isAlive) {
         NSDate *now = [NSDate date];
         NSTimeInterval elapsed = [now timeIntervalSinceDate:self.latestVisit.enteredAt];
+        
+        // Reset the timer
+        self.latestVisit.beaconLastDetectedAt = now;
+        [self.latestVisit persistToDefaults];
         
         RVLog(kRoverAlreadyVisitingNotification, @{ @"elapsed": [NSNumber numberWithDouble:elapsed],
                                                     @"keepAlive": [NSNumber numberWithDouble:self.latestVisit.keepAlive] });
@@ -90,7 +101,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 - (void)regionManagerDidExitRegion:(NSNotification *)note {
     CLBeaconRegion *beaconRegion = [note.userInfo objectForKey:@"beaconRegion"];
     
-    if (self.latestVisit && [self isCurrentRegion:beaconRegion]) {
+    if (self.latestVisit && [self.latestVisit isInRegion:beaconRegion]) {
         [self updateVisitExitTime];
     }
 }

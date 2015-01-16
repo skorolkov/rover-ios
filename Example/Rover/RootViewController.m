@@ -8,10 +8,11 @@
 
 #import "RootViewController.h"
 #import "NewOffersViewController.h"
+#import "CustomModalViewController.h"
 
 #import <Rover/Rover.h>
 
-@interface RootViewController ()
+@interface RootViewController () <RVModalViewControllerDelegate>
 
 @end
 
@@ -51,7 +52,12 @@
 }
 
 - (void)displayModal {
-    [[Rover shared] presentModal];
+    //[[Rover shared] presentModal];
+    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *currentViewController = (UIViewController *)[Rover findCurrentViewController:rootViewController];
+    CustomModalViewController *vc = [CustomModalViewController new];
+    vc.delegate = self;
+    [currentViewController presentViewController:vc animated:YES completion:nil];
 }
 
 #pragma mark - Application Notifications
@@ -71,6 +77,12 @@
 
 - (void)roverDidDisplayCardNotification {
     [self updateBadgeNumber];
+}
+
+#pragma mark - ModalViewController delegate
+
+- (void)modalViewControllerDidFinish:(RVModalViewController *)modalViewController {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end
