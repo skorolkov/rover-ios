@@ -85,8 +85,15 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
             RVTouchpoint *touchpoint = [self.latestVisit touchpointForRegion:beaconRegion];
             if (touchpoint) {
                 self.latestVisit.currentTouchpoint = touchpoint;
+
                 [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self userInfo:@{ @"touchpoint": touchpoint }];
                 //RVLog(kRoverDidEnterTouchpointNotification, nil);
+//=======
+//                [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self
+//                                                                  userInfo:@{ @"touchpoint": touchpoint,
+//                                                                              @"visit": self.latestVisit}];
+//                RVLog(kRoverDidEnterTouchpointNotification, nil);
+//>>>>>>> card list
             } else {
                 NSLog(@"Invalid touchpoint");
             }
@@ -96,6 +103,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         NSTimeInterval elapsed = [now timeIntervalSinceDate:self.latestVisit.enteredAt];
 
         [_expirationTimer invalidate];
+
         
         RVLog(kRoverAlreadyVisitingNotification, @{ @"elapsed": [NSNumber numberWithDouble:elapsed],
                                                     @"keepAlive": [NSNumber numberWithDouble:self.latestVisit.keepAlive] });
@@ -147,8 +155,10 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         RVTouchpoint *touchpoint = [self.latestVisit touchpointForMinor:minor];
         if (touchpoint) {
             self.latestVisit.currentTouchpoint = touchpoint;
+
             [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self userInfo:@{ @"touchpoint": touchpoint }];
             //RVLog(kRoverDidEnterTouchpointNotification, nil);
+
         } else {
             NSLog(@"Invalid touchpoint");
         }

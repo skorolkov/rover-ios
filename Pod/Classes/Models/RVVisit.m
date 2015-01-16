@@ -108,7 +108,7 @@
     self = [super init];
     if (self) {
         self.cards = [NSMutableArray arrayWithCapacity:5];
-        _mVisitedTouchpoints = [NSMutableArray new];
+        _mVisitedTouchpoints = [NSMutableArray array];
     }
     return self;
 }
@@ -143,7 +143,7 @@
     // keepAlive
     NSNumber *keepAlive = [JSON objectForKey:@"keep_alive"];
     if (keepAlive && keepAlive != (id)[NSNull null]) {
-        self.keepAlive = [keepAlive doubleValue];
+        self.keepAlive = 1; //[keepAlive doubleValue];
     }
     
     // primaryBackgroundColor
@@ -363,13 +363,13 @@
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
-    if((self = [super init])) {
+    if((self = [self init])) {
         //decode properties, other class vars
         self.UUID = [decoder decodeObjectForKey:@"UUID"];
         self.major = [decoder decodeObjectForKey:@"major"];
         self.customerID = [decoder decodeObjectForKey:@"customerID"];
         self.welcomeMessage = [decoder decodeObjectForKey:@"welcomeMessage"];
-        self.keepAlive = [[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
+        self.keepAlive = 1; //[[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
         self.primaryBackgroundColor = [decoder decodeObjectForKey:@"primaryBackgroundColor"];
         self.primaryFontColor = [decoder decodeObjectForKey:@"primaryFontColor"];
         self.secondaryBackgroundColor = [decoder decodeObjectForKey:@"secondaryBackgroundColor"];

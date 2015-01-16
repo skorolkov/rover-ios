@@ -13,13 +13,15 @@
 
 @interface RXModalViewController ()
 
-@property (strong, nonatomic) RVVisit *visit;
+@property (weak, nonatomic) RVVisit *visit;
 
 @end
 
 @implementation RXModalViewController
 
 static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
+static NSInteger maxIndexPathSection = 0;
+static NSInteger maxIndexPathRow = 0;
 
 - (instancetype)init
 {
@@ -28,6 +30,8 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         self.backdropBlurRadius = [Rover shared].config.modalBackdropBlurRadius;
         self.backdropTintColor = [Rover shared].config.modalBackdropTintColor;
+        // Account for status bar
+        [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
     }
     return self;
 }
@@ -43,6 +47,11 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     self.visit = [[Rover shared] currentVisit];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roverDidEnterTouchpoint) name:kRoverDidEnterTouchpointNotification object:nil];
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"647086E7-89A6-439C-9E3B-4A2268F13FC6"];
+        [[Rover shared] simulateBeaconWithUUID:UUID major:52643 minor:2];
+    });
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -77,8 +86,7 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of visited touchpoints.
-    // return self.visit.visitedTouchpoints.count
-    return 1;
+    return self.visit.visitedTouchpoints.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
@@ -95,59 +103,137 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     if (!cell) {
         cell = [[RXCardViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellReuseIdentifier];
     }
-                            
     
     return cell;
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 220;
 }
-*/
 
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static BOOL hasDisplayedInitialAnimation = NO;
+    
+    if ([self hasDisplayedCellAtIndexPath:indexPath] && hasDisplayedInitialAnimation) {
+        return;
+    }
+    
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        
+        cell.alpha = 0;
+        cell.transform = CGAffineTransformMakeScale(0.3, 0.3);
+        
+        [UIView animateWithDuration:0.7
+                              delay:0
+             usingSpringWithDamping:0.7
+              initialSpringVelocity:.1
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             cell.transform = CGAffineTransformIdentity;
+                             cell.alpha = 1;
+                         } completion:^(BOOL finished) {
+                             hasDisplayedInitialAnimation = YES;
+                         }];
+        return;
+    }
+    
+    if (!hasDisplayedInitialAnimation) {
+
+        NSInteger cellIndex = (indexPath.section * [self tableView:tableView numberOfRowsInSection:indexPath.section]) + indexPath.row;
+        cell.transform = CGAffineTransformMakeTranslation(0, self.tableView.frame.size.height - [self tableView:tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]);
+        [UIView animateWithDuration:0.7
+                              delay:0.8 + cellIndex * (0.2)
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             cell.transform = CGAffineTransformIdentity;
+
+                         } completion:nil];
+    }
+    
+    
+    if (![self isEnoughOfCellVisible:cell inScrollView:self.tableView]) {
+        cell.alpha = 0.6;
+    }
 }
-*/
 
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
+#pragma mark - Scroll view delegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSArray* cells = self.tableView.visibleCells;
+    
+    NSUInteger cellCount = [cells count];
+    if (cellCount == 0)
+        return;
+    
+    // Check against the maximum index path
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:[cells lastObject]];
+    if ([self hasDisplayedCellAtIndexPath:indexPath])
+        return;
+    
+//    // Check the visibility of the first cell
+//    [self checkVisibilityOfCell:[cells firstObject] inScrollView:scrollView];
+//    if (cellCount == 1)
+//        return;
+//    
+//    // Check the visibility of the last cell
+//    [self checkVisibilityOfCell:[cells lastObject] inScrollView:scrollView];
+//    if (cellCount == 2)
+//        return;
+    
+    // All of the rest of the cells are visible: Loop through the 2nd through n-1 cells
+    for (NSUInteger i = 0; i < cellCount; i++)
+        [self checkVisibilityOfCell:cells[i] inScrollView:scrollView];
 }
-*/
 
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
+- (void)checkVisibilityOfCell:(UITableViewCell *)cell inScrollView:(UIScrollView *)scrollView
+{
+    if ([self isEnoughOfCellVisible:cell inScrollView:scrollView]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        [UIView animateWithDuration:0.3
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             cell.alpha = 1;
+                         } completion:^(BOOL finished) {
+                             maxIndexPathRow = indexPath.row;
+                             maxIndexPathSection = indexPath.section;
+                         }];
+    }
 }
-*/
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (BOOL)isEnoughOfCellVisible:(UITableViewCell *)cell inScrollView:(UIScrollView *)scrollView
+{
+    CGRect cellRect = [scrollView convertRect:cell.frame toView:scrollView.superview];
+    return CGRectContainsRect(scrollView.frame, cellRect);
 }
-*/
+
+- (BOOL)hasDisplayedCellAtIndexPath:(NSIndexPath *)indexPath
+{
+    return (indexPath.section < maxIndexPathSection || (indexPath.section == maxIndexPathSection && indexPath.row <= maxIndexPathRow));
+}
 
 - (void)roverDidEnterTouchpoint
 {
+    self.visit = [[Rover shared] currentVisit];
+    NSLog(@"touchpoints: %@", self.visit.visitedTouchpoints);
     // get smarter
+    maxIndexPathSection++;
+    
+    
+    CGPoint originalOffset = self.tableView.contentOffset;
+    //[self.tableView insertSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:UITableViewRowAnimationNone];
     [self.tableView reloadData];
+    NSInteger rows = [self tableView:self.tableView numberOfRowsInSection:0];
+    CGFloat yOffset = 0;
+    for (int i=0; i<rows; i++) {
+        yOffset += [self tableView:self.tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
+    }
+    [self.tableView setContentOffset:CGPointMake(originalOffset.x, originalOffset.y + yOffset) animated:NO];
 }
 
 @end

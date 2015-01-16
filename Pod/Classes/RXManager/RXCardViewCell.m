@@ -45,6 +45,7 @@
 
 - (void)initialize
 {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.backgroundColor = [UIColor clearColor];
     [self addSubviews];
     [self configureLayout];
@@ -76,8 +77,8 @@
     //  containerView
     //----------------------------------------
     
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-[containerView]-|" options:0 metrics:nil views:views]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[containerView]-|" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-15-[containerView]-15-|" options:0 metrics:nil views:views]];
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-15-[containerView]-15-|" options:0 metrics:nil views:views]];
     
     //----------------------------------------
     //  cardImageView

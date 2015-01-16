@@ -10,6 +10,7 @@
 
 extern NSString *const kRVVisitManagerDidEnterLocationNotification;
 extern NSString *const kRVVisitManagerDidExitLocationNotification;
+extern NSString *const kRVVisitManagerDidEnterTouchpointNotification;
 
 @class RVVisit;
 

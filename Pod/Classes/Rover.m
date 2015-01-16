@@ -165,7 +165,7 @@ static Rover *sharedInstance = nil;
     
     [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidEnterLocation:) name:kRVVisitManagerDidEnterLocationNotification object:nil];
     [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidExitLocation:) name:kRVVisitManagerDidExitLocationNotification object:nil];
-    [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidEnterTouchpoint:) name:kRoverDidEnterTouchpointNotification object:nil];
+    [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidEnterTouchpoint:) name:kRVVisitManagerDidEnterTouchpointNotification object:nil];
 }
 
 - (void)dealloc {
@@ -219,7 +219,7 @@ static Rover *sharedInstance = nil;
     
     if (!_currentVisit || _currentVisit.cards.count < 1) {
         NSLog(@"%@ warning showModal called but there are no cards to display", self);
-        return;
+        //return;
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillPresentModalNotification object:self];
@@ -287,6 +287,7 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)visitManagerDidEnterTouchpoint:(NSNotification *)note {
+    _currentVisit = [note.userInfo objectForKey:@"visit"];
     RVTouchpoint *currentTouchpoint = [note.userInfo objectForKey:@"touchpoint"];
     
     if ([_currentVisit.visitedTouchpoints containsObject:currentTouchpoint]) {
