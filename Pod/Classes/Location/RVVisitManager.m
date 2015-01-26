@@ -79,10 +79,6 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         NSDate *now = [NSDate date];
         NSTimeInterval elapsed = [now timeIntervalSinceDate:self.latestVisit.enteredAt];
         
-        // Reset the timer
-        self.latestVisit.beaconLastDetectedAt = now;
-        [self.latestVisit persistToDefaults];
-        
         RVLog(kRoverAlreadyVisitingNotification, @{ @"elapsed": [NSNumber numberWithDouble:elapsed],
                                                     @"keepAlive": [NSNumber numberWithDouble:self.latestVisit.keepAlive] });
         return;
@@ -102,6 +98,10 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
     CLBeaconRegion *beaconRegion = [note.userInfo objectForKey:@"beaconRegion"];
     
     if (self.latestVisit && [self.latestVisit isInRegion:beaconRegion]) {
+        // Reset the timer
+        self.latestVisit.beaconLastDetectedAt = [NSDate date];
+        [self.latestVisit persistToDefaults];
+        
         [self updateVisitExitTime];
     }
 }
