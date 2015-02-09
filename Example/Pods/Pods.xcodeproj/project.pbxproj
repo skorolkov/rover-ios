@@ -36,6 +36,9 @@
 		320C48E9DAB76EF2311BF6D7 /* RSCornersView.h in Headers */ = {isa = PBXBuildFile; fileRef = 9B10255183CD613CD866D8D0 /* RSCornersView.h */; };
 		33D2195AE21BA9A2C88073CE /* Pods-Rover-RSBarcodes-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BF9673D990CACA64738D33CC /* Pods-Rover-RSBarcodes-dummy.m */; };
 		3686198B52540D9CFE6224F7 /* RSUnifiedCodeGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = FB0A0A0F2C805F86310EA09B /* RSUnifiedCodeGenerator.m */; settings = {COMPILER_FLAGS = "-fobjc-arc -DOS_OBJECT_USE_OBJC=0"; }; };
+		3D1897AF1A7F62DF00A8EFA3 /* RXBlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1897A71A7B53AE00A8EFA3 /* RXBlockView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		3D1897B01A7F62E400A8EFA3 /* RXCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1897AA1A7C0E7100A8EFA3 /* RXCardViewController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		3D1897B11A7F62E800A8EFA3 /* RXTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1897AD1A7C1D1B00A8EFA3 /* RXTransition.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		3D8FC92E1A658C3E001628AE /* RXModalViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8FC9281A6439A1001628AE /* RXModalViewController.h */; };
 		3D8FC92F1A658C3E001628AE /* RXModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8FC9291A6439A1001628AE /* RXModalViewController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		3D8FC9301A658C3E001628AE /* RXCardViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8FC92B1A644401001628AE /* RXCardViewCell.h */; };
@@ -248,6 +251,12 @@
 		374F13DAB86BD0F452D5FACF /* SDWebImageDownloaderOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageDownloaderOperation.h; path = SDWebImage/SDWebImageDownloaderOperation.h; sourceTree = "<group>"; };
 		3C44B5861C60C28F2A6C0B41 /* UIButton+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIButton+WebCache.h"; path = "SDWebImage/UIButton+WebCache.h"; sourceTree = "<group>"; };
 		3C75139205504EB7B66C89EA /* RSUPCEGenerator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RSUPCEGenerator.h; path = RSBarcodes/RSUPCEGenerator.h; sourceTree = "<group>"; };
+		3D1897A61A7B53AE00A8EFA3 /* RXBlockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXBlockView.h; path = Pod/Classes/RXManager/RXBlockView.h; sourceTree = "<group>"; };
+		3D1897A71A7B53AE00A8EFA3 /* RXBlockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXBlockView.m; path = Pod/Classes/RXManager/RXBlockView.m; sourceTree = "<group>"; };
+		3D1897A91A7C0E7100A8EFA3 /* RXCardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXCardViewController.h; path = Pod/Classes/RXManager/RXCardViewController.h; sourceTree = "<group>"; };
+		3D1897AA1A7C0E7100A8EFA3 /* RXCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXCardViewController.m; path = Pod/Classes/RXManager/RXCardViewController.m; sourceTree = "<group>"; };
+		3D1897AC1A7C1D1B00A8EFA3 /* RXTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXTransition.h; path = Pod/Classes/RXManager/RXTransition.h; sourceTree = "<group>"; };
+		3D1897AD1A7C1D1B00A8EFA3 /* RXTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXTransition.m; path = Pod/Classes/RXManager/RXTransition.m; sourceTree = "<group>"; };
 		3D8FC9281A6439A1001628AE /* RXModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXModalViewController.h; path = Pod/Classes/RXManager/RXModalViewController.h; sourceTree = "<group>"; };
 		3D8FC9291A6439A1001628AE /* RXModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXModalViewController.m; path = Pod/Classes/RXManager/RXModalViewController.m; sourceTree = "<group>"; };
 		3D8FC92B1A644401001628AE /* RXCardViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXCardViewCell.h; path = Pod/Classes/RXManager/RXCardViewCell.h; sourceTree = "<group>"; };
@@ -607,6 +616,12 @@
 				3D8FC9291A6439A1001628AE /* RXModalViewController.m */,
 				3D8FC92B1A644401001628AE /* RXCardViewCell.h */,
 				3D8FC92C1A644401001628AE /* RXCardViewCell.m */,
+				3D1897A61A7B53AE00A8EFA3 /* RXBlockView.h */,
+				3D1897A71A7B53AE00A8EFA3 /* RXBlockView.m */,
+				3D1897A91A7C0E7100A8EFA3 /* RXCardViewController.h */,
+				3D1897AA1A7C0E7100A8EFA3 /* RXCardViewController.m */,
+				3D1897AC1A7C1D1B00A8EFA3 /* RXTransition.h */,
+				3D1897AD1A7C1D1B00A8EFA3 /* RXTransition.m */,
 			);
 			name = Rover;
 			path = ../..;
@@ -1017,6 +1032,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3D1897B01A7F62E400A8EFA3 /* RXCardViewController.m in Sources */,
 				6A13B31A67789045E74AA7BB /* Pods-Rover-Rover-dummy.m in Sources */,
 				782A706A038A82D97E9E6F08 /* RVCard.m in Sources */,
 				55AF498B4B48C3587528D006 /* RVCardBaseView.m in Sources */,
@@ -1033,10 +1049,12 @@
 				6060AB56673CA534EB78C603 /* RVLog.m in Sources */,
 				8AD295DC95500AC5FBA10ABB /* RVModalView.m in Sources */,
 				4B976F771A850BC27FD4F23F /* RVModalViewController.m in Sources */,
+				3D1897AF1A7F62DF00A8EFA3 /* RXBlockView.m in Sources */,
 				F430B2A2DBE3EBBA64E2CA41 /* RVModel.m in Sources */,
 				054368D687A6F912ADC61D97 /* RVMoreButton.m in Sources */,
 				3D8FC9311A658C3E001628AE /* RXCardViewCell.m in Sources */,
 				3D8FC92F1A658C3E001628AE /* RXModalViewController.m in Sources */,
+				3D1897B11A7F62E800A8EFA3 /* RXTransition.m in Sources */,
 				4FCE8F51D1C91D304DFE571D /* RVNetworkingManager.m in Sources */,
 				AED80C4549608B888276EE21 /* RVNotificationCenter.m in Sources */,
 				C41841D735214120C5938FA9 /* RVRegionManager.m in Sources */,

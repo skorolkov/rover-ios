@@ -10,8 +10,10 @@
 #import "RVImageEffects.h"
 #import "Rover.h"
 #import "RXCardViewCell.h"
+#import "RXCardViewController.h"
+#import "RXTransition.h"
 
-@interface RXModalViewController ()
+@interface RXModalViewController () <RXCardViewCellDelegate>
 
 @property (readonly) RVVisit *visit;
 @property (strong, nonatomic) UIButton *pillView;
@@ -41,7 +43,6 @@ static NSInteger minIndexPathRow = 0;
         _pillView.frame = CGRectMake(0, 0, 150, 60);
         [_pillView setTitle:@"New Offers" forState:UIControlStateNormal];
         [_pillView addTarget:self action:@selector(scrollToTop) forControlEvents:UIControlEventTouchUpInside];
-        
     }
     return self;
 }
@@ -58,10 +59,10 @@ static NSInteger minIndexPathRow = 0;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roverDidEnterTouchpoint) name:kRoverDidEnterTouchpointNotification object:nil];
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"647086E7-89A6-439C-9E3B-4A2268F13FC6"];
-        [[Rover shared] simulateBeaconWithUUID:UUID major:52643 minor:2];
-    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"647086E7-89A6-439C-9E3B-4A2268F13FC6"];
+//        [[Rover shared] simulateBeaconWithUUID:UUID major:52643 minor:2];
+//    });
     
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
@@ -105,20 +106,25 @@ static NSInteger minIndexPathRow = 0;
     return self.visit.visitedTouchpoints.count;
 }
 
+static NSInteger numberOfCards = 8;
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of cards in the touchpoint.
     // return self.visit.visitedTouchpoints[section].cards.count;
-    return 3;
+    return numberOfCards;
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellReuseIdentifier forIndexPath:indexPath];
+    RXCardViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellReuseIdentifier forIndexPath:indexPath];
     
     if (!cell) {
         cell = [[RXCardViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellReuseIdentifier];
     }
+    
+    cell.card = nil;
+    cell.delegate = self;
     
     return cell;
 }
@@ -181,6 +187,13 @@ static NSInteger minIndexPathRow = 0;
     if (![self isEnoughOfCellVisible:cell inScrollView:self.tableView]) {
         cell.alpha = 0.6;
     }
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSLog(@"Select");
+    RVCard *card = nil; //[self.visit.visitedTouchpoints[indexPath.section] objectAtIndex:indexPath.row];
+    RXCardViewController *cardViewController = [[RXCardViewController alloc] initWithCard:card];
+    [self presentViewController:cardViewController animated:YES completion:nil];
 }
 
 #pragma mark - Scroll view delegate
@@ -290,6 +303,14 @@ static NSInteger minIndexPathRow = 0;
 - (void)scrollToTop
 {
     [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+}
+
+#pragma mark - RXCardViewCellDelegate
+
+- (void)cardViewCellDidSwipe:(RXCardViewCell *)cardViewCell {
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cardViewCell];
+    numberOfCards--;
+    [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 
 @end
