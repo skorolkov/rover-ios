@@ -23,6 +23,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 @interface RVVisitManager ()
 
 @property (strong, nonatomic) RVVisit *latestVisit;
+@property (strong, nonatomic) NSTimer *expirationTimer;
 
 @end
 
@@ -74,15 +75,19 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 
 - (void)regionManagerDidEnterRegion:(NSNotification *)note {
     CLBeaconRegion *beaconRegion = [note.userInfo objectForKey:@"beaconRegion"];
-    
+
     if (self.latestVisit && [self.latestVisit isInRegion:beaconRegion] && self.latestVisit.isAlive) {
         NSDate *now = [NSDate date];
         NSTimeInterval elapsed = [now timeIntervalSinceDate:self.latestVisit.enteredAt];
+
+        [_expirationTimer invalidate];
         
         RVLog(kRoverAlreadyVisitingNotification, @{ @"elapsed": [NSNumber numberWithDouble:elapsed],
                                                     @"keepAlive": [NSNumber numberWithDouble:self.latestVisit.keepAlive] });
         return;
     }
+    
+    _expirationTimer = nil;
 
     RVCustomer *customer = [Rover shared].customer;
     if (customer.dirty) {
@@ -103,6 +108,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         [self.latestVisit persistToDefaults];
         
         [self updateVisitExitTime];
+        [self startExpirationTimer];
     }
 }
 
@@ -136,6 +142,16 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
     } failure:^(NSString *reason) {
         RVLog(kRoverUpdateExitTimeFailedNotification, nil);
     }];
+}
+
+// TODO: consider if this should happen in the succes block ^
+
+- (void)startExpirationTimer {
+    _expirationTimer = [NSTimer scheduledTimerWithTimeInterval:self.latestVisit.keepAlive target:self selector:@selector(expireVisit) userInfo:nil repeats:NO];
+}
+
+- (void)expireVisit {
+    [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidExitLocationNotification object:self userInfo:@{@"visit": self.latestVisit}];
 }
 
 @end

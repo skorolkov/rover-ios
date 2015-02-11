@@ -17,4 +17,6 @@ extern NSString *const kRVVisitManagerDidExitLocationNotification;
 
 + (id)sharedManager;
 
+@property (strong, nonatomic, readonly) RVVisit *latestVisit;
+
 @end

@@ -38,8 +38,6 @@
 - (RVCardBaseView *)cardDeck:(RVCardDeckView *)cardDeck cardViewForItemAtIndex:(NSUInteger)index {
     RVCardView *cardView = (RVCardView *)[super cardDeck:cardDeck cardViewForItemAtIndex:index];
     
-    NSLog(@"Card liked at: %@", cardView.card.expiresAt);
-    
     if (cardView.card.likedAt) {
         [cardView addButtonWithTitle:@"Remove from Saved Cards"];
     } else {
