@@ -25,7 +25,7 @@
 
 /** The view blocks for when in detail view
  */
-@property (strong, nonatomic) NSArray *detailviewBlocks;
+@property (strong, nonatomic) NSArray *detailv iewBlocks;
 
 
 // TODO: reevaluate these
