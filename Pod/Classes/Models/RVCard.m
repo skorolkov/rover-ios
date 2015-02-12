@@ -9,70 +9,71 @@
 #import "RVModelProject.h"
 #import "RVCardProject.h"
 #import "RVColorUtilities.h"
+#import "RVBlock.h"
 
 @implementation RVCard
 
 #pragma mark - Properties
 
-- (UIColor *)primaryBackgroundColor {
-    if (!_primaryBackgroundColor) {
-        return [UIColor colorWithRed:37.0/255.0 green:111.0/255.0 blue:203.0/255.0 alpha:1.0];
-    }
-    
-    return _primaryBackgroundColor;
-}
-
-- (UIColor *)primaryFontColor {
-    if (!_primaryFontColor) {
-        return [UIColor whiteColor];
-    }
-    
-    return _primaryFontColor;
-}
-
-- (UIColor *)secondaryBackgroundColor {
-    if (!_secondaryBackgroundColor) {
-        return [UIColor colorWithRed:37.0/255.0 green:111.0/255.0 blue:203.0/255.0 alpha:1.0];
-    }
-    
-    return _secondaryBackgroundColor;
-}
-
-- (UIColor *)secondaryFontColor {
-    if (!_secondaryFontColor) {
-        return [UIColor whiteColor];
-    }
-    
-    return _secondaryFontColor;
-}
-
-- (NSURL *)imageURL
-{
-    if (!_imageURL) {
-        return nil;
-    }
-    
-    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width * UIScreen.mainScreen.scale;
-    NSInteger screenHeight;
-    
-    switch (screenWidth) {
-        case 750:
-            screenHeight = 469;
-            break;
-        case 1242:
-            screenHeight = 776;
-            break;
-        default: {
-            screenWidth = 640;
-            screenHeight = 400;
-        }
-            break;
-    }
-    
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?w=%ld&h=%ld&fit=crop&fm=jpg", _imageURL.absoluteString, (long)screenWidth, (long)screenHeight]];
-    
-    return url;
-}
+//- (UIColor *)primaryBackgroundColor {
+//    if (!_primaryBackgroundColor) {
+//        return [UIColor colorWithRed:37.0/255.0 green:111.0/255.0 blue:203.0/255.0 alpha:1.0];
+//    }
+//    
+//    return _primaryBackgroundColor;
+//}
+//
+//- (UIColor *)primaryFontColor {
+//    if (!_primaryFontColor) {
+//        return [UIColor whiteColor];
+//    }
+//    
+//    return _primaryFontColor;
+//}
+//
+//- (UIColor *)secondaryBackgroundColor {
+//    if (!_secondaryBackgroundColor) {
+//        return [UIColor colorWithRed:37.0/255.0 green:111.0/255.0 blue:203.0/255.0 alpha:1.0];
+//    }
+//    
+//    return _secondaryBackgroundColor;
+//}
+//
+//- (UIColor *)secondaryFontColor {
+//    if (!_secondaryFontColor) {
+//        return [UIColor whiteColor];
+//    }
+//    
+//    return _secondaryFontColor;
+//}
+//
+//- (NSURL *)imageURL
+//{
+//    if (!_imageURL) {
+//        return nil;
+//    }
+//    
+//    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width * UIScreen.mainScreen.scale;
+//    NSInteger screenHeight;
+//    
+//    switch (screenWidth) {
+//        case 750:
+//            screenHeight = 469;
+//            break;
+//        case 1242:
+//            screenHeight = 776;
+//            break;
+//        default: {
+//            screenWidth = 640;
+//            screenHeight = 400;
+//        }
+//            break;
+//    }
+//    
+//    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?w=%ld&h=%ld&fit=crop&fm=jpg", _imageURL.absoluteString, (long)screenWidth, (long)screenHeight]];
+//    
+//    return url;
+//}
 
 #pragma mark - Initialization
 
@@ -93,16 +94,33 @@
 - (void)updateWithJSON:(NSDictionary *)JSON {
     [super updateWithJSON:JSON];
     
-    // organizationTitle
-    NSString *organizationTitle = [JSON objectForKey:@"organization_title"];
-    if (organizationTitle != (id)[NSNull null] && [organizationTitle length] > 0) {
-        self.organizationTitle = organizationTitle;
+
+    // metaData
+    NSDictionary *metaData = [JSON objectForKey:@"metaData"];
+    if (metaData && metaData != (id)[NSNull null]) {
+        _metaData = metaData;
     }
     
-    // title
-    NSString *title = [JSON objectForKey:@"title"];
-    if (title != (id)[NSNull null] && [title length] > 0) {
-        self.title = title;
+    // listviewBlocks
+    NSArray *listviewBlocksData = [JSON objectForKey:@"listviewBlocks"];
+    if (listviewBlocksData && listviewBlocksData != (id)[NSNull null]) {
+        NSMutableArray *listviewBlocks = [NSMutableArray arrayWithCapacity:[listviewBlocksData count]];
+        [listviewBlocksData enumerateObjectsUsingBlock:^(NSDictionary *blockData, NSUInteger idx, BOOL *stop) {
+            RVBlock *block = [[RVBlock alloc] initWithJSON:blockData];
+            [listviewBlocks insertObject:block atIndex:idx];
+        }];
+        _listviewBlocks = listviewBlocks;
+    }
+    
+    // detailviewBlocks
+    NSArray *detailviewBlocksData = [JSON objectForKey:@"detailviewBlocks"];
+    if (detailviewBlocksData && detailviewBlocksData != (id)[NSNull null]) {
+        NSMutableArray *detailviewBlocks = [NSMutableArray arrayWithCapacity:[detailviewBlocksData count]];
+        [detailviewBlocksData enumerateObjectsUsingBlock:^(NSDictionary *blockData, NSUInteger idx, BOOL *stop) {
+            RVBlock *block = [[RVBlock alloc] initWithJSON:blockData];
+            [detailviewBlocks insertObject:block atIndex:idx];
+        }];
+        _detailviewBlocks = detailviewBlocks;
     }
     
     // cardId
@@ -111,47 +129,7 @@
         self.cardId = cardId;
     }
     
-    // shortDescription
-    NSString *shortDescription = [JSON objectForKey:@"short_description_html"];
-    if (shortDescription != (id)[NSNull null] && [shortDescription length] > 0) {
-        self.shortDescription = shortDescription;
-    }
-    
-    // longDescription
-    NSString *longDescription = [JSON objectForKey:@"long_description"];
-    if (longDescription != (id)[NSNull null] && [longDescription length] > 0) {
-        self.longDescription = longDescription;
-    }
-    
-    // imageURL
-    NSString *imageURL = [JSON objectForKey:@"image_url"];
-    if (imageURL != (id)[NSNull null] && [imageURL length] > 0) {
-        self.imageURL = [NSURL URLWithString:imageURL];
-    }
-    
-    // primaryBackgroundColor
-    NSString *primaryBackgroundColor = [JSON objectForKey:@"primary_background_color"];
-    if (primaryBackgroundColor != (id)[NSNull null] && [primaryBackgroundColor length] > 0) {
-        self.primaryBackgroundColor = [RVColorUtilities colorFromHexString:primaryBackgroundColor];
-    }
-    
-    // primaryFontColor
-    NSString *primaryFontColor = [JSON objectForKey:@"primary_font_color"];
-    if (primaryFontColor != (id)[NSNull null] && [primaryFontColor length] > 0) {
-        self.primaryFontColor = [RVColorUtilities colorFromHexString:primaryFontColor];
-    }
-    
-    // secondaryBackgroundColor
-    NSString *secondaryBackgroundColor = [JSON objectForKey:@"secondary_background_color"];
-    if (secondaryBackgroundColor != (id)[NSNull null] && [secondaryBackgroundColor length] > 0) {
-        self.secondaryBackgroundColor = [RVColorUtilities colorFromHexString:secondaryBackgroundColor];
-    }
-    
-    // secondaryFontColor
-    NSString *secondaryFontColor = [JSON objectForKey:@"secondary_font_color"];
-    if (secondaryFontColor != (id)[NSNull null] && [secondaryFontColor length] > 0) {
-        self.secondaryFontColor = [RVColorUtilities colorFromHexString:secondaryFontColor];
-    }
+
     
     NSDateFormatter *dateFormatter = [self dateFormatter];
     
@@ -179,35 +157,7 @@
         self.expiresAt = [dateFormatter dateFromString:expiresAt];
     }
 
-    // buttons
-    NSArray *buttons = [JSON objectForKey:@"buttons"];
-    if (buttons != (id)[NSNull null] && [buttons count] > 0) {
-        self.buttons = buttons;
-    }
-    
-    // barcode
-    NSString *barcode = [JSON objectForKey:@"barcode"];
-    if (barcode != (id)[NSNull null] && [barcode length] > 0) {
-        self.barcode = barcode;
-    }
-    
-    // barcodeType
-    NSNumber *barcodeType = [JSON objectForKey:@"barcode_type"];
-    if (barcodeType != (id)[NSNull null]) {
-        self.barcodeType = barcodeType;
-    }
-    
-    // barcodeInstructions
-    NSString *barcodeInstructions = [JSON objectForKey:@"barcode_instructions"];
-    if (barcodeInstructions != (id)[NSNull null] && [barcodeInstructions length] > 0) {
-        self.barcodeInstructions = barcodeInstructions;
-    }
-    
-    // tags
-    NSArray *tags = [JSON objectForKey:@"tags"];
-    if (tags != (id)[NSNull null] && [tags count] > 0) {
-        self.tags = tags;
-    }
+
     
     // lastExpandedAt
     NSString *lastExpandedAt = [JSON objectForKey:@"last_expanded_at"];
@@ -221,11 +171,6 @@
         self.lastViewedBarcodeAt = [dateFormatter dateFromString:lastViewedBarcodeAt];
     }
     
-    // terms
-    NSString *terms = [JSON objectForKey:@"terms"];
-    if (terms != (id)[NSNull null] && [terms length] > 0) {
-        self.terms = terms;
-    }
 }
 
 - (NSDictionary *)toJSON {

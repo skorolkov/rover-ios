@@ -43,10 +43,6 @@
  */
 @property (strong, nonatomic) NSDate *openedAt;
 
-/** A list of cards delivered by the Rover Platform that should be displayed to the customer.
- */
-@property (strong, nonatomic) NSArray *cards;
-
 /** Only the cards the customer has not viewed during *the current visit*. I.e. the customer may have seen these card before on a different visit but could still be unread for this visit.
  */
 @property (readonly, nonatomic) NSArray *unreadCards;

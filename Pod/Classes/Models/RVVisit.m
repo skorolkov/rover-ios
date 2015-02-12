@@ -107,7 +107,6 @@
 {
     self = [super init];
     if (self) {
-        self.cards = [NSMutableArray arrayWithCapacity:5];
         _mVisitedTouchpoints = [NSMutableArray array];
     }
     return self;
@@ -190,17 +189,6 @@
         self.openedAt = [dateFormatter dateFromString:openedAt];
     }
     
-    // cards
-    NSArray *cardsData = [JSON objectForKey:@"cards"];
-    if (cardsData && cardsData != (id)[NSNull null]) {
-        NSMutableArray *cards = [NSMutableArray arrayWithCapacity:[cardsData count]];
-        [cardsData enumerateObjectsUsingBlock:^(NSDictionary *cardData, NSUInteger idx, BOOL *stop) {
-            RVCard *card = [[RVCard alloc] initWithJSON:cardData];
-            [cards addObject:card];
-        }];
-        self.cards = cards;
-    }
-    
     //location
     NSDictionary *locationData = [JSON objectForKey:@"location"];
     if (locationData) {
@@ -216,19 +204,8 @@
             RVTouchpoint *touchpoint = [[RVTouchpoint alloc] init];
             [touchpoints addObject:touchpoint];
         }];
-        self.touchpoints = touchpoints;
+        self.touchpoints = [touchpoints copy];
     }
-    // MOCK
-    
-    RVTouchpoint *tp1 = [RVTouchpoint new];
-    tp1.minor = @1;
-    
-    RVTouchpoint *tp2 = [RVTouchpoint new];
-    tp2.minor = @2;
-    
-    self.touchpoints = @[tp1, tp2];
-    
-    // END MOCK
     
 }
 

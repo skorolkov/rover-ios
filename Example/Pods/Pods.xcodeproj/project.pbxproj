@@ -39,6 +39,7 @@
 		3D1897AF1A7F62DF00A8EFA3 /* RXBlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1897A71A7B53AE00A8EFA3 /* RXBlockView.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		3D1897B01A7F62E400A8EFA3 /* RXCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1897AA1A7C0E7100A8EFA3 /* RXCardViewController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		3D1897B11A7F62E800A8EFA3 /* RXTransition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D1897AD1A7C1D1B00A8EFA3 /* RXTransition.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
+		3D51D56D1A8D19550020428E /* RVBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D51D56C1A8D19550020428E /* RVBlock.m */; };
 		3D8FC92E1A658C3E001628AE /* RXModalViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8FC9281A6439A1001628AE /* RXModalViewController.h */; };
 		3D8FC92F1A658C3E001628AE /* RXModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8FC9291A6439A1001628AE /* RXModalViewController.m */; settings = {COMPILER_FLAGS = "-fobjc-arc"; }; };
 		3D8FC9301A658C3E001628AE /* RXCardViewCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D8FC92B1A644401001628AE /* RXCardViewCell.h */; };
@@ -257,6 +258,8 @@
 		3D1897AA1A7C0E7100A8EFA3 /* RXCardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXCardViewController.m; path = Pod/Classes/RXManager/RXCardViewController.m; sourceTree = "<group>"; };
 		3D1897AC1A7C1D1B00A8EFA3 /* RXTransition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXTransition.h; path = Pod/Classes/RXManager/RXTransition.h; sourceTree = "<group>"; };
 		3D1897AD1A7C1D1B00A8EFA3 /* RXTransition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXTransition.m; path = Pod/Classes/RXManager/RXTransition.m; sourceTree = "<group>"; };
+		3D51D56B1A8D19550020428E /* RVBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RVBlock.h; path = Pod/Classes/Models/RVBlock.h; sourceTree = "<group>"; };
+		3D51D56C1A8D19550020428E /* RVBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RVBlock.m; path = Pod/Classes/Models/RVBlock.m; sourceTree = "<group>"; };
 		3D8FC9281A6439A1001628AE /* RXModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXModalViewController.h; path = Pod/Classes/RXManager/RXModalViewController.h; sourceTree = "<group>"; };
 		3D8FC9291A6439A1001628AE /* RXModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXModalViewController.m; path = Pod/Classes/RXManager/RXModalViewController.m; sourceTree = "<group>"; };
 		3D8FC92B1A644401001628AE /* RXCardViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXCardViewCell.h; path = Pod/Classes/RXManager/RXCardViewCell.h; sourceTree = "<group>"; };
@@ -622,6 +625,8 @@
 				3D1897AA1A7C0E7100A8EFA3 /* RXCardViewController.m */,
 				3D1897AC1A7C1D1B00A8EFA3 /* RXTransition.h */,
 				3D1897AD1A7C1D1B00A8EFA3 /* RXTransition.m */,
+				3D51D56B1A8D19550020428E /* RVBlock.h */,
+				3D51D56C1A8D19550020428E /* RVBlock.m */,
 			);
 			name = Rover;
 			path = ../..;
@@ -1070,6 +1075,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EB43663AC202D42C43D4AC65 /* Pods-Rover-dummy.m in Sources */,
+				3D51D56D1A8D19550020428E /* RVBlock.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
