@@ -25,6 +25,8 @@
 #import "RVModalViewController.h"
 #import "RVCardViewController.h"
 
+extern NSString *const kRoverDidExpireVisitNotification;
+
 /** This notification will be posted when the customer enters a location.
  */
 extern NSString *const kRoverDidEnterLocationNotification;
