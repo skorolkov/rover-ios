@@ -14,6 +14,7 @@
 @property (strong, nonatomic) NSMutableArray *logItems;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UILabel *beaconCountLabel;
+@property (nonatomic, strong) UIView *instoreHeaderView;
 
 @end
 
@@ -24,7 +25,19 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    // In-Store header
+    UILabel *instoreLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 50)];
+    instoreLabel.text = @"Currently Visiting";
+    instoreLabel.backgroundColor = [UIColor grayColor];
+    instoreLabel.textColor = [UIColor whiteColor];
+    instoreLabel.textAlignment = NSTextAlignmentCenter;
+    instoreLabel.font = [UIFont boldSystemFontOfSize:14];
+    _instoreHeaderView = instoreLabel;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roverDidPostNotification:) name:nil object:[Rover class]];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:kRoverDidEnterLocationNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)dealloc {
@@ -80,6 +93,14 @@
     } else {
         [self addLogItem:[note.userInfo objectForKey:@"description"]];
         NSLog(@"%@", [note.userInfo objectForKey:@"description"]);
+    }
+}
+
+- (void)toggleHeaderIfNecessary {
+    if ([Rover shared].currentVisit) {
+        self.tableView.tableHeaderView = _instoreHeaderView;
+    } else {
+        self.tableView.tableHeaderView = nil;
     }
 }
 

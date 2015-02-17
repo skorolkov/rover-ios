@@ -17,6 +17,7 @@
 #import "RVModel.h"
 
 NSString *const kRoverDidEnterLocationNotification = @"RoverDidEnterLocationNotification";
+NSString *const kRoverDidExpireVisitNotification = @"RoverDidExpireVisitNotification";
 NSString *const kRoverWillPresentModalNotification = @"RoverWillPresentModalNotification";
 NSString *const kRoverDidPresentModalNotification = @"RoverDidPresentModalNotification";
 NSString *const kRoverWillDismissModalNotification = @"RoverWillDismissModalNotification";
@@ -24,6 +25,11 @@ NSString *const kRoverDidDismissModalNotification = @"RoverDidDismissModalNotifi
 NSString *const kRoverDidDisplayCardNotification = @"RoverDidDisplayCardNotification";
 NSString *const kRoverDidSwipeCardNotification = @"RoverDidSwipeCardNotification";
 
+@interface Rover ()
+
+@property (nonatomic, strong) RVVisit *currentVisit;
+
+@end
 
 @implementation Rover {
     RVCustomer *_customer;
@@ -96,6 +102,23 @@ static Rover *sharedInstance = nil;
     
     _customer = [RVCustomer cachedCustomer];
     return _customer;
+}
+
+- (RVVisit *)currentVisit {
+    RVRegionManager *regionManager = [RVRegionManager sharedManager];
+    if (_currentVisit && regionManager.nearestBeacon) {
+        CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:regionManager.nearestBeacon.proximityUUID major:regionManager.nearestBeacon.major.integerValue identifier:regionManager.nearestBeacon.proximityUUID.UUIDString];
+        if ([_currentVisit isInRegion:beaconRegion]) {
+            return _currentVisit;
+        };
+    }
+    
+    RVVisitManager *visitManager = [RVVisitManager sharedManager];
+    if (visitManager.latestVisit.isAlive) {
+        return visitManager.latestVisit;
+    }
+    
+    return nil;
 }
 
 #pragma mark - Initialization
@@ -189,7 +212,7 @@ static Rover *sharedInstance = nil;
 
 - (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options {
     
-    if (!self.currentVisit || self.currentVisit.cards.count < 1) {
+    if (!_currentVisit || _currentVisit.cards.count < 1) {
         NSLog(@"%@ warning showModal called but there are no cards to display", self);
         return;
     }
@@ -211,21 +234,21 @@ static Rover *sharedInstance = nil;
 #pragma mark - Utility 
 
 - (void)updateVisitOpenTime {
-    if (!self.currentVisit) {
+    if (!_currentVisit) {
         return;
     }
     
-    self.currentVisit.openedAt = [NSDate date];
-    [self.currentVisit save:nil failure:nil];
+    _currentVisit.openedAt = [NSDate date];
+    [_currentVisit save:nil failure:nil];
 }
 
 - (void)sendNotification {
-    if (!self.currentVisit || self.currentVisit.cards.count < 1) {
+    if (!_currentVisit || _currentVisit.cards.count < 1) {
         return;
     }
     
     UILocalNotification *note = [[UILocalNotification alloc] init];
-    note.alertBody = self.currentVisit.welcomeMessage;
+    note.alertBody = _currentVisit.welcomeMessage;
     if (self.config.notificationSoundName) {
         note.soundName = self.config.notificationSoundName;
     }
@@ -251,7 +274,7 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)visitManagerDidExitLocation:(NSNotification *)note {    
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidExpireVisitNotification object:self];
 }
 
 #pragma mark - RVModalViewControllerDelegate
@@ -275,7 +298,7 @@ static Rover *sharedInstance = nil;
 #pragma mark - Application Notifications
 
 - (void)applicationDidBecomeActive:(NSNotification *)note {
-    if (self.currentVisit && !self.currentVisit.openedAt) {
+    if (_currentVisit && !_currentVisit.openedAt) {
         
         [self updateVisitOpenTime];
         
