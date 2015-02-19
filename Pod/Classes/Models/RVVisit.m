@@ -44,19 +44,19 @@
 }
 
 - (NSArray *)unreadCards {
-    NSIndexSet *indexes = [self.cards indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-        RVCard *card = (RVCard *)obj;
-        return card.isUnread;
-    }];
-    return [self.cards objectsAtIndexes:indexes];
+//    NSIndexSet *indexes = [self.cards indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+//        RVCard *card = (RVCard *)obj;
+//        return card.isUnread;
+//    }];
+//    return [self.cards objectsAtIndexes:indexes];
 }
 
 - (NSArray *)savedCards {
-    NSIndexSet *indexes = [self.cards indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-        RVCard *card = (RVCard *)obj;
-        return card.likedAt ? YES : NO;
-    }];
-    return [self.cards objectsAtIndexes:indexes];
+//    NSIndexSet *indexes = [self.cards indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
+//        RVCard *card = (RVCard *)obj;
+//        return card.likedAt ? YES : NO;
+//    }];
+//    return [self.cards objectsAtIndexes:indexes];
 }
 
 - (void)setEnteredAt:(NSDate *)enteredAt
@@ -201,7 +201,7 @@
     if (touchpointsData && touchpointsData != (id)[NSNull null]) {
         NSMutableArray *touchpoints = [NSMutableArray arrayWithCapacity:[touchpointsData count]];
         [touchpointsData enumerateObjectsUsingBlock:^(NSDictionary *touchpointData, NSUInteger idx, BOOL *stop) {
-            RVTouchpoint *touchpoint = [[RVTouchpoint alloc] init];
+            RVTouchpoint *touchpoint = [[RVTouchpoint alloc] initWithJSON:touchpointData];
             [touchpoints addObject:touchpoint];
         }];
         self.touchpoints = [touchpoints copy];

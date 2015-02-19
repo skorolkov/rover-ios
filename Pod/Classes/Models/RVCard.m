@@ -102,26 +102,41 @@
     }
     
     // listviewBlocks
-    NSArray *listviewBlocksData = [JSON objectForKey:@"listviewBlocks"];
+    NSArray *listviewBlocksData = [JSON objectForKey:@"listView"];
     if (listviewBlocksData && listviewBlocksData != (id)[NSNull null]) {
         NSMutableArray *listviewBlocks = [NSMutableArray arrayWithCapacity:[listviewBlocksData count]];
         [listviewBlocksData enumerateObjectsUsingBlock:^(NSDictionary *blockData, NSUInteger idx, BOOL *stop) {
-            RVBlock *block = [[RVBlock alloc] initWithJSON:blockData];
+            RVBlock *block = [RVBlock appropriateBlockWithJSON:blockData];
             [listviewBlocks insertObject:block atIndex:idx];
         }];
         _listviewBlocks = listviewBlocks;
     }
     
     // detailviewBlocks
-    NSArray *detailviewBlocksData = [JSON objectForKey:@"detailviewBlocks"];
+    NSArray *detailviewBlocksData = [JSON objectForKey:@"detailView"];
     if (detailviewBlocksData && detailviewBlocksData != (id)[NSNull null]) {
         NSMutableArray *detailviewBlocks = [NSMutableArray arrayWithCapacity:[detailviewBlocksData count]];
         [detailviewBlocksData enumerateObjectsUsingBlock:^(NSDictionary *blockData, NSUInteger idx, BOOL *stop) {
-            RVBlock *block = [[RVBlock alloc] initWithJSON:blockData];
+            RVBlock *block = [RVBlock appropriateBlockWithJSON:blockData];
             [detailviewBlocks insertObject:block atIndex:idx];
         }];
         _detailviewBlocks = detailviewBlocks;
     }
+    
+    
+    // corderRadius
+//    NSNumber *borderRadius = [JSON objectForKey:@"borderRadius"];
+//    if (borderRadius && borderRadius != (id)[NSNull null]) {
+//        self.corderRadius = [borderRadius floatValue];
+//    }
+
+    
+    // margins
+    NSArray *margins = [JSON objectForKey:@"margin"];
+    if (margins && margins != (id)[NSNull null]) {
+        self.margins = UIEdgeInsetsMake([margins[0] floatValue], [margins[2] floatValue], [margins[1] floatValue], [margins[3] floatValue]);
+    }
+    
     
     // cardId
     NSNumber *cardId = [JSON objectForKey:@"card_id"];
@@ -234,6 +249,15 @@
     }
     
     return JSON;
+}
+
+- (CGFloat)heightForWidth:(CGFloat)width {
+    __block CGFloat blocksHeight = 0;
+    [_listviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
+        blocksHeight += [block heightForWidth:width - _margins.left - _margins.right];
+    }];
+    
+    return _margins.top + blocksHeight + _margins.bottom;
 }
 
 @end

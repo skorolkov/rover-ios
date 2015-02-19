@@ -217,10 +217,17 @@ static Rover *sharedInstance = nil;
 
 - (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options {
     
+<<<<<<< HEAD
     if (!_currentVisit || _currentVisit.cards.count < 1) {
         NSLog(@"%@ warning showModal called but there are no cards to display", self);
         //return;
     }
+=======
+//    if (!self.currentVisit || self.currentVisit.cards.count < 1) {
+//        NSLog(@"%@ warning showModal called but there are no cards to display", self);
+//        //return;
+//    }
+>>>>>>> lots of ui
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillPresentModalNotification object:self];
     
@@ -250,10 +257,7 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)sendNotification {
-
-    if (!self.currentVisit || !_currentVisit.currentTouchpoint || self.currentVisit.cards.count < 1) {
-        return;
-    }
+    // REDO THIS
     
     UILocalNotification *note = [[UILocalNotification alloc] init];
     //note.alertBody = _currentVisit.currentTouchpoint.notification;

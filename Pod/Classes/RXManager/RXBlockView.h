@@ -12,7 +12,9 @@
 
 @interface RXBlockView : UIView
 
-+ (NSArray *)constraintsForBlockView:(RXBlockView *)blockView withPreviousBlockView:(RXBlockView *)previousBlockView inside:(UIView *)containerView;
++ (NSArray *)constraintsForBlockView:(UIView *)blockView withPreviousBlockView:(UIView *)previousBlockView inside:(UIView *)containerView;
+
++ (UIView *)viewForBlock:(RVBlock *)block;
 
 - (instancetype)initWithBlock:(RVBlock *)block;
  

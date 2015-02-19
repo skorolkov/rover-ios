@@ -80,6 +80,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 
     if (self.latestVisit && [self.latestVisit isInRegion:beaconRegion] && self.latestVisit.isAlive) {
         
+
         // Touchpoint check
         if (!self.latestVisit.currentTouchpoint || ![self.latestVisit.currentTouchpoint isInRegion:beaconRegion]) {
             RVTouchpoint *touchpoint = [self.latestVisit touchpointForRegion:beaconRegion];
@@ -151,6 +152,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterLocationNotification object:self userInfo:@{ @"visit": self.latestVisit }];
         RVLog(kRoverDidPostVisitNotification, nil);
         
+        NSLog(@"touchpoints: %@", self.latestVisit.touchpoints); //DELETE
         // Touchpoint
         RVTouchpoint *touchpoint = [self.latestVisit touchpointForMinor:minor];
         if (touchpoint) {

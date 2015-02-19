@@ -209,36 +209,36 @@ const CGFloat kRVCardViewImageRatio = .625;
 
 - (void)setCard:(RVCard *)card
 {
-    self.title = card.title;
-    self.shortDescription = card.shortDescription;
-    
-    if (card.longDescription) {
-        self.longDescription = card.longDescription;
-    }
-    
-    self.imageURL = card.imageURL;
-    self.backgroundColor = card.primaryBackgroundColor;
-    self.closeButton.color = card.primaryFontColor;
-    self.fontColor = card.primaryFontColor;
-    self.secondaryBackgroundColor = card.secondaryBackgroundColor;
-    self.secondaryFontColor = card.secondaryFontColor;
-    self.discarded = card.discardedAt != nil;
-    
-    // TODO: make this behave more like the barcode stuff
-    if (card.terms) {
-        self.terms = card.terms;
-    } else {
-        // This works for now because we aren't reusing cardViews
-        [self.termsTitleView removeFromSuperview];
-    }
-
-    if (card.barcode) {
-        [self addBarcode:card.barcode type:card.barcodeType.integerValue instructions:card.barcodeInstructions];
-    }
-    
-    _card = card;
-    
-    self.liked = card.likedAt != nil;
+//    self.title = card.title;
+//    self.shortDescription = card.shortDescription;
+//    
+//    if (card.longDescription) {
+//        self.longDescription = card.longDescription;
+//    }
+//    
+//    self.imageURL = card.imageURL;
+//    self.backgroundColor = card.primaryBackgroundColor;
+//    self.closeButton.color = card.primaryFontColor;
+//    self.fontColor = card.primaryFontColor;
+//    self.secondaryBackgroundColor = card.secondaryBackgroundColor;
+//    self.secondaryFontColor = card.secondaryFontColor;
+//    self.discarded = card.discardedAt != nil;
+//    
+//    // TODO: make this behave more like the barcode stuff
+//    if (card.terms) {
+//        self.terms = card.terms;
+//    } else {
+//        // This works for now because we aren't reusing cardViews
+//        [self.termsTitleView removeFromSuperview];
+//    }
+//
+//    if (card.barcode) {
+//        [self addBarcode:card.barcode type:card.barcodeType.integerValue instructions:card.barcodeInstructions];
+//    }
+//    
+//    _card = card;
+//    
+//    self.liked = card.likedAt != nil;
     
 }
 

@@ -12,6 +12,7 @@
 #import "RXCardViewCell.h"
 #import "RXCardViewController.h"
 #import "RXTransition.h"
+#import "RVTouchpoint.h"
 
 @interface RXModalViewController () <RXCardViewCellDelegate>
 
@@ -76,6 +77,10 @@ static NSInteger minIndexPathRow = 0;
     return [[Rover shared] currentVisit];
 }
 
+- (RVCard *)cardAtIndexPath:(NSIndexPath *)indexPath {
+    return ((RVTouchpoint *)self.visit.visitedTouchpoints[indexPath.section]).cards[indexPath.row];
+}
+
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [_pillView removeFromSuperview]; // To be safe
@@ -102,18 +107,12 @@ static NSInteger minIndexPathRow = 0;
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    // Return the number of visited touchpoints.
     return self.visit.visitedTouchpoints.count;
 }
 
-static NSInteger numberOfCards = 8;
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    // Return the number of cards in the touchpoint.
-    // return self.visit.visitedTouchpoints[section].cards.count;
-    return numberOfCards;
+    return ((RVTouchpoint *)self.visit.visitedTouchpoints[section]).cards.count;
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -123,7 +122,7 @@ static NSInteger numberOfCards = 8;
         cell = [[RXCardViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellReuseIdentifier];
     }
     
-    cell.card = nil;
+    cell.card = [self cardAtIndexPath:indexPath];
     cell.delegate = self;
     
     return cell;
@@ -131,7 +130,7 @@ static NSInteger numberOfCards = 8;
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 220;
+    return [[self cardAtIndexPath:indexPath] heightForWidth:self.view.frame.size.width];
 }
 
 #pragma mark - Table view delegate
@@ -184,14 +183,14 @@ static NSInteger numberOfCards = 8;
     }
     
     
-    if (![self isEnoughOfCellVisible:cell inScrollView:self.tableView]) {
-        cell.alpha = 0.6;
-    }
+//    if (![self isEnoughOfCellVisible:cell inScrollView:self.tableView]) {
+//        cell.alpha = 0.6;
+//    }
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSLog(@"Select");
-    RVCard *card = nil; //[self.visit.visitedTouchpoints[indexPath.section] objectAtIndex:indexPath.row];
+    RVCard *card = [self cardAtIndexPath:indexPath];
     RXCardViewController *cardViewController = [[RXCardViewController alloc] initWithCard:card];
     [self presentViewController:cardViewController animated:YES completion:nil];
 }
@@ -309,7 +308,7 @@ static NSInteger numberOfCards = 8;
 
 - (void)cardViewCellDidSwipe:(RXCardViewCell *)cardViewCell {
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cardViewCell];
-    numberOfCards--;
+   // numberOfCards--;
     [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
 

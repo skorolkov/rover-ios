@@ -25,8 +25,13 @@
 
 /** The view blocks for when in detail view
  */
-@property (strong, nonatomic) NSArray *detailv iewBlocks;
+@property (strong, nonatomic) NSArray *detailviewBlocks;
 
+@property (nonatomic) UIEdgeInsets margins;
+
+@property (nonatomic) CGFloat corderRadius;
+
+- (CGFloat)heightForWidth:(CGFloat)width;
 
 // TODO: reevaluate these
 
@@ -67,5 +72,6 @@
 @property (strong, nonatomic) NSNumber *lastViewedPosition;
 @property (strong, nonatomic) NSDate *lastExpandedAt;
 @property (strong, nonatomic) NSDate *lastViewedBarcodeAt;
+
 
 @end

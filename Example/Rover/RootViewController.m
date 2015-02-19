@@ -42,13 +42,14 @@
 }
 
 - (void)updateBadgeNumber {
-    RVVisit *visit = [[Rover shared] currentVisit];
-    int badgeNumber = (int)[visit.unreadCards count];
-    
-    UITabBarItem *item = [self.tabBar.items objectAtIndex:3];
-    item.badgeValue = badgeNumber > 0 ? [NSString stringWithFormat:@"%d", badgeNumber] : nil;
-    
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badgeNumber];
+// TODO: remove badges
+//    RVVisit *visit = [[Rover shared] currentVisit];
+//    int badgeNumber = (int)[visit.unreadCards count];
+//    
+//    UITabBarItem *item = [self.tabBar.items objectAtIndex:3];
+//    item.badgeValue = badgeNumber > 0 ? [NSString stringWithFormat:@"%d", badgeNumber] : nil;
+//    
+//    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badgeNumber];
 }
 
 - (void)displayModal {

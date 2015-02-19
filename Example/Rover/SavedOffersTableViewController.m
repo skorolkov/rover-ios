@@ -49,8 +49,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     RVCard *card = [self.cards objectAtIndex:indexPath.row];
-    cell.textLabel.text = card.shortDescription;
-    cell.detailTextLabel.text = card.organizationTitle;
+//    cell.textLabel.text = card.shortDescription;
+//    cell.detailTextLabel.text = card.organizationTitle;
     return cell;
 }
 

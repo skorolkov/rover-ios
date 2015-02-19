@@ -51,60 +51,60 @@ NSString *const RVModalViewOptionsPredicate = @"Predicate";
 }
 
 - (NSArray *)cards {
-    if (_cards) {
-        return _cards;
-    }
-    
-    NSArray *tags = [self.options objectForKey:RVModalViewOptionsTag];
-    NSPredicate *predicate = [self.options objectForKey:RVModalViewOptionsPredicate];
-    
-    if (self.cardSet == ModalViewCardSetSaved) {
-        _cards = self.visit.savedCards;
-    } else if (self.cardSet == ModalViewCardSetUnread) {
-        _cards = self.visit.unreadCards;
-    } else if (self.cardSet == ModalViewCardSetTagsInclude) {
-        NSAssert(tags != nil, @"No tag options supplied. You must set the RVModalViewOptionsTag key of the options property.");
-        _cards = [self.visit.cards filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-            RVCard *card = evaluatedObject;
-            
-            __block BOOL includesTags = NO;
-            [tags enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                NSString *tag = obj;
-                
-                if ([card.tags containsObject:tag]) {
-                    includesTags = YES;
-                    *stop = YES;
-                }
-                
-            }];
-            
-            return includesTags;
-        }]];
-    } else if (self.cardSet == ModalViewCardSetTagsExclude) {
-        NSAssert(tags != nil, @"No tag options supplied. You must set the RVModalViewOptionsTag key of the options property.");
-        _cards = [self.visit.cards filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
-            RVCard *card = evaluatedObject;
-            
-            __block BOOL excludesTags = YES;
-            [tags enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                NSString *tag = obj;
-                
-                if ([card.tags containsObject:tag]) {
-                    excludesTags = NO;
-                    *stop = YES;
-                }
-            }];
-            
-            return excludesTags;
-        }]];
-    } else if (self.cardSet == ModalViewCardSetCustom) {
-        NSAssert(predicate != nil, @"No predicate options supplied. You must set the RVModalViewOptionsPredicate key of the options property.");
-        _cards = [self.visit.cards filteredArrayUsingPredicate:predicate];
-    } else {
-        _cards = self.visit.cards;
-    }
-    
-    return _cards;
+//    if (_cards) {
+//        return _cards;
+//    }
+//    
+//    NSArray *tags = [self.options objectForKey:RVModalViewOptionsTag];
+//    NSPredicate *predicate = [self.options objectForKey:RVModalViewOptionsPredicate];
+//    
+//    if (self.cardSet == ModalViewCardSetSaved) {
+//        _cards = self.visit.savedCards;
+//    } else if (self.cardSet == ModalViewCardSetUnread) {
+//        _cards = self.visit.unreadCards;
+//    } else if (self.cardSet == ModalViewCardSetTagsInclude) {
+//        NSAssert(tags != nil, @"No tag options supplied. You must set the RVModalViewOptionsTag key of the options property.");
+//        _cards = [self.visit.cards filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+//            RVCard *card = evaluatedObject;
+//            
+//            __block BOOL includesTags = NO;
+//            [tags enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//                NSString *tag = obj;
+//                
+//                if ([card.tags containsObject:tag]) {
+//                    includesTags = YES;
+//                    *stop = YES;
+//                }
+//                
+//            }];
+//            
+//            return includesTags;
+//        }]];
+//    } else if (self.cardSet == ModalViewCardSetTagsExclude) {
+//        NSAssert(tags != nil, @"No tag options supplied. You must set the RVModalViewOptionsTag key of the options property.");
+//        _cards = [self.visit.cards filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+//            RVCard *card = evaluatedObject;
+//            
+//            __block BOOL excludesTags = YES;
+//            [tags enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//                NSString *tag = obj;
+//                
+//                if ([card.tags containsObject:tag]) {
+//                    excludesTags = NO;
+//                    *stop = YES;
+//                }
+//            }];
+//            
+//            return excludesTags;
+//        }]];
+//    } else if (self.cardSet == ModalViewCardSetCustom) {
+//        NSAssert(predicate != nil, @"No predicate options supplied. You must set the RVModalViewOptionsPredicate key of the options property.");
+//        _cards = [self.visit.cards filteredArrayUsingPredicate:predicate];
+//    } else {
+//        _cards = self.visit.cards;
+//    }
+//    
+//    return _cards;
 }
 
 #pragma mark - Initialization

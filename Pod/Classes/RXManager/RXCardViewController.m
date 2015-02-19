@@ -9,6 +9,9 @@
 #import "RXCardViewController.h"
 #import "RXTransition.h"
 #import "RXBlockView.h"
+#import "RVCard.h"
+#import "RVBlock.h"
+#import "RVHeaderBlock.h"
 
 @interface RXCardViewController () <UIScrollViewDelegate>
 
@@ -19,6 +22,7 @@
 
 @property (nonatomic, strong) NSLayoutConstraint *titleBarTopConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *containerBarBottomConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *scrollViewHeightConstraint;
 
 @end
 
@@ -77,14 +81,13 @@
     
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[_titleBar]|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[_scrollView]|" options:0 metrics:nil views:views]];
-    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[_titleBar(20)]" options:0 metrics:nil views:views]];
     
     _titleBarTopConstraint = [NSLayoutConstraint constraintWithItem:_titleBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1 constant:0];
-
-    
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_scrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:1 constant:-20]];
-    
     [self.view addConstraint:_titleBarTopConstraint];
+    
+    _scrollViewHeightConstraint = [NSLayoutConstraint constraintWithItem:_scrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
+    [self.view addConstraint:_scrollViewHeightConstraint];
+
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
     
     [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeMe)]];
@@ -115,17 +118,36 @@
     [_containerView addConstraints:[RXBlockView constraintsForBlockView:blockView withPreviousBlockView:lastBlockView inside:_containerView]];
 }
 
+- (void)configureHeaderLayoutForBlockView:(RXBlockView *)blockView {
+    id lastHeaderBlockView = _titleBar.subviews.count > 1 ? _titleBar.subviews[_titleBar.subviews.count - 2] : nil;
+    [_titleBar addConstraints:[RXBlockView constraintsForBlockView:blockView withPreviousBlockView:lastHeaderBlockView inside:_titleBar]];
+}
+
 - (void)addBlockView:(RXBlockView *)blockView {
     [_containerView addSubview:blockView];
     [self configureLayoutForBlockView:blockView];
 }
 
+- (void)addHeaderBlockView:(RXBlockView *)blockView {
+    [_titleBar addSubview:blockView];
+    [self configureHeaderLayoutForBlockView:blockView];
+}
+
 - (void)setCard:(RVCard *)card {
-    if (self.view ) {
+    if (self.view) {
         [_containerView.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
             [subview removeFromSuperview];
         }];
-        [self addBlockView:[RXBlockView new]];
+        [card.detailviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
+            if ([block class] == [RVHeaderBlock class]) {
+                [self addHeaderBlockView:[[RXBlockView alloc] initWithBlock:block]];
+                
+                // move this somewhere else
+                _scrollViewHeightConstraint.constant -= [block heightForWidth:self.view.frame.size.width];
+            } else {
+                [self addBlockView:[[RXBlockView alloc] initWithBlock:block]];
+            }
+        }];
     }
     // This is necessary for UIScrollView with AutoLayout
     //[_scrollView addConstraint:[NSLayoutConstraint constraintWithItem:_scrollView.subviews[_scrollView.subviews.count - 1] attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_scrollView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
@@ -137,7 +159,7 @@
 }
 
 - (void)prepareLayoutForInteractiveTransition:(CGFloat)percentageComplete {
-    _titleBarTopConstraint.constant = -20 * percentageComplete;
+    _titleBarTopConstraint.constant = _scrollViewHeightConstraint.constant * percentageComplete;
     if (percentageComplete > 0.2) {
         //_containerBarBottomConstraint.constant = [UIScreen mainScreen].applicationFrame.size.height;// * percentageComplete * 4;
     }

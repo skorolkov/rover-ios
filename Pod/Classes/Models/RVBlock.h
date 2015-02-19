@@ -7,22 +7,26 @@
 //
 
 #import "RVModel.h"
+#import <UIKit/UIKit.h>
 
-@class UIColor;
-
-struct RVVector {
-    CGFloat top;
-    CGFloat bottom;
-    CGFloat left;
-    CGFloat right;
+typedef NS_ENUM(NSInteger, RVBlockType) {
+    RVBlockImageType,
+    RVBlockTextType,
+    RVBlockBarcodeType,
+    RVBlockButtonType,
+    RVBlockHeaderType
 };
-typedef struct RVVector RVVector;
 
 @interface RVBlock : RVModel
 
++ (RVBlock *)appropriateBlockWithJSON:(NSDictionary *)JSON;
+
 @property (nonatomic, strong) UIColor *backgroundColor;
 @property (nonatomic, strong) UIColor *borderColor;
-@property (nonatomic, assign) RVVector borderWidth;
-@property (nonatomic, assign) RVVector padding;
+@property (nonatomic, assign) UIEdgeInsets borderWidth;
+@property (nonatomic, assign) UIEdgeInsets padding;
+@property (nonatomic, assign, readonly) RVBlockType blockType;
+
+- (CGFloat)heightForWidth:(CGFloat)width;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "RXCardViewCell.h"
 #import "RXBlockView.h"
+#import "RVCard.h"
 
 // Shadow constants
 #define kCardShadowColor [[UIColor blackColor] CGColor]
@@ -59,7 +60,7 @@
 {
     _containerView = [UIView new];
     _containerView.translatesAutoresizingMaskIntoConstraints = NO;
-    _containerView.backgroundColor = [UIColor whiteColor];
+    _containerView.backgroundColor = [UIColor clearColor];
     _containerView.layer.shadowColor = kCardShadowColor;
     _containerView.layer.shadowOffset = kCardShadowOffset;
     _containerView.layer.shadowOpacity = kCardShadowOpacity;
@@ -83,21 +84,21 @@
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-15-[containerView]-15-|" options:0 metrics:nil views:views]];
 }
 
-- (void)configureLayoutForBlockView:(RXBlockView *)blockView
+- (void)configureLayoutForBlockView:(UIView *)blockView
 {
     id lastBlockView = _containerView.subviews.count > 1 ? _containerView.subviews[_containerView.subviews.count - 2] : nil;
     [_containerView addConstraints:[RXBlockView constraintsForBlockView:blockView withPreviousBlockView:lastBlockView inside:_containerView]];
 }
 
-- (void)addBlockView:(RXBlockView *)blockView {
+- (void)addBlockView:(UIView *)blockView {
     [_containerView addSubview:blockView];
-    [self configureLayoutForBlockView:blockView];
+    [self configureLayoutForBlockView:blockView ];
 }
 
 - (void)setCard:(RVCard *)card {
-
-    [self addBlockView:[RXBlockView new]];
-    //[self addBlockView:[RXBlockView new]];
+    [card.listviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
+        [self addBlockView:[[RXBlockView alloc] initWithBlock:block]];
+    }];
 }
 
 - (void)prepareForReuse {

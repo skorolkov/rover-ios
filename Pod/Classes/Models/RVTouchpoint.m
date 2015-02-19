@@ -63,4 +63,8 @@
     return self;
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<RVTouchpoint: id(%@) minorNumber(%@)>", self.ID, self.minor];
+}
+
 @end
