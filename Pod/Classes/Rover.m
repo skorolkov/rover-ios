@@ -276,9 +276,9 @@ static Rover *sharedInstance = nil;
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         [self updateVisitOpenTime];
         
-        if (self.config.autoPresentModal) {
-            [self presentModal];
-        }
+//        if (self.config.autoPresentModal) {
+//            [self presentModal];
+//        }
     } else {
         //[self sendNotification];
     }
@@ -294,15 +294,32 @@ static Rover *sharedInstance = nil;
     _currentVisit = [note.userInfo objectForKey:@"visit"];
     RVTouchpoint *currentTouchpoint = [note.userInfo objectForKey:@"touchpoint"];
     
+    
     if ([_currentVisit.visitedTouchpoints containsObject:currentTouchpoint]) {
         return;
     }
     
-    if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-        [self sendNotification];
-    }
+    _currentVisit.currentTouchpoint = currentTouchpoint;
+    
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidEnterTouchpointNotification object:self];
+    
+//    if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+//        [self sendNotification];
+//    }
+    
+    
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+        //        [self updateVisitOpenTime];
+        
+        if (self.config.autoPresentModal) {
+            [self presentModal];
+        }
+    } else {
+        //[self sendNotification];
+    }
+    
+    
 }
 
 #pragma mark - RVModalViewControllerDelegate

@@ -76,7 +76,7 @@
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_containerView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
     [_scrollView addConstraint:[NSLayoutConstraint constraintWithItem:_containerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_scrollView attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
     //[self.view addConstraint:[NSLayoutConstraint constraintWithItem:_containerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-    _containerBarBottomConstraint = [NSLayoutConstraint constraintWithItem:_containerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    _containerBarBottomConstraint = [NSLayoutConstraint constraintWithItem:_containerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_scrollView attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
     [self.view addConstraint:_containerBarBottomConstraint];
     
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[_titleBar]|" options:0 metrics:nil views:views]];
@@ -143,11 +143,26 @@
                 [self addHeaderBlockView:[[RXBlockView alloc] initWithBlock:block]];
                 
                 // move this somewhere else
-                _scrollViewHeightConstraint.constant -= [block heightForWidth:self.view.frame.size.width];
+                _scrollViewHeightConstraint.constant = -[block heightForWidth:self.view.frame.size.width];
+                
             } else {
                 [self addBlockView:[[RXBlockView alloc] initWithBlock:block]];
             }
         }];
+        // TODO: move this stuff out
+        
+        UIView *lastBlock = _containerView.subviews[_containerView.subviews.count - 1];
+        
+        [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:lastBlock attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+        
+        UIView *extendedBackground = [UIView new];
+        extendedBackground.translatesAutoresizingMaskIntoConstraints = NO;
+        extendedBackground.backgroundColor = lastBlock.backgroundColor;
+        
+        [_containerView addSubview:extendedBackground];
+        [_containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[extendedBackground]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(extendedBackground)]];
+        [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:extendedBackground attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:lastBlock attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:extendedBackground attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
     }
     // This is necessary for UIScrollView with AutoLayout
     //[_scrollView addConstraint:[NSLayoutConstraint constraintWithItem:_scrollView.subviews[_scrollView.subviews.count - 1] attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_scrollView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];

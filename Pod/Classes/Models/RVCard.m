@@ -134,7 +134,7 @@
     // margins
     NSArray *margins = [JSON objectForKey:@"margin"];
     if (margins && margins != (id)[NSNull null]) {
-        self.margins = UIEdgeInsetsMake([margins[0] floatValue], [margins[2] floatValue], [margins[1] floatValue], [margins[3] floatValue]);
+        self.margins = UIEdgeInsetsMake([margins[0] floatValue], [margins[3] floatValue], [margins[2] floatValue], [margins[1] floatValue]);
     }
     
     

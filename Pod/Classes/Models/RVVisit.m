@@ -142,7 +142,7 @@
     // keepAlive
     NSNumber *keepAlive = [JSON objectForKey:@"keep_alive"];
     if (keepAlive && keepAlive != (id)[NSNull null]) {
-        self.keepAlive = 1; //[keepAlive doubleValue];
+        self.keepAlive = [keepAlive doubleValue];
     }
     
     // primaryBackgroundColor
@@ -346,7 +346,7 @@
         self.major = [decoder decodeObjectForKey:@"major"];
         self.customerID = [decoder decodeObjectForKey:@"customerID"];
         self.welcomeMessage = [decoder decodeObjectForKey:@"welcomeMessage"];
-        self.keepAlive = 1; //[[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
+        self.keepAlive = [[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
         self.primaryBackgroundColor = [decoder decodeObjectForKey:@"primaryBackgroundColor"];
         self.primaryFontColor = [decoder decodeObjectForKey:@"primaryFontColor"];
         self.secondaryBackgroundColor = [decoder decodeObjectForKey:@"secondaryBackgroundColor"];

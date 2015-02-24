@@ -79,7 +79,6 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
     CLBeaconRegion *beaconRegion = [note.userInfo objectForKey:@"beaconRegion"];
 
     if (self.latestVisit && [self.latestVisit isInRegion:beaconRegion] && self.latestVisit.isAlive) {
-        
 
         // Touchpoint check
         if (!self.latestVisit.currentTouchpoint || ![self.latestVisit.currentTouchpoint isInRegion:beaconRegion]) {
@@ -87,14 +86,12 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
             if (touchpoint) {
                 self.latestVisit.currentTouchpoint = touchpoint;
 
-                [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self userInfo:@{ @"touchpoint": touchpoint }];
+                [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self
+                                                                  userInfo:@{ @"touchpoint": touchpoint,
+                                                                              @"visit": self.latestVisit}];
+                // TODO: fix this, this posts a noti,..why?!
                 //RVLog(kRoverDidEnterTouchpointNotification, nil);
-//=======
-//                [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self
-//                                                                  userInfo:@{ @"touchpoint": touchpoint,
-//                                                                              @"visit": self.latestVisit}];
-//                RVLog(kRoverDidEnterTouchpointNotification, nil);
-//>>>>>>> card list
+
             } else {
                 NSLog(@"Invalid touchpoint");
             }
@@ -158,7 +155,12 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         if (touchpoint) {
             self.latestVisit.currentTouchpoint = touchpoint;
 
-            [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self userInfo:@{ @"touchpoint": touchpoint }];
+            [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self
+                                                              userInfo:@{ @"touchpoint": touchpoint,
+                                                                          @"visit": self.latestVisit }];
+            
+            
+            // TODO: fix this for the same reason,.rvlog posts a noti,..why?
             //RVLog(kRoverDidEnterTouchpointNotification, nil);
 
         } else {

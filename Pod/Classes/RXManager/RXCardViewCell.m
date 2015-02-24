@@ -20,8 +20,12 @@
 
 @property (nonatomic, strong) NSLayoutConstraint *containerViewLeadingConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *containerViewTrailingConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *containerViewTopConstraint;
+@property (nonatomic, strong) NSLayoutConstraint *containerViewBottomConstraint;
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
+
+@property (nonatomic, assign) UIEdgeInsets margins;
 
 @end
 
@@ -71,8 +75,6 @@
 
 - (void)configureLayout
 {
-    NSDictionary *views = @{@"containerView": _containerView};
-    
     //----------------------------------------
     //  containerView
     //----------------------------------------
@@ -81,7 +83,19 @@
     _containerViewTrailingConstraint = [NSLayoutConstraint constraintWithItem:_containerView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:-15];
     
     [self addConstraints:@[_containerViewLeadingConstraint, _containerViewTrailingConstraint]];
-    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-15-[containerView]-15-|" options:0 metrics:nil views:views]];
+    
+    _containerViewTopConstraint = [NSLayoutConstraint constraintWithItem:_containerView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:15];
+    _containerViewBottomConstraint = [NSLayoutConstraint constraintWithItem:_containerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:-15];
+    
+    [self addConstraints:@[_containerViewTopConstraint, _containerViewBottomConstraint]];
+}
+
+- (void)setMargins:(UIEdgeInsets)margins {
+    _margins = margins;
+    _containerViewTopConstraint.constant = margins.top;
+    _containerViewTrailingConstraint.constant = -margins.right;
+    _containerViewBottomConstraint.constant = -margins.bottom;
+    _containerViewLeadingConstraint.constant = margins.left;
 }
 
 - (void)configureLayoutForBlockView:(UIView *)blockView
@@ -96,6 +110,7 @@
 }
 
 - (void)setCard:(RVCard *)card {
+    [self setMargins:card.margins];
     [card.listviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
         [self addBlockView:[[RXBlockView alloc] initWithBlock:block]];
     }];
@@ -127,7 +142,7 @@
         }
             break;
         case UIGestureRecognizerStateEnded: {
-            if (fabs(_containerViewLeadingConstraint.constant - 15) > (_containerView.frame.size.width *.5)) {
+            if (fabs(_containerViewLeadingConstraint.constant - _margins.left) > (_containerView.frame.size.width *.5)) {
                 [self setConstraintsToSwipeCardAway:YES notifyDelegate:YES];
             } else {
                 [self resetConstraintsToZero:YES notifyDelegate:NO];
@@ -142,6 +157,9 @@
 }
 
 - (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)gesture {
+    if (gesture != _panGestureRecognizer) {
+        return NO;
+    }
     CGPoint translation = [gesture translationInView: self.superview];
     return (fabsf(translation.x) > fabsf(translation.y));
 }
@@ -153,10 +171,10 @@
         [self.delegate cardViewCellDidSwipe:self];
     }
     
-    float direction = _containerViewLeadingConstraint.constant - 15 > 0 ? 1 : -1;
+    float direction = _containerViewLeadingConstraint.constant - _margins.left > 0 ? 1 : -1;
     
-    _containerViewLeadingConstraint.constant = 15 + (direction * self.contentView.frame.size.width);
-    _containerViewTrailingConstraint.constant = -15 + (direction * self.contentView.frame.size.width);
+    _containerViewLeadingConstraint.constant = _margins.left + (direction * self.contentView.frame.size.width);
+    _containerViewTrailingConstraint.constant = _margins.right + (direction * self.contentView.frame.size.width);
     
     [self updateConstraintsIfNeeded:animated animationBlock:^{
         _containerView.alpha = 0.2;
@@ -166,8 +184,8 @@
 - (void)resetConstraintsToZero:(BOOL)animated notifyDelegate:(BOOL)notify {
     [self removeConstraints:@[_containerViewTrailingConstraint, _containerViewLeadingConstraint]];
     
-    _containerViewLeadingConstraint.constant = 15;
-    _containerViewTrailingConstraint.constant = -15;
+    _containerViewLeadingConstraint.constant = _margins.left;
+    _containerViewTrailingConstraint.constant = -_margins.right;
     
     [self addConstraints:@[_containerViewLeadingConstraint, _containerViewTrailingConstraint]];
 
@@ -189,8 +207,8 @@
 }
 
 - (void)moveContainer:(CGFloat)deltaX {
-    _containerViewLeadingConstraint.constant = deltaX + 15;
-    _containerViewTrailingConstraint.constant = deltaX - 15;
+    _containerViewLeadingConstraint.constant = deltaX + _margins.left;
+    _containerViewTrailingConstraint.constant = deltaX - _margins.right;
     _containerView.alpha = (_containerView.frame.size.width - fabs(deltaX)) / _containerView.frame.size.width;
     [self updateConstraintsIfNeeded:NO animationBlock:nil completion:nil];
 }

@@ -34,11 +34,14 @@
     }
     
     // imageOffset
-    NSNumber *imageOffset = [JSON objectForKey:@"imageOffset"];
+    NSNumber *imageOffset = [JSON objectForKey:@"imageOffsetRatio"];
     if (imageOffset && imageOffset != (id)[NSNull null]) {
         self.yOffset = [imageOffset floatValue];
+        NSLog(@"offset: %f", self.yOffset);
     }
     
+    self.borderWidth = UIEdgeInsetsMake(1, 1, 1, 1);
+    self.borderColor = [UIColor yellowColor];
 }
 
 - (NSURL *)imageURL
@@ -47,31 +50,19 @@
         return nil;
     }
 
-    NSInteger screenWidth = [UIScreen mainScreen].bounds.size.width * UIScreen.mainScreen.scale;
-    NSInteger screenHeight;
+    NSInteger imageWidth = [UIScreen mainScreen].bounds.size.width * UIScreen.mainScreen.scale;
+    NSInteger imageHeight = imageWidth / _aspectRatio;
 
-    switch (screenWidth) {
-        case 750:
-            screenHeight = 469;
-            break;
-        case 1242:
-            screenHeight = 776;
-            break;
-        default: {
-            screenWidth = 640;
-            screenHeight = 400;
-        }
-            break;
-    }
+    NSLog(@"offset: %f", self.yOffset);
+    
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?w=%ld&h=%ld&rect=0,%ld,%ld,%ld", self.imagePath, (long)imageWidth, (long)imageHeight, (long)(-self.yOffset * imageWidth), imageWidth, imageHeight]];
 
-    // TODO: make an exception for gifs
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?w=%ld&h=%ld&fit=crop&fm=jpg", self.imagePath, (long)screenWidth, (long)screenHeight]];
-
+    NSLog(@"url: %@", url);
     return url;
 }
 
 - (CGFloat)heightForWidth:(CGFloat)width {
-    return [super heightForWidth:width] + (width / _aspectRatio);
+    return [super heightForWidth:width] + floor(width / _aspectRatio);
 }
 
 @end

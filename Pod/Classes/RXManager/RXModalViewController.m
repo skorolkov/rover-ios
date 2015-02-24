@@ -14,7 +14,13 @@
 #import "RXTransition.h"
 #import "RVTouchpoint.h"
 
-@interface RXModalViewController () <RXCardViewCellDelegate>
+@interface RXModalViewController () <RXCardViewCellDelegate> {
+    BOOL _hasDisplayedInitialAnimation;
+    NSInteger _maxIndexPathSection;
+    NSInteger _maxIndexPathRow;
+    NSInteger _minIndexPathSection;
+    NSInteger _minIndexPathRow;
+}
 
 @property (readonly) RVVisit *visit;
 @property (strong, nonatomic) UIButton *pillView;
@@ -25,10 +31,9 @@
 
 static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 
-static NSInteger maxIndexPathSection = 0;
-static NSInteger maxIndexPathRow = 0;
-static NSInteger minIndexPathSection = 0;
-static NSInteger minIndexPathRow = 0;
+// BUG: animation only happens once
+
+// BUG: footer is over everything
 
 - (instancetype)init
 {
@@ -37,8 +42,10 @@ static NSInteger minIndexPathRow = 0;
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         self.backdropBlurRadius = [Rover shared].config.modalBackdropBlurRadius;
         self.backdropTintColor = [Rover shared].config.modalBackdropTintColor;
+        
         // Account for status bar
         [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
+        
         // TODO: make this customizable through the SDK
         _pillView = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         _pillView.frame = CGRectMake(0, 0, 150, 60);
@@ -54,22 +61,52 @@ static NSInteger minIndexPathRow = 0;
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[RXCardViewCell class] forCellReuseIdentifier:cellReuseIdentifier];
+
     
     [self createBlur];
     
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roverDidEnterTouchpoint) name:kRoverDidEnterTouchpointNotification object:nil];
     
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"647086E7-89A6-439C-9E3B-4A2268F13FC6"];
-//        [[Rover shared] simulateBeaconWithUUID:UUID major:52643 minor:2];
-//    });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"647086E7-89A6-439C-9E3B-4A2268F13FC6"];
+        [[Rover shared] simulateBeaconWithUUID:UUID major:54321 minor:236];
+    });
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 77)];
+    footerView.backgroundColor = [UIColor clearColor];
+    footerView.alpha = 0;
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    UIButton *closeButton = [self closeButtonView];
+    closeButton.translatesAutoresizingMaskIntoConstraints = NO;
+    [closeButton addTarget:self action:@selector(closeModal) forControlEvents:UIControlEventTouchUpInside];
+    [footerView addSubview:closeButton];
+    NSDictionary *views = NSDictionaryOfVariableBindings(closeButton);
+    [footerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-15-[closeButton]-15-|" options:0 metrics:nil views:views]];
+    [footerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-15-[closeButton(47)]-15-|" options:0 metrics:nil views:views]];
+    
+    [self.tableView setTableFooterView:footerView];
+    
+    [UIView animateWithDuration:.3 delay:.3 options:UIViewAnimationOptionCurveEaseIn animations:^{
+        footerView.alpha = 1;
+    } completion:nil];
+}
+
+- (UIButton *)closeButtonView {
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setTitle:@"Close" forState:UIControlStateNormal];
+    button.titleLabel.font = [UIFont systemFontOfSize:16];
+    button.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5];
+    button.layer.cornerRadius = 4;
+    [button addConstraint:[NSLayoutConstraint constraintWithItem:button attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:0 attribute:0 multiplier:0 constant:47]];
+    return button;
+}
+
+- (void)closeModal {
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (RVVisit *)visit
@@ -107,6 +144,7 @@ static NSInteger minIndexPathRow = 0;
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    NSLog(@"visited: %ld", self.visit.visitedTouchpoints.count);
     return self.visit.visitedTouchpoints.count;
 }
 
@@ -137,13 +175,11 @@ static NSInteger minIndexPathRow = 0;
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static BOOL hasDisplayedInitialAnimation = NO;
-    
-    if ([self hasDisplayedCellAtIndexPath:indexPath] && hasDisplayedInitialAnimation) {
+    if ([self hasDisplayedCellAtIndexPath:indexPath] && _hasDisplayedInitialAnimation) {
         return;
     }
     
-    BOOL isNewCell = hasDisplayedInitialAnimation && ![self hasDisplayedCellAtIndexPath:indexPath];
+    BOOL isNewCell = _hasDisplayedInitialAnimation && ![self hasDisplayedCellAtIndexPath:indexPath];
     
     if (indexPath.section == 0 && (indexPath.row == 0 || isNewCell)) {
         
@@ -159,17 +195,17 @@ static NSInteger minIndexPathRow = 0;
                              cell.transform = CGAffineTransformIdentity;
                              cell.alpha = 1;
                          } completion:^(BOOL finished) {
-                             hasDisplayedInitialAnimation = YES;
-                             minIndexPathSection = 0;
-                             minIndexPathRow = indexPath.row;
-                             if (minIndexPathRow == 0 && _pillView.superview) {
+                             _hasDisplayedInitialAnimation = YES;
+                             _minIndexPathSection = 0;
+                             _minIndexPathRow = indexPath.row;
+                             if (_minIndexPathRow == 0 && _pillView.superview) {
                                  [self retractPill];
                              }
                          }];
         return;
     }
     
-    if (!hasDisplayedInitialAnimation) {
+    if (!_hasDisplayedInitialAnimation) {
 
         NSInteger cellIndex = (indexPath.section * [self tableView:tableView numberOfRowsInSection:indexPath.section]) + indexPath.row;
         cell.transform = CGAffineTransformMakeTranslation(0, self.tableView.frame.size.height - [self tableView:tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]);
@@ -235,8 +271,8 @@ static NSInteger minIndexPathRow = 0;
                          animations:^{
                              cell.alpha = 1;
                          } completion:^(BOOL finished) {
-                             maxIndexPathRow = indexPath.row;
-                             maxIndexPathSection = indexPath.section;
+                             _maxIndexPathRow = indexPath.row;
+                             _maxIndexPathSection = indexPath.section;
                          }];
     }
 }
@@ -249,18 +285,17 @@ static NSInteger minIndexPathRow = 0;
 
 - (BOOL)hasDisplayedCellAtIndexPath:(NSIndexPath *)indexPath
 {
-    return ((indexPath.section < maxIndexPathSection && indexPath.section > minIndexPathSection) ||
-            (indexPath.section == maxIndexPathSection && indexPath.row <= maxIndexPathRow) ||
-            (indexPath.section == minIndexPathSection && indexPath.row >= minIndexPathRow));
+    return ((indexPath.section < _maxIndexPathSection && indexPath.section > _minIndexPathSection) ||
+            (indexPath.section == _maxIndexPathSection && indexPath.row <= _maxIndexPathRow) ||
+            (indexPath.section == _minIndexPathSection && indexPath.row >= _minIndexPathRow));
 }
 
 - (void)roverDidEnterTouchpoint
 {
-    NSLog(@"touchpoints: %@", self.visit.visitedTouchpoints);
     // get smarter
-    maxIndexPathSection++;
-    minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:0];
-    minIndexPathSection = 1;
+    _maxIndexPathSection++;
+    _minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:0];
+    _minIndexPathSection = 1;
     
     
     CGPoint originalOffset = self.tableView.contentOffset;

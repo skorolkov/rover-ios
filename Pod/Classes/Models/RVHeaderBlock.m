@@ -61,7 +61,9 @@
 }
 
 - (CGFloat)heightForWidth:(CGFloat)width {
-    return [super heightForWidth:width] + [[self title] boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height + 20; // 20 for status bar
+    CGFloat height = [super heightForWidth:width] + ([[self title] boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height) + 20; // 20 for status bar
+    NSLog(@"header height: %f", floor(height));
+    return floor(height) - 1;
 }
 
 @end

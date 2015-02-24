@@ -82,19 +82,19 @@ NSString *const sRVBlockHeaderType = @"header";
     // padding
     NSArray *padding = [JSON objectForKey:@"padding"];
     if (padding && borderColor != (id)[NSNull null]) {
-        self.padding = UIEdgeInsetsMake([padding[0] floatValue], [padding[2] floatValue], [padding[1] floatValue], [padding[3] floatValue]);
+        self.padding = UIEdgeInsetsMake([padding[0] floatValue], [padding[3] floatValue], [padding[2] floatValue], [padding[1] floatValue]);
     }
     
     // borderWidth
     NSArray *borderWidth = [JSON objectForKey:@"borderWidth"];
     if (borderWidth && borderWidth != (id)[NSNull null]) {
-        self.borderWidth = UIEdgeInsetsMake([borderWidth[0] floatValue], [borderWidth[2] floatValue], [borderWidth[1] floatValue], [borderWidth[3] floatValue]);
+        self.borderWidth = UIEdgeInsetsMake([borderWidth[0] floatValue], [borderWidth[3] floatValue], [borderWidth[2] floatValue], [borderWidth[1] floatValue]);
     }
     
 }
 
 - (CGFloat)heightForWidth:(CGFloat)width {
-    return _padding.top  + _padding.bottom;
+    return _padding.top + _padding.bottom;
 }
 
 @end
