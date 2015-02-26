@@ -96,7 +96,10 @@
 - (void)setCurrentTouchpoint:(RVTouchpoint *)currentTouchpoint
 {
     if (![_mVisitedTouchpoints containsObject:currentTouchpoint]) {
+        // TODO: research better KVO patterns
+        [self willChangeValueForKey:@"visitedTouchpoints"];
         [_mVisitedTouchpoints insertObject:currentTouchpoint atIndex:0];
+        [self didChangeValueForKey:@"visitedTouchpoints"];
     }
     _currentTouchpoint = currentTouchpoint;
 }
@@ -140,9 +143,9 @@
     }
     
     // keepAlive
-    NSNumber *keepAlive = [JSON objectForKey:@"keep_alive"];
+    NSNumber *keepAlive = [JSON objectForKey:@"keepAlive"];
     if (keepAlive && keepAlive != (id)[NSNull null]) {
-        self.keepAlive = [keepAlive doubleValue];
+        self.keepAlive = [keepAlive doubleValue] * 60;
     }
     
     // primaryBackgroundColor
@@ -346,7 +349,7 @@
         self.major = [decoder decodeObjectForKey:@"major"];
         self.customerID = [decoder decodeObjectForKey:@"customerID"];
         self.welcomeMessage = [decoder decodeObjectForKey:@"welcomeMessage"];
-        self.keepAlive = [[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
+        //self.keepAlive = [[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
         self.primaryBackgroundColor = [decoder decodeObjectForKey:@"primaryBackgroundColor"];
         self.primaryFontColor = [decoder decodeObjectForKey:@"primaryFontColor"];
         self.secondaryBackgroundColor = [decoder decodeObjectForKey:@"secondaryBackgroundColor"];

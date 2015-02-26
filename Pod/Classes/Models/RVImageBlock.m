@@ -13,6 +13,8 @@
 @interface RVImageBlock ()
 
 @property (nonatomic, strong) NSString *imagePath;
+@property (nonatomic, assign) CGFloat originalImageWidth;
+@property (nonatomic, assign) CGFloat originalImageHeight;
 
 @end
 
@@ -37,11 +39,22 @@
     NSNumber *imageOffset = [JSON objectForKey:@"imageOffsetRatio"];
     if (imageOffset && imageOffset != (id)[NSNull null]) {
         self.yOffset = [imageOffset floatValue];
-        NSLog(@"offset: %f", self.yOffset);
     }
     
-    self.borderWidth = UIEdgeInsetsMake(1, 1, 1, 1);
-    self.borderColor = [UIColor yellowColor];
+    // originalImageWidth
+    NSNumber *originalImageWidth = [JSON objectForKey:@"imageWidth"];
+    if (originalImageWidth && originalImageWidth != (id)[NSNull null]) {
+        self.originalImageWidth = [originalImageWidth floatValue];
+    }
+    
+    // originalImageHeight
+    NSNumber *originalImageHeight = [JSON objectForKey:@"imageHeight"];
+    if (originalImageHeight && originalImageHeight != (id)[NSNull null]) {
+        self.originalImageHeight = [originalImageHeight floatValue];
+    }
+    
+//    self.borderWidth = UIEdgeInsetsMake(1, 1, 1, 1);
+//    self.borderColor = [UIColor yellowColor];
 }
 
 - (NSURL *)imageURL
@@ -51,13 +64,15 @@
     }
 
     NSInteger imageWidth = [UIScreen mainScreen].bounds.size.width * UIScreen.mainScreen.scale;
-    NSInteger imageHeight = imageWidth / _aspectRatio;
-
-    NSLog(@"offset: %f", self.yOffset);
+    NSInteger imageHeight = self.originalImageWidth / _aspectRatio;
     
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?w=%ld&h=%ld&rect=0,%ld,%ld,%ld", self.imagePath, (long)imageWidth, (long)imageHeight, (long)(-self.yOffset * imageWidth), imageWidth, imageHeight]];
-
-    NSLog(@"url: %@", url);
+    NSURL *url;
+    if (self.originalImageWidth && self.originalImageHeight) {
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?w=%ld&rect=0,%ld,%ld,%ld", self.imagePath, (long)imageWidth, (long)(-self.yOffset * self.originalImageHeight), (long)self.originalImageWidth, (long)imageHeight]];
+    } else {
+        url = [NSURL URLWithString:[NSString stringWithFormat:@"%@?w=%ld&h=%ld&fit=crop", self.imagePath, (long)imageWidth, (long)(imageWidth / _aspectRatio)]];
+    }
+    
     return url;
 }
 

@@ -84,11 +84,15 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         if (!self.latestVisit.currentTouchpoint || ![self.latestVisit.currentTouchpoint isInRegion:beaconRegion]) {
             RVTouchpoint *touchpoint = [self.latestVisit touchpointForRegion:beaconRegion];
             if (touchpoint) {
+
+                if (![self.latestVisit.visitedTouchpoints containsObject:touchpoint]) {
+                    [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self
+                                                                      userInfo:@{ @"touchpoint": touchpoint,
+                                                                                  @"visit": self.latestVisit}];
+                }
+
                 self.latestVisit.currentTouchpoint = touchpoint;
 
-                [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self
-                                                                  userInfo:@{ @"touchpoint": touchpoint,
-                                                                              @"visit": self.latestVisit}];
                 // TODO: fix this, this posts a noti,..why?!
                 //RVLog(kRoverDidEnterTouchpointNotification, nil);
 

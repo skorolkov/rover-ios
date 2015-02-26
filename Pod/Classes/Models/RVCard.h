@@ -33,6 +33,12 @@
 
 - (CGFloat)heightForWidth:(CGFloat)width;
 
+
+@property (nonatomic,assign) BOOL isDeleted;
+
+
+
+
 // TODO: reevaluate these
 
 /** The id of the card. This is the same ID seen form the web console.

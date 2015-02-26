@@ -53,12 +53,7 @@
 }
 
 - (void)displayModal {
-    //[[Rover shared] presentModal];
-    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    UIViewController *currentViewController = (UIViewController *)[Rover findCurrentViewController:rootViewController];
-    CustomModalViewController *vc = [CustomModalViewController new];
-    vc.delegate = self;
-    [currentViewController presentViewController:vc animated:YES completion:nil];
+    [[Rover shared] presentModal];
 }
 
 #pragma mark - Application Notifications

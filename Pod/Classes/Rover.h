@@ -20,6 +20,7 @@
 #import "RVCustomer.h"
 #import "RVVisit.h"
 #import "RVCard.h"
+#import "RVTouchpoint.h"
 
 // Controllers
 #import "RVModalViewController.h"

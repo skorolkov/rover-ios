@@ -8,10 +8,11 @@
 
 #import <Foundation/Foundation.h>
 #import "RVModel.h"
+#import "RVVisitController.h"
 
 @class CLBeaconRegion;
 
-@interface RVTouchpoint : RVModel
+@interface RVTouchpoint : RVModel <RVVisitTouchpointInfo>
 
 /** The minor number for the touchpoint
  */

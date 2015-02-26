@@ -8,11 +8,10 @@
 
 #import "RXCardViewCell.h"
 #import "RXBlockView.h"
-#import "RVCard.h"
 
 // Shadow constants
 #define kCardShadowColor [[UIColor blackColor] CGColor]
-#define kCardShadowOffset CGSizeMake(0, 2)
+#define kCardShadowOffset CGSizeMake(0, 0)
 #define kCardShadowOpacity 0.2
 #define kCardShadowRadius 0
 

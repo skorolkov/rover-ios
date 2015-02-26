@@ -209,6 +209,7 @@ static Rover *sharedInstance = nil;
 {
     CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID major:major minor:minor identifier:UUID.UUIDString];
     [[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidEnterRegionNotification object:[RVRegionManager sharedManager] userInfo:@{ @"beaconRegion": beaconRegion }];
+    //[[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidExitRegionNotification object:self userInfo:@{ @"beaconRegion": beaconRegion }];
 }
 
 - (void)presentModal {
@@ -217,17 +218,17 @@ static Rover *sharedInstance = nil;
 
 - (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options {
     
-<<<<<<< HEAD
-    if (!_currentVisit || _currentVisit.cards.count < 1) {
-        NSLog(@"%@ warning showModal called but there are no cards to display", self);
-        //return;
-    }
-=======
-//    if (!self.currentVisit || self.currentVisit.cards.count < 1) {
+//<<<<<<< HEAD
+//    if (!_currentVisit || _currentVisit.cards.count < 1) {
 //        NSLog(@"%@ warning showModal called but there are no cards to display", self);
 //        //return;
 //    }
->>>>>>> lots of ui
+//=======
+////    if (!self.currentVisit || self.currentVisit.cards.count < 1) {
+////        NSLog(@"%@ warning showModal called but there are no cards to display", self);
+////        //return;
+////    }
+//>>>>>>> lots of ui
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillPresentModalNotification object:self];
     
@@ -292,14 +293,8 @@ static Rover *sharedInstance = nil;
 
 - (void)visitManagerDidEnterTouchpoint:(NSNotification *)note {
     _currentVisit = [note.userInfo objectForKey:@"visit"];
-    RVTouchpoint *currentTouchpoint = [note.userInfo objectForKey:@"touchpoint"];
+    //RVTouchpoint *currentTouchpoint = [note.userInfo objectForKey:@"touchpoint"];
     
-    
-    if ([_currentVisit.visitedTouchpoints containsObject:currentTouchpoint]) {
-        return;
-    }
-    
-    _currentVisit.currentTouchpoint = currentTouchpoint;
     
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidEnterTouchpointNotification object:self];
@@ -343,11 +338,8 @@ static Rover *sharedInstance = nil;
 #pragma mark - Application Notifications
 
 - (void)applicationDidBecomeActive:(NSNotification *)note {
-<<<<<<< HEAD
-    if (_currentVisit && !_currentVisit.openedAt) {
-=======
+
     if (self.currentVisit && _currentVisit.currentTouchpoint && !self.currentVisit.openedAt) {
->>>>>>> more touchpoint stuff
         
         [self updateVisitOpenTime];
         

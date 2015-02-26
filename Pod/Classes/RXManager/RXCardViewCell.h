@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RVCard.h"
 
 @protocol RXCardViewCellDelegate;
-@class RVCard;
 
 @interface RXCardViewCell : UITableViewCell
 

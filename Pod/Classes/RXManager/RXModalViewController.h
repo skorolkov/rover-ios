@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RXVisitViewController.h"
 
-@interface RXModalViewController : UITableViewController
+@interface RXModalViewController : RXVisitViewController
 
 @property (nonatomic, strong) UIColor *backdropTintColor;
 @property (nonatomic, assign) NSUInteger backdropBlurRadius;

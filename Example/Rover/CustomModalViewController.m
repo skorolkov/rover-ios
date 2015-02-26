@@ -50,16 +50,16 @@
     return cardView;
 }
 
-- (void)cardView:(RVCardView *)cardView clickedButtonAtIndex:(NSInteger)buttonIndex {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Saved" message:[NSString stringWithFormat:@"%@ has been added to your shopping list", cardView.card.title] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    alert.delegate = self;
-    [alert show];
-    
-    // Update the card
-    RVCard *card = cardView.card;
-    card.likedAt = card.likedAt ? nil : [NSDate date];
-    [card save:nil failure:nil];
-}
+//- (void)cardView:(RVCardView *)cardView clickedButtonAtIndex:(NSInteger)buttonIndex {
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Saved" message:[NSString stringWithFormat:@"%@ has been added to your shopping list", cardView.card.title] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//    alert.delegate = self;
+//    [alert show];
+//    
+//    // Update the card
+//    RVCard *card = cardView.card;
+//    card.likedAt = card.likedAt ? nil : [NSDate date];
+//    [card save:nil failure:nil];
+//}
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     [self.cardDeckView swipeToNextCard];
