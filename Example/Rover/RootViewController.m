@@ -60,9 +60,9 @@
 
 - (void)applicationDidBecomeActive {
     RVVisit *currentVisit = [[Rover shared] currentVisit];
-    if (currentVisit.unreadCards.count > 0 && !currentVisit.openedAt) {
-        [self displayModal];
-    }
+    //if (currentVisit.unreadCards.count > 0 && !currentVisit.openedAt) {
+    //    [self displayModal];
+    //}
 }
 
 #pragma mark - Rover Notifications

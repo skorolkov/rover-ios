@@ -12,7 +12,8 @@
 #import "RVCard.h"
 
 #import <RSBarcodes/RSUnifiedCodeGenerator.h>
-#import <UIActivityIndicator-for-SDWebImage/UIImageView+UIActivityIndicatorForSDWebImage.h>
+//#import <UIActivityIndicator-for-SDWebImage/UIImageView+UIActivityIndicatorForSDWebImage.h>
+#import <SDWebImage/UIImageView+WebCache.h>
 
 #define IS_WIDESCREEN ([[UIScreen mainScreen] bounds].size.height == 568.0)
 
@@ -153,7 +154,8 @@ const CGFloat kRVCardViewImageRatio = .625;
 
 - (void)setImageURL:(NSURL *)imageURL
 {
-    [self.imageView setImageWithURL:imageURL usingActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    //[self.imageView setImageWithURL:imageURL usingActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [self.imageView sd_setImageWithURL:imageURL];
 }
 
 - (NSAttributedString *)attributedTextFromHTMLString:(NSString *)htmlString withFont:(UIFont *)font styles:(NSArray *)styles

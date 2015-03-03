@@ -15,7 +15,7 @@
 #define kCardShadowOpacity 0.2
 #define kCardShadowRadius 0
 
-@interface RXCardViewCell () <UIGestureRecognizerDelegate>
+@interface RXCardViewCell () <UIGestureRecognizerDelegate, RXBlockViewDelegate>
 
 @property (nonatomic, strong) NSLayoutConstraint *containerViewLeadingConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *containerViewTrailingConstraint;
@@ -111,8 +111,11 @@
 - (void)setCard:(RVCard *)card {
     [self setMargins:card.margins];
     [card.listviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
-        [self addBlockView:[[RXBlockView alloc] initWithBlock:block]];
+        RXBlockView *blockView = [[RXBlockView alloc] initWithBlock:block];
+        blockView.delegate = self;
+        [self addBlockView:blockView];
     }];
+    _card = card;
 }
 
 - (void)prepareForReuse {
@@ -210,6 +213,15 @@
     _containerViewTrailingConstraint.constant = deltaX - _margins.right;
     _containerView.alpha = (_containerView.frame.size.width - fabs(deltaX)) / _containerView.frame.size.width;
     [self updateConstraintsIfNeeded:NO animationBlock:nil completion:nil];
+}
+
+#pragma mark - RXBlockViewDelegate
+
+- (BOOL)shouldOpenURL:(NSURL *)url {
+    if ([self.delegate respondsToSelector:@selector(cardViewCell:shouldOpenURL:)]) {
+        return [self.delegate cardViewCell:self shouldOpenURL:url];
+    }
+    return YES;
 }
 
 @end

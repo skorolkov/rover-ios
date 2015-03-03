@@ -117,6 +117,15 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     card.isDeleted = YES;
 }
 
+- (BOOL)cardViewCell:(RXCardViewCell *)cell shouldOpenURL:(NSURL *)url {
+    if ([url.scheme isEqualToString:@"rover"]) {
+        // do rover stuff
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
 #pragma mark - RVVisitControllerDelegate
 
 - (void)controller:(RVVisitController *)controller didChangeTouchpoint:(id<RVVisitTouchpointInfo>)touchpointInfo atIndex:(NSUInteger)touchpointIndex forChangeType:(RVVisitChangeType)type {

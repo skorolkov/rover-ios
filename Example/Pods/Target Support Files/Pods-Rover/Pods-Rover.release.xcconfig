@@ -1,6 +1,6 @@
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/RSBarcodes" "${PODS_ROOT}/Headers/Public/Rover" "${PODS_ROOT}/Headers/Public/SDWebImage" "${PODS_ROOT}/Headers/Public/UIActivityIndicator-for-SDWebImage"
-OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/RSBarcodes" -isystem "${PODS_ROOT}/Headers/Public/Rover" -isystem "${PODS_ROOT}/Headers/Public/SDWebImage" -isystem "${PODS_ROOT}/Headers/Public/UIActivityIndicator-for-SDWebImage"
-OTHER_LDFLAGS = -ObjC -l"Pods-Rover-RSBarcodes" -l"Pods-Rover-Rover" -l"Pods-Rover-SDWebImage" -l"Pods-Rover-UIActivityIndicator-for-SDWebImage" -framework "AVFoundation" -framework "Accelerate" -framework "CoreImage" -framework "CoreLocation" -framework "ImageIO"
+HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Public" "${PODS_ROOT}/Headers/Public/RSBarcodes" "${PODS_ROOT}/Headers/Public/Rover" "${PODS_ROOT}/Headers/Public/SDWebImage"
+OTHER_CFLAGS = $(inherited) -isystem "${PODS_ROOT}/Headers/Public" -isystem "${PODS_ROOT}/Headers/Public/RSBarcodes" -isystem "${PODS_ROOT}/Headers/Public/Rover" -isystem "${PODS_ROOT}/Headers/Public/SDWebImage"
+OTHER_LDFLAGS = -ObjC -l"Pods-Rover-RSBarcodes" -l"Pods-Rover-Rover" -l"Pods-Rover-SDWebImage" -framework "AVFoundation" -framework "Accelerate" -framework "CoreImage" -framework "CoreLocation" -framework "ImageIO"
 OTHER_LIBTOOLFLAGS = $(OTHER_LDFLAGS)
 PODS_ROOT = ${SRCROOT}/Pods

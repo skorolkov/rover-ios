@@ -17,7 +17,6 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 
 @interface RVRegionManager ()
 
-@property (strong, nonatomic) NSMutableArray *beaconRegions;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLBeacon *nearestBeacon;
 @property (strong, nonatomic) NSDate *beaconDetectedAt;
@@ -43,16 +42,15 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 #pragma mark - Properties
 
 - (void)setBeaconUUIDs:(NSArray *)beaconUUIDs {
-    [self stopMonitoring];
-    [self.beaconRegions removeAllObjects];
-    
-    [beaconUUIDs enumerateObjectsUsingBlock:^(NSUUID *UUID, NSUInteger idx, BOOL *stop) {
-        CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID identifier:UUID.UUIDString];
-        beaconRegion.notifyEntryStateOnDisplay = YES;
-        [self.beaconRegions addObject:beaconRegion];
-    }];
-    
     _beaconUUIDs = beaconUUIDs;
+    [self stopMonitoring];
+    [self setupBeaconRegionsForUUIDs:beaconUUIDs];
+}
+
+- (void)setBeaconRegions:(NSMutableArray *)beaconRegions {
+    _beaconRegions = beaconRegions;
+    [self stopMonitoring];
+    [self setupBeaconRegions];
 }
 
 - (NSTimeInterval)timeSinceBeaconDetected {
@@ -69,7 +67,7 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 - (id)init {
     self = [super init];
     if (self) {
-        self.beaconRegions = [[NSMutableArray alloc] initWithCapacity:20];
+        _beaconRegions = [[NSMutableArray alloc] initWithCapacity:20];
         
         self.locationManager = [[CLLocationManager alloc] init];
         if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
@@ -116,6 +114,24 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
     CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beacon.proximityUUID major:beacon.major.integerValue identifier:beacon.proximityUUID.UUIDString];
     
     [[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidExitRegionNotification object:self userInfo:@{ @"beaconRegion": beaconRegion }];
+}
+
+#pragma mark - Helper Methods
+
+- (void)setupBeaconRegionsForUUIDs:(NSArray *)UUIDs {
+    [self.beaconRegions removeAllObjects];
+    
+    [UUIDs enumerateObjectsUsingBlock:^(NSUUID *UUID, NSUInteger idx, BOOL *stop) {
+        CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID identifier:UUID.UUIDString];
+        beaconRegion.notifyEntryStateOnDisplay = YES;
+        [self.beaconRegions addObject:beaconRegion];
+    }];
+}
+
+- (void)setupBeaconRegions {
+    [self.beaconRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, NSUInteger idx, BOOL *stop) {
+        beaconRegion.notifyEntryStateOnDisplay = YES;
+    }];
 }
 
 #pragma mark - CLLocationManagerDelegate

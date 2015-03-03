@@ -24,5 +24,6 @@
 @optional
 - (void)cardViewCellDidSwipe:(RXCardViewCell *)cardViewCell;
 - (void)cardViewCellDidCancelSwipe:(RXCardViewCell *)cardViewCell;
+- (BOOL)cardViewCell:(RXCardViewCell *)cell shouldOpenURL:(NSURL *)url;
 
 @end

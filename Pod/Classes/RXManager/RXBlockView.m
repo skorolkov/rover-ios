@@ -15,12 +15,14 @@
 #import "RVBarcodeBlock.h"
 #import "RVButtonBlock.h"
 
-#import <UIActivityIndicator-for-SDWebImage/UIImageView+UIActivityIndicatorForSDWebImage.h>
+//#import <UIActivityIndicator-for-SDWebImage/UIImageView+UIActivityIndicatorForSDWebImage.h>
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @interface RXBlockView ()
 
 @property (assign, nonatomic) UIEdgeInsets borderWidth;
 @property (strong, nonatomic) UIColor *borderColor;
+@property (strong, nonatomic) NSURL *url;
 
 @end
 
@@ -60,7 +62,8 @@
 + (UIImageView *)imageViewForBlock:(RVImageBlock *)block {
     UIImageView *imageView = [UIImageView new];
     imageView.contentMode = UIViewContentModeScaleAspectFill;
-    [imageView setImageWithURL:block.imageURL usingActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    //[imageView setImageWithURL:block.imageURL usingActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    [imageView sd_setImageWithURL:block.imageURL];
     [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeWidth multiplier:1/block.aspectRatio constant:0]];
     
     return imageView;
@@ -141,6 +144,15 @@
         
         _borderColor = block.borderColor;
         _borderWidth = block.borderWidth;
+        
+        // Link
+        
+        //if (block.url) {
+            // TODO: add touchdown states and stuff
+            UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
+            [self addGestureRecognizer:tapGestureRecognizer];
+            self.url = block.url;
+        //}
     }
     return self;
 }
@@ -175,6 +187,16 @@
     
     if (_borderWidth.top) {
         CGContextFillRect(context, CGRectMake(xMin, yMin, fWidth, _borderWidth.top));
+    }
+}
+
+#pragma mark - TapGestureRecognizer Action
+
+- (void)tapped:(UITapGestureRecognizer *)recognizer {
+    if ([self.delegate respondsToSelector:@selector(shouldOpenURL:)]) {
+        if ([self.delegate shouldOpenURL:self.url]) {
+            [[UIApplication sharedApplication] openURL:self.url];
+        }
     }
 }
 

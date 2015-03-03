@@ -1,29 +1,33 @@
 PODS:
-  - Rover (0.24.2):
-    - Rover/RXManager
+  - Rover (0.24.4):
+    - Rover/RXManager (= 0.24.4)
     - RSBarcodes (~> 0.1)
-    - UIActivityIndicator-for-SDWebImage (~> 1.2)
-  - Rover/RXManager (0.24.2):
+  - Rover/RXManager (0.24.4):
     - RSBarcodes (~> 0.1)
-    - UIActivityIndicator-for-SDWebImage (~> 1.2)
   - RSBarcodes (0.1)
   - SDWebImage (3.7.1):
-    - SDWebImage/Core
+    - SDWebImage/Core (= 3.7.1)
   - SDWebImage/Core (3.7.1)
-  - UIActivityIndicator-for-SDWebImage (1.2):
-    - SDWebImage (~> 3.7)
 
 DEPENDENCIES:
   - Rover (from `../`)
+  - SDWebImage (from `git@github.com:ata-n/SDWebImage.git`, branch `master`)
 
 EXTERNAL SOURCES:
   Rover:
     :path: ../
+  SDWebImage:
+    :branch: master
+    :git: git@github.com:ata-n/SDWebImage.git
+
+CHECKOUT OPTIONS:
+  SDWebImage:
+    :commit: 9cc8269dcdcf7dc5fd42abb5adbd911b835bb21b
+    :git: git@github.com:ata-n/SDWebImage.git
 
 SPEC CHECKSUMS:
-  Rover: 1050ce77863612db068e87cd87fb121a46968636
+  Rover: 5ac2441a4b5465a4296067531e148c70cb229d67
   RSBarcodes: c4d54f52033f9af3d781230292568529ade14b78
-  SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
-  UIActivityIndicator-for-SDWebImage: 8bd92c15280fbe54816448c6b14674145eee05c7
+  SDWebImage: ff5239e81afa8f9cc29552712cac071183529f66
 
-COCOAPODS: 0.34.4
+COCOAPODS: 0.35.0

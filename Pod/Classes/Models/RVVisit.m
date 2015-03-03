@@ -13,6 +13,9 @@
 #import "RVLocation.h"
 #import "RVTouchpoint.h"
 
+#import "RVBlock.h"
+#import "RVImageBlock.h"
+
 @interface RVVisit ()
 
 @property (nonatomic, strong) NSMutableArray *mVisitedTouchpoints;
@@ -41,6 +44,20 @@
     }
     
     return _welcomeMessage;
+}
+
+- (NSArray *)allImageUrls {
+    NSMutableArray *array = [NSMutableArray array];
+    [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
+        [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
+            [card.listviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
+                if ([block isKindOfClass:[RVImageBlock class]]) {
+                    [array insertObject:((RVImageBlock *)block).imageURL atIndex:array.count];
+                }
+            }];
+        }];
+    }];
+    return [NSArray arrayWithArray:array];
 }
 
 - (NSArray *)unreadCards {
@@ -91,6 +108,16 @@
 - (NSArray *)visitedTouchpoints
 {
     return _mVisitedTouchpoints;
+}
+
+- (NSArray *)observableRegions {
+    NSMutableArray *touchpointsWithNotification = [NSMutableArray array];
+    [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
+        if (touchpoint.notification && ![touchpoint.notification isEqualToString:@""]) {
+            [touchpointsWithNotification addObject:[[CLBeaconRegion alloc] initWithProximityUUID:self.UUID major:self.major.integerValue minor:touchpoint.minor.integerValue identifier:self.UUID.UUIDString]];
+        }
+    }];
+    return touchpointsWithNotification;
 }
 
 - (void)setCurrentTouchpoint:(RVTouchpoint *)currentTouchpoint

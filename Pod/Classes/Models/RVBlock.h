@@ -26,6 +26,7 @@ typedef NS_ENUM(NSInteger, RVBlockType) {
 @property (nonatomic, assign) UIEdgeInsets borderWidth;
 @property (nonatomic, assign) UIEdgeInsets padding;
 @property (nonatomic, assign, readonly) RVBlockType blockType;
+@property (nonatomic, strong) NSURL *url;
 
 - (CGFloat)heightForWidth:(CGFloat)width;
 

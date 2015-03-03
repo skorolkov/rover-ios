@@ -15,11 +15,11 @@
 #import "RVBarcodeBlock.h"
 #import "RVButtonBlock.h"
 
-NSString *const sRVBlockImageType = @"image";
-NSString *const sRVBlockTextType = @"text";
-NSString *const sRVBlockBarcodeType = @"barcode";
-NSString *const sRVBlockButtonType = @"button";
-NSString *const sRVBlockHeaderType = @"header";
+NSString *const sRVBlockImageType = @"imageBlock";
+NSString *const sRVBlockTextType = @"textBlock";
+NSString *const sRVBlockBarcodeType = @"barcodeBlock";
+NSString *const sRVBlockButtonType = @"buttonBlock";
+NSString *const sRVBlockHeaderType = @"headerBlock";
 
 @interface RVBlock ()
 
@@ -91,6 +91,11 @@ NSString *const sRVBlockHeaderType = @"header";
         self.borderWidth = UIEdgeInsetsMake([borderWidth[0] floatValue], [borderWidth[3] floatValue], [borderWidth[2] floatValue], [borderWidth[1] floatValue]);
     }
     
+    // link
+    NSString *linkURLString = [JSON objectForKey:@"link"];
+    if (linkURLString && linkURLString != (id)[NSNull null]) {
+        self.url = [NSURL URLWithString:linkURLString];
+    }
 }
 
 - (CGFloat)heightForWidth:(CGFloat)width {

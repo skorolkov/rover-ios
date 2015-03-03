@@ -19,7 +19,7 @@
 #import "RVHelper.h"
 #import "RVCustomerProject.h"
 
-#import "UIImageView+UIActivityIndicatorForSDWebImage.h"
+//#import "UIImageView+UIActivityIndicatorForSDWebImage.h"
 
 NSString *const RVModalViewOptionsTag = @"Tags";
 NSString *const RVModalViewOptionsPredicate = @"Predicate";

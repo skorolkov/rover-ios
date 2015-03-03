@@ -16,13 +16,13 @@
 #define COCOAPODS_POD_AVAILABLE_Rover
 #define COCOAPODS_VERSION_MAJOR_Rover 0
 #define COCOAPODS_VERSION_MINOR_Rover 24
-#define COCOAPODS_VERSION_PATCH_Rover 2
+#define COCOAPODS_VERSION_PATCH_Rover 4
 
 // Rover/RXManager
 #define COCOAPODS_POD_AVAILABLE_Rover_RXManager
 #define COCOAPODS_VERSION_MAJOR_Rover_RXManager 0
 #define COCOAPODS_VERSION_MINOR_Rover_RXManager 24
-#define COCOAPODS_VERSION_PATCH_Rover_RXManager 2
+#define COCOAPODS_VERSION_PATCH_Rover_RXManager 4
 
 // SDWebImage
 #define COCOAPODS_POD_AVAILABLE_SDWebImage
@@ -35,10 +35,4 @@
 #define COCOAPODS_VERSION_MAJOR_SDWebImage_Core 3
 #define COCOAPODS_VERSION_MINOR_SDWebImage_Core 7
 #define COCOAPODS_VERSION_PATCH_SDWebImage_Core 1
-
-// UIActivityIndicator-for-SDWebImage
-#define COCOAPODS_POD_AVAILABLE_UIActivityIndicator_for_SDWebImage
-#define COCOAPODS_VERSION_MAJOR_UIActivityIndicator_for_SDWebImage 1
-#define COCOAPODS_VERSION_MINOR_UIActivityIndicator_for_SDWebImage 2
-#define COCOAPODS_VERSION_PATCH_UIActivityIndicator_for_SDWebImage 0
 

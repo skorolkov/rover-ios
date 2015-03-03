@@ -18,6 +18,8 @@
 
 #import "RXModalViewController.h"
 
+#import <SDWebImage/SDWebImagePrefetcher.h>
+
 NSString *const kRoverDidEnterTouchpointNotification = @"RoverDidEnterTouchpointNotification";
 NSString *const kRoverDidEnterLocationNotification = @"RoverDidEnterLocationNotification";
 NSString *const kRoverDidExpireVisitNotification = @"RoverDidExpireVisitNotification";
@@ -257,11 +259,11 @@ static Rover *sharedInstance = nil;
     [_currentVisit save:nil failure:nil];
 }
 
-- (void)sendNotification {
-    // REDO THIS
+- (void)sendNotification:(NSString *)message {
+    // TODO: consider the case where a noti has already been delivered (want to be silent)
     
     UILocalNotification *note = [[UILocalNotification alloc] init];
-    //note.alertBody = _currentVisit.currentTouchpoint.notification;
+    note.alertBody = message;
 
     if (self.config.notificationSoundName) {
         note.soundName = self.config.notificationSoundName;
@@ -274,12 +276,24 @@ static Rover *sharedInstance = nil;
 - (void)visitManagerDidEnterLocation:(NSNotification *)note {
     _currentVisit = [note.userInfo objectForKey:@"visit"];
     
+    // cache all images
+    SDWebImagePrefetcher *imagePrefetcher = [SDWebImagePrefetcher sharedImagePrefetcher];
+    imagePrefetcher.options = SDWebImageDownloaderContinueInBackground;
+    NSLog(@"prefetching images: %@", _currentVisit.allImageUrls);
+    [imagePrefetcher prefetchURLs:_currentVisit.allImageUrls progress:^(NSUInteger noOfFinishedUrls, NSUInteger noOfTotalUrls) {
+        NSLog(@"# of finished image prefetched: %lu / %lu", (unsigned long)noOfFinishedUrls, noOfTotalUrls);
+    } completed:^(NSUInteger noOfFinishedUrls, NSUInteger noOfSkippedUrls) {
+        NSLog(@"images prefetched: %lu", noOfFinishedUrls);
+    }];
+    
+    // TODO: redo all this
+    
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         [self updateVisitOpenTime];
         
-//        if (self.config.autoPresentModal) {
-//            [self presentModal];
-//        }
+        if (self.config.autoPresentModal) {
+            [self presentModal];
+        }
     } else {
         //[self sendNotification];
     }
@@ -293,9 +307,7 @@ static Rover *sharedInstance = nil;
 
 - (void)visitManagerDidEnterTouchpoint:(NSNotification *)note {
     _currentVisit = [note.userInfo objectForKey:@"visit"];
-    //RVTouchpoint *currentTouchpoint = [note.userInfo objectForKey:@"touchpoint"];
-    
-    
+    RVTouchpoint *currentTouchpoint = [note.userInfo objectForKey:@"touchpoint"];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidEnterTouchpointNotification object:self];
     
@@ -303,19 +315,17 @@ static Rover *sharedInstance = nil;
 //        [self sendNotification];
 //    }
     
-    
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-        //        [self updateVisitOpenTime];
-        
-        if (self.config.autoPresentModal) {
-            [self presentModal];
-        }
-    } else {
-        //[self sendNotification];
+        // do something else (banner or something)
+    } else if (currentTouchpoint.notification) {
+        [self sendNotification:currentTouchpoint.notification];
+
     }
     
     
 }
+
+
 
 #pragma mark - RVModalViewControllerDelegate
 

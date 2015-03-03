@@ -63,6 +63,14 @@
  */
 @property (nonatomic, readonly) NSArray *visitedTouchpoints;
 
+/** All the image urls for this visit
+ */
+@property (nonatomic, readonly) NSArray *allImageUrls;
+
+/** Valid regions for monitoring (i.e. touchpoints with a notification message
+ */
+@property (nonatomic, readonly) NSArray *observableRegions;
+
 - (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
 
 - (void)persistToDefaults;
