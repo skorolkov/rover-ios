@@ -277,14 +277,14 @@ static Rover *sharedInstance = nil;
     _currentVisit = [note.userInfo objectForKey:@"visit"];
     
     // cache all images
-    SDWebImagePrefetcher *imagePrefetcher = [SDWebImagePrefetcher sharedImagePrefetcher];
-    imagePrefetcher.options = SDWebImageDownloaderContinueInBackground;
-    NSLog(@"prefetching images: %@", _currentVisit.allImageUrls);
-    [imagePrefetcher prefetchURLs:_currentVisit.allImageUrls progress:^(NSUInteger noOfFinishedUrls, NSUInteger noOfTotalUrls) {
-        NSLog(@"# of finished image prefetched: %lu / %lu", (unsigned long)noOfFinishedUrls, noOfTotalUrls);
-    } completed:^(NSUInteger noOfFinishedUrls, NSUInteger noOfSkippedUrls) {
-        NSLog(@"images prefetched: %lu", noOfFinishedUrls);
-    }];
+//    SDWebImagePrefetcher *imagePrefetcher = [SDWebImagePrefetcher sharedImagePrefetcher];
+//    imagePrefetcher.options = SDWebImageDownloaderContinueInBackground;
+//    NSLog(@"prefetching images: %@", _currentVisit.allImageUrls);
+//    [imagePrefetcher prefetchURLs:_currentVisit.allImageUrls progress:^(NSUInteger noOfFinishedUrls, NSUInteger noOfTotalUrls) {
+//        NSLog(@"# of finished image prefetched: %lu / %lu", (unsigned long)noOfFinishedUrls, noOfTotalUrls);
+//    } completed:^(NSUInteger noOfFinishedUrls, NSUInteger noOfSkippedUrls) {
+//        NSLog(@"images prefetched: %lu", noOfFinishedUrls);
+//    }];
     
     // TODO: redo all this
     

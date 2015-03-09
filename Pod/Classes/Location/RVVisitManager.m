@@ -188,7 +188,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         // TODO: fix this, this posts a noti,..why?!
         //RVLog(kRoverDidEnterTouchpointNotification, nil);
     } else {
-        NSLog(@"Invalid touchpoint");
+        NSLog(@"Invalid touchpoint: %@", beaconRegion.minor);
     }
 }
 

@@ -138,7 +138,7 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLRegion *)region {
     RVLog(kRoverDidRangeBeaconsNotification, @{ @"count": [NSNumber numberWithUnsignedInteger:[beacons count]] });
-
+    
     CLBeaconRegion *beaconRegion = (CLBeaconRegion *)region;
     CLBeacon *currentBeacon = [beacons lastObject];
     

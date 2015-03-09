@@ -8,16 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-@class RVCard;
+@class RVViewDefinition;
 
 @interface RXCardViewController : UIViewController
 
-@property (nonatomic, weak) RVCard *card;
+@property (nonatomic, weak) RVViewDefinition *viewDefinition;
 @property (readonly) UIScrollView *scrollView;
 @property (readonly) UIView *containerView;
 @property (readonly) UIView *titleBar;
 
-- (instancetype)initWithCard:(RVCard *)card;
+- (instancetype)initWithViewDefinition:(RVViewDefinition *)viewDefinition;
 
 - (void)prepareLayoutForTransition;
 - (void)prepareLayoutForInteractiveTransition:(CGFloat)percentageComplete;

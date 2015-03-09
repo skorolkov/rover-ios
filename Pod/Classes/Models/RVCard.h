@@ -9,6 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "RVModel.h"
 
+@class RVViewDefinition;
+
 /** Represents a Card from the [Rover Marketing Console](http://app.roverlabs.co/).
  */
 @interface RVCard : RVModel
@@ -19,24 +21,16 @@
  */
 @property (strong, nonatomic) NSDictionary *metaData;
 
-/** The view blocks for when in list view
- */
-@property (strong, nonatomic) NSArray *listviewBlocks;
+@property (strong, nonatomic) NSArray *viewDefinitions;
 
-/** The view blocks for when in detail view
- */
-@property (strong, nonatomic) NSArray *detailviewBlocks;
 
-@property (nonatomic) UIEdgeInsets margins;
-
-@property (nonatomic) CGFloat corderRadius;
-
-- (CGFloat)heightForWidth:(CGFloat)width;
+- (CGFloat)listViewHeightForWidth:(CGFloat)width;
 
 
 @property (nonatomic,assign) BOOL isDeleted;
 
-
+// handy property
+@property (nonatomic, weak) RVViewDefinition *listView;
 
 
 // TODO: reevaluate these

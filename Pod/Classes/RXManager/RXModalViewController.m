@@ -49,10 +49,10 @@
 
     
     
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(30 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"647086E7-89A6-439C-9E3B-4A2268F13FC6"];
-        [[Rover shared] simulateBeaconWithUUID:UUID major:54321 minor:63295];
-    });
+//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+//        NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"647086E7-89A6-439C-9E3B-4A2268F13FC6"];
+//        [[Rover shared] simulateBeaconWithUUID:UUID major:54321 minor:28871];
+//    });
     
 }
 
@@ -141,14 +141,6 @@
                              cell.transform = CGAffineTransformIdentity;
 
                          } completion:nil];
-    }
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    RVCard *card = [self.visitController cardAtIndexPath:indexPath];
-    if (card.detailviewBlocks && card.detailviewBlocks.count > 0) {
-        RXCardViewController *cardViewController = [[RXCardViewController alloc] initWithCard:card];
-        [self presentViewController:cardViewController animated:YES completion:nil];
     }
 }
 
@@ -293,5 +285,6 @@
 - (void)didAddTouchpoint:(RVTouchpoint *)touchpoint {
     [self dropPill];
 }
+
 
 @end

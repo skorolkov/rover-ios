@@ -28,6 +28,8 @@ NSString *const sRVBlockHeaderType = @"headerBlock";
 
 @implementation RVBlock
 
+@synthesize backgroundColor, backgroundImageURL, backgroundContentMode;
+
 + (RVBlock *)appropriateBlockWithJSON:(NSDictionary *)JSON {
     // type
     RVBlockType blockType;
@@ -96,10 +98,26 @@ NSString *const sRVBlockHeaderType = @"headerBlock";
     if (linkURLString && linkURLString != (id)[NSNull null]) {
         self.url = [NSURL URLWithString:linkURLString];
     }
+    
+    // backgroundImageUrl
+    NSString *backgroundImageUrl = [JSON objectForKey:@"backgroundImageUrl"];
+    if (backgroundImageUrl && backgroundImageUrl != (id)[NSNull null]) {
+        self.backgroundImageURL = [NSURL URLWithString:backgroundImageUrl];
+    }
+    
+    // backgroundContentMode
+    NSString *backgroundContentMode = [JSON objectForKey:@"backgroundContentMode"];
+    if (backgroundContentMode && backgroundContentMode != (id)[NSNull null]) {
+        self.backgroundContentMode = RVBackgroundContentModeFromString(backgroundContentMode);
+    }
 }
 
 - (CGFloat)heightForWidth:(CGFloat)width {
     return _padding.top + _padding.bottom;
+}
+
+- (CGFloat)paddingAdjustedValueForWidth:(CGFloat)width {
+    return width - _padding.left - _padding.right;
 }
 
 @end

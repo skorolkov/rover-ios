@@ -17,6 +17,24 @@
 
 //#import <UIActivityIndicator-for-SDWebImage/UIImageView+UIActivityIndicatorForSDWebImage.h>
 #import <SDWebImage/UIImageView+WebCache.h>
+#import <SDWebImage/SDWebImageManager.h>
+
+UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundContentMode backgroundContentMode) {
+    switch (backgroundContentMode) {
+        case RVBackgroundContentModeScaleAspectFill:
+            return UIViewContentModeScaleAspectFill;
+            break;
+        case RVBackgroundContentModeScaleAspectFit:
+            return UIViewContentModeScaleAspectFit;
+            break;
+        case RVBackgroundContentModeScaleFill:
+            return UIViewContentModeScaleToFill;
+            break;
+        default:
+            return UIViewContentModeTop;
+            break;
+    }
+}
 
 @interface RXBlockView ()
 
@@ -65,7 +83,7 @@
     //[imageView setImageWithURL:block.imageURL usingActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [imageView sd_setImageWithURL:block.imageURL];
     [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeWidth multiplier:1/block.aspectRatio constant:0]];
-    
+
     return imageView;
 }
 
@@ -89,9 +107,14 @@
 + (UIView *)buttonViewForBlock:(RVButtonBlock *)block {
     UIView *buttonView = [UIView new];
     
-    UILabel *titleView = [UILabel new];
+    UITextView *titleView = [UITextView new];
     titleView.translatesAutoresizingMaskIntoConstraints = NO;
     titleView.backgroundColor = [UIColor clearColor];
+    titleView.scrollEnabled = NO;
+    titleView.editable = NO;
+    titleView.userInteractionEnabled = NO;
+    titleView.textContainerInset = UIEdgeInsetsZero;
+    titleView.textContainer.lineFragmentPadding = 0;
     titleView.attributedText = block.label;
     
     NSDictionary *views = NSDictionaryOfVariableBindings(titleView);
@@ -128,14 +151,38 @@
     self = [self init];
     if (self) {
         self.translatesAutoresizingMaskIntoConstraints = NO;
+        self.clipsToBounds = YES;
+        
+        // backgroundColor
         self.backgroundColor = block.backgroundColor;
+        
+        // backgroundImage
+        if (block.backgroundImageURL) {
+            __weak typeof(self) weakSelf = self;
+            if (block.backgroundContentMode == RVBackgroundContentModeTile) {
+//                [[SDWebImageManager sharedManager] downloadImageWithURL:block.backgroundImageURL options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+//                    weakSelf.backgroundColor = [UIColor colorWithPatternImage:image];
+//                }];
+            } else {
+                UIImageView *backgroundImageView = [UIImageView new];
+                backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
+                backgroundImageView.contentMode = UIViewContentModeFromRVBackgroundContentMode(block.backgroundContentMode);
+                [backgroundImageView sd_setImageWithURL:block.backgroundImageURL];
+                
+                [self addSubview:backgroundImageView];
+                
+                NSDictionary *views = NSDictionaryOfVariableBindings(backgroundImageView);
+                
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[backgroundImageView]|" options:0 metrics:nil views:views]];
+                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundImageView]|" options:0 metrics:nil views:views]];
+            }
+        }
         
         UIView *contentView = [RXBlockView viewForBlock:block];
         contentView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:contentView];
         
         // Padding
-        
         NSDictionary *views = NSDictionaryOfVariableBindings(contentView);
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"|-%f-[contentView]-%f-|", block.padding.left, block.padding.right] options:0 metrics:nil views:views]];
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-%f-[contentView]-%f-|", block.padding.top, block.padding.bottom] options:0 metrics:nil views:views]];
@@ -150,7 +197,7 @@
         //if (block.url) {
             // TODO: add touchdown states and stuff
             UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
-            [self addGestureRecognizer:tapGestureRecognizer];
+            //[self addGestureRecognizer:tapGestureRecognizer];
             self.url = block.url;
         //}
     }

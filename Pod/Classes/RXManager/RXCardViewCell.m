@@ -8,6 +8,7 @@
 
 #import "RXCardViewCell.h"
 #import "RXBlockView.h"
+#import "RVViewDefinition.h"
 
 // Shadow constants
 #define kCardShadowColor [[UIColor blackColor] CGColor]
@@ -68,7 +69,7 @@
     _containerView.layer.shadowOffset = kCardShadowOffset;
     _containerView.layer.shadowOpacity = kCardShadowOpacity;
     _containerView.layer.shadowRadius = kCardShadowRadius;
-    [_containerView addGestureRecognizer:_panGestureRecognizer];
+    //[_containerView addGestureRecognizer:_panGestureRecognizer];
     [self.contentView addSubview:_containerView];
 }
 
@@ -108,14 +109,22 @@
     [self configureLayoutForBlockView:blockView ];
 }
 
-- (void)setCard:(RVCard *)card {
-    [self setMargins:card.margins];
-    [card.listviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
+- (void)setViewDefinition:(RVViewDefinition *)viewDefinition {
+    // Margins
+    [self setMargins:viewDefinition.margins];
+    
+    // Background Color
+    [_containerView setBackgroundColor:viewDefinition.backgroundColor];
+    
+    // Corner Radius
+    _containerView.layer.cornerRadius = viewDefinition.corderRadius;
+    
+    [viewDefinition.blocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
         RXBlockView *blockView = [[RXBlockView alloc] initWithBlock:block];
         blockView.delegate = self;
         [self addBlockView:blockView];
     }];
-    _card = card;
+    _viewDefinition = viewDefinition;
 }
 
 - (void)prepareForReuse {
@@ -199,13 +208,18 @@
 - (void)updateConstraintsIfNeeded:(BOOL)animated animationBlock:(void (^)())animationBlock completion:(void (^)(BOOL finished))completion {
     float duration = 0;
     if (animated) {
-        duration = 0.1;
+        duration = 0.3;
     }
     
-    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+    [UIView animateWithDuration:duration delay:0 usingSpringWithDamping:.6 initialSpringVelocity:5 options:UIViewAnimationOptionCurveEaseIn animations:^{
         animationBlock ? animationBlock() : nil;
         [self layoutIfNeeded];
     } completion:completion];
+    
+//    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+//        animationBlock ? animationBlock() : nil;
+//        [self layoutIfNeeded];
+//    } completion:completion];
 }
 
 - (void)moveContainer:(CGFloat)deltaX {

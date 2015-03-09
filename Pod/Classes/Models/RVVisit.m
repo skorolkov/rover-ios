@@ -48,15 +48,15 @@
 
 - (NSArray *)allImageUrls {
     NSMutableArray *array = [NSMutableArray array];
-    [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
-        [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
-            [card.listviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
-                if ([block isKindOfClass:[RVImageBlock class]]) {
-                    [array insertObject:((RVImageBlock *)block).imageURL atIndex:array.count];
-                }
-            }];
-        }];
-    }];
+//    [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
+//        [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
+//            [card.listviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
+//                if ([block isKindOfClass:[RVImageBlock class]]) {
+//                    [array insertObject:((RVImageBlock *)block).imageURL atIndex:array.count];
+//                }
+//            }];
+//        }];
+//    }];
     return [NSArray arrayWithArray:array];
 }
 

@@ -10,6 +10,7 @@
 #import "RVCardProject.h"
 #import "RVColorUtilities.h"
 #import "RVBlock.h"
+#import "RVViewDefinition.h"
 
 @implementation RVCard
 
@@ -101,41 +102,23 @@
         _metaData = metaData;
     }
     
-    // listviewBlocks
-    NSArray *listviewBlocksData = [JSON objectForKey:@"listView"];
-    if (listviewBlocksData && listviewBlocksData != (id)[NSNull null]) {
-        NSMutableArray *listviewBlocks = [NSMutableArray arrayWithCapacity:[listviewBlocksData count]];
-        [listviewBlocksData enumerateObjectsUsingBlock:^(NSDictionary *blockData, NSUInteger idx, BOOL *stop) {
-            RVBlock *block = [RVBlock appropriateBlockWithJSON:blockData];
-            [listviewBlocks insertObject:block atIndex:idx];
+    // views
+    NSArray *views = [JSON objectForKey:@"views"];
+    if (views && views != (id)[NSNull null]) {
+        NSMutableArray *viewsArray = [NSMutableArray arrayWithCapacity:views.count];
+        [views enumerateObjectsUsingBlock:^(NSDictionary *viewData, NSUInteger idx, BOOL *stop) {
+            RVViewDefinition *view = [[RVViewDefinition alloc] initWithJSON:viewData];
+            [viewsArray insertObject:view atIndex:idx];
+            
+            if (view.type == RVViewDefinitionTypeListView) {
+                self.listView = view;
+            }
         }];
-        _listviewBlocks = listviewBlocks;
-    }
-    
-    // detailviewBlocks
-    NSArray *detailviewBlocksData = [JSON objectForKey:@"detailView"];
-    if (detailviewBlocksData && detailviewBlocksData != (id)[NSNull null]) {
-        NSMutableArray *detailviewBlocks = [NSMutableArray arrayWithCapacity:[detailviewBlocksData count]];
-        [detailviewBlocksData enumerateObjectsUsingBlock:^(NSDictionary *blockData, NSUInteger idx, BOOL *stop) {
-            RVBlock *block = [RVBlock appropriateBlockWithJSON:blockData];
-            [detailviewBlocks insertObject:block atIndex:idx];
-        }];
-        _detailviewBlocks = detailviewBlocks;
+        _viewDefinitions = [NSArray arrayWithArray:viewsArray];
     }
     
     
-    // corderRadius
-//    NSNumber *borderRadius = [JSON objectForKey:@"borderRadius"];
-//    if (borderRadius && borderRadius != (id)[NSNull null]) {
-//        self.corderRadius = [borderRadius floatValue];
-//    }
-
-    
-    // margins
-    NSArray *margins = [JSON objectForKey:@"margin"];
-    if (margins && margins != (id)[NSNull null]) {
-        self.margins = UIEdgeInsetsMake([margins[0] floatValue], [margins[3] floatValue], [margins[2] floatValue], [margins[1] floatValue]);
-    }
+// -0-----
     
     
     // cardId
@@ -251,13 +234,8 @@
     return JSON;
 }
 
-- (CGFloat)heightForWidth:(CGFloat)width {
-    __block CGFloat blocksHeight = 0;
-    [_listviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
-        blocksHeight += [block heightForWidth:width - _margins.left - _margins.right];
-    }];
-    
-    return _margins.top + blocksHeight + _margins.bottom;
+- (CGFloat)listViewHeightForWidth:(CGFloat)width {
+    return [_listView heightForWidth:width];
 }
 
 

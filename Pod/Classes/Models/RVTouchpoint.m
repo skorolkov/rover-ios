@@ -42,7 +42,7 @@
             RVCard *card = [[RVCard alloc] initWithJSON:cardData];
             [cards addObject:card];
         }];
-        self.cards = [cards copy];
+        self.cards = [NSArray arrayWithArray:cards];
     }
     
 }

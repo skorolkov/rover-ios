@@ -8,6 +8,7 @@
 
 #import "RVModel.h"
 #import <UIKit/UIKit.h>
+#import "RVBackgroundImage.h"
 
 typedef NS_ENUM(NSInteger, RVBlockType) {
     RVBlockImageType,
@@ -17,11 +18,10 @@ typedef NS_ENUM(NSInteger, RVBlockType) {
     RVBlockHeaderType
 };
 
-@interface RVBlock : RVModel
+@interface RVBlock : RVModel <RVBackgroundImage>
 
 + (RVBlock *)appropriateBlockWithJSON:(NSDictionary *)JSON;
 
-@property (nonatomic, strong) UIColor *backgroundColor;
 @property (nonatomic, strong) UIColor *borderColor;
 @property (nonatomic, assign) UIEdgeInsets borderWidth;
 @property (nonatomic, assign) UIEdgeInsets padding;
@@ -29,5 +29,6 @@ typedef NS_ENUM(NSInteger, RVBlockType) {
 @property (nonatomic, strong) NSURL *url;
 
 - (CGFloat)heightForWidth:(CGFloat)width;
+- (CGFloat)paddingAdjustedValueForWidth:(CGFloat)width;
 
 @end

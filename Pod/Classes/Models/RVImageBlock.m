@@ -77,7 +77,7 @@
 }
 
 - (CGFloat)heightForWidth:(CGFloat)width {
-    return [super heightForWidth:width] + floor(width / _aspectRatio);
+    return [super heightForWidth:width] + ([self paddingAdjustedValueForWidth:width] / _aspectRatio);
 }
 
 @end

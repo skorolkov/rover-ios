@@ -10,6 +10,8 @@
 #import "RVVisitController.h"
 #import "RXCardViewCell.h"
 #import "RXCardViewController.h"
+#import "RVCard.h"
+#import "RVViewDefinition.h"
 
 @interface RXVisitViewController () <RVVisitControllerDelegate, RXCardViewCellDelegate>
 
@@ -71,7 +73,7 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return [[self.visitController cardAtIndexPath:indexPath] heightForWidth:self.view.frame.size.width];
+    return [[self.visitController cardAtIndexPath:indexPath] listViewHeightForWidth:self.view.frame.size.width];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -87,7 +89,7 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 }
 
 - (void)configureCell:(RXCardViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    [cell setCard:[self.visitController cardAtIndexPath:indexPath]];
+    [cell setViewDefinition:[self.visitController cardAtIndexPath:indexPath].listView];
     cell.delegate = self;
 }
 
@@ -103,8 +105,9 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     RVCard *card = [self.visitController cardAtIndexPath:indexPath];
-    if (card.detailviewBlocks) {
-        RXCardViewController *cardViewController = [[RXCardViewController alloc] initWithCard:card];
+    RVViewDefinition *detailView = [card.viewDefinitions objectAtIndex:1];
+    if (detailView && detailView.blocks > 0) {
+        RXCardViewController *cardViewController = [[RXCardViewController alloc] initWithViewDefinition:detailView];
         [self presentViewController:cardViewController animated:YES completion:nil];
     }
 }

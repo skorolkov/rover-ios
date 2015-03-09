@@ -61,8 +61,8 @@
 }
 
 - (CGFloat)heightForWidth:(CGFloat)width {
-    CGFloat height = [super heightForWidth:width] + ([[self title] boundingRectWithSize:CGSizeMake(width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height) + 20; // 20 for status bar
-    return floor(height) - 1;
+    CGFloat height = [super heightForWidth:width] + ([[self title] boundingRectWithSize:CGSizeMake([self paddingAdjustedValueForWidth:width], MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height) + 20; // 20 for status bar
+    return height;
 }
 
 @end

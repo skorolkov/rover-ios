@@ -9,7 +9,7 @@
 #import "RXCardViewController.h"
 #import "RXTransition.h"
 #import "RXBlockView.h"
-#import "RVCard.h"
+#import "RVViewDefinition.h"
 #import "RVBlock.h"
 #import "RVHeaderBlock.h"
 
@@ -38,10 +38,10 @@
     return self;
 }
 
-- (instancetype)initWithCard:(RVCard *)card {
+- (instancetype)initWithViewDefinition:(RVViewDefinition *)viewDefinition {
     self = [self init];
     if (self) {
-        self.card = card;
+        self.viewDefinition = viewDefinition;
     }
     return self;
 }
@@ -133,12 +133,12 @@
     [self configureHeaderLayoutForBlockView:blockView];
 }
 
-- (void)setCard:(RVCard *)card {
+- (void)setViewDefinition:(RVViewDefinition *)viewDefinition {
     if (self.view) {
         [_containerView.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
             [subview removeFromSuperview];
         }];
-        [card.detailviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
+        [viewDefinition.blocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
             if ([block class] == [RVHeaderBlock class]) {
                 [self addHeaderBlockView:[[RXBlockView alloc] initWithBlock:block]];
                 

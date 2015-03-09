@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RVCard.h"
+
+@class RVViewDefinition;
 
 @protocol RXCardViewCellDelegate;
 
@@ -15,7 +16,7 @@
 
 @property (nonatomic, weak) id<RXCardViewCellDelegate> delegate;
 @property (nonatomic, readonly) UIView *containerView;
-@property (nonatomic, weak) RVCard *card;
+@property (nonatomic, weak) RVViewDefinition *viewDefinition;
 
 @end
 
