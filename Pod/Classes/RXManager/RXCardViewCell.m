@@ -64,6 +64,7 @@
 {
     _containerView = [UIView new];
     _containerView.translatesAutoresizingMaskIntoConstraints = NO;
+    _containerView.clipsToBounds = YES;
     _containerView.backgroundColor = [UIColor clearColor];
     _containerView.layer.shadowColor = kCardShadowColor;
     _containerView.layer.shadowOffset = kCardShadowOffset;
@@ -117,7 +118,7 @@
     [_containerView setBackgroundColor:viewDefinition.backgroundColor];
     
     // Corner Radius
-    _containerView.layer.cornerRadius = viewDefinition.corderRadius;
+    _containerView.layer.cornerRadius = viewDefinition.cornerRadius;
     
     [viewDefinition.blocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
         RXBlockView *blockView = [[RXBlockView alloc] initWithBlock:block];

@@ -30,7 +30,7 @@
     // corderRadius
     NSNumber *borderRadius = [JSON objectForKey:@"borderRadius"];
     if (borderRadius && borderRadius != (id)[NSNull null]) {
-        self.corderRadius = [borderRadius floatValue];
+        self.cornerRadius = [borderRadius floatValue];
     }
     
     

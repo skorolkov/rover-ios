@@ -15,6 +15,8 @@
 #import "RVBarcodeBlock.h"
 #import "RVButtonBlock.h"
 
+#import "RXBarcodeView.h"
+
 //#import <UIActivityIndicator-for-SDWebImage/UIImageView+UIActivityIndicatorForSDWebImage.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <SDWebImage/SDWebImageManager.h>
@@ -101,7 +103,7 @@ UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundConte
 }
 
 + (UIView *)barcodeViewForBlock:(RVBarcodeBlock *)block {
-    return [UIView new];
+    return [[RXBarcodeView alloc] initWithCode:block.barcodeString type:block.barcodeType attributedLabel:block.barcodeLabelAttributedString];
 }
 
 + (UIView *)buttonViewForBlock:(RVButtonBlock *)block {
@@ -160,9 +162,9 @@ UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundConte
         if (block.backgroundImageURL) {
             __weak typeof(self) weakSelf = self;
             if (block.backgroundContentMode == RVBackgroundContentModeTile) {
-//                [[SDWebImageManager sharedManager] downloadImageWithURL:block.backgroundImageURL options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-//                    weakSelf.backgroundColor = [UIColor colorWithPatternImage:image];
-//                }];
+                [[SDWebImageManager sharedManager] downloadImageWithURL:block.backgroundImageURL options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+                    weakSelf.backgroundColor = [UIColor colorWithPatternImage:image];
+                }];
             } else {
                 UIImageView *backgroundImageView = [UIImageView new];
                 backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;

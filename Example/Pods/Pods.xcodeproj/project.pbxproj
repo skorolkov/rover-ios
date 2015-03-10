@@ -43,6 +43,7 @@
 		352F05C70EAAEF6C664B8336 /* RVColorUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F2A79CCFDB9270107E4FEA7 /* RVColorUtilities.m */; };
 		36B63590FCABA357522B0F25 /* RVHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1424A7762FAB38A564FD0736 /* RVHelper.h */; };
 		3D2E52CB309AFE04AD913F6D /* RSISSN13Generator.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB1E971D4E42FFFF8DAC1EF /* RSISSN13Generator.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
+		3D82E1091AAF3AD700F35A41 /* RXBarcodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D82E1081AAF3AD700F35A41 /* RXBarcodeView.m */; };
 		3D91845A1AA8BD7700F50096 /* RVViewDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D9184581AA8BD7700F50096 /* RVViewDefinition.h */; };
 		3D91845B1AA8BD7700F50096 /* RVViewDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D9184591AA8BD7700F50096 /* RVViewDefinition.m */; };
 		3D9184601AA8FDFC00F50096 /* RVBackgroundImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D91845F1AA8FDFC00F50096 /* RVBackgroundImage.h */; };
@@ -260,6 +261,8 @@
 		3BA5ED4E45C453AE1137CDBA /* RVModalViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RVModalViewController.m; path = Pod/Classes/Controllers/RVModalViewController.m; sourceTree = "<group>"; };
 		3C6C20180E5334C81E2407D2 /* RVImageBlock.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RVImageBlock.h; path = Pod/Classes/Models/RVImageBlock.h; sourceTree = "<group>"; };
 		3C8EFECA51BDE22C1B15E454 /* Pods-Rover-SDWebImage.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Rover-SDWebImage.xcconfig"; sourceTree = "<group>"; };
+		3D82E1071AAF3AD700F35A41 /* RXBarcodeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXBarcodeView.h; path = Pod/Classes/RXManager/RXBarcodeView.h; sourceTree = "<group>"; };
+		3D82E1081AAF3AD700F35A41 /* RXBarcodeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXBarcodeView.m; path = Pod/Classes/RXManager/RXBarcodeView.m; sourceTree = "<group>"; };
 		3D9184581AA8BD7700F50096 /* RVViewDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RVViewDefinition.h; path = Pod/Classes/Models/RVViewDefinition.h; sourceTree = "<group>"; };
 		3D9184591AA8BD7700F50096 /* RVViewDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RVViewDefinition.m; path = Pod/Classes/Models/RVViewDefinition.m; sourceTree = "<group>"; };
 		3D91845F1AA8FDFC00F50096 /* RVBackgroundImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RVBackgroundImage.h; path = Pod/Classes/Models/RVBackgroundImage.h; sourceTree = "<group>"; };
@@ -713,6 +716,8 @@
 				3D9184591AA8BD7700F50096 /* RVViewDefinition.m */,
 				3D91845F1AA8FDFC00F50096 /* RVBackgroundImage.h */,
 				3D9184611AA9015D00F50096 /* RVBackgroundImage.m */,
+				3D82E1071AAF3AD700F35A41 /* RXBarcodeView.h */,
+				3D82E1081AAF3AD700F35A41 /* RXBarcodeView.m */,
 			);
 			name = Rover;
 			path = ../..;
@@ -1052,6 +1057,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13E8382D6141704256EDCE90 /* Pods-Rover-dummy.m in Sources */,
+				3D82E1091AAF3AD700F35A41 /* RXBarcodeView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

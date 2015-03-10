@@ -19,7 +19,7 @@ typedef NS_ENUM(NSUInteger, RVViewDefinitionType) {
 @property (nonatomic, assign) RVViewDefinitionType type;
 @property (nonatomic, strong) NSArray *blocks;
 @property (nonatomic) UIEdgeInsets margins;
-@property (nonatomic) CGFloat corderRadius;
+@property (nonatomic) CGFloat cornerRadius;
 
 
 - (CGFloat)heightForWidth:(CGFloat)width;
