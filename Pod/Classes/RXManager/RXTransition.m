@@ -7,7 +7,7 @@
 //
 
 #import "RXTransition.h"
-#import "RXCardViewController.h"
+#import "RXDetailViewController.h"
 
 #define kThreshold 100.f
 
@@ -53,7 +53,7 @@
 
 - (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext{
     UIViewController *fromVC=[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    RXCardViewController *toVC=(RXCardViewController *)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    RXDetailViewController *toVC=(RXDetailViewController *)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIView *contextView=[transitionContext containerView];
     
     CGRect finalFrame=[transitionContext finalFrameForViewController:toVC];
@@ -91,7 +91,7 @@
     
     UIView* inView = [transitionContext containerView];
     UIViewController* toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    RXCardViewController* fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    RXDetailViewController* fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
 
     NSLog(@"TO VC: %@", toViewController);
     
@@ -122,7 +122,7 @@
     }
     
     //UIViewController* toViewController = [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    RXCardViewController* fromViewController = (RXCardViewController *)[self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    RXDetailViewController* fromViewController = (RXDetailViewController *)[self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     
     [fromViewController prepareLayoutForInteractiveTransition:percentComplete];
     [fromViewController.view layoutIfNeeded];
@@ -157,7 +157,7 @@
 - (void)finishInteractiveTransitionWithDuration:(CGFloat)duration{
     
     UIViewController* toViewController = [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    RXCardViewController* fromViewController = (RXCardViewController *)[self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    RXDetailViewController* fromViewController = (RXDetailViewController *)[self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     
     
     [fromViewController prepareLayoutForInteractiveTransition:1];

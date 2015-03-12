@@ -10,7 +10,6 @@
 #import "RVImageEffects.h"
 #import "Rover.h"
 #import "RXCardViewCell.h"
-#import "RXCardViewController.h"
 #import "RXTransition.h"
 #import "RVTouchpoint.h"
 

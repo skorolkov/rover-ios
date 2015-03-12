@@ -1,5 +1,5 @@
 //
-//  RXCardViewController.h
+//  RXDetailViewController.h
 //  Pods
 //
 //  Created by Ata Namvari on 2015-01-30.
@@ -10,7 +10,7 @@
 
 @class RVViewDefinition;
 
-@interface RXCardViewController : UIViewController
+@interface RXDetailViewController : UIViewController
 
 @property (nonatomic, weak) RVViewDefinition *viewDefinition;
 @property (readonly) UIScrollView *scrollView;

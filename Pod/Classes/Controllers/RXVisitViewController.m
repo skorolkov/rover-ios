@@ -9,7 +9,7 @@
 #import "RXVisitViewController.h"
 #import "RVVisitController.h"
 #import "RXCardViewCell.h"
-#import "RXCardViewController.h"
+#import "RXDetailViewController.h"
 #import "RVCard.h"
 #import "RVViewDefinition.h"
 
@@ -107,7 +107,7 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     RVCard *card = [self.visitController cardAtIndexPath:indexPath];
     RVViewDefinition *detailView = [card.viewDefinitions objectAtIndex:1];
     if (detailView && detailView.blocks > 0) {
-        RXCardViewController *cardViewController = [[RXCardViewController alloc] initWithViewDefinition:detailView];
+        RXDetailViewController *cardViewController = [[RXDetailViewController alloc] initWithViewDefinition:detailView];
         [self presentViewController:cardViewController animated:YES completion:nil];
     }
 }

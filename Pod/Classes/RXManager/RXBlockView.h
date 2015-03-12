@@ -17,9 +17,11 @@
 + (UIView *)viewForBlock:(RVBlock *)block;
 
 @property (nonatomic, assign) id<RXBlockViewDelegate> delegate;
+@property (nonatomic, weak, readonly) RVBlock *block;
 
+// Designated initializer
 - (instancetype)initWithBlock:(RVBlock *)block;
- 
+
 @end
 
 @protocol RXBlockViewDelegate <NSObject>

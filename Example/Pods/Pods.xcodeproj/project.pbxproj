@@ -36,7 +36,7 @@
 		2A8F021882BD6FD06508FF0A /* RXBlockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 270378507660899441D9BA30 /* RXBlockView.m */; };
 		2CC6F79A43A7129B8B21EC35 /* RVLocation.h in Headers */ = {isa = PBXBuildFile; fileRef = 13629FE4AA24537B5C33F08F /* RVLocation.h */; };
 		2E1A3525C456E702E31C8C63 /* SDWebImageCompat.m in Sources */ = {isa = PBXBuildFile; fileRef = BCA7DD38612126AD0A685695 /* SDWebImageCompat.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
-		2FCE1581B04C4C2B37FB9A7D /* RXCardViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = EF0AE08B0C37E12F11259F61 /* RXCardViewController.h */; };
+		2FCE1581B04C4C2B37FB9A7D /* RXDetailViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = EF0AE08B0C37E12F11259F61 /* RXDetailViewController.h */; };
 		30C8DFB3793FE6378D39F7C9 /* RVBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = D052274AA23AD7ECD4D4BB19 /* RVBlock.m */; };
 		31A7DC5D77CBB440BA609D29 /* RVTouchpoint.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EF98FE929653751D1148247 /* RVTouchpoint.h */; };
 		32ED7DC3FC500D8E2CE85198 /* RSCodeGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = AE1C75EA38305841999897D2 /* RSCodeGenerator.h */; };
@@ -44,6 +44,8 @@
 		36B63590FCABA357522B0F25 /* RVHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 1424A7762FAB38A564FD0736 /* RVHelper.h */; };
 		3D2E52CB309AFE04AD913F6D /* RSISSN13Generator.m in Sources */ = {isa = PBXBuildFile; fileRef = BFB1E971D4E42FFFF8DAC1EF /* RSISSN13Generator.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		3D82E1091AAF3AD700F35A41 /* RXBarcodeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D82E1081AAF3AD700F35A41 /* RXBarcodeView.m */; };
+		3D82E10C1AB0E11700F35A41 /* RXTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D82E10A1AB0E11700F35A41 /* RXTextView.h */; };
+		3D82E10D1AB0E11700F35A41 /* RXTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D82E10B1AB0E11700F35A41 /* RXTextView.m */; };
 		3D91845A1AA8BD7700F50096 /* RVViewDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D9184581AA8BD7700F50096 /* RVViewDefinition.h */; };
 		3D91845B1AA8BD7700F50096 /* RVViewDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D9184591AA8BD7700F50096 /* RVViewDefinition.m */; };
 		3D9184601AA8FDFC00F50096 /* RVBackgroundImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 3D91845F1AA8FDFC00F50096 /* RVBackgroundImage.h */; };
@@ -74,7 +76,7 @@
 		5F065C8FE6E33C0EC1C702F2 /* SDWebImagePrefetcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 814A24689A85C85808CB7557 /* SDWebImagePrefetcher.h */; };
 		5FF7AFA39F4FA4419FACB5C9 /* RVVisitController.h in Headers */ = {isa = PBXBuildFile; fileRef = DC841004F9B6E8437485B213 /* RVVisitController.h */; };
 		600CA88A6F6560ABAC0B482C /* RVTextBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 933BAB07F59952522A22F8CB /* RVTextBlock.h */; };
-		617A24121E1112EE682775AC /* RXCardViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = EF0AE08B0C37E12F11259F61 /* RXCardViewController.h */; };
+		617A24121E1112EE682775AC /* RXDetailViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = EF0AE08B0C37E12F11259F61 /* RXDetailViewController.h */; };
 		61AB04155C595E4874E50824 /* SDWebImageDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 76F9653EC2151ECF1443967B /* SDWebImageDownloader.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		64D8CAEE589C5E614A5B647A /* RSEANGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 959627F8C3D5BFD449B78627 /* RSEANGenerator.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		6C8C091C0F9BE2261587590A /* RSBarcodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 70E9FA8FB01A96250102A26D /* RSBarcodes.h */; };
@@ -85,7 +87,7 @@
 		74FBA1C59C3AA76F419B690C /* RSEAN13Generator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7851E9A90D7B29710F38653B /* RSEAN13Generator.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		75D3CEF3F5E3F48FE68C8702 /* RVNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 96EE3492883BA0A16CDB0DC8 /* RVNotificationCenter.m */; };
 		787EE02A3DC5400D45B61734 /* RVCard.m in Sources */ = {isa = PBXBuildFile; fileRef = D1697C7B38789C9AA704DA73 /* RVCard.m */; };
-		79510FC2513AC89960DCCEE5 /* RXCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D51E85F18638BBE802F3AEE /* RXCardViewController.m */; };
+		79510FC2513AC89960DCCEE5 /* RXDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D51E85F18638BBE802F3AEE /* RXDetailViewController.m */; };
 		7A5FDCC247CADD6712645516 /* RSScannerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C45F65E00A8ACBD62E3208E1 /* RSScannerViewController.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		7F8737AC0D3CF091C6E18628 /* SDImageCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F8D6CFB3F36F626499CD4D5 /* SDImageCache.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		8129176DE59493DB97058F82 /* RSUPCEGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 863C22AC86DCC50B11C5BFF1 /* RSUPCEGenerator.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
@@ -138,7 +140,7 @@
 		C7C070081B967BE2CFBFA363 /* RVImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 0898DA8B784F2FF8C9F93246 /* RVImageEffects.m */; };
 		C9622A008A46B0EC0BBBD381 /* RSCode128Generator.m in Sources */ = {isa = PBXBuildFile; fileRef = 054AECA5DC301559EB994BE5 /* RSCode128Generator.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		CB73C7F041779854FDFB7F1F /* RVMoreButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 1FAAB824711EDAD617E18BB8 /* RVMoreButton.h */; };
-		CC025C69C9A72B0FCAA9C347 /* RXCardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D51E85F18638BBE802F3AEE /* RXCardViewController.m */; };
+		CC025C69C9A72B0FCAA9C347 /* RXDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D51E85F18638BBE802F3AEE /* RXDetailViewController.m */; };
 		CC2A96DFA7F2ED252411EBD7 /* RVVisitProject.h in Headers */ = {isa = PBXBuildFile; fileRef = 9CF842778CDD321434E6903D /* RVVisitProject.h */; };
 		CCE0A0901465082BB3C6E77B /* RXModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C2373D7C3E78B04676940094 /* RXModalViewController.m */; };
 		CE3121931DEED6CE274E3463 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5C288E65C80215CE638258F /* Foundation.framework */; };
@@ -263,6 +265,8 @@
 		3C8EFECA51BDE22C1B15E454 /* Pods-Rover-SDWebImage.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Rover-SDWebImage.xcconfig"; sourceTree = "<group>"; };
 		3D82E1071AAF3AD700F35A41 /* RXBarcodeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXBarcodeView.h; path = Pod/Classes/RXManager/RXBarcodeView.h; sourceTree = "<group>"; };
 		3D82E1081AAF3AD700F35A41 /* RXBarcodeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXBarcodeView.m; path = Pod/Classes/RXManager/RXBarcodeView.m; sourceTree = "<group>"; };
+		3D82E10A1AB0E11700F35A41 /* RXTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RXTextView.h; path = Pod/Classes/RXManager/RXTextView.h; sourceTree = "<group>"; };
+		3D82E10B1AB0E11700F35A41 /* RXTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RXTextView.m; path = Pod/Classes/RXManager/RXTextView.m; sourceTree = "<group>"; };
 		3D9184581AA8BD7700F50096 /* RVViewDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RVViewDefinition.h; path = Pod/Classes/Models/RVViewDefinition.h; sourceTree = "<group>"; };
 		3D9184591AA8BD7700F50096 /* RVViewDefinition.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RVViewDefinition.m; path = Pod/Classes/Models/RVViewDefinition.m; sourceTree = "<group>"; };
 		3D91845F1AA8FDFC00F50096 /* RVBackgroundImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RVBackgroundImage.h; path = Pod/Classes/Models/RVBackgroundImage.h; sourceTree = "<group>"; };
@@ -332,7 +336,7 @@
 		9B28A0D7DDF74DF390C53FF9 /* RXTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RXTransition.h; path = Pod/Classes/RXManager/RXTransition.h; sourceTree = "<group>"; };
 		9C4793B2AF0B6C22BC32E7CE /* RSCodeView.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RSCodeView.h; path = RSBarcodes/RSCodeView.h; sourceTree = "<group>"; };
 		9CF842778CDD321434E6903D /* RVVisitProject.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RVVisitProject.h; path = Pod/Classes/Models/RVVisitProject.h; sourceTree = "<group>"; };
-		9D51E85F18638BBE802F3AEE /* RXCardViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RXCardViewController.m; path = Pod/Classes/RXManager/RXCardViewController.m; sourceTree = "<group>"; };
+		9D51E85F18638BBE802F3AEE /* RXDetailViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RXDetailViewController.m; path = Pod/Classes/RXManager/RXDetailViewController.m; sourceTree = "<group>"; };
 		9DF6CBD7F26283F9761B3397 /* RVBarcodeBlock.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RVBarcodeBlock.m; path = Pod/Classes/Models/RVBarcodeBlock.m; sourceTree = "<group>"; };
 		A0C0903F833E87C10F20EB4C /* RVBlock.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RVBlock.h; path = Pod/Classes/Models/RVBlock.h; sourceTree = "<group>"; };
 		A1718EFD293F91A48B5D86DB /* RVRegionManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RVRegionManager.h; path = Pod/Classes/Location/RVRegionManager.h; sourceTree = "<group>"; };
@@ -389,7 +393,7 @@
 		EB9FEC3E42216A959AC47B64 /* RVButtonBlock.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RVButtonBlock.m; path = Pod/Classes/Models/RVButtonBlock.m; sourceTree = "<group>"; };
 		EC24AED12456A464864F846D /* RSCode93Generator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RSCode93Generator.m; path = RSBarcodes/RSCode93Generator.m; sourceTree = "<group>"; };
 		ED5E57739A831B827CE77D35 /* RVImageEffects.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RVImageEffects.h; path = Pod/Classes/Utilities/RVImageEffects.h; sourceTree = "<group>"; };
-		EF0AE08B0C37E12F11259F61 /* RXCardViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RXCardViewController.h; path = Pod/Classes/RXManager/RXCardViewController.h; sourceTree = "<group>"; };
+		EF0AE08B0C37E12F11259F61 /* RXDetailViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RXDetailViewController.h; path = Pod/Classes/RXManager/RXDetailViewController.h; sourceTree = "<group>"; };
 		F1D269FF192723B7B4653C18 /* RVVisitController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RVVisitController.m; path = Pod/Classes/Controllers/RVVisitController.m; sourceTree = "<group>"; };
 		F50A0ED4F56D31C866FE105E /* Rover.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = Rover.h; path = Pod/Classes/Rover.h; sourceTree = "<group>"; };
 		F542B04FCD779F41D35A6401 /* RVCard.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RVCard.h; path = Pod/Classes/Models/RVCard.h; sourceTree = "<group>"; };
@@ -689,19 +693,19 @@
 				96D1C4C5926B46B4D765040E /* RVTextBlock.m */,
 				4EF98FE929653751D1148247 /* RVTouchpoint.h */,
 				40F4FD1D4E0CC97311CF214F /* RVTouchpoint.m */,
-				DAEF27AB8F20D9FF7D91E076 /* RVVisit.h */,
 				1DABDB6FD85E7A7C7D07B2A5 /* RVVisit.m */,
 				DC841004F9B6E8437485B213 /* RVVisitController.h */,
 				F1D269FF192723B7B4653C18 /* RVVisitController.m */,
 				A22A065E0173FF5C5DAFBD9D /* RVVisitManager.h */,
 				0D5B75CA451C8BD1511DE977 /* RVVisitManager.m */,
 				9CF842778CDD321434E6903D /* RVVisitProject.h */,
+				DAEF27AB8F20D9FF7D91E076 /* RVVisit.h */,
 				E86B434D24924975B8E05860 /* RXBlockView.h */,
 				270378507660899441D9BA30 /* RXBlockView.m */,
 				8D2E43EAAF3AE409886475A5 /* RXCardViewCell.h */,
 				04C8EE0C7D54F98FD0020903 /* RXCardViewCell.m */,
-				EF0AE08B0C37E12F11259F61 /* RXCardViewController.h */,
-				9D51E85F18638BBE802F3AEE /* RXCardViewController.m */,
+				EF0AE08B0C37E12F11259F61 /* RXDetailViewController.h */,
+				9D51E85F18638BBE802F3AEE /* RXDetailViewController.m */,
 				7F3F8EE70D5A4D3AD46BDF6B /* RXModalViewController.h */,
 				C2373D7C3E78B04676940094 /* RXModalViewController.m */,
 				9B28A0D7DDF74DF390C53FF9 /* RXTransition.h */,
@@ -718,6 +722,8 @@
 				3D9184611AA9015D00F50096 /* RVBackgroundImage.m */,
 				3D82E1071AAF3AD700F35A41 /* RXBarcodeView.h */,
 				3D82E1081AAF3AD700F35A41 /* RXBarcodeView.m */,
+				3D82E10A1AB0E11700F35A41 /* RXTextView.h */,
+				3D82E10B1AB0E11700F35A41 /* RXTextView.m */,
 			);
 			name = Rover;
 			path = ../..;
@@ -853,10 +859,11 @@
 				CC2A96DFA7F2ED252411EBD7 /* RVVisitProject.h in Headers */,
 				A523B0EBECD37E356B4F547F /* RXBlockView.h in Headers */,
 				C0EE30192A0FEC43D3B69971 /* RXBlockView.h in Headers */,
+				3D82E10C1AB0E11700F35A41 /* RXTextView.h in Headers */,
 				23442DEEDB922643355FF0E7 /* RXCardViewCell.h in Headers */,
 				8DF9BD00A576D65D7A25905E /* RXCardViewCell.h in Headers */,
-				617A24121E1112EE682775AC /* RXCardViewController.h in Headers */,
-				2FCE1581B04C4C2B37FB9A7D /* RXCardViewController.h in Headers */,
+				617A24121E1112EE682775AC /* RXDetailViewController.h in Headers */,
+				2FCE1581B04C4C2B37FB9A7D /* RXDetailViewController.h in Headers */,
 				BF2F70885DAD5C529D6BAABD /* RXModalViewController.h in Headers */,
 				B869A87B38D8ABB36B038FA0 /* RXModalViewController.h in Headers */,
 				6D1186670E207970E0240D12 /* RXTransition.h in Headers */,
@@ -1102,12 +1109,13 @@
 				A4E93C772A925BFA0EE7F233 /* RXBlockView.m in Sources */,
 				A19832F059BE53A1663300AC /* RXCardViewCell.m in Sources */,
 				ED2DFE0D02D89AA57F5A7083 /* RXCardViewCell.m in Sources */,
-				CC025C69C9A72B0FCAA9C347 /* RXCardViewController.m in Sources */,
-				79510FC2513AC89960DCCEE5 /* RXCardViewController.m in Sources */,
+				CC025C69C9A72B0FCAA9C347 /* RXDetailViewController.m in Sources */,
+				79510FC2513AC89960DCCEE5 /* RXDetailViewController.m in Sources */,
 				CCE0A0901465082BB3C6E77B /* RXModalViewController.m in Sources */,
 				C14EFFD5BE1B7F56CF953087 /* RXModalViewController.m in Sources */,
 				989A30BADE30838A7806D6A9 /* RXTransition.m in Sources */,
 				EB7ABEB2277C0F64E7CF5C8A /* RXTransition.m in Sources */,
+				3D82E10D1AB0E11700F35A41 /* RXTextView.m in Sources */,
 				949A65FC989CB24624E043C3 /* RXVisitViewController.m in Sources */,
 				468AAC185BDA14271C8F3F52 /* Rover.m in Sources */,
 			);

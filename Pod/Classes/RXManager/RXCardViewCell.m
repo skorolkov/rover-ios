@@ -105,6 +105,11 @@
     [_containerView addConstraints:[RXBlockView constraintsForBlockView:blockView withPreviousBlockView:lastBlockView inside:_containerView]];
 }
 
+- (void)configureLayoutForLastBlockView:(UIView *)blockView
+{
+    [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+}
+
 - (void)addBlockView:(UIView *)blockView {
     [_containerView addSubview:blockView];
     [self configureLayoutForBlockView:blockView ];
@@ -125,6 +130,7 @@
         blockView.delegate = self;
         [self addBlockView:blockView];
     }];
+    [self configureLayoutForLastBlockView:_containerView.subviews[_containerView.subviews.count - 1]];
     _viewDefinition = viewDefinition;
 }
 
@@ -216,11 +222,6 @@
         animationBlock ? animationBlock() : nil;
         [self layoutIfNeeded];
     } completion:completion];
-    
-//    [UIView animateWithDuration:duration delay:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-//        animationBlock ? animationBlock() : nil;
-//        [self layoutIfNeeded];
-//    } completion:completion];
 }
 
 - (void)moveContainer:(CGFloat)deltaX {

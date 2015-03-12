@@ -1,19 +1,19 @@
 //
-//  RXCardViewController.m
+//  RXDetailViewController.m
 //  Pods
 //
 //  Created by Ata Namvari on 2015-01-30.
 //
 //
 
-#import "RXCardViewController.h"
+#import "RXDetailViewController.h"
 #import "RXTransition.h"
 #import "RXBlockView.h"
 #import "RVViewDefinition.h"
 #import "RVBlock.h"
 #import "RVHeaderBlock.h"
 
-@interface RXCardViewController () <UIScrollViewDelegate>
+@interface RXDetailViewController () <UIScrollViewDelegate>
 
 @property (nonatomic, strong) RXTransition *transitionManager;
 @property (nonatomic, strong) UIScrollView *scrollView;
@@ -26,7 +26,7 @@
 
 @end
 
-@implementation RXCardViewController
+@implementation RXDetailViewController
 
 - (instancetype)init {
     self = [super init];
@@ -116,11 +116,16 @@
 {
     id lastBlockView = _containerView.subviews.count > 1 ? _containerView.subviews[_containerView.subviews.count - 2] : nil;
     [_containerView addConstraints:[RXBlockView constraintsForBlockView:blockView withPreviousBlockView:lastBlockView inside:_containerView]];
+    
+    // Height constraint
+    [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:[blockView.block heightForWidth:self.view.frame.size.width]]];
+    NSLog(@"height for %@ = %f",blockView.block, [blockView.block heightForWidth:self.view.frame.size.width] );
 }
 
 - (void)configureHeaderLayoutForBlockView:(RXBlockView *)blockView {
     id lastHeaderBlockView = _titleBar.subviews.count > 1 ? _titleBar.subviews[_titleBar.subviews.count - 2] : nil;
     [_titleBar addConstraints:[RXBlockView constraintsForBlockView:blockView withPreviousBlockView:lastHeaderBlockView inside:_titleBar]];
+    
 }
 
 - (void)addBlockView:(RXBlockView *)blockView {
@@ -165,9 +170,6 @@
         [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:extendedBackground attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:lastBlock attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
         [self.view addConstraint:[NSLayoutConstraint constraintWithItem:extendedBackground attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
     }
-    // This is necessary for UIScrollView with AutoLayout
-    //[_scrollView addConstraint:[NSLayoutConstraint constraintWithItem:_scrollView.subviews[_scrollView.subviews.count - 1] attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_scrollView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-    //[self addBlockView:[RXBlockView new]];
 }
 
 - (void)prepareLayoutForTransition {

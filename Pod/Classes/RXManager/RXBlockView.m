@@ -17,6 +17,8 @@
 
 #import "RXBarcodeView.h"
 
+#import "RXTextView.h"
+
 //#import <UIActivityIndicator-for-SDWebImage/UIImageView+UIActivityIndicatorForSDWebImage.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <SDWebImage/SDWebImageManager.h>
@@ -90,6 +92,10 @@ UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundConte
 }
 
 + (UITextView *)textViewForBlock:(RVTextBlock *)block {
+//    RXTextView *textView = [RXTextView new];
+//    textView.backgroundColor = [UIColor clearColor];
+//    
+//    return textView;
     UITextView *textView = [UITextView new];
     textView.backgroundColor = [UIColor clearColor];
     textView.attributedText = block.htmlText;
@@ -98,6 +104,7 @@ UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundConte
     textView.userInteractionEnabled = NO;
     textView.textContainerInset = UIEdgeInsetsZero;
     textView.textContainer.lineFragmentPadding = 0;
+    textView.contentInset = UIEdgeInsetsZero;
 
     return textView;
 }
@@ -202,6 +209,8 @@ UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundConte
             //[self addGestureRecognizer:tapGestureRecognizer];
             self.url = block.url;
         //}
+        
+        _block = block;
     }
     return self;
 }
