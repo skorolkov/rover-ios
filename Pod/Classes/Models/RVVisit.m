@@ -299,6 +299,7 @@
     [encoder encodeObject:self.exitedAt forKey:@"exitedAt"];
     [encoder encodeObject:self.openedAt forKey:@"openedAt"];
     [encoder encodeObject:self.beaconLastDetectedAt forKey:@"beaconLastDetecedAt"];
+    [encoder encodeObject:self.cards forKey:@"cards"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -317,6 +318,7 @@
         self.exitedAt = [decoder decodeObjectForKey:@"exitedAt"];
         self.openedAt = [decoder decodeObjectForKey:@"openedAt"];
         self.beaconLastDetectedAt = [decoder decodeObjectForKey:@"beaconLastDetecedAt"];
+        self.cards = [decoder decodeObjectForKey:@"cards"];
     }
     return self;
 }
