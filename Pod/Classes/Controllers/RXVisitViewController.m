@@ -105,6 +105,9 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     RVCard *card = [self.visitController cardAtIndexPath:indexPath];
+    if (card.viewDefinitions.count == 1) {
+        return;
+    }
     RVViewDefinition *detailView = [card.viewDefinitions objectAtIndex:1];
     if (detailView && detailView.blocks > 0) {
         RXDetailViewController *cardViewController = [[RXDetailViewController alloc] initWithViewDefinition:detailView];

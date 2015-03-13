@@ -23,22 +23,7 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <SDWebImage/SDWebImageManager.h>
 
-UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundContentMode backgroundContentMode) {
-    switch (backgroundContentMode) {
-        case RVBackgroundContentModeScaleAspectFill:
-            return UIViewContentModeScaleAspectFill;
-            break;
-        case RVBackgroundContentModeScaleAspectFit:
-            return UIViewContentModeScaleAspectFit;
-            break;
-        case RVBackgroundContentModeScaleFill:
-            return UIViewContentModeScaleToFill;
-            break;
-        default:
-            return UIViewContentModeTop;
-            break;
-    }
-}
+
 
 @interface RXBlockView ()
 
@@ -91,21 +76,11 @@ UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundConte
     return imageView;
 }
 
-+ (UITextView *)textViewForBlock:(RVTextBlock *)block {
-//    RXTextView *textView = [RXTextView new];
-//    textView.backgroundColor = [UIColor clearColor];
-//    
-//    return textView;
-    UITextView *textView = [UITextView new];
++ (RXTextView *)textViewForBlock:(RVTextBlock *)block {
+    RXTextView *textView = [RXTextView new];
     textView.backgroundColor = [UIColor clearColor];
     textView.attributedText = block.htmlText;
-    textView.scrollEnabled = NO;
-    textView.editable = NO;
-    textView.userInteractionEnabled = NO;
-    textView.textContainerInset = UIEdgeInsetsZero;
-    textView.textContainer.lineFragmentPadding = 0;
-    textView.contentInset = UIEdgeInsetsZero;
-
+    
     return textView;
 }
 
@@ -162,31 +137,15 @@ UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundConte
         self.translatesAutoresizingMaskIntoConstraints = NO;
         self.clipsToBounds = YES;
         
-        // backgroundColor
+        // Background Color
         self.backgroundColor = block.backgroundColor;
         
-        // backgroundImage
+        // Background Image
         if (block.backgroundImageURL) {
-            __weak typeof(self) weakSelf = self;
-            if (block.backgroundContentMode == RVBackgroundContentModeTile) {
-                [[SDWebImageManager sharedManager] downloadImageWithURL:block.backgroundImageURL options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
-                    weakSelf.backgroundColor = [UIColor colorWithPatternImage:image];
-                }];
-            } else {
-                UIImageView *backgroundImageView = [UIImageView new];
-                backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
-                backgroundImageView.contentMode = UIViewContentModeFromRVBackgroundContentMode(block.backgroundContentMode);
-                [backgroundImageView sd_setImageWithURL:block.backgroundImageURL];
-                
-                [self addSubview:backgroundImageView];
-                
-                NSDictionary *views = NSDictionaryOfVariableBindings(backgroundImageView);
-                
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[backgroundImageView]|" options:0 metrics:nil views:views]];
-                [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundImageView]|" options:0 metrics:nil views:views]];
-            }
+            [self setBackgroundImageWithURL:block.backgroundImageURL contentMode:block.backgroundContentMode];
         }
         
+        // Content
         UIView *contentView = [RXBlockView viewForBlock:block];
         contentView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:contentView];
@@ -197,12 +156,10 @@ UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundConte
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-%f-[contentView]-%f-|", block.padding.top, block.padding.bottom] options:0 metrics:nil views:views]];
     
         // Borders
-        
         _borderColor = block.borderColor;
         _borderWidth = block.borderWidth;
         
         // Link
-        
         //if (block.url) {
             // TODO: add touchdown states and stuff
             UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
@@ -213,6 +170,27 @@ UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundConte
         _block = block;
     }
     return self;
+}
+
+- (void)setBackgroundImageWithURL:(NSURL *)url contentMode:(RVBackgroundContentMode)contentmode {
+    __weak typeof(self) weakSelf = self;
+    if (contentmode == RVBackgroundContentModeTile) {
+        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+            weakSelf.backgroundColor = [UIColor colorWithPatternImage:image];
+        }];
+    } else {
+        UIImageView *backgroundImageView = [UIImageView new];
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        backgroundImageView.contentMode = UIViewContentModeFromRVBackgroundContentMode(contentmode);
+        [backgroundImageView sd_setImageWithURL:url];
+        
+        [self addSubview:backgroundImageView];
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(backgroundImageView);
+        
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[backgroundImageView]|" options:0 metrics:nil views:views]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundImageView]|" options:0 metrics:nil views:views]];
+    }
 }
 
 

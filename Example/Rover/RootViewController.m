@@ -8,11 +8,10 @@
 
 #import "RootViewController.h"
 #import "NewOffersViewController.h"
-#import "CustomModalViewController.h"
 
 #import <Rover/Rover.h>
 
-@interface RootViewController () <RVModalViewControllerDelegate>
+@interface RootViewController ()
 
 @end
 
@@ -77,8 +76,8 @@
 
 #pragma mark - ModalViewController delegate
 
-- (void)modalViewControllerDidFinish:(RVModalViewController *)modalViewController {
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
+//- (void)modalViewControllerDidFinish:(RVModalViewController *)modalViewController {
+//    [self dismissViewControllerAnimated:YES completion:nil];
+//}
 
 @end

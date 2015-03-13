@@ -16,7 +16,8 @@ typedef NS_ENUM(NSUInteger, RVBackgroundContentMode) {
     RVBackgroundContentModeScaleAspectFit = 4
 };
 
-extern inline RVBackgroundContentMode RVBackgroundContentModeFromString(NSString *string);
+extern RVBackgroundContentMode RVBackgroundContentModeFromString(NSString *string);
+extern UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundContentMode backgroundContentMode);
 
 @protocol RVBackgroundImage <NSObject>
 

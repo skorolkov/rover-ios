@@ -215,30 +215,26 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)presentModal {
-    [self presentModalForCardSet:ModalViewCardSetAll withOptions:nil];
-}
-
-- (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options {
     
-//<<<<<<< HEAD
-//    if (!_currentVisit || _currentVisit.cards.count < 1) {
-//        NSLog(@"%@ warning showModal called but there are no cards to display", self);
-//        //return;
-//    }
-//=======
-////    if (!self.currentVisit || self.currentVisit.cards.count < 1) {
-////        NSLog(@"%@ warning showModal called but there are no cards to display", self);
-////        //return;
-////    }
-//>>>>>>> lots of ui
+    //<<<<<<< HEAD
+    //    if (!_currentVisit || _currentVisit.cards.count < 1) {
+    //        NSLog(@"%@ warning showModal called but there are no cards to display", self);
+    //        //return;
+    //    }
+    //=======
+    ////    if (!self.currentVisit || self.currentVisit.cards.count < 1) {
+    ////        NSLog(@"%@ warning showModal called but there are no cards to display", self);
+    ////        //return;
+    ////    }
+    //>>>>>>> lots of ui
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillPresentModalNotification object:self];
     
-//    RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
-//    modalViewController.delegate = self;
-//    modalViewController.cardSet = cardSet;
-//    modalViewController.options = options;
-
+    //    RVModalViewController *modalViewController = [[RVModalViewController alloc] init];
+    //    modalViewController.delegate = self;
+    //    modalViewController.cardSet = cardSet;
+    //    modalViewController.options = options;
+    
     RXModalViewController *modalViewController = [RXModalViewController new];
     
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
@@ -329,21 +325,21 @@ static Rover *sharedInstance = nil;
 
 #pragma mark - RVModalViewControllerDelegate
 
-- (void)modalViewControllerDidFinish:(RVModalViewController *)modalViewController {
-    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillDismissModalNotification object:self];
-    [modalViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidDismissModalNotification object:self];
-}
-
-- (void)modalViewController:(RVModalViewController *)modalViewController didDisplayCard:(RVCard *)card {
-    NSDictionary *userInfo = @{ @"card": card };
-    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidDisplayCardNotification object:self userInfo:userInfo];
-}
-
-- (void)modalViewController:(RVModalViewController *)modalViewController didSwipeCard:(RVCard *)card {
-    NSDictionary *userInfo = @{ @"card": card };
-    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidSwipeCardNotification object:self userInfo:userInfo];
-}
+//- (void)modalViewControllerDidFinish:(RVModalViewController *)modalViewController {
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillDismissModalNotification object:self];
+//    [modalViewController.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidDismissModalNotification object:self];
+//}
+//
+//- (void)modalViewController:(RVModalViewController *)modalViewController didDisplayCard:(RVCard *)card {
+//    NSDictionary *userInfo = @{ @"card": card };
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidDisplayCardNotification object:self userInfo:userInfo];
+//}
+//
+//- (void)modalViewController:(RVModalViewController *)modalViewController didSwipeCard:(RVCard *)card {
+//    NSDictionary *userInfo = @{ @"card": card };
+//    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidSwipeCardNotification object:self userInfo:userInfo];
+//}
 
 #pragma mark - Application Notifications
 

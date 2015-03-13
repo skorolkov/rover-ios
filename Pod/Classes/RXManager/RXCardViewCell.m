@@ -9,6 +9,7 @@
 #import "RXCardViewCell.h"
 #import "RXBlockView.h"
 #import "RVViewDefinition.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 // Shadow constants
 #define kCardShadowColor [[UIColor blackColor] CGColor]
@@ -125,6 +126,11 @@
     // Corner Radius
     _containerView.layer.cornerRadius = viewDefinition.cornerRadius;
     
+    // Background Image
+    if (viewDefinition.backgroundImageURL) {
+        [self setBackgroundImageWithURL:viewDefinition.backgroundImageURL contentMode:viewDefinition.backgroundContentMode];
+    }
+    
     [viewDefinition.blocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
         RXBlockView *blockView = [[RXBlockView alloc] initWithBlock:block];
         blockView.delegate = self;
@@ -132,6 +138,27 @@
     }];
     [self configureLayoutForLastBlockView:_containerView.subviews[_containerView.subviews.count - 1]];
     _viewDefinition = viewDefinition;
+}
+
+- (void)setBackgroundImageWithURL:(NSURL *)url contentMode:(RVBackgroundContentMode)contentmode {
+    __weak UIView *weakContainerView = _containerView;
+    if (contentmode == RVBackgroundContentModeTile) {
+        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+            weakContainerView.backgroundColor = [UIColor colorWithPatternImage:image];
+        }];
+    } else {
+        UIImageView *backgroundImageView = [UIImageView new];
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        backgroundImageView.contentMode = UIViewContentModeFromRVBackgroundContentMode(contentmode);
+        [backgroundImageView sd_setImageWithURL:url];
+        
+        [self addSubview:backgroundImageView];
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(backgroundImageView);
+        
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[backgroundImageView]|" options:0 metrics:nil views:views]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundImageView]|" options:0 metrics:nil views:views]];
+    }
 }
 
 - (void)prepareForReuse {

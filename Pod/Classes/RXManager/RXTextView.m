@@ -9,61 +9,34 @@
 #import "RXTextView.h"
 @import CoreText;
 
-@interface RXTextView ()
-
-//@property (nonatomic, strong)
-
-@end
-
 @implementation RXTextView
 
-- (NSAttributedString *)attributedText {
-    return [[NSAttributedString alloc] initWithString:@"Hello core text world!"];
-}
 
 - (instancetype)init {
     if (self = [super init]) {
-        NSLog(@"init");
+
     }
     return self;
 }
 
+- (void)setAttributedText:(NSAttributedString *)attributedText {
+    _attributedText = attributedText;
+    [self invalidateIntrinsicContentSize];
+}
+
 - (void)setBounds:(CGRect)bounds {
+    if (self.bounds.size.width != bounds.size.width && self.bounds.size.height != bounds.size.height) {
+        [self invalidateIntrinsicContentSize];
+    }
     [super setBounds:bounds];
-    
-    // constraints here
-    
+}
+
+- (CGSize)intrinsicContentSize {
+    return CGSizeMake(self.bounds.size.width, [self.attributedText boundingRectWithSize:CGSizeMake(self.bounds.size.width, CGFLOAT_MAX) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height);
 }
 
 - (void)drawRect:(CGRect)rect {
-    // Drawing code
-    
-    NSLog(@"height: %f", rect.size.width);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-//    // Flip the coordinate system
-//    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-//    CGContextTranslateCTM(context, 0, self.bounds.size.height);
-//    CGContextScaleCTM(context, 1.0, -1.0);
-//    
-//    CGMutablePathRef path = CGPathCreateMutable(); //1
-//    CGPathAddRect(path, NULL, rect );
-//    
-//    NSAttributedString* attString = [[NSAttributedString alloc]
-//                                      initWithString:@"Hello core text world!"] ; //2
-//    
-//    CTFramesetterRef framesetter = CTFramesetterCreateWithAttributedString((CFAttributedStringRef)attString); //3
-//    CTFrameRef frame =
-//    CTFramesetterCreateFrame(framesetter,
-//                             CFRangeMake(0, [attString length]), path, NULL);
-//    
-//    CTFrameDraw(frame, context); //4
-//    
-//    CFRelease(frame); //5
-//    CFRelease(path);
-//    CFRelease(framesetter);
-    NSAttributedString* attString = [[NSAttributedString alloc] initWithString:@"Hello core text world!"] ; //2
-    [attString drawInRect:rect];
+    [_attributedText drawInRect:rect];
 }
 
 

@@ -28,8 +28,7 @@
     // htmlText
     NSString *htmlText = [JSON objectForKey:@"textContent"];
     if (htmlText && htmlText != (id)[NSNull null]) {
-        //self.htmlString = htmlText;
-        self.htmlString = @"<style type=\"text/css\">h1{font-weight:normal;font-family: HelveticaNeue-Thin;font-size:22px;text-align:center;line-height:28px;min-height:24px;color:rgba(255,255,255,1);margin:0px 0px 10px 0px;}h2{font-weight:normal;font-family: HelveticaNeue-Bold;font-size:22px;text-align:left;line-height:22px;min-height:22px;color:rgba(129,129,129,1);margin:0px 0px 10px 0px;}p{font-weight:normal;font-family: HelveticaNeue-Light;font-size:14px;text-align:left;line-height:18px;min-height:18px;color:rgba(93,93,93,1);margin:0px 0px 10px 0px;}</style><h1>Earn 100 Bonus Rewards miles when you spend $40 or more in store</h1>";
+        self.htmlString = htmlText;
     }
 }
 
@@ -37,12 +36,6 @@
     if (!_htmlText) {
         
         _htmlText = [[NSMutableAttributedString alloc] initWithData:[self.htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} documentAttributes:nil error:nil];
-        
-        //NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle ]
-        
-        //[_htmlText setAttributes:@{NSParagraphStyleAttributeName: } range:NSMakeRange(0, _htmlText.length)];
-        
-
         
         // Remove any trailing newline
         if (_htmlText.length) {
@@ -53,8 +46,8 @@
         }
     }
     
-    NSLog(@"htmlString: %@", self.htmlString);
-    NSLog(@"htmlText : %@", _htmlText);
+//    NSLog(@"htmlString: %@", self.htmlString);
+//    NSLog(@"htmlText : %@", _htmlText);
     
     return _htmlText;
 }

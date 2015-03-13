@@ -9,11 +9,7 @@
 #import <CoreLocation/CoreLocation.h>
 
 // Views
-#import "RVCardView.h"
-#import "RVCardBaseView.h"
-#import "RVCardDeckView.h"
-#import "RVCloseButton.h"
-#import "RVModalView.h"
+// WHAT?
 
 // Models
 #import "RVModel.h"
@@ -23,8 +19,7 @@
 #import "RVTouchpoint.h"
 
 // Controllers
-#import "RVModalViewController.h"
-#import "RVCardViewController.h"
+//WHAT?
 
 
 extern NSString *const kRoverDidExpireVisitNotification;
@@ -66,7 +61,7 @@ extern NSString *const kRoverDidSwipeCardNotification;
 
 /** The Rover class it the primary interface to the SDK. All properties and methods are invoked on the class itself. There is no reason to instantiate a Rover instance.
  */
-@interface Rover : NSObject <RVModalViewControllerDelegate>
+@interface Rover : NSObject
 
 /** Sets up the Rover framework with the configuration options for your app. You should call as soon as possible in your AppDelegate.
  */
@@ -106,7 +101,7 @@ extern NSString *const kRoverDidSwipeCardNotification;
 
 /** Present the modal view controller with a subset of cards. E.g. only show unread cards.
  */
-- (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options;
+//- (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options;
 
 /** You can use this method to simulate your app coming in range of a particular beacon.
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.

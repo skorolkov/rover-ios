@@ -8,7 +8,6 @@
 
 #import "RVModelProject.h"
 #import "RVCardProject.h"
-#import "RVColorUtilities.h"
 #import "RVBlock.h"
 #import "RVViewDefinition.h"
 

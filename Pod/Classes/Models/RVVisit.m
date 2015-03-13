@@ -9,7 +9,6 @@
 #import "RVModelProject.h"
 #import "RVVisitProject.h"
 #import "RVCardProject.h"
-#import "RVColorUtilities.h"
 #import "RVLocation.h"
 #import "RVTouchpoint.h"
 
@@ -163,40 +162,10 @@
         self.customerID = customerID;
     }
     
-    // welcomeMessage
-    NSString *welcomeMessage = [JSON objectForKey:@"welcome_message"];
-    if (welcomeMessage && welcomeMessage != (id)[NSNull null] && [welcomeMessage length] > 0) {
-        self.welcomeMessage = welcomeMessage;
-    }
-    
     // keepAlive
     NSNumber *keepAlive = [JSON objectForKey:@"keepAlive"];
     if (keepAlive && keepAlive != (id)[NSNull null]) {
         self.keepAlive = [keepAlive doubleValue] * 60;
-    }
-    
-    // primaryBackgroundColor
-    NSString *primaryBackgroundColor = [JSON objectForKey:@"primary_background_color"];
-    if (primaryBackgroundColor && primaryBackgroundColor != (id)[NSNull null] && [primaryBackgroundColor length] > 0) {
-        self.primaryBackgroundColor = [RVColorUtilities colorFromHexString:primaryBackgroundColor];
-    }
-    
-    // primaryFontColor
-    NSString *primaryFontColor = [JSON objectForKey:@"primary_font_color"];
-    if (primaryFontColor && primaryFontColor != (id)[NSNull null] && [primaryFontColor length] > 0) {
-        self.primaryFontColor = [RVColorUtilities colorFromHexString:primaryFontColor];
-    }
-    
-    // secondaryBackgroundColor
-    NSString *secondaryBackgroundColor = [JSON objectForKey:@"secondary_background_color"];
-    if (secondaryBackgroundColor && secondaryBackgroundColor != (id)[NSNull null] && [secondaryBackgroundColor length] > 0) {
-        self.secondaryBackgroundColor = [RVColorUtilities colorFromHexString:secondaryBackgroundColor];
-    }
-    
-    // secondaryFontColor
-    NSString *secondaryFontColor = [JSON objectForKey:@"secondary_font_color"];
-    if (secondaryFontColor && secondaryFontColor != (id)[NSNull null] && [secondaryFontColor length] > 0) {
-        self.secondaryFontColor = [RVColorUtilities colorFromHexString:secondaryFontColor];
     }
     
     NSDateFormatter *dateFormatter = [self dateFormatter];
@@ -263,47 +232,6 @@
         [JSON setObject:[NSNull null] forKey:@"customer_id"];
     }
     
-    // welcomeMessage
-    if (self.welcomeMessage) {
-        [JSON setObject:self.welcomeMessage forKey:@"welcome_message"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"welcome_message"];
-    }
-    
-    // keepAlive
-    if (self.keepAlive) {
-        [JSON setObject:[NSNumber numberWithDouble:self.keepAlive] forKey:@"keep_alive"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"keep_alive"];
-    }
-
-    // primaryBackgroundColor
-    if (self.primaryBackgroundColor) {
-        [JSON setObject:[RVColorUtilities hexStringFromColor:self.primaryBackgroundColor] forKey:@"primary_background_color"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"primary_background_color"];
-    }
-    
-    // primaryFontColor
-    if (self.primaryFontColor) {
-        [JSON setObject:[RVColorUtilities hexStringFromColor:self.primaryFontColor] forKey:@"primary_font_color"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"primary_font_color"];
-    }
-    
-    // secondaryBackgroundColor
-    if (self.secondaryBackgroundColor) {
-        [JSON setObject:[RVColorUtilities hexStringFromColor:self.secondaryBackgroundColor] forKey:@"secondary_background_color"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"secondary_background_color"];
-    }
-    
-    // secondaryFontColor
-    if (self.secondaryFontColor) {
-        [JSON setObject:[RVColorUtilities hexStringFromColor:self.secondaryFontColor] forKey:@"secondary_font_color"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"secondary_font_color"];
-    }
     
     NSDateFormatter *dateFormatter = [self dateFormatter];
     

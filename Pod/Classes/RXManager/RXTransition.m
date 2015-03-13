@@ -166,7 +166,7 @@
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                         [fromViewController.view layoutIfNeeded];
+                         //[fromViewController.view layoutIfNeeded];
                          fromViewController.containerView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.5, 0.5), CGAffineTransformMakeTranslation(0, 400));
                          //fromViewController.containerView.alpha = 0;
                          //[fromViewController.scrollView setContentOffset:CGPointMake(0, -400) animated:NO];

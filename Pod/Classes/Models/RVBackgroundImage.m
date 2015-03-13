@@ -20,3 +20,20 @@ extern inline RVBackgroundContentMode RVBackgroundContentModeFromString(NSString
     }
     return RVBackgroundContentModeOriginalSize;
 }
+
+extern inline UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVBackgroundContentMode backgroundContentMode) {
+    switch (backgroundContentMode) {
+        case RVBackgroundContentModeScaleAspectFill:
+            return UIViewContentModeScaleAspectFill;
+            break;
+        case RVBackgroundContentModeScaleAspectFit:
+            return UIViewContentModeScaleAspectFit;
+            break;
+        case RVBackgroundContentModeScaleFill:
+            return UIViewContentModeScaleToFill;
+            break;
+        default:
+            return UIViewContentModeTop;
+            break;
+    }
+}

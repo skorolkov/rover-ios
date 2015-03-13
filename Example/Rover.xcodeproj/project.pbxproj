@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3D8FC9341A66CDF1001628AE /* CustomModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D8FC9331A66CDF1001628AE /* CustomModalViewController.m */; };
 		7A1AF948827E2A7C1B112DFF /* libPods-Rover.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF05A447F91BF240B292B882 /* libPods-Rover.a */; };
 		DBB10BA619E230950078E9B4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BA519E230950078E9B4 /* main.m */; };
 		DBB10BA919E230950078E9B4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BA819E230950078E9B4 /* AppDelegate.m */; };
@@ -23,8 +22,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3D8FC9321A66CDF1001628AE /* CustomModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomModalViewController.h; sourceTree = "<group>"; };
-		3D8FC9331A66CDF1001628AE /* CustomModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomModalViewController.m; sourceTree = "<group>"; };
 		92B5C43F52D9A234F9BAB4B8 /* Pods-Rover.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rover.release.xcconfig"; path = "Pods/Target Support Files/Pods-Rover/Pods-Rover.release.xcconfig"; sourceTree = "<group>"; };
 		B698DB8A6FC47A1548DF3FDA /* Pods-Rover.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rover.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Rover/Pods-Rover.debug.xcconfig"; sourceTree = "<group>"; };
 		DBB10BA019E230950078E9B4 /* Rover.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rover.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,8 +130,6 @@
 				DBB10BD219E236920078E9B4 /* RootViewController.m */,
 				DBB10BCD19E236740078E9B4 /* SavedOffersTableViewController.h */,
 				DBB10BD319E236920078E9B4 /* SavedOffersTableViewController.m */,
-				3D8FC9321A66CDF1001628AE /* CustomModalViewController.h */,
-				3D8FC9331A66CDF1001628AE /* CustomModalViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -250,7 +245,6 @@
 				DBB10BD619E236920078E9B4 /* RootViewController.m in Sources */,
 				DBB10BD419E236920078E9B4 /* NewOffersViewController.m in Sources */,
 				DBB10BCF19E236740078E9B4 /* DebugViewController.m in Sources */,
-				3D8FC9341A66CDF1001628AE /* CustomModalViewController.m in Sources */,
 				DBB10BD519E236920078E9B4 /* ProfileViewController.m in Sources */,
 				DBB10BD719E236920078E9B4 /* SavedOffersTableViewController.m in Sources */,
 			);

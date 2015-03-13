@@ -56,9 +56,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     RVCard *card = [self.cards objectAtIndex:indexPath.row];
-    RVCardViewController *viewController = [RVCardViewController new];
-    viewController.card = card;
-    [self presentViewController:viewController animated:YES completion:nil];
+//    RVCardViewController *viewController = [RVCardViewController new];
+//    viewController.card = card;
+//    [self presentViewController:viewController animated:YES completion:nil];
+    NSLog(@"present card detail view?");
 }
 
 /*
@@ -99,10 +100,10 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"show"]) {
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
-        RVCard *card = self.cards[indexPath.row];
-        RVCardViewController *viewController = (RVCardViewController *)segue.destinationViewController;
-        viewController.card = card;
+//        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+//        RVCard *card = self.cards[indexPath.row];
+//        RVCardViewController *viewController = (RVCardViewController *)segue.destinationViewController;
+//        viewController.card = card;
     }
 }
 
