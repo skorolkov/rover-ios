@@ -8,6 +8,7 @@
 
 #import "RXBarcodeView.h"
 #import "RSBarcodes.h"
+#import "RXTextView.h"
 
 @interface RXBarcodeView ()
 
@@ -24,14 +25,9 @@
         barcodeView.backgroundColor = [UIColor clearColor];
         barcodeView.translatesAutoresizingMaskIntoConstraints = NO;
         
-        UITextView *barcodeLabel = [[UITextView alloc] init];
+        RXTextView *barcodeLabel = [RXTextView new];
         barcodeLabel.translatesAutoresizingMaskIntoConstraints = NO;
         barcodeLabel.backgroundColor = [UIColor clearColor];
-        barcodeLabel.scrollEnabled = NO;
-        barcodeLabel.editable = NO;
-        barcodeLabel.userInteractionEnabled = NO;
-        barcodeLabel.textContainerInset = UIEdgeInsetsZero;
-        barcodeLabel.textContainer.lineFragmentPadding = 0;
         barcodeLabel.attributedText = attributedLabel;
         
         [self addSubview:barcodeLabel];

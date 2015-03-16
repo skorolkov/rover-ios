@@ -1,17 +1,17 @@
 //
-//  RVCloseButton.m
+//  RXCloseButton.m
 //  Rover
 //
 //  Created by Sean Rucker on 2014-06-28.
 //  Copyright (c) 2014 Rover Labs Inc. All rights reserved.
 //
 
-#import "RVCloseButton.h"
+#import "RXCloseButton.h"
 
 CGFloat const kWidth = 22.0;
 CGFloat const kHeight = 22.0;
 
-@implementation RVCloseButton
+@implementation RXCloseButton
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];

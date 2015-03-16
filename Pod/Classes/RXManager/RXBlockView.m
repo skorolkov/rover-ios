@@ -91,14 +91,9 @@
 + (UIView *)buttonViewForBlock:(RVButtonBlock *)block {
     UIView *buttonView = [UIView new];
     
-    UITextView *titleView = [UITextView new];
+    RXTextView *titleView = [RXTextView new];
     titleView.translatesAutoresizingMaskIntoConstraints = NO;
     titleView.backgroundColor = [UIColor clearColor];
-    titleView.scrollEnabled = NO;
-    titleView.editable = NO;
-    titleView.userInteractionEnabled = NO;
-    titleView.textContainerInset = UIEdgeInsetsZero;
-    titleView.textContainer.lineFragmentPadding = 0;
     titleView.attributedText = block.label;
     
     NSDictionary *views = NSDictionaryOfVariableBindings(titleView);
@@ -113,20 +108,16 @@
 + (UIView *)headerViewForBlock:(RVHeaderBlock *)block {
     UIView *headerView = [UIView new];
     
-    UILabel *titleView = [UILabel new];
+    RXTextView *titleView = [RXTextView new];
     titleView.translatesAutoresizingMaskIntoConstraints = NO;
     titleView.backgroundColor = [UIColor clearColor];
     titleView.attributedText = block.title;
-    titleView.numberOfLines = 1;
-    titleView.lineBreakMode = NSLineBreakByTruncatingTail;
-    titleView.adjustsFontSizeToFitWidth = YES;
-    titleView.minimumScaleFactor = .3;
+
+    NSDictionary *views = NSDictionaryOfVariableBindings(titleView);
     
     [headerView addSubview:titleView];
-    [headerView addConstraint:[NSLayoutConstraint constraintWithItem:titleView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:headerView attribute:NSLayoutAttributeCenterX multiplier:1 constant:0]];
-    [headerView addConstraint:[NSLayoutConstraint constraintWithItem:titleView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:headerView attribute:NSLayoutAttributeCenterY multiplier:1 constant:10]];
-    [headerView addConstraint:[NSLayoutConstraint constraintWithItem:headerView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:titleView attribute:NSLayoutAttributeHeight multiplier:1 constant:20]];
-    //[headerView addConstraint:[NSLayoutConstraint constraintWithItem:titleView attribute:NSLayoutAttributeWidth relatedBy:NSLayoutRelationLessThanOrEqual toItem:headerView attribute:NSLayoutAttributeWidth multiplier:1 constant:0]];
+    [headerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-[titleView]-|" options:0 metrics:nil views:views]];
+    [headerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[titleView]|" options:0 metrics:nil views:views]];
     
     return headerView;
 }

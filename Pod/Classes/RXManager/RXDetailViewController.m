@@ -20,7 +20,7 @@
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIView *titleBar;
 
-@property (nonatomic, strong) NSLayoutConstraint *titleBarTopConstraint;
+
 @property (nonatomic, strong) NSLayoutConstraint *containerBarBottomConstraint;
 @property (nonatomic, strong) NSLayoutConstraint *scrollViewHeightConstraint;
 
@@ -119,7 +119,6 @@
     
     // Height constraint
     [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:[blockView.block heightForWidth:self.view.frame.size.width]]];
-    NSLog(@"height for %@ = %f",blockView.block, [blockView.block heightForWidth:self.view.frame.size.width] );
 }
 
 - (void)configureHeaderLayoutForBlockView:(RXBlockView *)blockView {
@@ -183,10 +182,10 @@
     }
 }
 
-- (void)resetLayout {
-    _titleBarTopConstraint.constant = 0;
-    //_containerBarBottomConstraint.constant = 0;
-}
+//- (void)resetLayout {
+//    _titleBarTopConstraint.constant = 0;
+//    //_containerBarBottomConstraint.constant = 0;
+//}
 
 
 @end

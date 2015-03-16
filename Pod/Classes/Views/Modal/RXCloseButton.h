@@ -1,5 +1,5 @@
 //
-//  RVCloseButton.h
+//  RXCloseButton.h
 //  Rover
 //
 //  Created by Sean Rucker on 2014-06-28.
@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RVCloseButton : UIButton
+@interface RXCloseButton : UIButton
 
 @property (nonatomic, strong) UIColor *color;
 

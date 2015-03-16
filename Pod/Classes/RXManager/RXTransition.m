@@ -52,17 +52,19 @@
 }
 
 - (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext{
-    UIViewController *fromVC=[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    RXDetailViewController *toVC=(RXDetailViewController *)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    RXDetailViewController *toVC = (RXDetailViewController *)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     UIView *contextView=[transitionContext containerView];
+    
+    NSLog(@"fromVC: %@", fromVC );
     
     CGRect finalFrame=[transitionContext finalFrameForViewController:toVC];
     
     [contextView addSubview:toVC.view];
     
-    [toVC prepareLayoutForTransition];
-    [toVC.view layoutIfNeeded];
-    [toVC resetLayout];
+//    [toVC prepareLayoutForTransition];
+//    [toVC.view layoutIfNeeded];
+    toVC.titleBarTopConstraint.constant = 0;
     
     UIView *container = toVC.containerView;
     container.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.5, 0.5), CGAffineTransformMakeTranslation(0, 400));
@@ -166,8 +168,8 @@
                           delay:0
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
-                         //[fromViewController.view layoutIfNeeded];
-                         fromViewController.containerView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.5, 0.5), CGAffineTransformMakeTranslation(0, 400));
+                         [fromViewController.view layoutIfNeeded];
+                         //fromViewController.containerView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.5, 0.5), CGAffineTransformMakeTranslation(0, 400));
                          //fromViewController.containerView.alpha = 0;
                          //[fromViewController.scrollView setContentOffset:CGPointMake(0, -400) animated:NO];
                      } completion:^(BOOL finished) {
@@ -196,17 +198,17 @@
             dismissalBegan = YES;
         }
         
-        CGFloat percent = -scrollView.contentOffset.y / scrollView.frame.size.height;
-        
-        if (percent > 0.2) {
-            scrollView.scrollEnabled = NO;
-            scrollView.contentOffset = CGPointMake(0, -0.2*scrollView.frame.size.height);
-            [self finishInteractiveTransitionWithDuration:0.6];
-            _isDismissing = YES;
-            return;
-        }
-        
-        [self updateInteractiveTransition:percent];
+//        CGFloat percent = -scrollView.contentOffset.y / scrollView.frame.size.height;
+//        
+//        if (percent > 0.2) {
+//            scrollView.scrollEnabled = NO;
+//            scrollView.contentOffset = CGPointMake(0, -0.2*scrollView.frame.size.height);
+//            [self finishInteractiveTransitionWithDuration:0.6];
+//            _isDismissing = YES;
+//            return;
+//        }
+//        
+//        [self updateInteractiveTransition:percent];
         
         return;
     }
