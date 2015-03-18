@@ -2,5 +2,4 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 target "Rover", :exclusive => true do
   pod "Rover", :path => "../"
-  pod 'SDWebImage', :git => 'git@github.com:ata-n/SDWebImage.git', :branch => 'master'
 end

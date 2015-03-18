@@ -71,7 +71,7 @@
     _containerView.layer.shadowOffset = kCardShadowOffset;
     _containerView.layer.shadowOpacity = kCardShadowOpacity;
     _containerView.layer.shadowRadius = kCardShadowRadius;
-    //[_containerView addGestureRecognizer:_panGestureRecognizer];
+    [_containerView addGestureRecognizer:_panGestureRecognizer];
     [self.contentView addSubview:_containerView];
 }
 
@@ -131,12 +131,14 @@
         [self setBackgroundImageWithURL:viewDefinition.backgroundImageURL contentMode:viewDefinition.backgroundContentMode];
     }
     
+    // Blocks
     [viewDefinition.blocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
         RXBlockView *blockView = [[RXBlockView alloc] initWithBlock:block];
         blockView.delegate = self;
         [self addBlockView:blockView];
     }];
     [self configureLayoutForLastBlockView:_containerView.subviews[_containerView.subviews.count - 1]];
+    
     _viewDefinition = viewDefinition;
 }
 

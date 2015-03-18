@@ -27,6 +27,6 @@
 @protocol RXBlockViewDelegate <NSObject>
 
 @optional
-- (BOOL)shouldOpenURL:(NSURL *)url;
+- (BOOL)blockview:(RXBlockView *)blockview shouldOpenURL:(NSURL *)url;
 
 @end

@@ -17,11 +17,10 @@
 @property (readonly) UIView *containerView;
 @property (readonly) UIView *titleBar;
 
-@property (nonatomic, strong) NSLayoutConstraint *titleBarTopConstraint;
+@property (nonatomic, strong, readonly) NSLayoutConstraint *titleBarTopConstraint;
+@property (nonatomic, strong, readonly) NSLayoutConstraint *scrollViewHeightConstraint;
 
 - (instancetype)initWithViewDefinition:(RVViewDefinition *)viewDefinition;
 
-- (void)prepareLayoutForTransition;
-- (void)prepareLayoutForInteractiveTransition:(CGFloat)percentageComplete;
 
 @end

@@ -13,16 +13,19 @@
 #import "RVBlock.h"
 #import "RVHeaderBlock.h"
 
-@interface RXDetailViewController () <UIScrollViewDelegate>
+#import <SDWebImage/UIImageView+WebCache.h>
+
+@interface RXDetailViewController ()
 
 @property (nonatomic, strong) RXTransition *transitionManager;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIView *titleBar;
+@property (nonatomic, strong) UIView *backgroundView;
 
 
 @property (nonatomic, strong) NSLayoutConstraint *containerBarBottomConstraint;
-@property (nonatomic, strong) NSLayoutConstraint *scrollViewHeightConstraint;
+
 
 @end
 
@@ -46,12 +49,13 @@
     return self;
 }
 
-- (void)loadView {
-    [super loadView];
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
     _titleBar = [UIView new];
     _titleBar.translatesAutoresizingMaskIntoConstraints = NO;
-    _titleBar.backgroundColor = [UIColor yellowColor];
+    _titleBar.backgroundColor = [UIColor clearColor];
+    _titleBar.userInteractionEnabled = YES;
     
     _scrollView = [UIScrollView new];
     _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -62,9 +66,7 @@
     
     _containerView = [UIView new];
     _containerView.translatesAutoresizingMaskIntoConstraints = NO;
-    _containerView.backgroundColor = [UIColor whiteColor];
-    
-    [_titleBar addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeMe)]];
+    _containerView.backgroundColor = [UIColor clearColor];
     
     NSDictionary *views = NSDictionaryOfVariableBindings(_scrollView,_titleBar,_containerView);
     
@@ -87,24 +89,87 @@
     
     _scrollViewHeightConstraint = [NSLayoutConstraint constraintWithItem:_scrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
     [self.view addConstraint:_scrollViewHeightConstraint];
-
+    
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+
     
-    [self.view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(closeMe)]];
+    [self loadViewDefinition];
 }
 
-- (void)closeMe {
-    NSLog(@"DISMISS");
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (void)loadViewDefinition {
+    [_containerView.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
+        [subview removeFromSuperview];
+    }];
+    [_viewDefinition.blocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
+        RXBlockView *blockView = [[RXBlockView alloc] initWithBlock:block];
+        if ([block class] == [RVHeaderBlock class]) {
+            blockView.userInteractionEnabled = YES;
+            [self addHeaderBlockView:blockView];
+            
+            // move this somewhere else
+            _scrollViewHeightConstraint.constant = -[block heightForWidth:self.view.frame.size.width];
+            
+        } else {
+            [self addBlockView:blockView];
+        }
+    }];
+    // TODO: move this stuff out
+    
+    
+    // UIScrollView AutoLayout ContentSize Constraint
+    UIView *lastBlock = _containerView.subviews[_containerView.subviews.count - 1];
+    [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:lastBlock attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    
+    
+    // UIScrollView Background
+    [self addBackgroundView];
+    
+    
+    // titlebar height bug
+    UIView *lastTitleBlock = _titleBar.subviews[_titleBar.subviews.count - 1];
+    if (lastTitleBlock) {
+        [_titleBar addConstraint:[NSLayoutConstraint constraintWithItem:_titleBar attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:lastTitleBlock attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    }
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.
+- (void)addBackgroundView {
+    _backgroundView = [UIView new];
+    _backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
+    _backgroundView.backgroundColor = _viewDefinition.backgroundColor;
     
+    UIView *firstBlock = _containerView.subviews[0];
     
+    [_containerView addSubview:_backgroundView];
+    [_containerView sendSubviewToBack:_backgroundView];
+    [_containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[_backgroundView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_backgroundView)]];
+    [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:_backgroundView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:firstBlock attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_backgroundView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    
+    // Background Image
+    if (_viewDefinition.backgroundImageURL) {
+        [self setBackgroundImageWithURL:_viewDefinition.backgroundImageURL contentMode:_viewDefinition.backgroundContentMode];
+    }
+}
 
-
+- (void)setBackgroundImageWithURL:(NSURL *)url contentMode:(RVBackgroundContentMode)contentmode {
+    __weak UIView *weakContainerView = _backgroundView;
+    if (contentmode == RVBackgroundContentModeTile) {
+        [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+            weakContainerView.backgroundColor = [UIColor colorWithPatternImage:image];
+        }];
+    } else {
+        UIImageView *backgroundImageView = [UIImageView new];
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
+        backgroundImageView.contentMode = UIViewContentModeFromRVBackgroundContentMode(contentmode);
+        [backgroundImageView sd_setImageWithURL:url];
+        
+        [weakContainerView addSubview:backgroundImageView];
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(backgroundImageView);
+        
+        [weakContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[backgroundImageView]|" options:0 metrics:nil views:views]];
+        [weakContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundImageView]|" options:0 metrics:nil views:views]];
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -124,7 +189,9 @@
 - (void)configureHeaderLayoutForBlockView:(RXBlockView *)blockView {
     id lastHeaderBlockView = _titleBar.subviews.count > 1 ? _titleBar.subviews[_titleBar.subviews.count - 2] : nil;
     [_titleBar addConstraints:[RXBlockView constraintsForBlockView:blockView withPreviousBlockView:lastHeaderBlockView inside:_titleBar]];
-    
+ 
+    // Height constraint
+    [_titleBar addConstraint:[NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:[blockView.block heightForWidth:self.view.frame.size.width]]];
 }
 
 - (void)addBlockView:(RXBlockView *)blockView {
@@ -136,56 +203,5 @@
     [_titleBar addSubview:blockView];
     [self configureHeaderLayoutForBlockView:blockView];
 }
-
-- (void)setViewDefinition:(RVViewDefinition *)viewDefinition {
-    if (self.view) {
-        [_containerView.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
-            [subview removeFromSuperview];
-        }];
-        [viewDefinition.blocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
-            if ([block class] == [RVHeaderBlock class]) {
-                [self addHeaderBlockView:[[RXBlockView alloc] initWithBlock:block]];
-                
-                // move this somewhere else
-                _scrollViewHeightConstraint.constant = -[block heightForWidth:self.view.frame.size.width];
-                
-            } else {
-                [self addBlockView:[[RXBlockView alloc] initWithBlock:block]];
-            }
-        }];
-        // TODO: move this stuff out
-        
-        
-        UIView *lastBlock = _containerView.subviews[_containerView.subviews.count - 1];
-        
-        [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:lastBlock attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-        
-        UIView *extendedBackground = [UIView new];
-        extendedBackground.translatesAutoresizingMaskIntoConstraints = NO;
-        extendedBackground.backgroundColor = lastBlock.backgroundColor;
-        
-        [_containerView addSubview:extendedBackground];
-        [_containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[extendedBackground]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(extendedBackground)]];
-        [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:extendedBackground attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:lastBlock attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-        [self.view addConstraint:[NSLayoutConstraint constraintWithItem:extendedBackground attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-    }
-}
-
-- (void)prepareLayoutForTransition {
-    [self prepareLayoutForInteractiveTransition:1];
-}
-
-- (void)prepareLayoutForInteractiveTransition:(CGFloat)percentageComplete {
-    _titleBarTopConstraint.constant = _scrollViewHeightConstraint.constant * percentageComplete;
-    if (percentageComplete > 0.2) {
-        //_containerBarBottomConstraint.constant = [UIScreen mainScreen].applicationFrame.size.height;// * percentageComplete * 4;
-    }
-}
-
-//- (void)resetLayout {
-//    _titleBarTopConstraint.constant = 0;
-//    //_containerBarBottomConstraint.constant = 0;
-//}
-
 
 @end

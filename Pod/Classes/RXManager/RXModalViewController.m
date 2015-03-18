@@ -15,6 +15,8 @@
 
 #import "RVVisitController.h"
 
+#import "RXUpArrow.h"
+
 @interface RXModalViewController () {
     BOOL _hasDisplayedInitialAnimation;
     NSInteger _maxIndexPathSection;
@@ -48,10 +50,10 @@
 
     
     
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"647086E7-89A6-439C-9E3B-4A2268F13FC6"];
-//        [[Rover shared] simulateBeaconWithUUID:UUID major:54321 minor:28871];
-//    });
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"647086E7-89A6-439C-9E3B-4A2268F13FC6"];
+        [[Rover shared] simulateBeaconWithUUID:UUID major:54321 minor:56797];
+    });
     
 }
 
@@ -235,13 +237,19 @@
     
     // TODO: make this customizable through the SDK
     _pillView = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    _pillView.frame = CGRectMake(0, 0, 150, 35);
+    _pillView.frame = CGRectMake(0, 0, 125, 35);
     _pillView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.5];
     _pillView.titleLabel.font = [UIFont systemFontOfSize:14];
     _pillView.layer.cornerRadius = 17.5;
     [_pillView setTitle:@"New Offers" forState:UIControlStateNormal];
     [_pillView setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_pillView setTitleEdgeInsets:UIEdgeInsetsMake(0, 35, 0, 15)];
     [_pillView addTarget:self action:@selector(scrollToTop) forControlEvents:UIControlEventTouchUpInside];
+    
+    RXUpArrow *upArrow = [RXUpArrow new];
+    upArrow.frame = CGRectMake(17, 12, 40, 40);
+    [_pillView addSubview:upArrow];
+    
     return _pillView;
 }
 
@@ -282,7 +290,9 @@
 
 
 - (void)didAddTouchpoint:(RVTouchpoint *)touchpoint {
-    [self dropPill];
+    if (touchpoint.cards.count > 0) {
+        [self dropPill];
+    }
 }
 
 

@@ -17,6 +17,7 @@
 #import "RVRegionManager.h"
 #import "RVVisitProject.h"
 #import "RVTouchpoint.h"
+#import "RVCustomer.h"
 
 NSString *const kRVVisitManagerDidEnterTouchpointNotification = @"RVVisitManagerDidEnterTouchpointNotification";
 NSString *const kRVVisitManagerDidEnterLocationNotification = @"RVVisitManagerDidEnterLocationNotification";
@@ -100,6 +101,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 
 
     RVCustomer *customer = [Rover shared].customer;
+    [customer set:@"annual_salary" to:@400];
     if (customer.dirty) {
         [customer save:^{
             [self createVisitWithBeaconRegion:beaconRegion];

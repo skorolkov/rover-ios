@@ -13,7 +13,7 @@
 
 @interface RXTransition ()
 
-@property (assign) BOOL isDismissing;
+@property (nonatomic, weak) RXDetailViewController *presentedViewController;
 
 @end
 
@@ -30,6 +30,7 @@
 #pragma mark - UIViewControllerTransitioningDelegate
 
 - (id <UIViewControllerAnimatedTransitioning>)animationControllerForPresentedController:(UIViewController *)presented presentingController:(UIViewController *)presenting sourceController:(UIViewController *)source{
+    _presentedViewController = (RXDetailViewController *)presented;
     return self;
 }
 
@@ -42,7 +43,7 @@
 }
 
 - (id <UIViewControllerInteractiveTransitioning>)interactionControllerForDismissal:(id <UIViewControllerAnimatedTransitioning>)animator{
-    return self;
+    return nil;
 }
 
 #pragma mark - UIViewControllerAnimatedTransitioning
@@ -53,32 +54,51 @@
 
 - (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext{
     UIViewController *fromVC = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    RXDetailViewController *toVC = (RXDetailViewController *)[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
-    UIView *contextView=[transitionContext containerView];
+    UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
+    UIView *contextView = [transitionContext containerView];
     
     NSLog(@"fromVC: %@", fromVC );
     
-    CGRect finalFrame=[transitionContext finalFrameForViewController:toVC];
+    if ([toVC isKindOfClass:[RXDetailViewController class]]) {
+        // Presenting
+        RXDetailViewController *detailVC = (RXDetailViewController *)toVC;
+        [contextView addSubview:toVC.view];
+        detailVC.titleBarTopConstraint.constant = detailVC.scrollViewHeightConstraint.constant;
+        [toVC.view layoutIfNeeded];
+        detailVC.titleBarTopConstraint.constant = 0;
+        
+        UIView *container = detailVC.containerView;
+        container.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.5, 0.5), CGAffineTransformMakeTranslation(0, 400));
+        
+        [UIView animateWithDuration:[self transitionDuration:transitionContext]
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             container.transform = CGAffineTransformIdentity;
+                             [detailVC.view layoutIfNeeded];
+                         } completion:^(BOOL finished) {
+                             
+                             [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+                         }];
+    } else {
+        // Dismissing
+        RXDetailViewController *detailVC = (RXDetailViewController *)fromVC;
+        detailVC.titleBarTopConstraint.constant = detailVC.scrollViewHeightConstraint.constant;
+        [UIView animateWithDuration:[self transitionDuration:transitionContext]
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             [detailVC.view layoutIfNeeded];
+                             detailVC.containerView.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.5, 0.5), CGAffineTransformMakeTranslation(0, 400));
+                             //fromViewController.containerView.alpha = 0;
+                             //[fromViewController.scrollView setContentOffset:CGPointMake(0, -400) animated:NO];
+                         } completion:^(BOOL finished) {
+                             //[fromViewController.view removeFromSuperview];
+                             [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+                         }];
+    }
     
-    [contextView addSubview:toVC.view];
-    
-//    [toVC prepareLayoutForTransition];
-//    [toVC.view layoutIfNeeded];
-    toVC.titleBarTopConstraint.constant = 0;
-    
-    UIView *container = toVC.containerView;
-    container.transform = CGAffineTransformConcat(CGAffineTransformMakeScale(0.5, 0.5), CGAffineTransformMakeTranslation(0, 400));
-    
-    [UIView animateWithDuration:[self transitionDuration:transitionContext]
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         container.transform = CGAffineTransformIdentity;
-                         [toVC.view layoutIfNeeded];
-                     } completion:^(BOOL finished) {
-                         
-                         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
-                     }];
+
 }
 
 - (void)animationEnded:(BOOL) transitionCompleted{
@@ -126,7 +146,7 @@
     //UIViewController* toViewController = [self.transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     RXDetailViewController* fromViewController = (RXDetailViewController *)[self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     
-    [fromViewController prepareLayoutForInteractiveTransition:percentComplete];
+//    [fromViewController prepareLayoutForInteractiveTransition:percentComplete];
     [fromViewController.view layoutIfNeeded];
     
 }
@@ -162,7 +182,7 @@
     RXDetailViewController* fromViewController = (RXDetailViewController *)[self.transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
     
     
-    [fromViewController prepareLayoutForInteractiveTransition:1];
+//    [fromViewController prepareLayoutForInteractiveTransition:1];
     
     [UIView animateWithDuration:duration
                           delay:0
@@ -176,7 +196,7 @@
                          //[fromViewController.view removeFromSuperview];
                          [self.transitionContext completeTransition:YES];
                          self.transitionContext=nil;
-                         _isDismissing = NO;
+
                      }];
     
     [self finishInteractiveTransition];
@@ -187,18 +207,22 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     static BOOL dismissalBegan = NO;
     
-    if (_isDismissing) {
-        dismissalBegan = NO;
+    if (!scrollView.scrollEnabled) {
+        //dismissalBegan = NO;
         return;
     }
     
-    if (scrollView.contentOffset.y < 0) {
+    CGFloat percent = -scrollView.contentOffset.y / scrollView.frame.size.height;
+    
+    if (percent > 0.2) {
         if (!dismissalBegan) {
+            scrollView.scrollEnabled = NO;
+            scrollView.contentOffset = CGPointMake(0, -0.2*scrollView.frame.size.height);
             [self.parentViewController dismissViewControllerAnimated:YES completion:nil];
             dismissalBegan = YES;
         }
         
-//        CGFloat percent = -scrollView.contentOffset.y / scrollView.frame.size.height;
+//
 //        
 //        if (percent > 0.2) {
 //            scrollView.scrollEnabled = NO;
@@ -211,9 +235,13 @@
 //        [self updateInteractiveTransition:percent];
         
         return;
+    } else if (percent > 0) {
+        _presentedViewController.titleBarTopConstraint.constant = _presentedViewController.scrollViewHeightConstraint.constant * percent;
+        [_presentedViewController.view layoutIfNeeded];
     }
     
     dismissalBegan = NO;
+    
 }
 
 

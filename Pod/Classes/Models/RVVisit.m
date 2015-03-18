@@ -238,6 +238,7 @@
     // enteredAt
     if (self.enteredAt) {
         [JSON setObject:[dateFormatter stringFromDate:self.enteredAt] forKey:@"entered_at"];
+        NSLog(@"enteredAt: %@", [dateFormatter stringFromDate:self.enteredAt]);
     } else {
         [JSON setObject:[NSNull null] forKey:@"entered_at"];
     }

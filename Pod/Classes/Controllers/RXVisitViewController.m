@@ -31,6 +31,7 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     if (self) {
         // Account for status bar
         [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
+        self.tableView.delaysContentTouches = NO;
     }
     return self;
 }
@@ -167,5 +168,6 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 // Implement in subclass
 - (void)willAddTouchpoint:(RVTouchpoint *)touchpoint {}
 - (void)didAddTouchpoint:(RVTouchpoint *)touchpoint {}
+
 
 @end

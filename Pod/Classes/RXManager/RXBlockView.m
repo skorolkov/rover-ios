@@ -16,20 +16,26 @@
 #import "RVButtonBlock.h"
 
 #import "RXBarcodeView.h"
-
+#import "RXCloseButton.h"
 #import "RXTextView.h"
+
+#import "Rover.h"
 
 //#import <UIActivityIndicator-for-SDWebImage/UIImageView+UIActivityIndicatorForSDWebImage.h>
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <SDWebImage/SDWebImageManager.h>
 
+#define kContentViewTag 500
+#define kButtonTitleViewTag 600
 
 
-@interface RXBlockView ()
+@interface RXBlockView () <UIGestureRecognizerDelegate>
 
 @property (assign, nonatomic) UIEdgeInsets borderWidth;
 @property (strong, nonatomic) UIColor *borderColor;
 @property (strong, nonatomic) NSURL *url;
+
+@property (nonatomic, strong) UIGestureRecognizer *gestureRecognizer;
 
 @end
 
@@ -66,14 +72,24 @@
 
 #pragma mark - BlockView Content Constructors
 
-+ (UIImageView *)imageViewForBlock:(RVImageBlock *)block {
++ (UIView *)imageViewForBlock:(RVImageBlock *)block {
+    UIView *imageContainerView = [UIView new];
+    
     UIImageView *imageView = [UIImageView new];
+    imageView.translatesAutoresizingMaskIntoConstraints = NO;
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     //[imageView setImageWithURL:block.imageURL usingActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [imageView sd_setImageWithURL:block.imageURL];
     [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeWidth multiplier:1/block.aspectRatio constant:0]];
 
-    return imageView;
+    [imageContainerView addSubview:imageView];
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
+    
+    [imageContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[imageView]|" options:0 metrics:nil views:views]];
+    [imageContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[imageView]|" options:0 metrics:nil views:views]];
+    
+    return imageContainerView;
 }
 
 + (RXTextView *)textViewForBlock:(RVTextBlock *)block {
@@ -94,6 +110,7 @@
     RXTextView *titleView = [RXTextView new];
     titleView.translatesAutoresizingMaskIntoConstraints = NO;
     titleView.backgroundColor = [UIColor clearColor];
+    titleView.tag = kButtonTitleViewTag;
     titleView.attributedText = block.label;
     
     NSDictionary *views = NSDictionaryOfVariableBindings(titleView);
@@ -113,11 +130,22 @@
     titleView.backgroundColor = [UIColor clearColor];
     titleView.attributedText = block.title;
 
-    NSDictionary *views = NSDictionaryOfVariableBindings(titleView);
+    RXCloseButton *closeButton = [RXCloseButton new];
+    closeButton.translatesAutoresizingMaskIntoConstraints = NO;
+    closeButton.color = [UIColor colorWithCGColor:[[block.title attribute:NSForegroundColorAttributeName atIndex:0 effectiveRange:0] CGColor]];
+    [closeButton addTarget:self action:@selector(closeMe:) forControlEvents:UIControlEventTouchUpInside];
+    
+    UIView *spacer = [UIView new];
+    spacer.translatesAutoresizingMaskIntoConstraints = NO;
+    
+    NSDictionary *views = NSDictionaryOfVariableBindings(titleView, closeButton, spacer);
     
     [headerView addSubview:titleView];
-    [headerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-[titleView]-|" options:0 metrics:nil views:views]];
-    [headerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[titleView]|" options:0 metrics:nil views:views]];
+    [headerView addSubview:closeButton];
+    [headerView addSubview:spacer];
+    [headerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"|-[spacer(%f)]-[titleView]-[closeButton]-10-|", closeButton.intrinsicContentSize.width + 10] options:0 metrics:nil views:views]];
+    [headerView addConstraint:[NSLayoutConstraint constraintWithItem:titleView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:headerView attribute:NSLayoutAttributeCenterY multiplier:1 constant:10]];
+    [headerView addConstraint:[NSLayoutConstraint constraintWithItem:closeButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:headerView attribute:NSLayoutAttributeCenterY multiplier:1 constant:10]];
     
     return headerView;
 }
@@ -138,6 +166,7 @@
         
         // Content
         UIView *contentView = [RXBlockView viewForBlock:block];
+        contentView.tag = kContentViewTag;
         contentView.translatesAutoresizingMaskIntoConstraints = NO;
         [self addSubview:contentView];
         
@@ -153,9 +182,26 @@
         // Link
         //if (block.url) {
             // TODO: add touchdown states and stuff
-            UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
-            //[self addGestureRecognizer:tapGestureRecognizer];
-            self.url = block.url;
+//            UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
+//            longPressGestureRecognizer.minimumPressDuration = 0;
+//        //longPressGestureRecognizer.cancelsTouchesInView = NO;
+//        longPressGestureRecognizer.delegate = self;
+//        _gestureRecognizer = longPressGestureRecognizer;
+//            [self addGestureRecognizer:longPressGestureRecognizer];
+//        UIButton *invisibleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//        invisibleButton.translatesAutoresizingMaskIntoConstraints = NO;
+//        [invisibleButton addTarget:self action:@selector(makeBlockTransparent:) forControlEvents:UIControlEventTouchDown];
+//        [invisibleButton addTarget:self action:@selector(blockTouchUp:) forControlEvents:UIControlEventTouchUpInside];
+//        [invisibleButton addTarget:self action:@selector(resetBlockOpacity:) forControlEvents:UIControlEventTouchUpOutside];
+//        
+//        [self addSubview:invisibleButton];
+//        
+//        NSDictionary *buttonViews = NSDictionaryOfVariableBindings(invisibleButton);
+//        
+//        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[invisibleButton]|" options:0 metrics:nil views:buttonViews]];
+//        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[invisibleButton]|" options:0 metrics:nil views:buttonViews]];
+        
+        self.url = block.url;
         //}
         
         _block = block;
@@ -217,14 +263,76 @@
     }
 }
 
-#pragma mark - TapGestureRecognizer Action
+#pragma mark - ButtonEvents
 
-- (void)tapped:(UITapGestureRecognizer *)recognizer {
-    if ([self.delegate respondsToSelector:@selector(shouldOpenURL:)]) {
-        if ([self.delegate shouldOpenURL:self.url]) {
-            [[UIApplication sharedApplication] openURL:self.url];
-        }
+- (void)makeBlockTransparent:(id)sender {
+    self.alpha = .5;
+}
+
+- (void)resetBlockOpacity:(id)sender {
+    self.alpha = 1;
+}
+
+- (void)blockTouchUp:(id)sender {
+    [self resetBlockOpacity:sender];
+    NSLog(@"Clicked");
+}
+
+#pragma mark - LongPressGestureRecognizer Action
+
+- (void)tapped:(UILongPressGestureRecognizer *)recognizer {
+    static UIView *titleSubview;
+    NSLog(@"received");
+    switch (recognizer.state) {
+        case UIGestureRecognizerStateBegan:
+            [recognizer.view.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
+                if (subview.tag == kContentViewTag) {
+                    [subview.subviews enumerateObjectsUsingBlock:^(UIView *contentSubview, NSUInteger idx, BOOL *stop) {
+                        if (contentSubview.tag == kButtonTitleViewTag) {
+                            titleSubview = contentSubview;
+                            titleSubview.alpha = .5;
+                            *stop = YES;
+                        }
+                    }];
+                    *stop = YES;
+                }
+            }];
+            break;
+        case UIGestureRecognizerStateEnded:
+            if (titleSubview) {
+                NSLog(@"tapped");
+                titleSubview.alpha = 1;
+                titleSubview = nil;
+            }
+            break;
+        default:
+            break;
     }
+//    if ([self.delegate respondsToSelector:@selector(blockview:shouldOpenURL:)]) {
+//        if ([self.delegate blockview:self shouldOpenURL:self.url]) {
+//            [[UIApplication sharedApplication] openURL:self.url];
+//        }
+//    }
+}
+
+#pragma mark - CloseButton Action
+
++ (void)closeMe:(id)sender {
+    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
+    [currentViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if ([otherGestureRecognizer.view isKindOfClass:[UITableView class]] && otherGestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        
+        gestureRecognizer.enabled = NO;
+        return YES;
+    }
+    gestureRecognizer.enabled = YES;
+    return [gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]];
 }
 
 @end

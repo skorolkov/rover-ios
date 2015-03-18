@@ -23,11 +23,8 @@ CGFloat const kHeight = 22.0;
     return self;
 }
 
-- (CGSize)sizeThatFits:(CGSize)size {
-    if (size.width  < kWidth)  size.width  = kWidth;
-    if (size.height < kHeight) size.height = kHeight;
-    
-    return size;
+- (CGSize)intrinsicContentSize {
+    return CGSizeMake(kWidth, kHeight);
 }
 
 - (void)drawRect:(CGRect)rect
