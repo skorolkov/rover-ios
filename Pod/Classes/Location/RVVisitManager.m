@@ -122,12 +122,12 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         NSLog(@"EXITING REGION");
         
         // Reset region monitoring
-        RVRegionManager *regionManager = [RVRegionManager sharedManager];
-        [regionManager setBeaconUUIDs:[Rover shared].config.beaconUUIDs];
-        [regionManager startMonitoring];
+//        RVRegionManager *regionManager = [RVRegionManager sharedManager];
+//        [regionManager setBeaconUUIDs:[Rover shared].config.beaconUUIDs];
+//        [regionManager startMonitoring];
         
         [self updateVisitExitTime];
-        [self startExpirationTimer];
+        //[self startExpirationTimer];
     }
 }
 
