@@ -120,6 +120,11 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
         } else {
             if (failure) {
                 NSError *error = [self errorForResponse:HTTPResponse withDescription:nil];
+                NSDictionary *errorResponse = [self parseJSONFromData:data];
+                NSString *errorMessage = [errorResponse objectForKey:@"message"];
+                if (errorMessage) {
+                    NSLog(@"ROVER-ERROR: %@", errorMessage);
+                }
                 dispatch_async(dispatch_get_main_queue(), ^{
                     failure(error);
                 });

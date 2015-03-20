@@ -16,10 +16,10 @@
 - (void)updateWithJSON:(NSDictionary *)JSON {
     [super updateWithJSON:JSON];
     
-    // minor
-    NSNumber *minor = [JSON objectForKey:@"minorNumber"];
-    if (minor && minor != (id)[NSNull null]) {
-        self.minor = minor;
+    // minorNumber
+    NSNumber *minorNumber = [JSON objectForKey:@"minorNumber"];
+    if (minorNumber && minorNumber != (id)[NSNull null]) {
+        self.minorNumber = minorNumber;
     }
     
     // title
@@ -49,22 +49,22 @@
 
 - (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion
 {
-    return [self.minor isEqualToNumber:beaconRegion.minor];
+    return [self.minorNumber isEqualToNumber:beaconRegion.minor];
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
-    [encoder encodeObject:self.minor forKey:@"minor"];
+    [encoder encodeObject:self.minorNumber forKey:@"minor"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
     if((self = [super init])) {
-        self.minor = [decoder decodeObjectForKey:@"minor"];
+        self.minorNumber = [decoder decodeObjectForKey:@"minor"];
     }
     return self;
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<RVTouchpoint: id(%@) minorNumber(%@)>", self.ID, self.minor];
+    return [NSString stringWithFormat:@"<RVTouchpoint: id(%@) minorNumber(%@)>", self.ID, self.minorNumber];
 }
 
 #pragma mark - RVVisitTouchpointInfo

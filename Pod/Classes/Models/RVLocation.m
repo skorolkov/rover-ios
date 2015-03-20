@@ -20,10 +20,10 @@
 - (void)updateWithJSON:(NSDictionary *)JSON {
     [super updateWithJSON:JSON];
     
-    // name
-    NSString *name = [JSON objectForKey:@"name"];
-    if (name != (id)[NSNull null] && [name length] > 0) {
-        self.name = name;
+    // title
+    NSString *title = [JSON objectForKey:@"title"];
+    if (title != (id)[NSNull null] && [title length] > 0) {
+        self.title = title;
     }
     
     // address
@@ -66,24 +66,6 @@
     NSNumber *radius = [JSON objectForKey:@"radius"];
     if (radius != (id)[NSNull null]) {
         self.radius = radius;
-    }
-    
-    // organizationName
-    NSString *organizationName = [JSON objectForKey:@"organization_name"];
-    if (organizationName != (id)[NSNull null] && [organizationName length] > 0) {
-        self.organizationName = organizationName;
-    }
-
-    // organizationId
-    NSString *organizationId = [JSON objectForKey:@"organization_id"];
-    if (organizationId != (id)[NSNull null] && [organizationId length] > 0) {
-        self.organizationId = organizationId;
-    }
-    
-    // logoURL
-    NSString *logoURLString = [JSON objectForKey:@"logo_url"];
-    if (logoURLString != (id)[NSNull null] && [logoURLString length] > 0) {
-        self.logoURL = [NSURL URLWithString:logoURLString];
     }
 }
 

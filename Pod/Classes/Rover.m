@@ -11,7 +11,7 @@
 #import "RVRegionManager.h"
 #import "RVVisitManager.h"
 #import "RVCustomerProject.h"
-#import "RVVisitProject.h"
+#import "RVVisit.h"
 #import "RVLog.h"
 #import "RVNotificationCenter.h"
 #import "RVModel.h"
@@ -19,6 +19,7 @@
 #import "RXModalViewController.h"
 
 #import <SDWebImage/SDWebImagePrefetcher.h>
+#import "RVImagePrefetcher.h"
 
 NSString *const kRoverDidEnterTouchpointNotification = @"RoverDidEnterTouchpointNotification";
 NSString *const kRoverDidEnterLocationNotification = @"RoverDidEnterLocationNotification";
@@ -251,8 +252,8 @@ static Rover *sharedInstance = nil;
         return;
     }
     
-    _currentVisit.openedAt = [NSDate date];
-    [_currentVisit save:nil failure:nil];
+    //_currentVisit.openedAt = [NSDate date];
+    //[_currentVisit save:nil failure:nil];
 }
 
 - (void)sendNotification:(NSString *)message {
@@ -272,15 +273,10 @@ static Rover *sharedInstance = nil;
 - (void)visitManagerDidEnterLocation:(NSNotification *)note {
     _currentVisit = [note.userInfo objectForKey:@"visit"];
     
-    // cache all images
-//    SDWebImagePrefetcher *imagePrefetcher = [SDWebImagePrefetcher sharedImagePrefetcher];
-//    imagePrefetcher.options = SDWebImageDownloaderContinueInBackground;
-//    NSLog(@"prefetching images: %@", _currentVisit.allImageUrls);
-//    [imagePrefetcher prefetchURLs:_currentVisit.allImageUrls progress:^(NSUInteger noOfFinishedUrls, NSUInteger noOfTotalUrls) {
-//        NSLog(@"# of finished image prefetched: %lu / %lu", (unsigned long)noOfFinishedUrls, noOfTotalUrls);
-//    } completed:^(NSUInteger noOfFinishedUrls, NSUInteger noOfSkippedUrls) {
-//        NSLog(@"images prefetched: %lu", noOfFinishedUrls);
-//    }];
+    [[RVImagePrefetcher sharedImagePrefetcher] prefetchURLs:_currentVisit.allImageUrls];
+    
+    // THIS IS FOR NOW
+    [_currentVisit trackEvent:@"location.enter" params:nil];
     
     // TODO: redo all this
     
@@ -345,14 +341,14 @@ static Rover *sharedInstance = nil;
 
 - (void)applicationDidBecomeActive:(NSNotification *)note {
 
-    if (self.currentVisit && _currentVisit.currentTouchpoint && !self.currentVisit.openedAt) {
-        
-        [self updateVisitOpenTime];
-        
-        if (self.config.autoPresentModal) {
-            [self presentModal];
-        }
-    }
+//    if (self.currentVisit && _currentVisit.currentTouchpoint && !self.currentVisit.openedAt) {
+//        
+//        [self updateVisitOpenTime];
+//        
+//        if (self.config.autoPresentModal) {
+//            [self presentModal];
+//        }
+//    }
 }
 
 @end

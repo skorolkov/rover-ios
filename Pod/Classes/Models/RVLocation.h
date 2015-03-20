@@ -11,7 +11,7 @@
 
 @interface RVLocation : RVModel
 
-@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) NSString *address;
 @property (nonatomic, strong) NSString *city;
 @property (nonatomic, strong) NSString *province;
@@ -19,10 +19,6 @@
 @property (nonatomic, strong) NSNumber *latitude;
 @property (nonatomic, strong) NSNumber *longitude;
 @property (nonatomic, strong) NSNumber *radius;
-
-@property (nonatomic, strong) NSString *organizationName;
-@property (nonatomic, strong) NSString *organizationId;
-@property (nonatomic, strong) NSURL *logoURL;
 
 - (CLLocation *)CLLocation;
 

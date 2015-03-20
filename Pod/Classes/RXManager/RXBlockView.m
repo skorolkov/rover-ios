@@ -33,7 +33,7 @@
 
 @property (assign, nonatomic) UIEdgeInsets borderWidth;
 @property (strong, nonatomic) UIColor *borderColor;
-@property (strong, nonatomic) NSURL *url;
+@property (copy, nonatomic) NSURL *url;
 
 @property (nonatomic, strong) UIGestureRecognizer *gestureRecognizer;
 
@@ -72,24 +72,15 @@
 
 #pragma mark - BlockView Content Constructors
 
-+ (UIView *)imageViewForBlock:(RVImageBlock *)block {
-    UIView *imageContainerView = [UIView new];
-    
++ (UIImageView *)imageViewForBlock:(RVImageBlock *)block {
     UIImageView *imageView = [UIImageView new];
     imageView.translatesAutoresizingMaskIntoConstraints = NO;
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     //[imageView setImageWithURL:block.imageURL usingActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [imageView sd_setImageWithURL:block.imageURL];
     [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeWidth multiplier:1/block.aspectRatio constant:0]];
-
-    [imageContainerView addSubview:imageView];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(imageView);
-    
-    [imageContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[imageView]|" options:0 metrics:nil views:views]];
-    [imageContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[imageView]|" options:0 metrics:nil views:views]];
-    
-    return imageContainerView;
+    return imageView;
 }
 
 + (RXTextView *)textViewForBlock:(RVTextBlock *)block {
@@ -176,33 +167,16 @@
         [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-%f-[contentView]-%f-|", block.padding.top, block.padding.bottom] options:0 metrics:nil views:views]];
     
         // Borders
-        _borderColor = block.borderColor;
-        _borderWidth = block.borderWidth;
+        [self setBorder:block.borderWidth color:block.borderColor];
         
         // Link
-        //if (block.url) {
-            // TODO: add touchdown states and stuff
-//            UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
-//            longPressGestureRecognizer.minimumPressDuration = 0;
-//        //longPressGestureRecognizer.cancelsTouchesInView = NO;
-//        longPressGestureRecognizer.delegate = self;
-//        _gestureRecognizer = longPressGestureRecognizer;
-//            [self addGestureRecognizer:longPressGestureRecognizer];
-//        UIButton *invisibleButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//        invisibleButton.translatesAutoresizingMaskIntoConstraints = NO;
-//        [invisibleButton addTarget:self action:@selector(makeBlockTransparent:) forControlEvents:UIControlEventTouchDown];
-//        [invisibleButton addTarget:self action:@selector(blockTouchUp:) forControlEvents:UIControlEventTouchUpInside];
-//        [invisibleButton addTarget:self action:@selector(resetBlockOpacity:) forControlEvents:UIControlEventTouchUpOutside];
-//        
-//        [self addSubview:invisibleButton];
-//        
-//        NSDictionary *buttonViews = NSDictionaryOfVariableBindings(invisibleButton);
-//        
-//        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[invisibleButton]|" options:0 metrics:nil views:buttonViews]];
-//        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[invisibleButton]|" options:0 metrics:nil views:buttonViews]];
-        
-        self.url = block.url;
-        //}
+        if (block.url) {
+            UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(tapped:)];
+            longPressGestureRecognizer.minimumPressDuration = 0;
+            longPressGestureRecognizer.delegate = self;
+            [self addGestureRecognizer:longPressGestureRecognizer];
+            self.url = block.url;
+        }
         
         _block = block;
     }
@@ -230,59 +204,60 @@
     }
 }
 
-
-- (void)drawRect:(CGRect)rect {
-    // Draw borders
-    CGFloat xMin = CGRectGetMinX(rect);
-    CGFloat xMax = CGRectGetMaxX(rect);
-    
-    CGFloat yMin = CGRectGetMinY(rect);
-    CGFloat yMax = CGRectGetMaxY(rect);
-    
-    CGFloat fWidth = self.frame.size.width;
-    CGFloat fHeight = self.frame.size.height;
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, _borderColor.CGColor);
-    
-    if (_borderWidth.left) {
-        CGContextFillRect(context, CGRectMake(xMin, yMin, _borderWidth.left, fHeight));
+- (void)setBorder:(UIEdgeInsets)borderWidth color:(UIColor *)color {
+    if (borderWidth.left) {
+        UIView *leftBorder = [UIView new];
+        leftBorder.translatesAutoresizingMaskIntoConstraints = NO;
+        leftBorder.backgroundColor = color;
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(leftBorder);
+        
+        [self addSubview:leftBorder];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"|[leftBorder(%f)]", borderWidth.left] options:0 metrics:nil views:views]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[leftBorder]|" options:0 metrics:nil views:views]];
     }
     
-    if (_borderWidth.right) {
-        CGContextFillRect(context, CGRectMake(xMax - _borderWidth.right, yMin, _borderWidth.right, fHeight));
+    if (borderWidth.right) {
+        UIView *rightBorder = [UIView new];
+        rightBorder.translatesAutoresizingMaskIntoConstraints = NO;
+        rightBorder.backgroundColor = color;
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(rightBorder);
+        
+        [self addSubview:rightBorder];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"[rightBorder(%f)]|", borderWidth.right] options:0 metrics:nil views:views]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[rightBorder]|" options:0 metrics:nil views:views]];
     }
     
-    if (_borderWidth.bottom) {
-        CGContextFillRect(context, CGRectMake(xMin, yMax - _borderWidth.bottom, fWidth, _borderWidth.bottom));
+    if (borderWidth.bottom) {
+        UIView *bottomBorder = [UIView new];
+        bottomBorder.translatesAutoresizingMaskIntoConstraints = NO;
+        bottomBorder.backgroundColor = color;
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(bottomBorder);
+        
+        [self addSubview:bottomBorder];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[bottomBorder]|" options:0 metrics:nil views:views]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:[bottomBorder(%f)]|", borderWidth.bottom] options:0 metrics:nil views:views]];
     }
     
-    if (_borderWidth.top) {
-        CGContextFillRect(context, CGRectMake(xMin, yMin, fWidth, _borderWidth.top));
+    if (borderWidth.top) {
+        UIView *topBorder = [UIView new];
+        topBorder.translatesAutoresizingMaskIntoConstraints = NO;
+        topBorder.backgroundColor = color;
+        
+        NSDictionary *views = NSDictionaryOfVariableBindings(topBorder);
+        
+        [self addSubview:topBorder];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[topBorder]|" options:0 metrics:nil views:views]];
+        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|[topBorder(%f)]", borderWidth.top] options:0 metrics:nil views:views]];
     }
-}
-
-#pragma mark - ButtonEvents
-
-- (void)makeBlockTransparent:(id)sender {
-    self.alpha = .5;
-}
-
-- (void)resetBlockOpacity:(id)sender {
-    self.alpha = 1;
-}
-
-- (void)blockTouchUp:(id)sender {
-    [self resetBlockOpacity:sender];
-    NSLog(@"Clicked");
 }
 
 #pragma mark - LongPressGestureRecognizer Action
 
 - (void)tapped:(UILongPressGestureRecognizer *)recognizer {
     static UIView *titleSubview;
-    NSLog(@"received");
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
             [recognizer.view.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
@@ -300,19 +275,22 @@
             break;
         case UIGestureRecognizerStateEnded:
             if (titleSubview) {
-                NSLog(@"tapped");
+                titleSubview.alpha = 1;
+                titleSubview = nil;
+            }
+            if ([self.delegate respondsToSelector:@selector(blockview:shouldOpenURL:)]) {
+                if ([self.delegate blockview:self shouldOpenURL:self.url]) {
+                    [[UIApplication sharedApplication] openURL:self.url];
+                }
+            }
+            break;
+        default:
+            if (titleSubview) {
                 titleSubview.alpha = 1;
                 titleSubview = nil;
             }
             break;
-        default:
-            break;
     }
-//    if ([self.delegate respondsToSelector:@selector(blockview:shouldOpenURL:)]) {
-//        if ([self.delegate blockview:self shouldOpenURL:self.url]) {
-//            [[UIApplication sharedApplication] openURL:self.url];
-//        }
-//    }
 }
 
 #pragma mark - CloseButton Action
@@ -326,13 +304,7 @@
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    if ([otherGestureRecognizer.view isKindOfClass:[UITableView class]] && otherGestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        
-        gestureRecognizer.enabled = NO;
-        return YES;
-    }
-    gestureRecognizer.enabled = YES;
-    return [gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]];
+    return YES;
 }
 
 @end

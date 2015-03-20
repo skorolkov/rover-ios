@@ -103,7 +103,7 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
 
 - (void)updateWithJSON:(NSDictionary *)JSON {    
     // customerID
-    NSString *customerID = [JSON objectForKey:@"customer_id"];
+    NSString *customerID = [JSON objectForKey:@"customerId"];
     if (customerID != (id)[NSNull null] && [customerID length] > 0) {
         self.customerID = customerID;
     }
@@ -131,24 +131,16 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
     NSMutableDictionary *JSON = [NSMutableDictionary dictionaryWithCapacity:4];
     
     // customerID
-    if (self.customerID) {
-        [JSON setObject:self.customerID forKey:@"customer_id"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"customer_id"];
-    }
+    [JSON setObject:RVNullSafeValueFromObject(self.customerID) forKey:@"customerId"];
     
     // name
     if (self.name) {
-        [JSON setObject:self.name forKey:@"name"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"name"];
+        [JSON setObject:RVNullSafeValueFromObject(self.name) forKey:@"name"];
     }
     
     // email
     if (self.email) {
-        [JSON setObject:self.email forKey:@"email"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"email"];
+        [JSON setObject:RVNullSafeValueFromObject(self.email) forKey:@"email"];
     }
     
     // attributes

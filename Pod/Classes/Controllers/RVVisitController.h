@@ -9,11 +9,14 @@
 #import <Foundation/Foundation.h>
 
 @class RVCard;
+@class RVVisit;
 
 @protocol RVVisitControllerDelegate;
 
 @interface RVVisitController : NSObject
 
+
+@property (nonatomic, strong, readonly) RVVisit *visit;
 
 @property (nonatomic, strong) NSPredicate *predicate;
 

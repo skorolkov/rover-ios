@@ -7,6 +7,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern inline NSObject* RVNullSafeValueFromObject(NSObject *object);
+
 /** RVModel is the base class for all models in the Rover SDK. It should never be instantiated directly and should be considered an abstract class.
  */
 @interface RVModel : NSObject
@@ -16,6 +18,10 @@
  The one potentially useful case for this property is to determine if a model has been saved. If the ID property of a model is not set, it means it has not been persisted to the Rover platform.
  */
 @property (readonly, strong, nonatomic) NSString *ID;
+
+/** Any meta data associated with the model.
+ */
+@property (nonatomic, strong, readonly) NSDictionary *meta;
 
 /** Any subclass of the RVModel class can be persisted to the Rover platform using the save method. For example, you can use this method on the current customer object to save attributes of your customer. After calling the save method your changes will be reflected in the [Rover Marketing Console](http://app.roverlabs.co/).
  @param success After successfully persisting the model to the Rover platform this block will be invoked.

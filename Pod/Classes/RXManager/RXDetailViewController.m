@@ -17,11 +17,9 @@
 
 @interface RXDetailViewController ()
 
-@property (nonatomic, strong) RXTransition *transitionManager;
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIView *titleBar;
-@property (nonatomic, strong) UIView *backgroundView;
 
 
 @property (nonatomic, strong) NSLayoutConstraint *containerBarBottomConstraint;
@@ -34,9 +32,7 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _transitionManager = [[RXTransition alloc] initWithParentViewController:self];
-        self.transitioningDelegate = _transitionManager;
-        self.modalPresentationStyle = UIModalPresentationCustom;
+        
     }
     return self;
 }
@@ -62,7 +58,6 @@
     _scrollView.scrollEnabled = YES;
     _scrollView.backgroundColor = [UIColor clearColor];
     _scrollView.alwaysBounceVertical = YES;
-    _scrollView.delegate = _transitionManager;
     
     _containerView = [UIView new];
     _containerView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -97,6 +92,15 @@
 }
 
 - (void)loadViewDefinition {
+    
+    // Background Color
+    self.view.backgroundColor = _viewDefinition.backgroundColor;
+    
+    // Background Image
+    if (_viewDefinition.backgroundImageURL) {
+        [self setBackgroundImageWithURL:_viewDefinition.backgroundImageURL contentMode:_viewDefinition.backgroundContentMode];
+    }
+    
     [_containerView.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
         [subview removeFromSuperview];
     }];
@@ -121,8 +125,7 @@
     [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:lastBlock attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
     
     
-    // UIScrollView Background
-    [self addBackgroundView];
+
     
     
     // titlebar height bug
@@ -132,27 +135,8 @@
     }
 }
 
-- (void)addBackgroundView {
-    _backgroundView = [UIView new];
-    _backgroundView.translatesAutoresizingMaskIntoConstraints = NO;
-    _backgroundView.backgroundColor = _viewDefinition.backgroundColor;
-    
-    UIView *firstBlock = _containerView.subviews[0];
-    
-    [_containerView addSubview:_backgroundView];
-    [_containerView sendSubviewToBack:_backgroundView];
-    [_containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[_backgroundView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_backgroundView)]];
-    [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:_backgroundView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:firstBlock attribute:NSLayoutAttributeTop multiplier:1 constant:0]];
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_backgroundView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-    
-    // Background Image
-    if (_viewDefinition.backgroundImageURL) {
-        [self setBackgroundImageWithURL:_viewDefinition.backgroundImageURL contentMode:_viewDefinition.backgroundContentMode];
-    }
-}
-
 - (void)setBackgroundImageWithURL:(NSURL *)url contentMode:(RVBackgroundContentMode)contentmode {
-    __weak UIView *weakContainerView = _backgroundView;
+    __weak UIView *weakContainerView = self.view;
     if (contentmode == RVBackgroundContentModeTile) {
         [[SDWebImageManager sharedManager] downloadImageWithURL:url options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             weakContainerView.backgroundColor = [UIColor colorWithPatternImage:image];
@@ -168,7 +152,11 @@
         NSDictionary *views = NSDictionaryOfVariableBindings(backgroundImageView);
         
         [weakContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[backgroundImageView]|" options:0 metrics:nil views:views]];
-        [weakContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundImageView]|" options:0 metrics:nil views:views]];
+        //[weakContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[backgroundImageView]|" options:0 metrics:nil views:views]];
+        [weakContainerView addConstraint:[NSLayoutConstraint constraintWithItem:backgroundImageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_titleBar attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+        [weakContainerView addConstraint:[NSLayoutConstraint constraintWithItem:backgroundImageView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:weakContainerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+        
+        [weakContainerView sendSubviewToBack:backgroundImageView];
     }
 }
 

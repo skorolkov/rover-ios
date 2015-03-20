@@ -108,7 +108,8 @@
 
 - (void)configureLayoutForLastBlockView:(UIView *)blockView
 {
-    [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    // TODO: this is not always accurate
+    [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
 }
 
 - (void)addBlockView:(UIView *)blockView {

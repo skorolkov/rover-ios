@@ -7,13 +7,40 @@
 //
 
 #import "RVModelProject.h"
-#import "RVVisitProject.h"
+#import "RVVisit.h"
 #import "RVCardProject.h"
 #import "RVLocation.h"
 #import "RVTouchpoint.h"
+#import "RVViewDefinition.h"
+#import "RVCustomer.h"
 
 #import "RVBlock.h"
 #import "RVImageBlock.h"
+
+#import "RVNetworkingManager.h"
+
+#pragma mark - SystemCalls
+
+#include <sys/sysctl.h>
+NSString * getSysInfoByName(char *typeSpecifier)
+{
+    size_t size;
+    sysctlbyname(typeSpecifier, NULL, &size, NULL, 0);
+    
+    char *answer = malloc(size);
+    sysctlbyname(typeSpecifier, answer, &size, NULL, 0);
+    
+    NSString *results = [NSString stringWithCString:answer encoding: NSUTF8StringEncoding];
+    
+    free(answer);
+    return results;
+}
+
+NSString * platform()
+{
+    return getSysInfoByName("hw.machine");
+}
+
 
 @interface RVVisit ()
 
@@ -37,25 +64,22 @@
     return elapsed < self.keepAlive;
 }
 
-- (NSString *)welcomeMessage {
-    if ([_welcomeMessage length] < 1) {
-        return @"Welcome!";
-    }
-    
-    return _welcomeMessage;
-}
-
 - (NSArray *)allImageUrls {
     NSMutableArray *array = [NSMutableArray array];
-//    [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
-//        [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
-//            [card.listviewBlocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
-//                if ([block isKindOfClass:[RVImageBlock class]]) {
-//                    [array insertObject:((RVImageBlock *)block).imageURL atIndex:array.count];
-//                }
-//            }];
-//        }];
-//    }];
+    [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
+        [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
+            [card.viewDefinitions enumerateObjectsUsingBlock:^(RVViewDefinition *viewDefintion, NSUInteger idx, BOOL *stop) {
+                [viewDefintion.blocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
+                    if ([block isKindOfClass:[RVImageBlock class]]) {
+                        [array insertObject:((RVImageBlock *)block).imageURL atIndex:array.count];
+                    }
+                    
+                    // add background images
+                }];
+                // add background image
+            }];
+        }];
+    }];
     return [NSArray arrayWithArray:array];
 }
 
@@ -75,16 +99,16 @@
 //    return [self.cards objectsAtIndexes:indexes];
 }
 
-- (void)setEnteredAt:(NSDate *)enteredAt
+- (void)setTimestamp:(NSDate *)timestamp
 {
-    self.beaconLastDetectedAt = enteredAt;
-    _enteredAt = enteredAt;
+    self.beaconLastDetectedAt = timestamp;
+    _timestamp = timestamp;
 }
 
 - (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion
 {
     return [self.UUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString]
-        && [self.major isEqualToNumber:beaconRegion.major];
+        && [self.majorNumber isEqualToNumber:beaconRegion.major];
 }
 
 - (RVTouchpoint *)touchpointForRegion:(CLBeaconRegion *)beaconRegion
@@ -96,7 +120,7 @@
 {
     __block RVTouchpoint *touchpoint = nil;
     [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *tp, NSUInteger idx, BOOL *stop) {
-        if ([tp.minor isEqualToNumber:minor]) {
+        if ([tp.minorNumber isEqualToNumber:minor]) {
             touchpoint = tp;
             *stop = YES;
         }
@@ -113,7 +137,7 @@
     NSMutableArray *touchpointsWithNotification = [NSMutableArray array];
     [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
         if (touchpoint.notification && ![touchpoint.notification isEqualToString:@""]) {
-            [touchpointsWithNotification addObject:[[CLBeaconRegion alloc] initWithProximityUUID:self.UUID major:self.major.integerValue minor:touchpoint.minor.integerValue identifier:self.UUID.UUIDString]];
+            [touchpointsWithNotification addObject:[[CLBeaconRegion alloc] initWithProximityUUID:self.UUID major:self.majorNumber.integerValue minor:touchpoint.minorNumber.integerValue identifier:self.UUID.UUIDString]];
         }
     }];
     return touchpointsWithNotification;
@@ -143,49 +167,18 @@
 
 - (void)updateWithJSON:(NSDictionary *)JSON {
     [super updateWithJSON:JSON];
-    
-    // UUID
-    NSString *UUID = [JSON objectForKey:@"uuid"];
-    if (UUID && UUID != (id)[NSNull null]  && [UUID length] > 0) {
-        self.UUID = [[NSUUID alloc] initWithUUIDString:UUID];
-    }
-    
-    // major
-    NSNumber *major = [JSON objectForKey:@"major"];
-    if (major && major != (id)[NSNull null]) {
-        self.major = major;
-    }
-    
-    // customerID
-    NSString *customerID = [JSON objectForKey:@"customer_id"];
-    if (customerID && customerID != (id)[NSNull null] && [customerID length] > 0) {
-        self.customerID = customerID;
-    }
+
+    // TODO: investigate this (how does this impact [Rover shared].custome)
+    // customer
+//    NSString *customerID = [JSON objectForKey:@"customer"];
+//    if (customerID && customerID != (id)[NSNull null] && [customerID length] > 0) {
+//        self.customer = customerID;
+//    }
     
     // keepAlive
     NSNumber *keepAlive = [JSON objectForKey:@"keepAlive"];
     if (keepAlive && keepAlive != (id)[NSNull null]) {
         self.keepAlive = [keepAlive doubleValue] * 60;
-    }
-    
-    NSDateFormatter *dateFormatter = [self dateFormatter];
-    
-    // enteredAt
-    NSString *enteredAt = [JSON objectForKey:@"entered_at"];
-    if (enteredAt && enteredAt != (id)[NSNull null] && [enteredAt length] > 0) {
-        self.enteredAt = [dateFormatter dateFromString:enteredAt];
-    }
-    
-    // exitedAt
-    NSString *exitedAt = [JSON objectForKey:@"exited_at"];
-    if (exitedAt && exitedAt != (id)[NSNull null] && [exitedAt length] > 0) {
-        self.exitedAt = [dateFormatter dateFromString:exitedAt];
-    }
-    
-    // openedAt
-    NSString *openedAt = [JSON objectForKey:@"opened_at"];
-    if (openedAt && openedAt != (id)[NSNull null] && [openedAt length] > 0) {
-        self.openedAt = [dateFormatter dateFromString:openedAt];
     }
     
     //location
@@ -209,53 +202,32 @@
 }
 
 - (NSDictionary *)toJSON {
-    NSMutableDictionary *JSON = [[super toJSON] mutableCopy];
+    NSMutableDictionary *JSON = [NSMutableDictionary dictionary];
     
     // UUID
-    if (self.UUID) {
-        [JSON setObject:self.UUID.UUIDString forKey:@"uuid"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"uuid"];
-    }
-    
+    [JSON setObject:RVNullSafeValueFromObject(self.UUID.UUIDString) forKey:@"uuid"];
+
     // major
-    if (self.major) {
-        [JSON setObject:self.major forKey:@"major"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"major"];
-    }
+    [JSON setObject:RVNullSafeValueFromObject(self.majorNumber) forKey:@"majorNumber"];
+
+    // customer
+    [JSON setObject:RVNullSafeValueFromObject([self.customer toJSON]) forKey:@"customer"];
     
-    // customerID
-    if (self.customerID) {
-        [JSON setObject:self.customerID forKey:@"customer_id"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"customer_id"];
-    }
+    // device
+    [JSON setObject:platform() forKey:@"device"];
     
+    // operatingSystem
+    [JSON setObject:[[UIDevice currentDevice] systemName] forKey:@"operatingSystem"];
     
-    NSDateFormatter *dateFormatter = [self dateFormatter];
+    // operatingSystemVersion
+    [JSON setObject:[[UIDevice currentDevice] systemVersion] forKey:@"osVersion"];
     
-    // enteredAt
-    if (self.enteredAt) {
-        [JSON setObject:[dateFormatter stringFromDate:self.enteredAt] forKey:@"entered_at"];
-        NSLog(@"enteredAt: %@", [dateFormatter stringFromDate:self.enteredAt]);
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"entered_at"];
-    }
+    // timestamp
+    [JSON setObject:[[self dateFormatter] stringFromDate:self.timestamp] forKey:@"timestamp"];
     
-    // exitedAt
-    if (self.exitedAt) {
-        [JSON setObject:[dateFormatter stringFromDate:self.exitedAt] forKey:@"exited_at"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"exited_at"];
-    }
-    
-    // openedAt
-    if (self.openedAt) {
-        [JSON setObject:[dateFormatter stringFromDate:self.openedAt] forKey:@"opened_at"];
-    } else {
-        [JSON setObject:[NSNull null] forKey:@"opened_at"];
-    }
+    // version (SDK)
+    // TODO: setup a compiler constant to handle this
+    [JSON setObject:@"0.3.0" forKey:@"sdkVersion"];
     
     return JSON;
 }
@@ -278,22 +250,42 @@
     [standardDefaults synchronize];
 }
 
+- (void)trackEvent:(NSString *)event params:(NSDictionary *)params {
+    NSLog(@"Tracking (%@)", event);
+    
+    NSArray *eventComponents = [event componentsSeparatedByString:@"."];
+    
+    NSMutableDictionary *eventParams = [NSMutableDictionary dictionaryWithDictionary:@{@"object": eventComponents[0],
+                                                                                       @"action": eventComponents[1],
+                                                                                       @"timestamp": [[self dateFormatter] stringFromDate:[NSDate date]]}];
+    
+    [eventParams addEntriesFromDictionary:params];
+    
+    NSString *path = [NSString stringWithFormat:@"%@/events", [self updatePath]];
+    
+    [[RVNetworkingManager sharedManager] sendRequestWithMethod:@"POST" path:path parameters:eventParams success:^(NSDictionary *data) {
+        NSLog(@"%@ tracked successfully", event);
+    } failure:^(NSError *error) {
+        NSLog(@"%@ failed: %@",event, error);
+    }];
+}
+
 #pragma mark - NSCoding
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
     //Encode properties, other class variables, etc
     [encoder encodeObject:self.UUID forKey:@"UUID"];
-    [encoder encodeObject:self.major forKey:@"major"];
-    [encoder encodeObject:self.customerID forKey:@"customerID"];
-    [encoder encodeObject:self.welcomeMessage forKey:@"welcomeMessage"];
+    [encoder encodeObject:self.majorNumber forKey:@"major"];
+    //[encoder encodeObject:self.customerID forKey:@"customerID"];
+    //[encoder encodeObject:self.welcomeMessage forKey:@"welcomeMessage"];
     [encoder encodeObject:[NSNumber numberWithDouble:self.keepAlive] forKey:@"keepAlive"];
-    [encoder encodeObject:self.primaryBackgroundColor forKey:@"primaryBackgroundColor"];
-    [encoder encodeObject:self.primaryFontColor forKey:@"primaryFontColor"];
-    [encoder encodeObject:self.secondaryBackgroundColor forKey:@"secondaryBackgroundColor"];
-    [encoder encodeObject:self.secondaryFontColor forKey:@"secondaryFontColor"];
-    [encoder encodeObject:self.enteredAt forKey:@"enteredAt"];
-    [encoder encodeObject:self.exitedAt forKey:@"exitedAt"];
-    [encoder encodeObject:self.openedAt forKey:@"openedAt"];
+//    [encoder encodeObject:self.primaryBackgroundColor forKey:@"primaryBackgroundColor"];
+//    [encoder encodeObject:self.primaryFontColor forKey:@"primaryFontColor"];
+//    [encoder encodeObject:self.secondaryBackgroundColor forKey:@"secondaryBackgroundColor"];
+//    [encoder encodeObject:self.secondaryFontColor forKey:@"secondaryFontColor"];
+    [encoder encodeObject:self.timestamp forKey:@"timestamp"];
+//    [encoder encodeObject:self.exitedAt forKey:@"exitedAt"];
+   // [encoder encodeObject:self.openedAt forKey:@"openedAt"];
     [encoder encodeObject:self.beaconLastDetectedAt forKey:@"beaconLastDetecedAt"];
     [encoder encodeObject:self.touchpoints forKey:@"touchpoints"];
 }
@@ -302,17 +294,17 @@
     if((self = [self init])) {
         //decode properties, other class vars
         self.UUID = [decoder decodeObjectForKey:@"UUID"];
-        self.major = [decoder decodeObjectForKey:@"major"];
-        self.customerID = [decoder decodeObjectForKey:@"customerID"];
-        self.welcomeMessage = [decoder decodeObjectForKey:@"welcomeMessage"];
+        self.majorNumber = [decoder decodeObjectForKey:@"major"];
+       // self.customerID = [decoder decodeObjectForKey:@"customerID"];
+        //self.welcomeMessage = [decoder decodeObjectForKey:@"welcomeMessage"];
         //self.keepAlive = [[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
-        self.primaryBackgroundColor = [decoder decodeObjectForKey:@"primaryBackgroundColor"];
-        self.primaryFontColor = [decoder decodeObjectForKey:@"primaryFontColor"];
-        self.secondaryBackgroundColor = [decoder decodeObjectForKey:@"secondaryBackgroundColor"];
-        self.secondaryFontColor = [decoder decodeObjectForKey:@"secondaryFontColor"];
-        self.enteredAt = [decoder decodeObjectForKey:@"enteredAt"];
-        self.exitedAt = [decoder decodeObjectForKey:@"exitedAt"];
-        self.openedAt = [decoder decodeObjectForKey:@"openedAt"];
+//        self.primaryBackgroundColor = [decoder decodeObjectForKey:@"primaryBackgroundColor"];
+//        self.primaryFontColor = [decoder decodeObjectForKey:@"primaryFontColor"];
+//        self.secondaryBackgroundColor = [decoder decodeObjectForKey:@"secondaryBackgroundColor"];
+//        self.secondaryFontColor = [decoder decodeObjectForKey:@"secondaryFontColor"];
+        self.timestamp = [decoder decodeObjectForKey:@"timestamp"];
+        //self.exitedAt = [decoder decodeObjectForKey:@"exitedAt"];
+        //self.openedAt = [decoder decodeObjectForKey:@"openedAt"];
         self.beaconLastDetectedAt = [decoder decodeObjectForKey:@"beaconLastDetecedAt"];
         self.touchpoints = [decoder decodeObjectForKey:@"touchpoints"];
     }
@@ -322,7 +314,7 @@
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"<RVVisit: UUID: %@, Major: %@, enteredAt: %@, beaconLastDetectedAt: %@, keepAlive: %f>",
-            self.UUID, self.major, self.enteredAt, self.beaconLastDetectedAt, self.keepAlive];
+            self.UUID, self.majorNumber, self.timestamp, self.beaconLastDetectedAt, self.keepAlive];
 }
 
 @end

@@ -16,7 +16,7 @@
 
 /** The minor number for the touchpoint
  */
-@property (nonatomic, strong) NSNumber *minor;
+@property (nonatomic, strong) NSNumber *minorNumber;
 
 /** The notification for the touchpoint
  */

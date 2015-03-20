@@ -12,6 +12,7 @@
 #import "RXDetailViewController.h"
 #import "RVCard.h"
 #import "RVViewDefinition.h"
+#import "RVVisit.h"
 
 @interface RXVisitViewController () <RVVisitControllerDelegate, RXCardViewCellDelegate>
 
@@ -98,22 +99,15 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    RVCard *card = [self.visitController cardAtIndexPath:indexPath];
+    if (!card.isViewed) {
+        [self.visitController.visit trackEvent:@"card.view" params:@{@"card": card.ID}];
+        card.isViewed = YES;
+    }
     // should this be another delegate method to hide tableview?
 //    if ([self.delegate respondsToSelector:@selector(willDisplayCell:forCardAtIndexPath:)]) {
 //        [self.delegate willDisplayCell:(RXCardViewCell *)cell forCardAtIndexPath:indexPath];
 //    }
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    RVCard *card = [self.visitController cardAtIndexPath:indexPath];
-    if (card.viewDefinitions.count == 1) {
-        return;
-    }
-    RVViewDefinition *detailView = [card.viewDefinitions objectAtIndex:1];
-    if (detailView && detailView.blocks > 0) {
-        RXDetailViewController *cardViewController = [[RXDetailViewController alloc] initWithViewDefinition:detailView];
-        [self presentViewController:cardViewController animated:YES completion:nil];
-    }
 }
 
 #pragma mark - RXCardViewCellDelegate
@@ -122,11 +116,25 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cardViewCell];
     RVCard *card = [self.visitController cardAtIndexPath:indexPath];
     card.isDeleted = YES;
+    [self.visitController.visit trackEvent:@"card.discard" params:@{@"card": card.ID}];
 }
 
 - (BOOL)cardViewCell:(RXCardViewCell *)cell shouldOpenURL:(NSURL *)url {
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    RVCard *card = [self.visitController cardAtIndexPath:indexPath];
+    [self.visitController.visit trackEvent:@"card.click" params:@{@"card": card.ID, @"url": url.absoluteString}];
+    
     if ([url.scheme isEqualToString:@"rover"]) {
-        // do rover stuff
+        if ([url.host isEqualToString:@"view"] && url.path.length > 1) {
+            NSString *viewID = [url.path substringFromIndex:1];
+            [card.viewDefinitions enumerateObjectsUsingBlock:^(RVViewDefinition *viewDef, NSUInteger idx, BOOL *stop) {
+                if ([viewDef.ID isEqualToString:viewID]) {
+                    RXDetailViewController *detailViewController = [[RXDetailViewController alloc] initWithViewDefinition:viewDef];
+                    [self presentViewController:detailViewController animated:YES completion:nil];
+                    *stop = YES;
+                }
+            }];
+        }
         return NO;
     } else {
         return YES;
