@@ -59,9 +59,9 @@
 
 @property (strong, nonatomic) NSDate *beaconLastDetectedAt;
 
-/** The current Touchpoint
+/** The current touchpoints
  */
-@property (strong, nonatomic) RVTouchpoint *currentTouchpoint;
+@property (strong, nonatomic) NSMutableSet *currentTouchpoints;
 
 /** All visited touchpoints
  */
@@ -75,7 +75,8 @@
  */
 @property (nonatomic, readonly) NSArray *observableRegions;
 
-- (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
+- (BOOL)isInLocationRegion:(CLBeaconRegion *)beaconRegion;
+- (BOOL)isInTouchpointRegion:(CLBeaconRegion *)beaconRegion;
 
 - (void)persistToDefaults;
 

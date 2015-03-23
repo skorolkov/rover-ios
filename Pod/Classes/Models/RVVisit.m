@@ -105,10 +105,19 @@ NSString * platform()
     _timestamp = timestamp;
 }
 
-- (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion
+- (BOOL)isInLocationRegion:(CLBeaconRegion *)beaconRegion
 {
     return [self.UUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString]
         && [self.majorNumber isEqualToNumber:beaconRegion.major];
+}
+
+- (BOOL)isInTouchpointRegion:(CLBeaconRegion *)beaconRegion {
+    for (RVTouchpoint *touchpoint in self.currentTouchpoints) {
+        if ([touchpoint.minorNumber isEqualToNumber:beaconRegion.minor]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (RVTouchpoint *)touchpointForRegion:(CLBeaconRegion *)beaconRegion
@@ -143,16 +152,16 @@ NSString * platform()
     return touchpointsWithNotification;
 }
 
-- (void)setCurrentTouchpoint:(RVTouchpoint *)currentTouchpoint
-{
-    if (![_mVisitedTouchpoints containsObject:currentTouchpoint]) {
-        // TODO: research better KVO patterns
-        [self willChangeValueForKey:@"visitedTouchpoints"];
-        [_mVisitedTouchpoints insertObject:currentTouchpoint atIndex:0];
-        [self didChangeValueForKey:@"visitedTouchpoints"];
-    }
-    _currentTouchpoint = currentTouchpoint;
-}
+//- (void)setCurrentTouchpoint:(RVTouchpoint *)currentTouchpoint
+//{
+//    if (![_mVisitedTouchpoints containsObject:currentTouchpoint]) {
+//        // TODO: research better KVO patterns
+//        [self willChangeValueForKey:@"visitedTouchpoints"];
+//        [_mVisitedTouchpoints insertObject:currentTouchpoint atIndex:0];
+//        [self didChangeValueForKey:@"visitedTouchpoints"];
+//    }
+//    _currentTouchpoint = currentTouchpoint;
+//}
 
 #pragma mark - Initialization
 
@@ -161,6 +170,7 @@ NSString * platform()
     self = [super init];
     if (self) {
         _mVisitedTouchpoints = [NSMutableArray array];
+        _currentTouchpoints = [NSMutableSet set];
     }
     return self;
 }

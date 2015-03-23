@@ -52,6 +52,17 @@
     return [self.minorNumber isEqualToNumber:beaconRegion.minor];
 }
 
+- (BOOL)isEqual:(id)object {
+    // TODO: better implementation from NSHipster
+    RVTouchpoint *otherTouchpoint = object;
+    
+    return [self.minorNumber isEqualToNumber:otherTouchpoint.minorNumber];
+}
+
+- (NSUInteger)hash {
+    return [self.minorNumber hash];
+}
+
 - (void)encodeWithCoder:(NSCoder *)encoder {
     [encoder encodeObject:self.minorNumber forKey:@"minor"];
 }

@@ -20,6 +20,7 @@
 #import "RVCustomer.h"
 
 NSString *const kRVVisitManagerDidEnterTouchpointNotification = @"RVVisitManagerDidEnterTouchpointNotification";
+NSString *const kRVVisitManagerDidExitTouchpointNotification = @"RVVisitManagerDidExitTouchpointNotification";
 NSString *const kRVVisitManagerDidEnterLocationNotification = @"RVVisitManagerDidEnterLocationNotification";
 NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDidExitLocationNotification";
 
@@ -27,6 +28,8 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 
 @property (strong, nonatomic) RVVisit *latestVisit;
 @property (strong, nonatomic) NSTimer *expirationTimer;
+
+@property (strong, nonatomic) NSOperationQueue *operationQueue;
 
 @end
 
@@ -49,6 +52,9 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 - (id)init {
     self = [super init];
     if (self) {
+        _operationQueue = [[NSOperationQueue alloc] init];
+        _operationQueue.maxConcurrentOperationCount = 1;
+        
         [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(regionManagerDidEnterRegion:) name:kRVRegionManagerDidEnterRegionNotification object:nil];
         
         [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(regionManagerDidExitRegion:) name:kRVRegionManagerDidExitRegionNotification object:nil];
@@ -78,62 +84,81 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 
 - (void)regionManagerDidEnterRegion:(NSNotification *)note {
     CLBeaconRegion *beaconRegion = [note.userInfo objectForKey:@"beaconRegion"];
-
-    if (self.latestVisit && [self.latestVisit isInRegion:beaconRegion] && self.latestVisit.isAlive) {
-
-        // Touchpoint check
-        if (!self.latestVisit.currentTouchpoint || ![self.latestVisit.currentTouchpoint isInRegion:beaconRegion]) {
-            [self movedToSubRegion:beaconRegion];
+    __weak typeof(self) weakSelf = self;
+    
+    [_operationQueue addOperationWithBlock:^{
+        if (weakSelf.latestVisit && [weakSelf.latestVisit isInLocationRegion:beaconRegion] && weakSelf.latestVisit.isAlive) {
+            
+            // Touchpoint check
+            if (![weakSelf.latestVisit isInTouchpointRegion:beaconRegion]) {
+                [weakSelf movedToRegion:beaconRegion];
+            }
+            
+            NSDate *now = [NSDate date];
+            NSTimeInterval elapsed = [now timeIntervalSinceDate:weakSelf.latestVisit.timestamp];
+            
+            [_expirationTimer invalidate];
+            
+            
+            RVLog(kRoverAlreadyVisitingNotification, @{ @"elapsed": [NSNumber numberWithDouble:elapsed],
+                                                        @"keepAlive": [NSNumber numberWithDouble:weakSelf.latestVisit.keepAlive] });
+            return;
         }
         
-        NSDate *now = [NSDate date];
-        NSTimeInterval elapsed = [now timeIntervalSinceDate:self.latestVisit.timestamp];
-
-        [_expirationTimer invalidate];
-
+        _expirationTimer = nil;
         
-        RVLog(kRoverAlreadyVisitingNotification, @{ @"elapsed": [NSNumber numberWithDouble:elapsed],
-                                                    @"keepAlive": [NSNumber numberWithDouble:self.latestVisit.keepAlive] });
-        return;
-    }
-    
-    _expirationTimer = nil;
+        // Need a synchronous call so that the queue behaves like a queue
+        dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+        
+        [weakSelf createVisitWithBeaconRegion:beaconRegion completionBlock:^{
+            dispatch_semaphore_signal(semaphore);
+        }];
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    }];
 
-    [self createVisitWithBeaconRegion:beaconRegion];
-
-//    RVCustomer *customer = [Rover shared].customer;
-//    if (customer.dirty) {
-//        [customer save:^{
-//            [self createVisitWithBeaconRegion:beaconRegion];
-//        } failure:nil];
-//    } else {
-//        [self createVisitWithBeaconRegion:beaconRegion];
-//    }
 }
 
 - (void)regionManagerDidExitRegion:(NSNotification *)note {
     CLBeaconRegion *beaconRegion = [note.userInfo objectForKey:@"beaconRegion"];
+    NSSet *regions = [note.userInfo objectForKey:@"allRegions"];
     
-    if (self.latestVisit && [self.latestVisit isInRegion:beaconRegion]) {
-        // Reset the keep-alive timer
-        self.latestVisit.beaconLastDetectedAt = [NSDate date];
-        [self.latestVisit persistToDefaults];
-        
-        NSLog(@"EXITING REGION");
-        
-        // Reset region monitoring
-//        RVRegionManager *regionManager = [RVRegionManager sharedManager];
-//        [regionManager setBeaconUUIDs:[Rover shared].config.beaconUUIDs];
-//        [regionManager startMonitoring];
-        
-        [self updateVisitExitTime];
-        //[self startExpirationTimer];
-    }
+    [_operationQueue addOperationWithBlock:^{
+        if (self.latestVisit && [self.latestVisit isInLocationRegion:beaconRegion]) {
+            
+            RVTouchpoint *touchpoint = [self.latestVisit touchpointForRegion:beaconRegion];
+            if (touchpoint) {
+                [self.latestVisit.currentTouchpoints removeObject:touchpoint];
+                
+                [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidExitTouchpointNotification object:self
+                                                                  userInfo:@{ @"touchpoint": touchpoint,
+                                                                              @"visit": self.latestVisit}];
+                NSLog(@"EXITING TOUCHPOINT: %@", touchpoint);
+            }
+            
+            if (regions.count == 0) {
+                // Reset the keep-alive timer
+                self.latestVisit.beaconLastDetectedAt = [NSDate date];
+                [self.latestVisit persistToDefaults];
+                
+                NSLog(@"EXITING LOCATION");
+                
+                // Reset region monitoring
+                //        RVRegionManager *regionManager = [RVRegionManager sharedManager];
+                //        [regionManager setBeaconUUIDs:[Rover shared].config.beaconUUIDs];
+                //        [regionManager startMonitoring];
+                
+                [self updateVisitExitTime];
+                //[self startExpirationTimer];
+            }
+            
+        }
+    }];
+
 }
 
 #pragma mark - Networking
 
-- (void)createVisitWithBeaconRegion:(CLBeaconRegion *)beaconRegion {
+- (void)createVisitWithBeaconRegion:(CLBeaconRegion *)beaconRegion completionBlock:(void (^)())completionBlock {
     RVLog(kRoverWillPostVisitNotification, nil);
     
     self.latestVisit = [RVVisit new];
@@ -145,20 +170,28 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
     self.latestVisit.timestamp = [NSDate date];
     
     [self.latestVisit save:^{
-        [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterLocationNotification object:self userInfo:@{ @"visit": self.latestVisit }];
         RVLog(kRoverDidPostVisitNotification, nil);
         
+        [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterLocationNotification object:self userInfo:@{ @"visit": self.latestVisit }];
         NSLog(@"touchpoints: %@", self.latestVisit.touchpoints); //DELETE
         
-        RVRegionManager *regionManager = [RVRegionManager sharedManager];
-        [regionManager setBeaconRegions:self.latestVisit.observableRegions];
-        [regionManager startMonitoring];
+//        RVRegionManager *regionManager = [RVRegionManager sharedManager];
+//        [regionManager setBeaconRegions:self.latestVisit.observableRegions];
+//        [regionManager startMonitoring];
         
 
         
-        [self movedToSubRegion:beaconRegion];
+        [self movedToRegion:beaconRegion];
+        
+        if (completionBlock) {
+            completionBlock();
+        }
     } failure:^(NSString *reason) {
         RVLog(kRoverPostVisitFailedNotification, nil);
+        
+        if (completionBlock) {
+            completionBlock();
+        }
     }];
 }
 
@@ -167,6 +200,8 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
     
     RVLog(kRoverWillUpdateExitTimeNotification, nil);
     
+    
+    // TOOD: move this stuff out to the Rover class
     [self.latestVisit trackEvent:@"location.exit" params:nil];
     
 //    //self.latestVisit.exitedAt = [NSDate date];
@@ -181,21 +216,21 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 
 #pragma mark - Helper Methods
 
-- (void)movedToSubRegion:(CLBeaconRegion *)beaconRegion {
+- (void)movedToRegion:(CLBeaconRegion *)beaconRegion {
     RVTouchpoint *touchpoint = [self.latestVisit touchpointForRegion:beaconRegion];
     if (touchpoint) {
         
         NSLog(@"Entered touchpoint: %@", touchpoint);
         
         if (![self.latestVisit.visitedTouchpoints containsObject:touchpoint]) {
-            self.latestVisit.currentTouchpoint = touchpoint;
+            [self.latestVisit.currentTouchpoints addObject:touchpoint];
             [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self
                                                               userInfo:@{ @"touchpoint": touchpoint,
                                                                           @"visit": self.latestVisit}];
             return;
         }
         
-        self.latestVisit.currentTouchpoint = touchpoint;
+        [self.latestVisit.currentTouchpoints addObject:touchpoint];
         // TODO: fix this, this posts a noti,..why?!
         //RVLog(kRoverDidEnterTouchpointNotification, nil);
         

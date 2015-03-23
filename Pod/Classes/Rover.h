@@ -24,7 +24,11 @@
 
 extern NSString *const kRoverDidExpireVisitNotification;
 
-/** This notification will be posted when the customer enters a touchpoint.
+/** This notification will be posted when the customer exits a touchpoint region.
+ */
+extern NSString *const kRoverDidExitTouchpointNotification;
+
+/** This notification will be posted when the customer enters a touchpoint region.
  */
 extern NSString *const kRoverDidEnterTouchpointNotification;
 

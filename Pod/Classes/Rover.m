@@ -21,6 +21,7 @@
 #import <SDWebImage/SDWebImagePrefetcher.h>
 #import "RVImagePrefetcher.h"
 
+NSString *const kRoverDidExitTouchpointNotification = @"RoverDidExitTouchpointNotification";
 NSString *const kRoverDidEnterTouchpointNotification = @"RoverDidEnterTouchpointNotification";
 NSString *const kRoverDidEnterLocationNotification = @"RoverDidEnterLocationNotification";
 NSString *const kRoverDidExpireVisitNotification = @"RoverDidExpireVisitNotification";
@@ -112,9 +113,9 @@ static Rover *sharedInstance = nil;
 
 - (RVVisit *)currentVisit {
     RVRegionManager *regionManager = [RVRegionManager sharedManager];
-    if (_currentVisit && regionManager.nearestBeacon) {
-        CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:regionManager.nearestBeacon.proximityUUID major:regionManager.nearestBeacon.major.integerValue identifier:regionManager.nearestBeacon.proximityUUID.UUIDString];
-        if ([_currentVisit isInRegion:beaconRegion]) {
+    if (_currentVisit && regionManager.currentRegions.count > 0) {
+        CLBeaconRegion *beaconRegion = regionManager.currentRegions.anyObject;
+        if ([_currentVisit isInLocationRegion:beaconRegion]) {
             return _currentVisit;
         };
     }
@@ -166,9 +167,13 @@ static Rover *sharedInstance = nil;
 - (void)setupListeners {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
     
+    // Location Notifications
     [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidEnterLocation:) name:kRVVisitManagerDidEnterLocationNotification object:nil];
     [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidExitLocation:) name:kRVVisitManagerDidExitLocationNotification object:nil];
+    
+    // Touchpoint Notifications
     [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidEnterTouchpoint:) name:kRVVisitManagerDidEnterTouchpointNotification object:nil];
+    [[RVNotificationCenter defaultCenter] addObserver:self selector:@selector(visitManagerDidExitTouchpoint:) name:kRVVisitManagerDidExitTouchpointNotification object:nil];
 }
 
 - (void)dealloc {
@@ -271,6 +276,7 @@ static Rover *sharedInstance = nil;
 #pragma mark - Visit Manager Notifications
 
 - (void)visitManagerDidEnterLocation:(NSNotification *)note {
+    // TODO: theres an error doing this cause of RVVisitController and how its observing a deallocated object
     _currentVisit = [note.userInfo objectForKey:@"visit"];
     
     [[RVImagePrefetcher sharedImagePrefetcher] prefetchURLs:_currentVisit.allImageUrls];
@@ -299,9 +305,11 @@ static Rover *sharedInstance = nil;
 
 - (void)visitManagerDidEnterTouchpoint:(NSNotification *)note {
     _currentVisit = [note.userInfo objectForKey:@"visit"];
-    RVTouchpoint *currentTouchpoint = [note.userInfo objectForKey:@"touchpoint"];
+    RVTouchpoint *touchpoint = [note.userInfo objectForKey:@"touchpoint"];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidEnterTouchpointNotification object:self];
+    
+    [_currentVisit trackEvent:@"touchpoint.enter" params:@{@"touchpoint": touchpoint.ID}];
     
 //    if (![[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
 //        [self sendNotification];
@@ -309,15 +317,21 @@ static Rover *sharedInstance = nil;
     
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         // do something else (banner or something)
-    } else if (currentTouchpoint.notification) {
-        [self sendNotification:currentTouchpoint.notification];
+    } else if (touchpoint.notification) {
+        [self sendNotification:touchpoint.notification];
 
     }
     
     
 }
 
+- (void)visitManagerDidExitTouchpoint:(NSNotification *)note {
+    RVTouchpoint *touchpoint = [note.userInfo objectForKey:@"touchpoint"];
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidExitTouchpointNotification object:self];
 
+    [self.currentVisit trackEvent:@"touchpoint.exit" params:@{@"touchpoint": touchpoint.ID}];
+}
 
 #pragma mark - RVModalViewControllerDelegate
 
@@ -349,6 +363,12 @@ static Rover *sharedInstance = nil;
 //            [self presentModal];
 //        }
 //    }
+    
+    if (self.currentVisit && self.currentVisit.currentTouchpoints) {
+        [self.currentVisit.currentTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
+            [self.currentVisit trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID}];
+        }];
+    }
 }
 
 @end
