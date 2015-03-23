@@ -86,6 +86,7 @@
 - (void)trackEvent:(NSString *)event params:(NSDictionary *)params;
 
 
-
+- (void)addToCurrentTouchpoints:(RVTouchpoint *)touchpoint;
+- (void)removeFromCurrentTouchpoints:(RVTouchpoint *)touchpoint;
 
 @end

@@ -18,10 +18,9 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 @interface RVRegionManager ()
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
-@property (strong, nonatomic) CLBeacon *nearestBeacon;
 @property (strong, nonatomic) NSDate *beaconDetectedAt;
 
-@property (readonly, nonatomic) NSTimeInterval timeSinceBeaconDetected;
+@property (readonly, nonatomic) NSTimeInterval timeSinceBeaconDetected; // This may not be needed anymore.
 
 @property (nonatomic, strong) NSSet *currentRegions;
 
@@ -55,14 +54,15 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
     [self setupBeaconRegions];
 }
 
-- (NSTimeInterval)timeSinceBeaconDetected {
-    if (!self.beaconDetectedAt) {
-        return 0;
-    }
-    
-    NSDate *now = [NSDate date];
-    return [now timeIntervalSinceDate:self.beaconDetectedAt];
-}
+//- (NSTimeInterval)timeSinceBeaconDetected {
+//    if (!self.beaconDetectedAt) {
+//        return 0;
+//    }
+//    
+//    NSDate *now = [NSDate date];
+//    return [now timeIntervalSinceDate:self.beaconDetectedAt];
+//}
+
 
 #pragma mark - Initialization
 
@@ -78,14 +78,6 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
         self.locationManager.delegate = self;
     }
     return  self;
-}
-
-#pragma mark - Utility methods
-
-- (BOOL)isCurrentRegion:(CLBeacon *)beacon {
-    return [self.nearestBeacon.proximityUUID.UUIDString isEqualToString:beacon.proximityUUID.UUIDString]
-            && [self.nearestBeacon.major isEqualToNumber:beacon.major]
-            && [self.nearestBeacon.minor isEqualToNumber:beacon.minor];
 }
 
 #pragma mark - Region monitoring
@@ -136,6 +128,8 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 #pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLRegion *)region {
+    RVLog(kRoverDidRangeBeaconsNotification, @{ @"count": [NSNumber numberWithUnsignedInteger:[beacons count]] });
+    
     NSMutableArray *wrappedBeacons = [NSMutableArray arrayWithCapacity:beacons.count];
     [beacons enumerateObjectsUsingBlock:^(CLBeacon *beacon, NSUInteger idx, BOOL *stop) {
         [wrappedBeacons insertObject:[[CLBeaconRegion alloc] initWithProximityUUID:beacon.proximityUUID major:beacon.major.integerValue minor:beacon.minor.integerValue identifier:[NSString stringWithFormat:@"%@-%@-%@", beacon.proximityUUID.UUIDString, beacon.major, beacon.minor]] atIndex:idx];
@@ -143,6 +137,7 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
     
     NSSet *regions = [NSSet setWithArray:wrappedBeacons];
     
+    // TODO: investigate if we still need that self.timeSinceLastBeaconDetected < TWO_HOURS condition.
     if ([regions isEqualToSet:self.currentRegions]) {
         return;
     } else {
@@ -162,28 +157,6 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
         
         self.currentRegions = regions;
     }
-    
-//    RVLog(kRoverDidRangeBeaconsNotification, @{ @"count": [NSNumber numberWithUnsignedInteger:[beacons count]] });
-//    
-//    NSLog(@"scanning");
-//    
-//    CLBeaconRegion *beaconRegion = (CLBeaconRegion *)region;
-//    CLBeacon *currentBeacon = [beacons lastObject];
-//    
-//    if (currentBeacon) {
-//        if (self.nearestBeacon && [self isCurrentRegion:currentBeacon] && self.timeSinceBeaconDetected < TWO_HOURS) {
-//            return;
-//        }
-//        
-//        self.nearestBeacon = currentBeacon;
-//        self.beaconDetectedAt = [NSDate date];
-//        [self postEnterNotification:currentBeacon];
-//    } else if (self.nearestBeacon && [self.nearestBeacon.proximityUUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString]) {
-//        CLBeacon *temp = self.nearestBeacon;
-//        self.nearestBeacon = nil;
-//        self.beaconDetectedAt = nil;
-//        [self postExitNotification:temp];        
-//    }
 }
 
 @end

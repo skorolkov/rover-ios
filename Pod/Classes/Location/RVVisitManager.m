@@ -24,6 +24,8 @@ NSString *const kRVVisitManagerDidExitTouchpointNotification = @"RVVisitManagerD
 NSString *const kRVVisitManagerDidEnterLocationNotification = @"RVVisitManagerDidEnterLocationNotification";
 NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDidExitLocationNotification";
 
+NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
+
 @interface RVVisitManager ()
 
 @property (strong, nonatomic) RVVisit *latestVisit;
@@ -74,8 +76,10 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         return _latestVisit;
     }
     
+    // TODO: need to do versioning for this! Users may have an old visit object from an older SDK
+    
     NSUserDefaults *standardDefault = [NSUserDefaults standardUserDefaults];
-    _latestVisit = [NSKeyedUnarchiver unarchiveObjectWithData:[standardDefault objectForKey:@"_roverLatestVisit"]];
+    _latestVisit = [NSKeyedUnarchiver unarchiveObjectWithData:[standardDefault objectForKey:kRVVisitManagerLatestVisitPersistenceKey]];
     return _latestVisit;
 }
 
@@ -84,24 +88,23 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
 
 - (void)regionManagerDidEnterRegion:(NSNotification *)note {
     CLBeaconRegion *beaconRegion = [note.userInfo objectForKey:@"beaconRegion"];
-    __weak typeof(self) weakSelf = self;
     
     [_operationQueue addOperationWithBlock:^{
-        if (weakSelf.latestVisit && [weakSelf.latestVisit isInLocationRegion:beaconRegion] && weakSelf.latestVisit.isAlive) {
+        if (self.latestVisit && [self.latestVisit isInLocationRegion:beaconRegion] && self.latestVisit.isAlive) {
             
             // Touchpoint check
-            if (![weakSelf.latestVisit isInTouchpointRegion:beaconRegion]) {
-                [weakSelf movedToRegion:beaconRegion];
+            if (![self.latestVisit isInTouchpointRegion:beaconRegion]) {
+                [self performSelectorOnMainThread:@selector(movedToRegion:) withObject:beaconRegion waitUntilDone:YES];// movedToRegion:beaconRegion];
             }
             
             NSDate *now = [NSDate date];
-            NSTimeInterval elapsed = [now timeIntervalSinceDate:weakSelf.latestVisit.timestamp];
+            NSTimeInterval elapsed = [now timeIntervalSinceDate:self.latestVisit.timestamp];
             
             [_expirationTimer invalidate];
             
             
             RVLog(kRoverAlreadyVisitingNotification, @{ @"elapsed": [NSNumber numberWithDouble:elapsed],
-                                                        @"keepAlive": [NSNumber numberWithDouble:weakSelf.latestVisit.keepAlive] });
+                                                        @"keepAlive": [NSNumber numberWithDouble:self.latestVisit.keepAlive] });
             return;
         }
         
@@ -109,8 +112,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         
         // Need a synchronous call so that the queue behaves like a queue
         dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
-        
-        [weakSelf createVisitWithBeaconRegion:beaconRegion completionBlock:^{
+        [self createVisitWithBeaconRegion:beaconRegion completionBlock:^{
             dispatch_semaphore_signal(semaphore);
         }];
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
@@ -127,7 +129,7 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
             
             RVTouchpoint *touchpoint = [self.latestVisit touchpointForRegion:beaconRegion];
             if (touchpoint) {
-                [self.latestVisit.currentTouchpoints removeObject:touchpoint];
+                [self.latestVisit removeFromCurrentTouchpoints:touchpoint];
                 
                 [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidExitTouchpointNotification object:self
                                                                   userInfo:@{ @"touchpoint": touchpoint,
@@ -223,14 +225,14 @@ NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDid
         NSLog(@"Entered touchpoint: %@", touchpoint);
         
         if (![self.latestVisit.visitedTouchpoints containsObject:touchpoint]) {
-            [self.latestVisit.currentTouchpoints addObject:touchpoint];
+            [self.latestVisit addToCurrentTouchpoints:touchpoint];
             [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self
                                                               userInfo:@{ @"touchpoint": touchpoint,
                                                                           @"visit": self.latestVisit}];
             return;
         }
         
-        [self.latestVisit.currentTouchpoints addObject:touchpoint];
+        [self.latestVisit addToCurrentTouchpoints:touchpoint];
         // TODO: fix this, this posts a noti,..why?!
         //RVLog(kRoverDidEnterTouchpointNotification, nil);
         

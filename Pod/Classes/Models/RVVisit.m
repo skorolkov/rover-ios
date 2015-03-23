@@ -83,22 +83,6 @@ NSString * platform()
     return [NSArray arrayWithArray:array];
 }
 
-- (NSArray *)unreadCards {
-//    NSIndexSet *indexes = [self.cards indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-//        RVCard *card = (RVCard *)obj;
-//        return card.isUnread;
-//    }];
-//    return [self.cards objectsAtIndexes:indexes];
-}
-
-- (NSArray *)savedCards {
-//    NSIndexSet *indexes = [self.cards indexesOfObjectsPassingTest:^BOOL(id obj, NSUInteger idx, BOOL *stop) {
-//        RVCard *card = (RVCard *)obj;
-//        return card.likedAt ? YES : NO;
-//    }];
-//    return [self.cards objectsAtIndexes:indexes];
-}
-
 - (void)setTimestamp:(NSDate *)timestamp
 {
     self.beaconLastDetectedAt = timestamp;
@@ -151,17 +135,6 @@ NSString * platform()
     }];
     return touchpointsWithNotification;
 }
-
-//- (void)setCurrentTouchpoint:(RVTouchpoint *)currentTouchpoint
-//{
-//    if (![_mVisitedTouchpoints containsObject:currentTouchpoint]) {
-//        // TODO: research better KVO patterns
-//        [self willChangeValueForKey:@"visitedTouchpoints"];
-//        [_mVisitedTouchpoints insertObject:currentTouchpoint atIndex:0];
-//        [self didChangeValueForKey:@"visitedTouchpoints"];
-//    }
-//    _currentTouchpoint = currentTouchpoint;
-//}
 
 #pragma mark - Initialization
 
@@ -278,6 +251,21 @@ NSString * platform()
     } failure:^(NSError *error) {
         NSLog(@"%@ failed: %@",event, error);
     }];
+}
+
+#pragma mark - Touchpoint Tracking
+
+- (void)addToCurrentTouchpoints:(RVTouchpoint *)touchpoint {
+    [self.currentTouchpoints addObject:touchpoint];
+    if (![_mVisitedTouchpoints containsObject:touchpoint]) {
+        [self willChangeValueForKey:@"visitedTouchpoints"];
+        [_mVisitedTouchpoints insertObject:touchpoint atIndex:0];
+        [self didChangeValueForKey:@"visitedTouchpoints"];
+    }
+}
+
+- (void)removeFromCurrentTouchpoints:(RVTouchpoint *)touchpoint {
+    [self.currentTouchpoints removeObject:touchpoint];
 }
 
 #pragma mark - NSCoding
