@@ -266,7 +266,7 @@ static Rover *sharedInstance = nil;
     
     UILocalNotification *note = [[UILocalNotification alloc] init];
     note.alertBody = message;
-
+    NSLog(@"sending: %@", message);
     if (self.config.notificationSoundName) {
         note.soundName = self.config.notificationSoundName;
     }
@@ -277,6 +277,8 @@ static Rover *sharedInstance = nil;
 
 - (void)visitManagerDidEnterLocation:(NSNotification *)note {
     // TODO: theres an error doing this cause of RVVisitController and how its observing a deallocated object
+    // CHANGING MAJOR NUMBERS CAUSES THIS
+    // IT SHOULD FAIL GRADEFULLy
     _currentVisit = [note.userInfo objectForKey:@"visit"];
     
     [[RVImagePrefetcher sharedImagePrefetcher] prefetchURLs:_currentVisit.allImageUrls];
@@ -315,12 +317,14 @@ static Rover *sharedInstance = nil;
 //        [self sendNotification];
 //    }
     
-    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-        // do something else (banner or something)
-    } else if (touchpoint.notification) {
-        [self sendNotification:touchpoint.notification];
-
-    }
+    //if (![_currentVisit.visitedTouchpoints containsObject:touchpoint]) {
+        if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+            // do something else (banner or something)
+        } else if (touchpoint.notification) {
+            [self sendNotification:touchpoint.notification];
+            
+        }
+    //}
     
     
 }

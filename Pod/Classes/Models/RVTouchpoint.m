@@ -16,6 +16,18 @@
 - (void)updateWithJSON:(NSDictionary *)JSON {
     [super updateWithJSON:JSON];
     
+    // trigger
+    NSString *triggerString = [JSON objectForKey:@"trigger"];
+    if (triggerString && triggerString != (id)[NSNull null]) {
+        if ([triggerString isEqualToString:@"minorNumber"]) {
+            self.trigger = RVTouchpointTriggerMinorNumber;
+        } else if ([triggerString isEqualToString:@"beacon"]) {
+            self.trigger = RVTouchpointTriggerAnyBeacon;
+        } else {
+            self.trigger = RVTouchpointTriggerGeofence;
+        }
+    }
+    
     // minorNumber
     NSNumber *minorNumber = [JSON objectForKey:@"minorNumber"];
     if (minorNumber && minorNumber != (id)[NSNull null]) {
@@ -56,11 +68,11 @@
     // TODO: better implementation from NSHipster
     RVTouchpoint *otherTouchpoint = object;
     
-    return [self.minorNumber isEqualToNumber:otherTouchpoint.minorNumber];
+    return [self.ID isEqualToString:otherTouchpoint.ID];
 }
 
 - (NSUInteger)hash {
-    return [self.minorNumber hash];
+    return [self.ID hash];
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder {

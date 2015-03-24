@@ -120,11 +120,12 @@
     // TODO: move this stuff out
     
     
-    // UIScrollView AutoLayout ContentSize Constraint
-    UIView *lastBlock = _containerView.subviews[_containerView.subviews.count - 1];
-    [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:lastBlock attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
-    
-    
+    if (_containerView.subviews.count > 0) {
+        // UIScrollView AutoLayout ContentSize Constraint
+        UIView *lastBlock = _containerView.subviews[_containerView.subviews.count - 1];
+        [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:lastBlock attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    }
+
 
     
     

@@ -45,6 +45,7 @@ NSString * platform()
 @interface RVVisit ()
 
 @property (nonatomic, strong) NSMutableArray *mVisitedTouchpoints;
+@property (nonatomic, strong) NSSet *wildcardTouchpoints;
 
 @end
 
@@ -121,6 +122,17 @@ NSString * platform()
     return touchpoint;
 }
 
+- (NSSet *)wildcardTouchpoints {
+    if (_wildcardTouchpoints) {
+        return _wildcardTouchpoints;
+    }
+    
+    _wildcardTouchpoints = [NSSet setWithArray:[self.touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
+        return touchpoint.trigger == RVTouchpointTriggerAnyBeacon;
+    }]]];
+    return _wildcardTouchpoints;
+}
+
 - (NSArray *)visitedTouchpoints
 {
     return _mVisitedTouchpoints;
@@ -129,7 +141,7 @@ NSString * platform()
 - (NSArray *)observableRegions {
     NSMutableArray *touchpointsWithNotification = [NSMutableArray array];
     [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
-        if (touchpoint.notification && ![touchpoint.notification isEqualToString:@""]) {
+        if (touchpoint.trigger != RVTouchpointTriggerAnyBeacon && touchpoint.notification && ![touchpoint.notification isEqualToString:@""]) {
             [touchpointsWithNotification addObject:[[CLBeaconRegion alloc] initWithProximityUUID:self.UUID major:self.majorNumber.integerValue minor:touchpoint.minorNumber.integerValue identifier:self.UUID.UUIDString]];
         }
     }];
@@ -234,23 +246,23 @@ NSString * platform()
 }
 
 - (void)trackEvent:(NSString *)event params:(NSDictionary *)params {
-    NSLog(@"Tracking (%@)", event);
-    
-    NSArray *eventComponents = [event componentsSeparatedByString:@"."];
-    
-    NSMutableDictionary *eventParams = [NSMutableDictionary dictionaryWithDictionary:@{@"object": eventComponents[0],
-                                                                                       @"action": eventComponents[1],
-                                                                                       @"timestamp": [[self dateFormatter] stringFromDate:[NSDate date]]}];
-    
-    [eventParams addEntriesFromDictionary:params];
-    
-    NSString *path = [NSString stringWithFormat:@"%@/events", [self updatePath]];
-    
-    [[RVNetworkingManager sharedManager] sendRequestWithMethod:@"POST" path:path parameters:eventParams success:^(NSDictionary *data) {
-        NSLog(@"%@ tracked successfully", event);
-    } failure:^(NSError *error) {
-        NSLog(@"%@ failed: %@",event, error);
-    }];
+//    NSLog(@"Tracking (%@)", event);
+//    
+//    NSArray *eventComponents = [event componentsSeparatedByString:@"."];
+//    
+//    NSMutableDictionary *eventParams = [NSMutableDictionary dictionaryWithDictionary:@{@"object": eventComponents[0],
+//                                                                                       @"action": eventComponents[1],
+//                                                                                       @"timestamp": [[self dateFormatter] stringFromDate:[NSDate date]]}];
+//    
+//    [eventParams addEntriesFromDictionary:params];
+//    
+//    NSString *path = [NSString stringWithFormat:@"%@/events", [self updatePath]];
+//    
+//    [[RVNetworkingManager sharedManager] sendRequestWithMethod:@"POST" path:path parameters:eventParams success:^(NSDictionary *data) {
+//        NSLog(@"%@ tracked successfully", event);
+//    } failure:^(NSError *error) {
+//        NSLog(@"%@ failed: %@",event, error);
+//    }];
 }
 
 #pragma mark - Touchpoint Tracking

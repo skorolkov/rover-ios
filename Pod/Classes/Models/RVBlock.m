@@ -94,7 +94,7 @@ NSString *const sRVBlockHeaderType = @"headerBlock";
     }
     
     // link
-    NSString *linkURLString = [JSON objectForKey:@"link"];
+    NSString *linkURLString = [JSON objectForKey:@"url"];
     if (linkURLString && linkURLString != (id)[NSNull null]) {
         self.url = [NSURL URLWithString:linkURLString];
     }

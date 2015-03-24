@@ -258,8 +258,10 @@
 
 - (void)tapped:(UILongPressGestureRecognizer *)recognizer {
     static UIView *titleSubview;
+    static BOOL touchCancelled = NO;
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
+            touchCancelled = NO;
             [recognizer.view.subviews enumerateObjectsUsingBlock:^(UIView *subview, NSUInteger idx, BOOL *stop) {
                 if (subview.tag == kContentViewTag) {
                     [subview.subviews enumerateObjectsUsingBlock:^(UIView *contentSubview, NSUInteger idx, BOOL *stop) {
@@ -278,7 +280,7 @@
                 titleSubview.alpha = 1;
                 titleSubview = nil;
             }
-            if ([self.delegate respondsToSelector:@selector(blockview:shouldOpenURL:)]) {
+            if ([self.delegate respondsToSelector:@selector(blockview:shouldOpenURL:)] && !touchCancelled) {
                 if ([self.delegate blockview:self shouldOpenURL:self.url]) {
                     [[UIApplication sharedApplication] openURL:self.url];
                 }
@@ -289,6 +291,7 @@
                 titleSubview.alpha = 1;
                 titleSubview = nil;
             }
+            touchCancelled = YES;
             break;
     }
 }

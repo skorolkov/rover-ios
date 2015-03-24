@@ -159,4 +159,8 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
     }
 }
 
+- (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error {
+    NSLog(@"Monitoring failed: %@", error);
+}
+
 @end

@@ -138,7 +138,10 @@
         blockView.delegate = self;
         [self addBlockView:blockView];
     }];
-    [self configureLayoutForLastBlockView:_containerView.subviews[_containerView.subviews.count - 1]];
+    
+    if (_containerView.subviews.count > 0) {
+        [self configureLayoutForLastBlockView:_containerView.subviews[_containerView.subviews.count - 1]];
+    }
     
     _viewDefinition = viewDefinition;
 }
@@ -263,7 +266,7 @@
 
 #pragma mark - RXBlockViewDelegate
 
-- (BOOL)shouldOpenURL:(NSURL *)url {
+- (BOOL)blockview:(RXBlockView *)blockview shouldOpenURL:(NSURL *)url {
     if ([self.delegate respondsToSelector:@selector(cardViewCell:shouldOpenURL:)]) {
         return [self.delegate cardViewCell:self shouldOpenURL:url];
     }

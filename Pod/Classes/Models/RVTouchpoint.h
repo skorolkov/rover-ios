@@ -12,7 +12,17 @@
 
 @class CLBeaconRegion;
 
+typedef NS_ENUM(NSInteger, RVTouchpointTrigger) {
+    RVTouchpointTriggerMinorNumber = 1,
+    RVTouchpointTriggerAnyBeacon = 2,
+    RVTouchpointTriggerGeofence = 3
+};
+
 @interface RVTouchpoint : RVModel <RVVisitTouchpointInfo>
+
+/** The trigger for the touchpoint. Could be one of RVTouchpointTriggerMinorNumber, RVTouchpointTriggerAnyBeacon, RVTouchpointTriggerGeofence.
+ */
+@property (nonatomic, assign) RVTouchpointTrigger trigger;
 
 /** The minor number for the touchpoint
  */

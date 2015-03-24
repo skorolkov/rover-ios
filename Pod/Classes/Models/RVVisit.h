@@ -51,7 +51,9 @@
  */
 @property (strong, nonatomic) NSArray *touchpoints;
 
-
+/** All touchpoints with trigger set to RVTouchpointTriggerAnyBeacon
+ */
+@property (nonatomic, readonly) NSSet *wildcardTouchpoints;
 
 // _____ TODO:  private ____
 
