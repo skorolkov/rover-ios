@@ -38,6 +38,7 @@
     if (iconPath && iconPath != (id)[NSNull null]) {
         self.iconPath = iconPath;
     }
+    
 }
 
 - (NSURL *)iconURL {

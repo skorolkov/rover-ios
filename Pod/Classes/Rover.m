@@ -359,14 +359,18 @@ static Rover *sharedInstance = nil;
 
 - (void)applicationDidBecomeActive:(NSNotification *)note {
 
-//    if (self.currentVisit && _currentVisit.currentTouchpoint && !self.currentVisit.openedAt) {
-//        
-//        [self updateVisitOpenTime];
-//        
-//        if (self.config.autoPresentModal) {
-//            [self presentModal];
-//        }
-//    }
+    static BOOL openned = NO;
+    
+    if (self.currentVisit && _currentVisit.visitedTouchpoints.count > 0) {
+        
+        //[self updateVisitOpenTime];
+        
+        openned = YES;
+        
+        if (self.config.autoPresentModal) {
+            [self presentModal];
+        }
+    }
     
     if (self.currentVisit && self.currentVisit.currentTouchpoints) {
         [self.currentVisit.currentTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {

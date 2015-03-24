@@ -18,6 +18,7 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 @interface RVRegionManager ()
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
+@property (strong, nonatomic) CLLocationManager *specificLocationManager;
 @property (strong, nonatomic) NSDate *beaconDetectedAt;
 
 @property (readonly, nonatomic) NSTimeInterval timeSinceBeaconDetected; // This may not be needed anymore.
@@ -71,11 +72,13 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
     if (self) {
         _beaconRegions = [[NSMutableArray alloc] initWithCapacity:20];
         
-        self.locationManager = [[CLLocationManager alloc] init];
-        if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
-            [self.locationManager requestAlwaysAuthorization];
+        _locationManager = [[CLLocationManager alloc] init];
+        _specificLocationManager = [[CLLocationManager alloc] init];
+        if ([_locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+            [_locationManager requestAlwaysAuthorization];
+            [_specificLocationManager requestAlwaysAuthorization];
         }
-        self.locationManager.delegate = self;
+        _locationManager.delegate = self;
     }
     return  self;
 }
@@ -94,6 +97,14 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
         [self.locationManager stopRangingBeaconsInRegion:beaconRegion];
         [self.locationManager stopMonitoringForRegion:beaconRegion];
     }];
+}
+
+- (void)startMonitoringForRegions:(NSArray *)regions {
+    
+}
+
+- (void)stopMonitoringForAllSpecificRegions {
+    
 }
 
 #pragma mark - Notifications
