@@ -67,4 +67,21 @@
     return 44 + 20;
 }
 
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    [super encodeWithCoder:encoder];
+    
+    [encoder encodeObject:self.titleString forKey:@"titleString"];
+    [encoder encodeObject:self.iconPath forKey:@"iconPath"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    if((self = [super initWithCoder:decoder])) {
+        self.titleString = [decoder decodeObjectForKey:@"titleString"];
+        self.iconPath = [decoder decodeObjectForKey:@"iconPath"];
+    }
+    return self;
+}
+
 @end

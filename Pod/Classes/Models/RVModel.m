@@ -123,4 +123,22 @@ extern inline NSObject* RVNullSafeValueFromObject(NSObject *object) {
     }];
 }
 
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    //Encode properties, other class variables, etc
+    [encoder encodeObject:self.ID forKey:@"ID"];
+    [encoder encodeObject:self.meta forKey:@"meta"];
+    
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    if((self = [self init])) {
+        //decode properties, other class vars
+        self.ID = [decoder decodeObjectForKey:@"ID"];
+        self.meta = [decoder decodeObjectForKey:@"meta"];
+    }
+    return self;
+}
+
 @end

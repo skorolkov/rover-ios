@@ -79,9 +79,12 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
             [_specificLocationManager requestAlwaysAuthorization];
         }
         _locationManager.delegate = self;
+        _specificLocationManager.delegate = self;
     }
     return  self;
 }
+
+// TODO: to save battery life, should only start ranging after monitoring has entered a location, then stop when exited the visit (keepalive?)
 
 #pragma mark - Region monitoring
 
@@ -100,11 +103,18 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 }
 
 - (void)startMonitoringForRegions:(NSArray *)regions {
-    
+    _specificRegions = regions;
+    [_specificRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, NSUInteger idx, BOOL *stop) {
+        beaconRegion.notifyEntryStateOnDisplay = YES;
+        [_specificLocationManager startMonitoringForRegion:beaconRegion];
+    }];
 }
 
 - (void)stopMonitoringForAllSpecificRegions {
-    
+    [_specificRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, NSUInteger idx, BOOL *stop) {
+        [_specificLocationManager stopMonitoringForRegion:beaconRegion];
+    }];
+    _specificRegions = nil;
 }
 
 #pragma mark - Notifications
@@ -172,6 +182,14 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error {
     NSLog(@"Monitoring failed: %@", error);
+}
+
+- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
+    NSLog(@"ENTERED REGION: %@", region);
+}
+
+- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
+    NSLog(@"EXITED REGION: %@", region);
 }
 
 @end

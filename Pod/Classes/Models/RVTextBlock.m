@@ -11,7 +11,7 @@
 
 @interface RVTextBlock ()
 
-@property (nonatomic, strong) NSMutableAttributedString *htmlText;
+@property (nonatomic, strong) NSAttributedString *htmlText;
 
 @end
 
@@ -37,6 +37,7 @@
         
         _htmlText = [[NSMutableAttributedString alloc] initWithData:[self.htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} documentAttributes:nil error:nil];
         
+        
         // Remove any trailing newline
         if (_htmlText.length) {
             NSAttributedString *last = [_htmlText attributedSubstringFromRange:NSMakeRange(_htmlText.length - 1, 1)];
@@ -54,6 +55,21 @@
 
 - (CGFloat)heightForWidth:(CGFloat)width {
     return [super heightForWidth:width] + [[self htmlText] boundingRectWithSize:CGSizeMake([self paddingAdjustedValueForWidth:width], MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height;
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    [super encodeWithCoder:encoder];
+    
+    [encoder encodeObject:self.htmlString forKey:@"htmlString"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    if((self = [super initWithCoder:decoder])) {
+        self.htmlString = [decoder decodeObjectForKey:@"htmlString"];
+    }
+    return self;
 }
 
 @end

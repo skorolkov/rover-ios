@@ -19,7 +19,7 @@ extern NSString *const kRVRegionManagerDidExitRegionNotification;
 @property (strong, nonatomic) NSArray *beaconUUIDs;
 @property (strong, nonatomic) NSMutableArray *beaconRegions;
 @property (nonatomic, readonly) NSSet *currentRegions;
-//@property (nonatomic, readonly)
+@property (nonatomic, readonly, strong) NSArray *specificRegions;
 
 - (void)startMonitoring;
 - (void)stopMonitoring;

@@ -63,4 +63,21 @@
     return [super heightForWidth:width] + [[self label] boundingRectWithSize:CGSizeMake([self paddingAdjustedValueForWidth:width], MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height;
 }
 
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    [super encodeWithCoder:encoder];
+    
+    [encoder encodeObject:self.labelString forKey:@"labelString"];
+    [encoder encodeObject:self.iconPath forKey:@"iconPath"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    if((self = [super initWithCoder:decoder])) {
+        self.labelString = [decoder decodeObjectForKey:@"labelString"];
+        self.iconPath = [decoder decodeObjectForKey:@"iconPath"];
+    }
+    return self;
+}
+
 @end

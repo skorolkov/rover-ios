@@ -11,7 +11,7 @@ extern inline NSObject* RVNullSafeValueFromObject(NSObject *object);
 
 /** RVModel is the base class for all models in the Rover SDK. It should never be instantiated directly and should be considered an abstract class.
  */
-@interface RVModel : NSObject
+@interface RVModel : NSObject <NSCoding>
 
 /** The unique ID used to store the model on the Rover platform. For the most part this property is only used internally and  can be safely ignored.
  

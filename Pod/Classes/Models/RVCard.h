@@ -27,7 +27,7 @@
 
 @property (nonatomic, assign) BOOL isViewed;
 
-@property (nonatomic, strong) RVViewDefinition *listView;
+@property (nonatomic, readonly) RVViewDefinition *listView;
 
 - (CGFloat)listViewHeightForWidth:(CGFloat)width;
 

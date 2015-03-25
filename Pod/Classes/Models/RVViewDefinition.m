@@ -53,21 +53,21 @@
     }
     
     // backgroundColor
-    NSArray *backgroundColor = [JSON objectForKey:@"backgroundColor"];
-    if (backgroundColor && backgroundColor != (id)[NSNull null]) {
-        self.backgroundColor = [UIColor colorWithRed:[backgroundColor[0] floatValue]/255.f green:[backgroundColor[1] floatValue]/255.f blue:[backgroundColor[2] floatValue]/255.f alpha:[backgroundColor[3] floatValue]];
+    NSArray *backgroundColorArray = [JSON objectForKey:@"backgroundColor"];
+    if (backgroundColorArray && backgroundColorArray != (id)[NSNull null]) {
+        self.backgroundColor = [UIColor colorWithRed:[backgroundColorArray[0] floatValue]/255.f green:[backgroundColorArray[1] floatValue]/255.f blue:[backgroundColorArray[2] floatValue]/255.f alpha:[backgroundColorArray[3] floatValue]];
     }
     
     // backgroundImageURL
-    NSString *backgroundImageURL = [JSON objectForKey:@"backgroundImageUrl"];
-    if (backgroundImageURL && backgroundImageURL != (id)[NSNull null]) {
-        self.backgroundImageURL = [NSURL URLWithString:backgroundImageURL];
+    NSString *backgroundImageURLString = [JSON objectForKey:@"backgroundImageUrl"];
+    if (backgroundImageURLString && backgroundImageURLString != (id)[NSNull null]) {
+        self.backgroundImageURL = [NSURL URLWithString:backgroundImageURLString];
     }
     
     // backgroundImageContentMode
-    NSString *backgroundContentMode = [JSON objectForKey:@"backgroundContentMode"];
-    if (backgroundContentMode && backgroundContentMode != (id)[NSNull null]) {
-        self.backgroundContentMode = RVBackgroundContentModeFromString(backgroundContentMode);
+    NSString *backgroundContentModeString = [JSON objectForKey:@"backgroundContentMode"];
+    if (backgroundContentModeString && backgroundContentModeString != (id)[NSNull null]) {
+        self.backgroundContentMode = RVBackgroundContentModeFromString(backgroundContentModeString);
     }
 }
 
@@ -78,6 +78,27 @@
     }];
     
     return _margins.top + blocksHeight + _margins.bottom;
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    [super encodeWithCoder:encoder];
+    
+    [encoder encodeObject:[NSNumber numberWithInt:self.type] forKey:@"type"];
+    [encoder encodeObject:self.blocks forKey:@"blocks"];
+    [encoder encodeObject:[NSValue valueWithUIEdgeInsets:self.margins] forKey:@"margins"];
+    [encoder encodeObject:[NSNumber numberWithFloat:self.cornerRadius] forKey:@"cornerRadius"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    if((self = [self initWithCoder:decoder])) {
+        self.type = [[decoder decodeObjectForKey:@"type"] integerValue];
+        self.blocks = [decoder decodeObjectForKey:@"blocks"];
+        self.margins = [[decoder decodeObjectForKey:@"margins"] UIEdgeInsetsValue];
+        self.cornerRadius = [[decoder decodeObjectForKey:@"cornerRadius"] floatValue];
+    }
+    return self;
 }
 
 @end

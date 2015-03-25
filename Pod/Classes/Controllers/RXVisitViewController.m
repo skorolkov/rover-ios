@@ -169,6 +169,9 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 
 - (void)controller:(RVVisitController *)controller didChangeCard:(RVCard *)card atIndexPath:(NSIndexPath *)indexPath forChangeType:(RVVisitChangeType)type {
     [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    if ([self hasNoCards]) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 #pragma mark - Event Hooks
@@ -177,5 +180,13 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 - (void)willAddTouchpoint:(RVTouchpoint *)touchpoint {}
 - (void)didAddTouchpoint:(RVTouchpoint *)touchpoint {}
 
+- (BOOL)hasNoCards {
+    for (id <RVVisitTouchpointInfo> touchpointInfo in self.visitController.touchpoints) {
+        if ([touchpointInfo numberOfCards] > 0) {
+            return NO;
+        }
+    }
+    return YES;
+}
 
 @end

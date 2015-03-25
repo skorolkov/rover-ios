@@ -22,7 +22,8 @@
 NSString *const kRVVisitManagerDidEnterTouchpointNotification = @"RVVisitManagerDidEnterTouchpointNotification";
 NSString *const kRVVisitManagerDidExitTouchpointNotification = @"RVVisitManagerDidExitTouchpointNotification";
 NSString *const kRVVisitManagerDidEnterLocationNotification = @"RVVisitManagerDidEnterLocationNotification";
-NSString *const kRVVisitManagerDidExitLocationNotification = @"RVVisitManagerDidExitLocationNotification";
+NSString *const kRVVisitManagerDidPotentiallyExitLocationNotification = @"RVVisitManagerDidPotentiallyExitLocationNotification";
+NSString *const kRVVisitManagerDidExpireVisitNotification = @"RVVisitManagerDidExpireVisitNotification";
 
 NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
 
@@ -131,9 +132,10 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
             if (touchpoint) {
                 [self.latestVisit removeFromCurrentTouchpoints:touchpoint];
                 
-                [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidExitTouchpointNotification object:self
-                                                                  userInfo:@{ @"touchpoint": touchpoint,
-                                                                              @"visit": self.latestVisit}];
+                [self postNotificationName:kRVVisitManagerDidExitTouchpointNotification userInfo:@{ @"touchpoint": touchpoint, @"visit": self.latestVisit}];
+                //[[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidExitTouchpointNotification object:self
+                //                                                  userInfo:@{ @"touchpoint": touchpoint,
+                //                                                              @"visit": self.latestVisit}];
                 NSLog(@"EXITING TOUCHPOINT: %@", touchpoint);
             }
             
@@ -149,14 +151,10 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
                 
                 NSLog(@"EXITING LOCATION");
                 
-                // Reset region monitoring
-                //        RVRegionManager *regionManager = [RVRegionManager sharedManager];
-                //        [regionManager setBeaconUUIDs:[Rover shared].config.beaconUUIDs];
-                //        [regionManager startMonitoring];
-                
-                
-                [self updateVisitExitTime];
-                //[self startExpirationTimer];
+                [self postNotificationName:kRVVisitManagerDidPotentiallyExitLocationNotification userInfo:@{ @"visit": self.latestVisit }];
+                //[self performSelectorOnMainThread:@selector(postNotificationName:userInfo:) withObject:@{ @"visit": self.latestVisit } waitUntilDone:YES];
+                //[[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidPotentiallyExitLocationNotification object:self userInfo:];
+                [self startExpirationTimer];
             }
             
         }
@@ -173,22 +171,20 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
     self.latestVisit.UUID = beaconRegion.proximityUUID;
     self.latestVisit.majorNumber = beaconRegion.major;
     self.latestVisit.customer = [Rover shared].customer;
-    self.latestVisit.customer.name = @"The Phantom";
-    self.latestVisit.customer.email = nil;
     self.latestVisit.timestamp = [NSDate date];
     
     [self.latestVisit save:^{
         RVLog(kRoverDidPostVisitNotification, nil);
-        // TODO: should make sure this happens on the main thread
-        [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterLocationNotification object:self userInfo:@{ @"visit": self.latestVisit }];
+        
+        [self postNotificationName:kRVVisitManagerDidEnterLocationNotification userInfo:@{ @"visit": self.latestVisit }];
+        //[[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterLocationNotification object:self userInfo:@{ @"visit": self.latestVisit }];
         NSLog(@"touchpoints: %@", self.latestVisit.touchpoints); //DELETE
         
         
         // START MONITORING
         RVRegionManager *regionManager = [RVRegionManager sharedManager];
-        [regionManager setBeaconRegions:self.latestVisit.observableRegions];
-        [regionManager startMonitoring];
-        
+        [regionManager stopMonitoringForAllSpecificRegions];
+        [regionManager startMonitoringForRegions:self.latestVisit.observableRegions];
 
         
         [self movedToRegion:beaconRegion];
@@ -205,26 +201,15 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
     }];
 }
 
-- (void)updateVisitExitTime {
-    if (!self.latestVisit) return;
-    
-    RVLog(kRoverWillUpdateExitTimeNotification, nil);
-    
-    
-    // TOOD: move this stuff out to the Rover class
-    [self.latestVisit trackEvent:@"location.exit" params:nil];
-    
-//    //self.latestVisit.exitedAt = [NSDate date];
-//    [self.latestVisit save:^{
-//        RVLog(kRoverDidUpdateExitTimeNotification, nil);
-//    } failure:^(NSString *reason) {
-//        RVLog(kRoverUpdateExitTimeFailedNotification, nil);
-//    }];
-}
-
 // TODO: consider if this should happen in the succes block ^
 
 #pragma mark - Helper Methods
+
+- (void)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo {
+    [[RVNotificationCenter defaultCenter] postNotificationName:notificationName object:self userInfo:userInfo];
+}
+
+// NOTE: this method should always be called from the main thread
 
 - (void)movedToRegion:(CLBeaconRegion *)beaconRegion {
     if (![self.latestVisit.currentTouchpoints containsObject:self.latestVisit.wildcardTouchpoints.anyObject]) {
@@ -242,13 +227,7 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
         
         NSLog(@"Entered touchpoint: %@", touchpoint);
         
-//        if (![self.latestVisit.visitedTouchpoints containsObject:touchpoint]) {
-//            [self.latestVisit addToCurrentTouchpoints:touchpoint];
-//            [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self
-//                                                              userInfo:@{ @"touchpoint": touchpoint,
-//                                                                          @"visit": self.latestVisit}];
-//            return;
-//        }
+        // TODO: do we need to do a currentTouchpoints.contains check? in case of missfires
         
         [self.latestVisit addToCurrentTouchpoints:touchpoint];
         [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self
@@ -256,7 +235,7 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
                                                                       @"visit": self.latestVisit}];
         
         
-    } else { // dont need the else and move this guy up
+    } else {
         NSLog(@"Invalid touchpoint: %@", beaconRegion.minor);
     }
 }
@@ -264,8 +243,10 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
 - (void)exitAllWildcardTouchpoints {
     [self.latestVisit.wildcardTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
         [self.latestVisit removeFromCurrentTouchpoints:touchpoint];
-        [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidExitTouchpointNotification object:self userInfo:@{ @"touchpoint": touchpoint,
-                                                                                                                                        @"visit": self.latestVisit }];
+        //[[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidExitTouchpointNotification object:self userInfo:@{ @"touchpoint": touchpoint,
+        //                                                                                                                                @"visit": self.latestVisit }];
+        [self postNotificationName:kRVVisitManagerDidExitTouchpointNotification userInfo:@{ @"touchpoint": touchpoint,
+                                                                                            @"visit": self.latestVisit }];
     }];
 }
 
@@ -274,7 +255,8 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
 }
 
 - (void)expireVisit {
-    [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidExitLocationNotification object:self userInfo:@{@"visit": self.latestVisit}];
+    //[[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidExpireVisitNotification object:self userInfo:@{@"visit": self.latestVisit}];
+    [self postNotificationName:kRVVisitManagerDidExpireVisitNotification userInfo:@{@"visit": self.latestVisit}];
 }
 
 @end

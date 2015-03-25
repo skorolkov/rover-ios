@@ -32,7 +32,6 @@ extern NSString *const kRoverDidExitTouchpointNotification;
  */
 extern NSString *const kRoverDidEnterTouchpointNotification;
 
-
 /** This notification will be posted when the customer enters a location.
  */
 extern NSString *const kRoverDidEnterLocationNotification;

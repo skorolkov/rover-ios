@@ -11,6 +11,6 @@
 @interface RVTextBlock : RVBlock
 
 @property (nonatomic, strong) NSString *htmlString;
-@property (nonatomic, strong, readonly) NSMutableAttributedString *htmlText;
+@property (nonatomic, strong, readonly) NSAttributedString *htmlText;
 
 @end

@@ -80,4 +80,23 @@
     return [super heightForWidth:width] + ([self paddingAdjustedValueForWidth:width] / _aspectRatio);
 }
 
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    [super encodeWithCoder:encoder];
+    
+    [encoder encodeObject:self.imagePath forKey:@"imagePath"];
+    [encoder encodeObject:[NSNumber numberWithFloat:self.aspectRatio] forKey:@"aspectRatio"];
+    [encoder encodeObject:[NSNumber numberWithFloat:self.yOffset] forKey:@"yOffset"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    if((self = [super initWithCoder:decoder])) {
+        self.imagePath = [decoder decodeObjectForKey:@"imagePath"];
+        self.aspectRatio = [[decoder decodeObjectForKey:@"aspectRatio"] floatValue];
+        self.yOffset = [[decoder decodeObjectForKey:@"yOffset"] floatValue];
+    }
+    return self;
+}
+
 @end

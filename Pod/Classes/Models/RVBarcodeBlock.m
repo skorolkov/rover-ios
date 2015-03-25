@@ -63,4 +63,24 @@
     return [super heightForWidth:width] + [[self barcodeLabelAttributedString] boundingRectWithSize:CGSizeMake([self paddingAdjustedValueForWidth:width], MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height + (self.barcodeType == RVBarcodeTypePLU ? 0 : kRVBarcodeHeight);
 }
 
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    [super encodeWithCoder:encoder];
+    
+    [encoder encodeObject:self.barcodeString forKey:@"barcodeString"];
+    [encoder encodeObject:self.barcodeLabel forKey:@"barcodeLabel"];
+    [encoder encodeObject:[NSNumber numberWithInteger:self.barcodeType] forKey:@"barcodeType"];
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    if((self = [super initWithCoder:decoder])) {
+        self.barcodeString = [decoder decodeObjectForKey:@"barcodeString"];
+        self.barcodeLabel = [decoder decodeObjectForKey:@"barcodeLabel"];
+        self.barcodeType = [[decoder decodeObjectForKey:@"padding"] integerValue];
+    }
+    return self;
+}
+
 @end
