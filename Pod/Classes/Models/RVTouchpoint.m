@@ -19,12 +19,10 @@
     // trigger
     NSString *triggerString = [JSON objectForKey:@"trigger"];
     if (triggerString && triggerString != (id)[NSNull null]) {
-        if ([triggerString isEqualToString:@"minorNumber"]) {
+        if ([triggerString isEqualToString:@"beacon"]) {
             self.trigger = RVTouchpointTriggerMinorNumber;
-        } else if ([triggerString isEqualToString:@"beacon"]) {
-            self.trigger = RVTouchpointTriggerAnyBeacon;
         } else {
-            self.trigger = RVTouchpointTriggerGeofence;
+            self.trigger = RVTouchpointTriggerVisit;
         }
     }
     
@@ -42,7 +40,7 @@
     
     // notification
     NSString *notification = [JSON objectForKey:@"notification"];
-    if (notification && notification != (id)[NSNull null]) {
+    if (notification && notification != (id)[NSNull null] && ![notification isEqualToString:@""]) {
         self.notification = notification;
     }
     
@@ -116,7 +114,7 @@
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
-    if((self = [self initWithCoder:decoder])) {
+    if((self = [super initWithCoder:decoder])) {
         self.trigger = [[decoder decodeObjectForKey:@"trigger"] integerValue];
         self.minorNumber = [decoder decodeObjectForKey:@"minorNumber"];
         self.notification = [decoder decodeObjectForKey:@"notification"];

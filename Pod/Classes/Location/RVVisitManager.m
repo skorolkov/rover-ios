@@ -26,6 +26,7 @@ NSString *const kRVVisitManagerDidPotentiallyExitLocationNotification = @"RVVisi
 NSString *const kRVVisitManagerDidExpireVisitNotification = @"RVVisitManagerDidExpireVisitNotification";
 
 NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
+NSString *const kRVVisitManagerLatestVisitVersionKey = @"_roverVersion";
 
 @interface RVVisitManager ()
 
@@ -77,10 +78,20 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
         return _latestVisit;
     }
     
-    // TODO: need to do versioning for this! Users may have an old visit object from an older SDK
-    
     NSUserDefaults *standardDefault = [NSUserDefaults standardUserDefaults];
-    _latestVisit = [NSKeyedUnarchiver unarchiveObjectWithData:[standardDefault objectForKey:kRVVisitManagerLatestVisitPersistenceKey]];
+    NSString *version = [standardDefault objectForKey:kRVVisitManagerLatestVisitVersionKey];
+    
+    // TODO: make this global somehwere
+    if (![version isEqualToString:@"0.30.0"]) {
+        [standardDefault removeObjectForKey:kRVVisitManagerLatestVisitPersistenceKey];
+        [standardDefault setObject:@"0.30.0" forKey:kRVVisitManagerLatestVisitVersionKey];
+    }
+    
+    NSData *visitData = [standardDefault objectForKey:kRVVisitManagerLatestVisitPersistenceKey];
+    if (visitData) {
+        _latestVisit = [NSKeyedUnarchiver unarchiveObjectWithData:visitData];
+    }
+    
     return _latestVisit;
 }
 
@@ -136,7 +147,6 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
                 //[[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidExitTouchpointNotification object:self
                 //                                                  userInfo:@{ @"touchpoint": touchpoint,
                 //                                                              @"visit": self.latestVisit}];
-                NSLog(@"EXITING TOUCHPOINT: %@", touchpoint);
             }
             
             if (regions.count == 0) {
@@ -149,7 +159,6 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
                 
                 [self exitAllWildcardTouchpoints];
                 
-                NSLog(@"EXITING LOCATION");
                 
                 [self postNotificationName:kRVVisitManagerDidPotentiallyExitLocationNotification userInfo:@{ @"visit": self.latestVisit }];
                 //[self performSelectorOnMainThread:@selector(postNotificationName:userInfo:) withObject:@{ @"visit": self.latestVisit } waitUntilDone:YES];
@@ -172,6 +181,7 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
     self.latestVisit.majorNumber = beaconRegion.major;
     self.latestVisit.customer = [Rover shared].customer;
     self.latestVisit.timestamp = [NSDate date];
+    self.latestVisit.simulate = YES;
     
     [self.latestVisit save:^{
         RVLog(kRoverDidPostVisitNotification, nil);
@@ -215,7 +225,6 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
     if (![self.latestVisit.currentTouchpoints containsObject:self.latestVisit.wildcardTouchpoints.anyObject]) {
         // Enter all wildcard touchpoints
         [self.latestVisit.wildcardTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
-            NSLog(@"ENTERING WILDCARD TOUCHPOINT: %@", touchpoint);
             [self.latestVisit addToCurrentTouchpoints:touchpoint];
             [[RVNotificationCenter defaultCenter] postNotificationName:kRVVisitManagerDidEnterTouchpointNotification object:self userInfo:@{ @"touchpoint": touchpoint,
                                                                                                                                              @"visit": self.latestVisit}];
@@ -224,8 +233,6 @@ NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
     
     RVTouchpoint *touchpoint = [self.latestVisit touchpointForRegion:beaconRegion];
     if (touchpoint) {
-        
-        NSLog(@"Entered touchpoint: %@", touchpoint);
         
         // TODO: do we need to do a currentTouchpoints.contains check? in case of missfires
         

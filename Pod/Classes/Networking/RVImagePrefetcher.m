@@ -48,7 +48,6 @@
     [urls enumerateObjectsUsingBlock:^(NSURL *url, NSUInteger idx, BOOL *stop) {
         BOOL cacheExists = [imageManager cachedImageExistsForURL:url];
         if (!cacheExists) {
-            NSLog(@"cache doesnt exist for : %@", url);
             
             NSURLSessionDownloadTask *downloadTask = [self.urlSession downloadTaskWithURL:url];
             
@@ -63,7 +62,6 @@
 
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
     NSData *imageData = [NSData dataWithContentsOfURL:location];
-    NSLog(@"task - %@ -downloaded", downloadTask.originalRequest.URL);
     [[SDWebImageManager sharedManager] saveImageToCache:[UIImage sd_imageWithData:imageData] forURL:downloadTask.originalRequest.URL];
     
 }

@@ -71,13 +71,20 @@ NSString * platform()
         [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
             [card.viewDefinitions enumerateObjectsUsingBlock:^(RVViewDefinition *viewDefintion, NSUInteger idx, BOOL *stop) {
                 [viewDefintion.blocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
+                    // image blocks
                     if ([block isKindOfClass:[RVImageBlock class]]) {
-                        [array insertObject:((RVImageBlock *)block).imageURL atIndex:array.count];
+                        [array addObject:((RVImageBlock *)block).imageURL];
                     }
                     
                     // add background images
+                    if (block.backgroundImageURL) {
+                        [array addObject:block.backgroundImageURL];
+                    }
                 }];
                 // add background image
+                if (viewDefintion.backgroundImageURL) {
+                    [array addObject:viewDefintion.backgroundImageURL];
+                }
             }];
         }];
     }];
@@ -128,7 +135,7 @@ NSString * platform()
     }
     
     _wildcardTouchpoints = [NSSet setWithArray:[self.touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-        return touchpoint.trigger == RVTouchpointTriggerAnyBeacon;
+        return touchpoint.trigger == RVTouchpointTriggerVisit;
     }]]];
     return _wildcardTouchpoints;
 }
@@ -139,13 +146,22 @@ NSString * platform()
 }
 
 - (NSArray *)observableRegions {
-    NSMutableArray *touchpointsWithNotification = [NSMutableArray array];
-    [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
-        if (touchpoint.trigger != RVTouchpointTriggerAnyBeacon && touchpoint.notification && ![touchpoint.notification isEqualToString:@""]) {
-            [touchpointsWithNotification addObject:[[CLBeaconRegion alloc] initWithProximityUUID:self.UUID major:self.majorNumber.integerValue minor:touchpoint.minorNumber.integerValue identifier:[NSString stringWithFormat:@"%@-%@-%@", self.UUID.UUIDString, self.majorNumber, touchpoint.minorNumber]]];
+    NSMutableArray *touchpointsToObserve = [NSMutableArray array];
+    [[[self.touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
+        // Filter for specific touchpoints
+        return touchpoint.trigger == RVTouchpointTriggerMinorNumber;
+    }]] sortedArrayUsingComparator:^NSComparisonResult(RVTouchpoint *touchpoint1, RVTouchpoint *touchpoint2) {
+        // Sort by notification
+        if (touchpoint1.notification && !touchpoint2.notification) {
+            return NSOrderedAscending;
+        } else if (!touchpoint1.notification && touchpoint2.notification) {
+            return NSOrderedDescending;
         }
+        return NSOrderedSame;
+    }] enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
+        [touchpointsToObserve addObject:[[CLBeaconRegion alloc] initWithProximityUUID:self.UUID major:self.majorNumber.integerValue minor:touchpoint.minorNumber.integerValue identifier:touchpoint.ID]];
     }];
-    return touchpointsWithNotification;
+    return touchpointsToObserve;
 }
 
 #pragma mark - Initialization
@@ -226,7 +242,7 @@ NSString * platform()
     
     
     // TODO: REMOVE THIS AND MAKE IT PART OF DEBUG
-    //[JSON setObject:@YES forKey:@"simulate"];
+    [JSON setObject:[NSNumber numberWithBool:self.simulate] forKey:@"simulate"];
     
     return JSON;
 }
@@ -250,7 +266,10 @@ NSString * platform()
 }
 
 - (void)trackEvent:(NSString *)event params:(NSDictionary *)params {
-    NSLog(@"Tracking (%@)", event);
+    
+    if (self.simulate) {
+        return;
+    }
     
     NSArray *eventComponents = [event componentsSeparatedByString:@"."];
     
@@ -263,9 +282,8 @@ NSString * platform()
     NSString *path = [NSString stringWithFormat:@"%@/events", [self updatePath]];
     
     [[RVNetworkingManager sharedManager] sendRequestWithMethod:@"POST" path:path parameters:eventParams success:^(NSDictionary *data) {
-        NSLog(@"%@ tracked successfully", event);
     } failure:^(NSError *error) {
-        NSLog(@"%@ failed: %@",event, error);
+        //NSLog(@"%@ failed: %@",event, error);
     }];
 }
 
@@ -287,6 +305,34 @@ NSString * platform()
 
 #pragma mark - NSCoding
 
+- (NSArray *)visitedTouchpointIDs {
+    NSMutableArray *visitedTouchpoindIds = [NSMutableArray arrayWithCapacity:self.visitedTouchpoints.count];
+    [self.visitedTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
+        [visitedTouchpoindIds insertObject:touchpoint.ID atIndex:idx];
+    }];
+    return visitedTouchpoindIds;
+}
+
+- (RVTouchpoint *)touchpointWithID:(NSString *)ID {
+    for (RVTouchpoint *touchpoint in self.touchpoints) {
+        if ([touchpoint.ID isEqualToString:ID]) {
+            return touchpoint;
+        }
+    }
+    return nil;
+}
+
+- (void)setVisitedTouchpointIDs:(NSArray *)ids {
+    [ids enumerateObjectsUsingBlock:^(NSString *touchpointID, NSUInteger idx, BOOL *stop) {
+        RVTouchpoint *touchpoint = [self touchpointWithID:touchpointID];
+        if (touchpoint) {
+            [_mVisitedTouchpoints insertObject:touchpoint atIndex:idx];
+        } else {
+            [_mVisitedTouchpoints insertObject:[NSNull null] atIndex:idx];
+        }
+    }];
+}
+
 - (void)encodeWithCoder:(NSCoder *)encoder {
     [super encodeWithCoder:encoder];
     
@@ -299,7 +345,8 @@ NSString * platform()
     // TODO: do we need customer? its already in [[Rover shared] customer]
     [encoder encodeObject:self.beaconLastDetectedAt forKey:@"beaconLastDetecedAt"];
     [encoder encodeObject:self.touchpoints forKey:@"touchpoints"];
-    // TODO: do something about visitedTouchpoints (this will by default create duplicate RVTouchpoint objects)
+    [encoder encodeObject:self.visitedTouchpointIDs forKey:@"visitedTouchpointIDs"];
+    [encoder encodeObject:[NSNumber numberWithBool:self.simulate] forKey:@"simulate"];
     
 }
 
@@ -307,7 +354,7 @@ NSString * platform()
     if((self = [super initWithCoder:decoder])) {
         self.UUID = [decoder decodeObjectForKey:@"UUID"];
         self.majorNumber = [decoder decodeObjectForKey:@"majorNumber"];
-        self.keepAlive = [[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
+        //self.keepAlive = [[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
         self.timestamp = [decoder decodeObjectForKey:@"timestamp"];
         self.organization = [decoder decodeObjectForKey:@"organization"];
         self.location = [decoder decodeObjectForKey:@"location"];
@@ -315,6 +362,9 @@ NSString * platform()
         self.beaconLastDetectedAt = [decoder decodeObjectForKey:@"beaconLastDetecedAt"];
         self.touchpoints = [decoder decodeObjectForKey:@"touchpoints"];
         
+        [self setVisitedTouchpointIDs:[decoder decodeObjectForKey:@"visitedTouchpointIDs"]];
+        
+        self.simulate = [[decoder decodeObjectForKey:@"simulate"] boolValue];
     }
     return self;
 }

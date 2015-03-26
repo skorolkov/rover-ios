@@ -17,6 +17,7 @@
 #import "RVModel.h"
 
 #import "RXModalViewController.h"
+#import "RXDetailViewController.h"
 
 #import <SDWebImage/SDWebImagePrefetcher.h>
 #import "RVImagePrefetcher.h"
@@ -320,8 +321,8 @@ static Rover *sharedInstance = nil;
 
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         // do something else (banner or something)
-        touchpoint.notficationDelivered = YES;
-    } else if (!touchpoint.notficationDelivered) {
+        touchpoint.notificationDelivered = YES;
+    } else if (!touchpoint.notificationDelivered) {
         
         [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
             [_currentVisit trackEvent:@"card.deliver" params:@{ @"card": card.ID }];
@@ -331,7 +332,7 @@ static Rover *sharedInstance = nil;
             [self sendNotification:touchpoint.notification];
         }
         
-        touchpoint.notficationDelivered = YES;
+        touchpoint.notificationDelivered = YES;
     }
 }
 
@@ -363,7 +364,9 @@ static Rover *sharedInstance = nil;
 
         // TODO: do class from string cause RX may not be present
         
-        if (![currentViewController isKindOfClass:[RXModalViewController class]]) {
+        if ([currentViewController isKindOfClass:[RXDetailViewController class]]) {
+            [currentViewController dismissViewControllerAnimated:YES completion:nil];
+        } else if (![currentViewController isKindOfClass:[RXModalViewController class]]) {
             [self presentModal];
         }
     }

@@ -78,7 +78,7 @@
     if((self = [super initWithCoder:decoder])) {
         self.barcodeString = [decoder decodeObjectForKey:@"barcodeString"];
         self.barcodeLabel = [decoder decodeObjectForKey:@"barcodeLabel"];
-        self.barcodeType = [[decoder decodeObjectForKey:@"padding"] integerValue];
+        self.barcodeType = [[decoder decodeObjectForKey:@"barcodeType"] integerValue];
     }
     return self;
 }

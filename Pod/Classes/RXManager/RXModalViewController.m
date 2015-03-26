@@ -48,33 +48,29 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    
-    
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"647086E7-89A6-439C-9E3B-4A2268F13FC6"];
-//        [[Rover shared] simulateBeaconWithUUID:UUID major:54321 minor:56797];
-//    });
-    
+    [self setNeedsStatusBarAppearanceUpdate];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 77)];
-    footerView.backgroundColor = [UIColor clearColor];
-    footerView.alpha = 0;
-    
-    UIButton *closeButton = [self closeButtonView];
-    closeButton.translatesAutoresizingMaskIntoConstraints = NO;
-    [closeButton addTarget:self action:@selector(closeModal) forControlEvents:UIControlEventTouchUpInside];
-    [footerView addSubview:closeButton];
-    NSDictionary *views = NSDictionaryOfVariableBindings(closeButton);
-    [footerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-15-[closeButton]-15-|" options:0 metrics:nil views:views]];
-    [footerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-15-[closeButton(47)]-15-|" options:0 metrics:nil views:views]];
-    
-    [self.tableView setTableFooterView:footerView];
-    
-    [UIView animateWithDuration:.3 delay:.3 options:UIViewAnimationOptionCurveEaseIn animations:^{
-        footerView.alpha = 1;
-    } completion:nil];
+    if (!self.tableView.tableFooterView) {
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 77)];
+        footerView.backgroundColor = [UIColor clearColor];
+        footerView.alpha = 0;
+        
+        UIButton *closeButton = [self closeButtonView];
+        closeButton.translatesAutoresizingMaskIntoConstraints = NO;
+        [closeButton addTarget:self action:@selector(closeModal) forControlEvents:UIControlEventTouchUpInside];
+        [footerView addSubview:closeButton];
+        NSDictionary *views = NSDictionaryOfVariableBindings(closeButton);
+        [footerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|-15-[closeButton]-15-|" options:0 metrics:nil views:views]];
+        [footerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-15-[closeButton(47)]-15-|" options:0 metrics:nil views:views]];
+        
+        [self.tableView setTableFooterView:footerView];
+        
+        [UIView animateWithDuration:.3 delay:.3 options:UIViewAnimationOptionCurveEaseIn animations:^{
+            footerView.alpha = 1;
+        } completion:nil];
+    }
 }
 
 - (UIButton *)closeButtonView {
@@ -94,6 +90,10 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
+}
+
+- (BOOL)prefersStatusBarHidden {
+    return YES;
 }
 
 
@@ -151,6 +151,8 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
+    [super scrollViewDidScroll:scrollView];
+    
     NSArray* cells = self.tableView.visibleCells;
     
     NSUInteger cellCount = [cells count];
@@ -243,7 +245,7 @@
     _pillView.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:.5];
     _pillView.titleLabel.font = [UIFont systemFontOfSize:14];
     _pillView.layer.cornerRadius = 17.5;
-    [_pillView setTitle:@"New Offers" forState:UIControlStateNormal];
+    [_pillView setTitle:@"New Cards" forState:UIControlStateNormal];
     [_pillView setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     [_pillView setTitleEdgeInsets:UIEdgeInsetsMake(0, 35, 0, 15)];
     [_pillView addTarget:self action:@selector(scrollToTop) forControlEvents:UIControlEventTouchUpInside];

@@ -79,7 +79,7 @@
     
     [encoder encodeObject:self.title forKey:@"title"];
     [encoder encodeObject:self.viewDefinitions forKey:@"viewDefinitions"];
-    [encoder encodeObject:[NSNumber numberWithBool:self.isDeleted] forKey:@"viewDefinitions"];
+    [encoder encodeObject:[NSNumber numberWithBool:self.isDeleted] forKey:@"isDeleted"];
     [encoder encodeObject:[NSNumber numberWithBool:self.isViewed] forKey:@"isViewed"];
 }
 

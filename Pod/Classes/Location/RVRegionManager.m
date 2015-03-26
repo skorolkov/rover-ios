@@ -181,15 +181,7 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 }
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error {
-    NSLog(@"Monitoring failed: %@", error);
-}
-
-- (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
-    NSLog(@"ENTERED REGION: %@", region);
-}
-
-- (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
-    NSLog(@"EXITED REGION: %@", region);
+    NSLog(@"Monitoring failed - probably because you have run out of slots - : %@", error);
 }
 
 @end

@@ -30,6 +30,8 @@
 
 @property (nonatomic, strong) NSDate *timestamp;
 
+@property (nonatomic, assign) BOOL simulate;
+
 // _____ RESPONSE_____
 
 // TODO: make private

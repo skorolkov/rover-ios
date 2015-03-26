@@ -60,7 +60,7 @@
     
     // backgroundImageURL
     NSString *backgroundImageURLString = [JSON objectForKey:@"backgroundImageUrl"];
-    if (backgroundImageURLString && backgroundImageURLString != (id)[NSNull null]) {
+    if (backgroundImageURLString && backgroundImageURLString != (id)[NSNull null] && ![backgroundImageURLString isEqualToString:@""]) {
         self.backgroundImageURL = [NSURL URLWithString:backgroundImageURLString];
     }
     
@@ -89,14 +89,24 @@
     [encoder encodeObject:self.blocks forKey:@"blocks"];
     [encoder encodeObject:[NSValue valueWithUIEdgeInsets:self.margins] forKey:@"margins"];
     [encoder encodeObject:[NSNumber numberWithFloat:self.cornerRadius] forKey:@"cornerRadius"];
+    
+    // Background
+    [encoder encodeObject:self.backgroundColor forKey:@"backgroundColor"];
+    [encoder encodeObject:[NSNumber  numberWithInteger:self.backgroundContentMode] forKey:@"backgroundContentMode"];
+    [encoder encodeObject:self.backgroundImageURL forKey:@"backgroundImageURL"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
-    if((self = [self initWithCoder:decoder])) {
+    if((self = [super initWithCoder:decoder])) {
         self.type = [[decoder decodeObjectForKey:@"type"] integerValue];
         self.blocks = [decoder decodeObjectForKey:@"blocks"];
         self.margins = [[decoder decodeObjectForKey:@"margins"] UIEdgeInsetsValue];
         self.cornerRadius = [[decoder decodeObjectForKey:@"cornerRadius"] floatValue];
+        
+        // Background
+        self.backgroundColor = [decoder decodeObjectForKey:@"backgroundColor"];
+        self.backgroundContentMode = [[decoder decodeObjectForKey:@"backgroundContentMode"] integerValue];
+        self.backgroundImageURL = [decoder decodeObjectForKey:@"backgroundImageURL"];
     }
     return self;
 }

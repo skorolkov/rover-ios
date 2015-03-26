@@ -100,7 +100,7 @@ NSString *const sRVBlockHeaderType = @"headerBlock";
     
     // backgroundImageUrl
     NSString *backgroundImageUrl = [JSON objectForKey:@"backgroundImageUrl"];
-    if (backgroundImageUrl && backgroundImageUrl != (id)[NSNull null]) {
+    if (backgroundImageUrl && backgroundImageUrl != (id)[NSNull null] && ![backgroundImageUrl isEqualToString:@""]) {
         self.backgroundImageURL = [NSURL URLWithString:backgroundImageUrl];
     }
     
@@ -129,6 +129,11 @@ NSString *const sRVBlockHeaderType = @"headerBlock";
     [encoder encodeObject:[NSValue valueWithUIEdgeInsets:self.padding] forKey:@"padding"];
     //[encoder encodeObject:[NSNumber numberWithInt:self.blockType] forKey:@"blockType"];
     [encoder encodeObject:self.url forKey:@"url"];
+    
+    // Background
+    [encoder encodeObject:self.backgroundColor forKey:@"backgroundColor"];
+    [encoder encodeObject:[NSNumber numberWithInteger:self.backgroundContentMode] forKey:@"backgroundContentMode"];
+    [encoder encodeObject:self.backgroundImageURL forKey:@"backgroundImageURL"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -137,6 +142,11 @@ NSString *const sRVBlockHeaderType = @"headerBlock";
         self.borderWidth = [[decoder decodeObjectForKey:@"borderWidth"] UIEdgeInsetsValue];
         self.padding = [[decoder decodeObjectForKey:@"padding"] UIEdgeInsetsValue];
         self.url = [decoder decodeObjectForKey:@"url"];
+        
+        // Background
+        self.backgroundColor = [decoder decodeObjectForKey:@"backgroundColor"];
+        self.backgroundContentMode = [[decoder decodeObjectForKey:@"backgroundContentMode"] integerValue];
+        self.backgroundImageURL = [decoder decodeObjectForKey:@"backgroundImageURL"];
     }
     return self;
 }

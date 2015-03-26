@@ -14,8 +14,7 @@
 
 typedef NS_ENUM(NSInteger, RVTouchpointTrigger) {
     RVTouchpointTriggerMinorNumber = 1,
-    RVTouchpointTriggerAnyBeacon = 2,
-    RVTouchpointTriggerGeofence = 3
+    RVTouchpointTriggerVisit = 2
 };
 
 @interface RVTouchpoint : RVModel <RVVisitTouchpointInfo>

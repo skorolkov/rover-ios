@@ -12,6 +12,7 @@
 #import "RVViewDefinition.h"
 #import "RVBlock.h"
 #import "RVHeaderBlock.h"
+#import "RVButtonBlock.h"
 
 #import <SDWebImage/UIImageView+WebCache.h>
 
@@ -20,7 +21,7 @@
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *containerView;
 @property (nonatomic, strong) UIView *titleBar;
-
+@property (nonatomic, strong) UIView *footerView;
 
 @property (nonatomic, strong) NSLayoutConstraint *containerBarBottomConstraint;
 
@@ -53,6 +54,11 @@
     _titleBar.backgroundColor = [UIColor clearColor];
     _titleBar.userInteractionEnabled = YES;
     
+    _footerView = [UIView new];
+    _footerView.translatesAutoresizingMaskIntoConstraints = NO;
+    _footerView.backgroundColor = [UIColor clearColor];
+    _footerView.userInteractionEnabled = YES;
+    
     _scrollView = [UIScrollView new];
     _scrollView.translatesAutoresizingMaskIntoConstraints = NO;
     _scrollView.scrollEnabled = YES;
@@ -63,11 +69,12 @@
     _containerView.translatesAutoresizingMaskIntoConstraints = NO;
     _containerView.backgroundColor = [UIColor clearColor];
     
-    NSDictionary *views = NSDictionaryOfVariableBindings(_scrollView,_titleBar,_containerView);
+    NSDictionary *views = NSDictionaryOfVariableBindings(_scrollView,_titleBar,_containerView,_footerView);
     
     [_scrollView addSubview:_containerView];
     [self.view addSubview:_scrollView];
     [self.view addSubview:_titleBar];
+    [self.view addSubview:_footerView];
     
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_containerView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeLeft multiplier:1 constant:0]];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_containerView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeRight multiplier:1 constant:0]];
@@ -78,14 +85,17 @@
     
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[_titleBar]|" options:0 metrics:nil views:views]];
     [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[_scrollView]|" options:0 metrics:nil views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[_footerView]|" options:0 metrics:nil views:views]];
     
-    _titleBarTopConstraint = [NSLayoutConstraint constraintWithItem:_titleBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1 constant:0];
-    [self.view addConstraint:_titleBarTopConstraint];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_titleBar][_scrollView][_footerView]|" options:0 metrics:nil views:views]];
     
-    _scrollViewHeightConstraint = [NSLayoutConstraint constraintWithItem:_scrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
-    [self.view addConstraint:_scrollViewHeightConstraint];
-    
-    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+//    _titleBarTopConstraint = [NSLayoutConstraint constraintWithItem:_titleBar attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeTop multiplier:1 constant:0];
+//    [self.view addConstraint:_titleBarTopConstraint];
+//    
+//    _scrollViewHeightConstraint = [NSLayoutConstraint constraintWithItem:_scrollView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeHeight multiplier:1 constant:0];
+//    [self.view addConstraint:_scrollViewHeightConstraint];
+//    
+//    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:_scrollView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.view attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
 
     
     [self loadViewDefinition];
@@ -110,9 +120,13 @@
             blockView.userInteractionEnabled = YES;
             [self addHeaderBlockView:blockView];
             
+            // TODO: can redo all of this and make it simpler
+            
             // move this somewhere else
             _scrollViewHeightConstraint.constant = -[block heightForWidth:self.view.frame.size.width];
             
+        } else if ([block class] == [RVButtonBlock class] && idx == _viewDefinition.blocks.count - 1) {
+            [self addBottomStickyBlockView:blockView];
         } else {
             [self addBlockView:blockView];
         }
@@ -130,9 +144,19 @@
     
     
     // titlebar height bug
-    UIView *lastTitleBlock = _titleBar.subviews[_titleBar.subviews.count - 1];
-    if (lastTitleBlock) {
-        [_titleBar addConstraint:[NSLayoutConstraint constraintWithItem:_titleBar attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:lastTitleBlock attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    if (_titleBar.subviews.count > 0) {
+        UIView *lastTitleBlock = _titleBar.subviews[_titleBar.subviews.count - 1];
+        if (lastTitleBlock) {
+            [_titleBar addConstraint:[NSLayoutConstraint constraintWithItem:_titleBar attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:lastTitleBlock attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+        }
+    }
+    
+    // same bug for footerview
+    if (_footerView.subviews.count > 0) {
+        UIView *lastFooterBlock = _footerView.subviews[_footerView.subviews.count - 1];
+        if (lastFooterBlock) {
+            [_footerView addConstraint:[NSLayoutConstraint constraintWithItem:_footerView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:lastFooterBlock attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+        }
     }
 }
 
@@ -179,8 +203,15 @@
     id lastHeaderBlockView = _titleBar.subviews.count > 1 ? _titleBar.subviews[_titleBar.subviews.count - 2] : nil;
     [_titleBar addConstraints:[RXBlockView constraintsForBlockView:blockView withPreviousBlockView:lastHeaderBlockView inside:_titleBar]];
  
-    // Height constraint
+//    // Height constraint
     [_titleBar addConstraint:[NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:[blockView.block heightForWidth:self.view.frame.size.width]]];
+}
+
+- (void)configureFooterLayoutForBlockView:(RXBlockView *)blockView {
+    id lastHeaderBlockView = _footerView.subviews.count > 1 ? _footerView.subviews[_footerView.subviews.count - 2] : nil;
+    [_footerView addConstraints:[RXBlockView constraintsForBlockView:blockView withPreviousBlockView:lastHeaderBlockView inside:_footerView]];
+    
+    [_footerView addConstraint:[NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:[blockView.block heightForWidth:self.view.frame.size.width]]];
 }
 
 - (void)addBlockView:(RXBlockView *)blockView {
@@ -191,6 +222,11 @@
 - (void)addHeaderBlockView:(RXBlockView *)blockView {
     [_titleBar addSubview:blockView];
     [self configureHeaderLayoutForBlockView:blockView];
+}
+
+- (void)addBottomStickyBlockView:(RXBlockView *)blockView {
+    [_footerView addSubview:blockView];
+    [self configureFooterLayoutForBlockView:blockView];
 }
 
 @end

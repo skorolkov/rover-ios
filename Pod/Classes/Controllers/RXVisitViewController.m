@@ -14,6 +14,8 @@
 #import "RVViewDefinition.h"
 #import "RVVisit.h"
 
+#define kCardViewAreaThreshold .5
+
 @interface RXVisitViewController () <RVVisitControllerDelegate, RXCardViewCellDelegate>
 
 @property (nonatomic, strong) RVVisitController *visitController;
@@ -99,15 +101,28 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [self tableView:tableView markCellAsViewedIfNeeded:cell atIndexPath:indexPath];
+}
+
+#pragma mark - ScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self.tableView.visibleCells enumerateObjectsUsingBlock:^(UITableViewCell *cell, NSUInteger idx, BOOL *stop) {
+        [self tableView:(UITableView *)scrollView markCellAsViewedIfNeeded:cell atIndexPath:[self.tableView indexPathForCell:cell]];
+    }];
+}
+
+- (void)tableView:(UITableView *)tableView markCellAsViewedIfNeeded:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     RVCard *card = [self.visitController cardAtIndexPath:indexPath];
     if (!card.isViewed) {
-        [self.visitController.visit trackEvent:@"card.view" params:@{@"card": card.ID}];
-        card.isViewed = YES;
+        CGRect cellRect = [tableView convertRect:cell.frame toView:tableView.superview];
+        CGRect intersection = CGRectIntersection(tableView.frame, cellRect);
+        CGFloat percentageInView = intersection.size.height / cellRect.size.height;
+        if (percentageInView > kCardViewAreaThreshold) {
+            card.isViewed = YES;
+            [self.visitController.visit trackEvent:@"card.view" params:@{ @"card": card.ID }];
+        }
     }
-    // should this be another delegate method to hide tableview?
-//    if ([self.delegate respondsToSelector:@selector(willDisplayCell:forCardAtIndexPath:)]) {
-//        [self.delegate willDisplayCell:(RXCardViewCell *)cell forCardAtIndexPath:indexPath];
-//    }
 }
 
 #pragma mark - RXCardViewCellDelegate
