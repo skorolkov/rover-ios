@@ -318,15 +318,20 @@ static Rover *sharedInstance = nil;
     
     [_currentVisit trackEvent:@"touchpoint.enter" params:@{@"touchpoint": touchpoint.ID}];
     
+    // Card delivered tracking
 
+    [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
+        [_currentVisit trackEvent:@"card.deliver" params:@{ @"card": card.ID }];
+    }];
+    
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         // do something else (banner or something)
+        
+        // Touchpoint tracking
+        [self.currentVisit trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID}];
+
         touchpoint.notificationDelivered = YES;
     } else if (!touchpoint.notificationDelivered) {
-        
-        [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
-            [_currentVisit trackEvent:@"card.deliver" params:@{ @"card": card.ID }];
-        }];
         
         if (touchpoint.notification) {
             [self sendNotification:touchpoint.notification];
