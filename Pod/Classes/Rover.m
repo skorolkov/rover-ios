@@ -270,13 +270,6 @@ static Rover *sharedInstance = nil;
     
     [[RVImagePrefetcher sharedImagePrefetcher] prefetchURLs:_currentVisit.allImageUrls];
     
-    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-    
-    if (self.config.autoPresentModal && [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive && ![currentViewController isKindOfClass:_config.modalViewControllerClass]) {
-        [self presentModal];
-    }
-    
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidEnterLocationNotification object:self];
     
     // Location tracking - NOTE: this should move somewhere else when geofencing and stuff
@@ -314,6 +307,16 @@ static Rover *sharedInstance = nil;
         // Touchpoint tracking
         [self.currentVisit trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID}];
 
+        
+        if (!touchpoint.notificationDelivered) {
+            UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+            UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
+            
+            if (self.config.autoPresentModal && [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive && ![currentViewController isKindOfClass:_config.modalViewControllerClass]) {
+                [self presentModal];
+            }
+        }
+        
         touchpoint.notificationDelivered = YES;
     } else if (!touchpoint.notificationDelivered) {
         
