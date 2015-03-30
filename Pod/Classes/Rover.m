@@ -229,10 +229,12 @@ static Rover *sharedInstance = nil;
 
 - (void)presentModal {
     
-    //    if (!_currentVisit || _currentVisit.cards.count < 1) {
-    //        NSLog(@"%@ warning showModal called but there are no cards to display", self);
-    //        //return;
-    //    }
+    if ([self.currentVisit.visitedTouchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
+        return touchpoint.cards.count > 0;
+    }]].count == 0) {
+        NSLog(@"%@ warning showModal called but there are no cards to display", self);
+        return;
+    }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillPresentModalNotification object:self];
 
@@ -262,9 +264,7 @@ static Rover *sharedInstance = nil;
 #pragma mark - Visit Manager Notifications
 
 - (void)visitManagerDidEnterLocation:(NSNotification *)note {
-    // TODO: theres an error doing this cause of RVVisitController and how its observing a deallocated object
-    // CHANGING MAJOR NUMBERS CAUSES THIS
-    // IT SHOULD FAIL GRADEFULLy
+    
     // This should be the only place where we set this iVar
     _currentVisit = [note.userInfo objectForKey:@"visit"];
     
@@ -354,13 +354,8 @@ static Rover *sharedInstance = nil;
         if (detailViewControllerClass && [currentViewController isKindOfClass:detailViewControllerClass]) {
             [currentViewController dismissViewControllerAnimated:YES completion:nil];
         } else if (![currentViewController isKindOfClass:_config.modalViewControllerClass]) {
-            // Card count check
-            // TODO: should this just be moved to present modal (CASE: when enter location it wont show up cause no touchpoints at that time
-            if ([self.currentVisit.visitedTouchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-                return touchpoint.cards.count > 0;
-            }]]) {
+
                 [self presentModal];
-            }
         }
     }
     
