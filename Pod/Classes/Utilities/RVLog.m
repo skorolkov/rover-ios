@@ -48,5 +48,19 @@ void RVLog(NSString *name, NSDictionary *data) {
     NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithDictionary:data];
     [userInfo addEntriesFromDictionary:@{ @"description": description }];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:name object:[Rover class] userInfo:userInfo];
+//    dispatch_queue_t currentQueue = dispatch_get_current_queue();
+//    dispatch_queue_t mainQueue = dispatch_get_main_queue();
+//    
+//    if (currentQueue == mainQueue) {
+//        [[NSNotificationCenter defaultCenter] postNotificationName:name object:[Rover class] userInfo:userInfo];
+//    } else {
+//        dispatch_sync(mainQueue, ^{
+//            [[NSNotificationCenter defaultCenter] postNotificationName:name object:[Rover class] userInfo:userInfo];
+//        });
+//    }
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:name object:[Rover class] userInfo:userInfo];
+    });
+
 }

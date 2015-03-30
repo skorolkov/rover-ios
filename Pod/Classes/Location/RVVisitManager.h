@@ -9,7 +9,10 @@
 #import <Foundation/Foundation.h>
 
 extern NSString *const kRVVisitManagerDidEnterLocationNotification;
-extern NSString *const kRVVisitManagerDidExitLocationNotification;
+extern NSString *const kRVVisitManagerDidPotentiallyExitLocationNotification;
+extern NSString *const kRVVisitManagerDidExpireVisitNotification;
+extern NSString *const kRVVisitManagerDidEnterTouchpointNotification;
+extern NSString *const kRVVisitManagerDidExitTouchpointNotification;
 
 @class RVVisit;
 

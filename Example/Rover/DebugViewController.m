@@ -38,7 +38,24 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:kRoverDidEnterLocationNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:UIApplicationDidBecomeActiveNotification object:nil];
+    
+
 }
+
+
+//- (void)viewDidAppear:(BOOL)animated {
+//    UIWindow *window = [UIApplication sharedApplication].keyWindow;
+//    CGRect screenFrame = [UIScreen mainScreen].bounds;
+//    window.bounds = CGRectMake(0, -20, screenFrame.size.width, screenFrame.size.height - 40);
+//    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, -140, screenFrame.size.width, 140)];
+//    view.backgroundColor = [UIColor redColor];
+//    [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clicked)]];
+//    [window addSubview:view];
+//}
+//
+//- (void)clicked {
+//    NSLog(@"Clicked the top bar");
+//}
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -105,8 +122,8 @@
 }
 
 - (IBAction)simulateButtonPressed:(id)sender {
-    NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"EB9F29E9-26A0-4414-A68D-D0CC7965FEDD"];
-    [[Rover shared] simulateBeaconWithUUID:UUID major:52643];
+    NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"B39C291F-A2F9-426B-BCF7-5A64D304E215"];
+    [[Rover shared] simulateBeaconWithUUID:UUID major:52643 minor:19039];
 }
 
 @end

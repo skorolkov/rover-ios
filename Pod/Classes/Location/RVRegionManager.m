@@ -17,12 +17,13 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 
 @interface RVRegionManager ()
 
-@property (strong, nonatomic) NSMutableArray *beaconRegions;
 @property (strong, nonatomic) CLLocationManager *locationManager;
-@property (strong, nonatomic) CLBeacon *nearestBeacon;
+@property (strong, nonatomic) CLLocationManager *specificLocationManager;
 @property (strong, nonatomic) NSDate *beaconDetectedAt;
 
-@property (readonly, nonatomic) NSTimeInterval timeSinceBeaconDetected;
+@property (readonly, nonatomic) NSTimeInterval timeSinceBeaconDetected; // This may not be needed anymore.
+
+@property (nonatomic, strong) NSSet *currentRegions;
 
 @end
 
@@ -43,49 +44,47 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 #pragma mark - Properties
 
 - (void)setBeaconUUIDs:(NSArray *)beaconUUIDs {
-    [self stopMonitoring];
-    [self.beaconRegions removeAllObjects];
-    
-    [beaconUUIDs enumerateObjectsUsingBlock:^(NSUUID *UUID, NSUInteger idx, BOOL *stop) {
-        CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID identifier:UUID.UUIDString];
-        beaconRegion.notifyEntryStateOnDisplay = YES;
-        [self.beaconRegions addObject:beaconRegion];
-    }];
-    
     _beaconUUIDs = beaconUUIDs;
+    [self stopMonitoring];
+    [self setupBeaconRegionsForUUIDs:beaconUUIDs];
 }
 
-- (NSTimeInterval)timeSinceBeaconDetected {
-    if (!self.beaconDetectedAt) {
-        return 0;
-    }
-    
-    NSDate *now = [NSDate date];
-    return [now timeIntervalSinceDate:self.beaconDetectedAt];
+- (void)setBeaconRegions:(NSMutableArray *)beaconRegions {
+    _beaconRegions = beaconRegions;
+    [self stopMonitoring];
+    [self setupBeaconRegions];
 }
+
+//- (NSTimeInterval)timeSinceBeaconDetected {
+//    if (!self.beaconDetectedAt) {
+//        return 0;
+//    }
+//    
+//    NSDate *now = [NSDate date];
+//    return [now timeIntervalSinceDate:self.beaconDetectedAt];
+//}
+
 
 #pragma mark - Initialization
 
 - (id)init {
     self = [super init];
     if (self) {
-        self.beaconRegions = [[NSMutableArray alloc] initWithCapacity:20];
+        _beaconRegions = [[NSMutableArray alloc] initWithCapacity:20];
         
-        self.locationManager = [[CLLocationManager alloc] init];
-        if ([self.locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
-            [self.locationManager requestAlwaysAuthorization];
+        _locationManager = [[CLLocationManager alloc] init];
+        _specificLocationManager = [[CLLocationManager alloc] init];
+        if ([_locationManager respondsToSelector:@selector(requestAlwaysAuthorization)]) {
+            [_locationManager requestAlwaysAuthorization];
+            [_specificLocationManager requestAlwaysAuthorization];
         }
-        self.locationManager.delegate = self;
+        _locationManager.delegate = self;
+        _specificLocationManager.delegate = self;
     }
     return  self;
 }
 
-#pragma mark - Utility methods
-
-- (BOOL)isCurrentRegion:(CLBeacon *)beacon {
-    return [self.nearestBeacon.proximityUUID.UUIDString isEqualToString:beacon.proximityUUID.UUIDString]
-            && [self.nearestBeacon.major isEqualToNumber:beacon.major];
-}
+// TODO: to save battery life, should only start ranging after monitoring has entered a location, then stop when exited the visit (keepalive?)
 
 #pragma mark - Region monitoring
 
@@ -103,42 +102,90 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
     }];
 }
 
-#pragma mark - Notifications
-
-- (void)postEnterNotification:(CLBeacon *)beacon {
-    CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beacon.proximityUUID major:beacon.major.integerValue identifier:beacon.proximityUUID.UUIDString];
-    
-    [[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidEnterRegionNotification object:self userInfo:@{ @"beaconRegion": beaconRegion }];
+- (void)startMonitoringForRegions:(NSArray *)regions {
+    _specificRegions = regions;
+    [_specificRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, NSUInteger idx, BOOL *stop) {
+        beaconRegion.notifyEntryStateOnDisplay = YES;
+        [_specificLocationManager startMonitoringForRegion:beaconRegion];
+    }];
 }
 
-- (void)postExitNotification:(CLBeacon *)beacon {
-    CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beacon.proximityUUID major:beacon.major.integerValue identifier:beacon.proximityUUID.UUIDString];
+- (void)stopMonitoringForAllSpecificRegions {
+    [_specificRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, NSUInteger idx, BOOL *stop) {
+        [_specificLocationManager stopMonitoringForRegion:beaconRegion];
+    }];
+    _specificRegions = nil;
+}
+
+#pragma mark - Notifications
+
+- (void)postEnterNotification:(CLBeaconRegion *)beaconRegion {
+    [[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidEnterRegionNotification object:self userInfo:@{ @"beaconRegion": beaconRegion}];
+}
+
+- (void)postExitNotification:(CLBeaconRegion *)beaconRegion {
+    [[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidExitRegionNotification object:self userInfo:@{ @"beaconRegion": beaconRegion,
+                                                                                                                                 @"allRegions": self.currentRegions}];
+}
+
+#pragma mark - Helper Methods
+
+- (void)setupBeaconRegionsForUUIDs:(NSArray *)UUIDs {
+    [self.beaconRegions removeAllObjects];
     
-    [[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidExitRegionNotification object:self userInfo:@{ @"beaconRegion": beaconRegion }];
+    [UUIDs enumerateObjectsUsingBlock:^(NSUUID *UUID, NSUInteger idx, BOOL *stop) {
+        CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID identifier:UUID.UUIDString];
+        beaconRegion.notifyEntryStateOnDisplay = YES;
+        [self.beaconRegions addObject:beaconRegion];
+    }];
+}
+
+- (void)setupBeaconRegions {
+    [self.beaconRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, NSUInteger idx, BOOL *stop) {
+        beaconRegion.notifyEntryStateOnDisplay = YES;
+    }];
 }
 
 #pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLRegion *)region {
-    RVLog(kRoverDidRangeBeaconsNotification, @{ @"count": [NSNumber numberWithUnsignedInteger:[beacons count]] });
-
-    CLBeaconRegion *beaconRegion = (CLBeaconRegion *)region;
-    CLBeacon *currentBeacon = [beacons lastObject];
+    // TODO: remove this to make more efficient
     
-    if (currentBeacon) {
-        if (self.nearestBeacon && [self isCurrentRegion:currentBeacon] && self.timeSinceBeaconDetected < TWO_HOURS) {
-            return;
-        }
+    RVLog(kRoverDidRangeBeaconsNotification, @{ @"count": [NSNumber numberWithUnsignedInteger:[beacons count]] });
+    
+    // TODO: use a mutable set (more efficient)
+    
+    NSMutableArray *wrappedBeacons = [NSMutableArray arrayWithCapacity:beacons.count];
+    [beacons enumerateObjectsUsingBlock:^(CLBeacon *beacon, NSUInteger idx, BOOL *stop) {
+        [wrappedBeacons insertObject:[[CLBeaconRegion alloc] initWithProximityUUID:beacon.proximityUUID major:beacon.major.integerValue minor:beacon.minor.integerValue identifier:[NSString stringWithFormat:@"%@-%@-%@", beacon.proximityUUID.UUIDString, beacon.major, beacon.minor]] atIndex:idx];
+    }];
+    
+    NSSet *regions = [NSSet setWithArray:wrappedBeacons];
+    
+    // TODO: investigate if we still need that self.timeSinceLastBeaconDetected < TWO_HOURS condition.
+    if ([regions isEqualToSet:self.currentRegions]) {
+        return;
+    } else {
+        NSMutableSet *enteredRegions = [NSMutableSet setWithSet:regions];
+        [enteredRegions minusSet:self.currentRegions];
         
-        self.nearestBeacon = currentBeacon;
-        self.beaconDetectedAt = [NSDate date];
-        [self postEnterNotification:currentBeacon];
-    } else if (self.nearestBeacon && [self.nearestBeacon.proximityUUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString]) {
-        CLBeacon *temp = self.nearestBeacon;
-        self.nearestBeacon = nil;
-        self.beaconDetectedAt = nil;
-        [self postExitNotification:temp];        
+        NSMutableSet *exitedRegions = [NSMutableSet setWithSet:self.currentRegions];
+        [exitedRegions minusSet:regions];
+        
+        [exitedRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, BOOL *stop) {
+            [self postExitNotification:beaconRegion];
+        }];
+        
+        [enteredRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, BOOL *stop) {
+            [self postEnterNotification:beaconRegion];
+        }];
+        
+        self.currentRegions = regions;
     }
+}
+
+- (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error {
+    NSLog(@"Monitoring failed - probably because you have run out of slots - : %@", error);
 }
 
 @end

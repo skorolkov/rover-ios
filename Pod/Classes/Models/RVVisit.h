@@ -8,53 +8,89 @@
 #import <Foundation/Foundation.h>
 #import "RVModel.h"
 
+@class RVTouchpoint;
 @class RVLocation;
+@class RVOrganization;
+@class RVCustomer;
 @class CLBeaconRegion;
 
 /** Represents a vist to a real-world physical location by a customer. A visit object will be created by the Rover Platform and delivered to the SDK when a customer enters a location.
  */
 @interface RVVisit : RVModel
 
-/** When the customer enters a location while their phone is asleep, the app should deliver a push notification. The welcomeMessage property should be used for the text property of the notification.
+
+@property (readonly) BOOL isAlive;
+
+
+//_____REQUEST ______
+
+@property (nonatomic, strong) NSUUID *UUID;
+
+@property (nonatomic, strong) NSNumber *majorNumber;
+
+@property (nonatomic, strong) NSDate *timestamp;
+
+@property (nonatomic, assign) BOOL simulate;
+
+// _____ RESPONSE_____
+
+// TODO: make private
+@property (nonatomic) NSTimeInterval keepAlive;
+
+/** The organization the visited location belongs to.
  */
-@property (strong, nonatomic) NSString *welcomeMessage;
-
-@property (strong, nonatomic) NSString *organizationName;
-@property (strong, nonatomic) NSString *organizationId;
-@property (strong, nonatomic) NSString *locationName;
-@property (strong, nonatomic) NSString *locationAddress;
-
-@property (strong, nonatomic) NSDate *beaconLastDetectedAt;
+@property (strong, nonatomic) RVOrganization *organization;
 
 /** The location which the customer has entered.
  */
 @property (strong, nonatomic) RVLocation *location;
 
-/** The date and time the customer entered the location.
+/** The customer visiting the location.
  */
-@property (strong, nonatomic) NSDate *enteredAt;
+@property (strong, nonatomic) RVCustomer *customer;
 
-/** The date and time the customer exited the location.
+/** All touchpoints at current location
  */
-@property (strong, nonatomic) NSDate *exitedAt;
+@property (strong, nonatomic) NSArray *touchpoints;
 
-/** The date and time the customer *first* opened the **app** during this visit. Note, this does not mean the customer viewed any of the cards.
+/** All touchpoints with trigger set to RVTouchpointTriggerAnyBeacon
  */
-@property (strong, nonatomic) NSDate *openedAt;
+@property (nonatomic, readonly) NSSet *wildcardTouchpoints;
 
-/** A list of cards delivered by the Rover Platform that should be displayed to the customer.
+// _____ TODO:  private ____
+
+
+
+@property (strong, nonatomic) NSDate *beaconLastDetectedAt;
+
+/** The current touchpoints
  */
-@property (strong, nonatomic) NSArray *cards;
+@property (strong, nonatomic) NSMutableSet *currentTouchpoints;
 
-/** Only the cards the customer has not viewed during *the current visit*. I.e. the customer may have seen these card before on a different visit but could still be unread for this visit.
+/** All visited touchpoints
  */
-@property (readonly, nonatomic) NSArray *unreadCards;
+@property (nonatomic, readonly) NSArray *visitedTouchpoints;
 
-/** Only the cards the customer has saved to their list. 
+/** All the image urls for this visit
  */
-@property (readonly, nonatomic) NSArray *savedCards;
+@property (nonatomic, readonly) NSArray *allImageUrls;
 
-- (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
+/** Valid regions for monitoring (i.e. touchpoints with a notification message
+ */
+@property (nonatomic, readonly) NSArray *observableRegions;
+
+- (BOOL)isInLocationRegion:(CLBeaconRegion *)beaconRegion;
+- (BOOL)isInTouchpointRegion:(CLBeaconRegion *)beaconRegion;
+
 - (void)persistToDefaults;
+
+- (RVTouchpoint *)touchpointForRegion:(CLBeaconRegion *)beaconRegion;
+- (RVTouchpoint *)touchpointForMinor:(NSNumber *)minor;
+
+- (void)trackEvent:(NSString *)event params:(NSDictionary *)params;
+
+
+- (void)addToCurrentTouchpoints:(RVTouchpoint *)touchpoint;
+- (void)removeFromCurrentTouchpoints:(RVTouchpoint *)touchpoint;
 
 @end
