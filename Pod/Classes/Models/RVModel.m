@@ -9,6 +9,13 @@
 #import "RVModelProject.h"
 #import "RVNetworkingManager.h"
 
+extern inline NSObject* RVNullSafeValueFromObject(NSObject *object) {
+    if (object) {
+        return object;
+    }
+    return [NSNull null];
+}
+
 @implementation RVModel
 
 #pragma mark - Paths
@@ -62,6 +69,13 @@
             self.ID = [ID stringValue];
         }
     }
+    
+    
+    // meta
+    NSDictionary *meta = [JSON objectForKey:@"meta"];
+    if (meta && meta != (id)[NSNull null]) {
+        _meta = meta;
+    }
 }
 
 - (NSDictionary *)toJSON {
@@ -87,7 +101,7 @@
     }
     
     NSString *modelName = [self modelName];
-    NSDictionary *parameters = @{ modelName: [self toJSON] };
+    NSDictionary *parameters = [self toJSON];
     
     [[RVNetworkingManager sharedManager] sendRequestWithMethod:method path:path parameters:parameters success:^(NSDictionary *data) {
         NSDictionary *JSON = [data objectForKey:modelName];
@@ -107,6 +121,24 @@
             failure(reason);
         }
     }];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)encoder {
+    //Encode properties, other class variables, etc
+    [encoder encodeObject:self.ID forKey:@"ID"];
+    [encoder encodeObject:self.meta forKey:@"meta"];
+    
+}
+
+- (id)initWithCoder:(NSCoder *)decoder {
+    if((self = [self init])) {
+        //decode properties, other class vars
+        self.ID = [decoder decodeObjectForKey:@"ID"];
+        self.meta = [decoder decodeObjectForKey:@"meta"];
+    }
+    return self;
 }
 
 @end

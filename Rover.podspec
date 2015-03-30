@@ -25,6 +25,12 @@ Pod::Spec.new do |s|
   s.frameworks = 'Accelerate', 'CoreLocation'
   s.dependency 'RSBarcodes', '~> 0.1'
   s.dependency 'UIActivityIndicator-for-SDWebImage', '~> 1.2'
+ # s.dependency 'SDWebImage', :git => 'git@github.com:ata-n/SDWebImage.git', :branch => 'master'
+
+  s.subspec 'RXManager' do |ss|
+    ss.source_files = 'Pod/Classes/RXManager'
+  end
+
   
   # s.subspec 'Networking' do |ss|
   #   ss.dependency 'Rover/Models'

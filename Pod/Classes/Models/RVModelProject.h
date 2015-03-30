@@ -12,6 +12,8 @@
 
 @property (strong, nonatomic) NSString *ID;
 
+@property (strong, nonatomic) NSDictionary *meta;
+
 #pragma mark - Class Methods
 
 - (NSString *)createPath;

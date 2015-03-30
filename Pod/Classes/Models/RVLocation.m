@@ -20,10 +20,10 @@
 - (void)updateWithJSON:(NSDictionary *)JSON {
     [super updateWithJSON:JSON];
     
-    // name
-    NSString *name = [JSON objectForKey:@"name"];
-    if (name != (id)[NSNull null] && [name length] > 0) {
-        self.name = name;
+    // title
+    NSString *title = [JSON objectForKey:@"title"];
+    if (title != (id)[NSNull null] && [title length] > 0) {
+        self.title = title;
     }
     
     // address
@@ -67,24 +67,6 @@
     if (radius != (id)[NSNull null]) {
         self.radius = radius;
     }
-    
-    // organizationName
-    NSString *organizationName = [JSON objectForKey:@"organization_name"];
-    if (organizationName != (id)[NSNull null] && [organizationName length] > 0) {
-        self.organizationName = organizationName;
-    }
-
-    // organizationId
-    NSString *organizationId = [JSON objectForKey:@"organization_id"];
-    if (organizationId != (id)[NSNull null] && [organizationId length] > 0) {
-        self.organizationId = organizationId;
-    }
-    
-    // logoURL
-    NSString *logoURLString = [JSON objectForKey:@"logo_url"];
-    if (logoURLString != (id)[NSNull null] && [logoURLString length] > 0) {
-        self.logoURL = [NSURL URLWithString:logoURLString];
-    }
 }
 
 
@@ -97,7 +79,11 @@
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
     //Encode properties, other class variables, etc
-    [encoder encodeObject:self.name forKey:@"name"];
+
+    [super encodeWithCoder:encoder];
+    
+    [encoder encodeObject:self.title forKey:@"title"];
+
     [encoder encodeObject:self.address forKey:@"address"];
     [encoder encodeObject:self.city forKey:@"city"];
     [encoder encodeObject:self.province forKey:@"province"];
@@ -105,24 +91,22 @@
     [encoder encodeObject:self.latitude forKey:@"latitude"];
     [encoder encodeObject:self.longitude forKey:@"longitude"];
     [encoder encodeObject:self.radius forKey:@"radius"];
-    [encoder encodeObject:self.organizationName forKey:@"organizationName"];
-    [encoder encodeObject:self.organizationId forKey:@"organizationId"];
-    [encoder encodeObject:self.logoURL forKey:@"logoURL"];
 }
 
+
 - (id)initWithCoder:(NSCoder *)decoder {
-    if((self = [super init])) {
-        //decode properties, other class vars
-        self.name = [decoder decodeObjectForKey:@"name"];
+    if((self = [self init])) {
+        self.title = [decoder decodeObjectForKey:@"title"];
         self.address = [decoder decodeObjectForKey:@"address"];
+        self.city = [decoder decodeObjectForKey:@"city"];
+
         self.province = [decoder decodeObjectForKey:@"province"];
         self.postalCode = [decoder decodeObjectForKey:@"postalCode"];
         self.latitude = [decoder decodeObjectForKey:@"latitude"];
         self.longitude = [decoder decodeObjectForKey:@"longitude"];
         self.radius = [decoder decodeObjectForKey:@"radius"];
-        self.organizationName = [decoder decodeObjectForKey:@"organizationName"];
-        self.organizationId = [decoder decodeObjectForKey:@"organizationId"];
-        self.logoURL = [decoder decodeObjectForKey:@"logoURL"];
+
+
     }
     return self;
 }
