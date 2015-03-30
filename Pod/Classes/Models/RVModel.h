@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-extern inline NSObject* RVNullSafeValueFromObject(NSObject *object);
+extern NSObject* RVNullSafeValueFromObject(NSObject *object);
 
 /** RVModel is the base class for all models in the Rover SDK. It should never be instantiated directly and should be considered an abstract class.
  */

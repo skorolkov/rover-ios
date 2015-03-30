@@ -135,7 +135,7 @@
     NSMutableArray *touchpoints = [NSMutableArray array];
     [self.visit.visitedTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger touchpointIdx, BOOL *stop) {
         RVTouchpointInfo *touchpointInfo = [RVTouchpointInfo new];
-        touchpointInfo.name = touchpoint.name;
+        touchpointInfo.name = touchpoint.title;
         //touchpointInfo.indexTitle = touchpoint.indexTitle;
         touchpointInfo.cards = [touchpoint.cards filteredArrayUsingPredicate:self.predicate];
         

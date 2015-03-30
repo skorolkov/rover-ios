@@ -78,27 +78,6 @@
     return [NSString stringWithFormat:@"<RVTouchpoint: id(%@) minorNumber(%@)>", self.ID, self.minorNumber];
 }
 
-#pragma mark - RVVisitTouchpointInfo
-
-- (NSString *)name {
-    return self.title;
-}
-
-// TODO: handle deletion
-
-- (NSUInteger)numberOfCards {
-    return self.cards.count;
-}
-
-- (NSArray *)cards {
-    return _cards;
-}
-
-/* Title of the touchpoint (used when displaying the index)
- */
-//@property (nonatomic, readonly) NSString *indexTitle;
-
-
 #pragma mark - NSCoding
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
