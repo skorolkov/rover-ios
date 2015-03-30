@@ -34,8 +34,11 @@
         
         // if iOS 7
         // configuration  = blah balh balh
-        
-        configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"roverBacgroundImagePrefetchSession"];
+        if ([NSURLSessionConfiguration respondsToSelector:@selector(backgroundSessionConfigurationWithIdentifier:)]) {
+            configuration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"roverBacgroundImagePrefetchSession"];
+        } else {
+            configuration = [NSURLSessionConfiguration backgroundSessionConfiguration:@"roverBacgroundImagePrefetchSession"];
+        }
         
         self.urlSession = [NSURLSession sessionWithConfiguration:configuration delegate:self delegateQueue:nil];
         self.downloadTasks = [NSMutableDictionary new];

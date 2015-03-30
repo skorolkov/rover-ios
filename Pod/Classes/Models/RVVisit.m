@@ -19,6 +19,8 @@
 
 #import "RVNetworkingManager.h"
 
+#import "Rover.h"
+
 #pragma mark - SystemCalls
 
 #include <sys/sysctl.h>
@@ -58,6 +60,15 @@ NSString * platform()
 }
 
 #pragma mark - Properties
+
+- (BOOL)simulate {
+    if (_simulate) {
+        return _simulate;
+    }
+    
+    _simulate = [[[Rover shared] configValueForKey:@"sandboxMode"] boolValue];
+    return _simulate;
+}
 
 - (BOOL)isAlive {
     NSDate *now = [NSDate date];
@@ -237,8 +248,7 @@ NSString * platform()
     [JSON setObject:[[self dateFormatter] stringFromDate:self.timestamp] forKey:@"timestamp"];
     
     // version (SDK)
-    // TODO: setup a compiler constant to handle this
-    [JSON setObject:@"0.3.0" forKey:@"sdkVersion"];
+    [JSON setObject:kRVVersion forKey:@"sdkVersion"];
     
     
     // TODO: REMOVE THIS AND MAKE IT PART OF DEBUG

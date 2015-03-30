@@ -21,6 +21,7 @@
 // Controllers
 //WHAT?
 
+#define kRVVersion @"0.30.0"
 
 extern NSString *const kRoverDidExpireVisitNotification;
 
@@ -76,7 +77,7 @@ extern NSString *const kRoverDidSwipeCardNotification;
 
 /** Rover framework configuration
  */
-@property (readonly, strong, nonatomic) RVConfig *config;
+//@property (readonly, strong, nonatomic) RVConfig *config;
 
 /** After a customer enters a location a new RVVisit object will be retrieved from the Rover platform and can be accessed through this property.
  */
@@ -97,6 +98,10 @@ extern NSString *const kRoverDidSwipeCardNotification;
 /** If you need to stop monitoring for some reason, you can call the stop monitoring method.
  */
 - (void)stopMonitoring;
+
+/** Returns the configuration value for the given key.
+ */
+- (id)configValueForKey:(NSString *)key;
 
 /** Present the modal view controller.
  */
@@ -156,6 +161,14 @@ extern NSString *const kRoverDidSwipeCardNotification;
  */
 @property (strong, nonatomic) NSString *serverURL;
 
+/** Sandbox mode. Visits will not be tracked when set to YES.
+ */
+@property (nonatomic, assign) BOOL sandboxMode;
+
+/** Register a UIViewController subclass to launch on RoverDidEnterLocationNotification.
+ */
+@property (nonatomic, strong, setter=registerModalViewControllerClass:) Class modalViewControllerClass;
+
 /** Create an RVConfig instance with the default values and override as necessary.
  */
 + (RVConfig *)defaultConfig;
@@ -163,5 +176,6 @@ extern NSString *const kRoverDidSwipeCardNotification;
 /** Add a beacon UUID found on the settings page of the [Rover Admin Console](http://app.roverlabs.co/). Add a separate UUID for each organization your app is configured to serve content from. For the majority of applications there will only be one UUID.
  */
 - (void)addBeaconUUID:(NSString *)UUIDString;
+
 
 @end

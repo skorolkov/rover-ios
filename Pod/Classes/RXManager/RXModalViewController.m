@@ -36,9 +36,9 @@
     self = [super init];
     if (self) {
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        self.backdropBlurRadius = [Rover shared].config.modalBackdropBlurRadius;
-        self.backdropTintColor = [Rover shared].config.modalBackdropTintColor;
-        
+        //self.modalPresentationStyle = UIModalPresentationCustom;
+        self.backdropBlurRadius = [[[Rover shared] configValueForKey:@"modalBackdropBlurRadius"] floatValue];
+        self.backdropTintColor = [[Rover shared] configValueForKey:@"modalBackdropTintColor"];
         
         [self createBlur];
     }
@@ -126,9 +126,7 @@
                              _hasDisplayedInitialAnimation = YES;
                              _minIndexPathSection = 0;
                              _minIndexPathRow = indexPath.row;
-                             if (_minIndexPathRow == 0 && _pillView.superview) {
-                                 [self retractPill];
-                             }
+
                          }];
         return;
     }
@@ -158,6 +156,13 @@
     NSUInteger cellCount = [cells count];
     if (cellCount == 0)
         return;
+    
+    if (_minIndexPathRow == 0 && _minIndexPathSection ==0 && _pillView.superview) {
+        RVCard *card = [self.visitController cardAtIndexPath:[self.tableView indexPathForCell:cells[0]]];
+        if (card.isViewed) {
+            [self retractPill];
+        }
+    }
     
     // Check against the maximum index path
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[cells lastObject]];
@@ -191,22 +196,17 @@
     
     image = [RVImageEffects applyBlurWithRadius:self.backdropBlurRadius tintColor:self.backdropTintColor saturationDeltaFactor:1 maskImage:nil toImage:image];
     
-    [self.tableView setBackgroundView:[[UIImageView alloc] initWithImage:image]];
+    UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:image];
+    [self.view addSubview:backgroundImageView];
+    [self.view sendSubviewToBack:backgroundImageView];
 }
 
 - (void)checkVisibilityOfCell:(UITableViewCell *)cell inScrollView:(UIScrollView *)scrollView
 {
     if ([self isEnoughOfCellVisible:cell inScrollView:scrollView]) {
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-        [UIView animateWithDuration:0.3
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             cell.alpha = 1;
-                         } completion:^(BOOL finished) {
-                             _maxIndexPathRow = indexPath.row;
-                             _maxIndexPathSection = indexPath.section;
-                         }];
+        _maxIndexPathRow = indexPath.row;
+        _maxIndexPathSection = indexPath.section;
     }
 }
 
@@ -226,6 +226,7 @@
 - (void)scrollToTop
 {
     [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
+    [self retractPill];
 }
 
 - (void)closeModal {
@@ -271,6 +272,10 @@
 
 - (void)retractPill
 {
+    if (_pillView.center.y ==  -_pillView.frame.size.height/2) {
+        return;
+    }
+    
     [UIView animateWithDuration:0.3
                           delay:0
                         options:UIViewAnimationOptionCurveEaseInOut

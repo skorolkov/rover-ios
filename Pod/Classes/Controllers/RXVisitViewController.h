@@ -12,8 +12,9 @@
 @class RVTouchpoint;
 @class RXCardViewCell;
 
-@interface RXVisitViewController : UITableViewController
+@interface RXVisitViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic, strong, readonly) UITableView *tableView;
 @property (nonatomic, readonly) RVVisitController *visitController;
 
 - (void)willAddTouchpoint:(RVTouchpoint *)touchpoint;

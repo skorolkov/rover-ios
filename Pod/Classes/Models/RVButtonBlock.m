@@ -60,7 +60,7 @@
 }
 
 - (CGFloat)heightForWidth:(CGFloat)width {
-    return [super heightForWidth:width] + [[self label] boundingRectWithSize:CGSizeMake([self paddingAdjustedValueForWidth:width], MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height;
+    return [super heightForWidth:width] + round([[self label] boundingRectWithSize:CGSizeMake([self paddingAdjustedValueForWidth:width], MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height);
 }
 
 #pragma mark - NSCoding

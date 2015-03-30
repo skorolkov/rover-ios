@@ -36,6 +36,7 @@ NSString *const kRoverDidSwipeCardNotification = @"RoverDidSwipeCardNotification
 
 @interface Rover ()
 
+@property (readonly, strong, nonatomic) RVConfig *config;
 @property (nonatomic, strong) RVVisit *currentVisit;
 
 @end
@@ -186,6 +187,10 @@ static Rover *sharedInstance = nil;
 
 #pragma mark - Public methods
 
+- (id)configValueForKey:(NSString *)key {
+    return [_config valueForKey:key];
+}
+
 - (void)savedCards:(void (^)(NSArray *, NSString *))block {
     [[RVNetworkingManager sharedManager] sendRequestWithMethod:@"GET" path:@"cards" parameters:@{ @"customer_id": self.customer.customerID } success:^(NSDictionary *data) {
         
@@ -224,21 +229,14 @@ static Rover *sharedInstance = nil;
 
 - (void)presentModal {
     
-    //<<<<<<< HEAD
     //    if (!_currentVisit || _currentVisit.cards.count < 1) {
     //        NSLog(@"%@ warning showModal called but there are no cards to display", self);
     //        //return;
     //    }
-    //=======
-    ////    if (!self.currentVisit || self.currentVisit.cards.count < 1) {
-    ////        NSLog(@"%@ warning showModal called but there are no cards to display", self);
-    ////        //return;
-    ////    }
-    //>>>>>>> lots of ui
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillPresentModalNotification object:self];
 
-    RXModalViewController *modalViewController = [RXModalViewController new];
+    UIViewController *modalViewController = [[self.config.modalViewControllerClass alloc] init];
     
     UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
     UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
@@ -247,19 +245,10 @@ static Rover *sharedInstance = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidPresentModalNotification object:self];
 }
 
-#pragma mark - Utility 
-
-- (void)updateVisitOpenTime {
-    if (!_currentVisit) {
-        return;
-    }
-    
-    //_currentVisit.openedAt = [NSDate date];
-    //[_currentVisit save:nil failure:nil];
-}
+#pragma mark - Utility
 
 - (void)sendNotification:(NSString *)message {
-    // TODO: consider the case where a noti has already been delivered (want to be silent)
+    // TODO: consider the case where the first noti has already been delivered (want to be silent)
     
     UILocalNotification *note = [[UILocalNotification alloc] init];
     note.alertBody = message;
@@ -276,21 +265,16 @@ static Rover *sharedInstance = nil;
     // TODO: theres an error doing this cause of RVVisitController and how its observing a deallocated object
     // CHANGING MAJOR NUMBERS CAUSES THIS
     // IT SHOULD FAIL GRADEFULLy
+    // This should be the only place where we set this iVar
     _currentVisit = [note.userInfo objectForKey:@"visit"];
     
     [[RVImagePrefetcher sharedImagePrefetcher] prefetchURLs:_currentVisit.allImageUrls];
     
+    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
     
-    // TODO: redo all this
-    
-    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-        [self updateVisitOpenTime];
-        
-        if (self.config.autoPresentModal) {
-            [self presentModal];
-        }
-    } else {
-        //[self sendNotification];
+    if (self.config.autoPresentModal && [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive && ![currentViewController isKindOfClass:_config.modalViewControllerClass]) {
+        [self presentModal];
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidEnterLocationNotification object:self];
@@ -353,10 +337,6 @@ static Rover *sharedInstance = nil;
 #pragma mark - Application Notifications
 
 - (void)applicationDidBecomeActive:(NSNotification *)note {
-
-    
-    // TODO: do a card count check as well
-    
     
     // Auto Modal
     
@@ -367,12 +347,20 @@ static Rover *sharedInstance = nil;
         UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
         UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
 
-        // TODO: do class from string cause RX may not be present
+
         
-        if ([currentViewController isKindOfClass:[RXDetailViewController class]]) {
+        Class detailViewControllerClass = NSClassFromString(@"RXDetailViewController");
+        
+        if (detailViewControllerClass && [currentViewController isKindOfClass:detailViewControllerClass]) {
             [currentViewController dismissViewControllerAnimated:YES completion:nil];
-        } else if (![currentViewController isKindOfClass:[RXModalViewController class]]) {
-            [self presentModal];
+        } else if (![currentViewController isKindOfClass:_config.modalViewControllerClass]) {
+            // Card count check
+            // TODO: should this just be moved to present modal (CASE: when enter location it wont show up cause no touchpoints at that time
+            if ([self.currentVisit.visitedTouchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
+                return touchpoint.cards.count > 0;
+            }]]) {
+                [self presentModal];
+            }
         }
     }
     
@@ -388,7 +376,6 @@ static Rover *sharedInstance = nil;
 @end
 
 
-
 @implementation RVConfig
 
 + (RVConfig *)defaultConfig {
@@ -396,9 +383,11 @@ static Rover *sharedInstance = nil;
     config.allowedUserNotificationTypes = (UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound);
     config.notificationSoundName = UILocalNotificationDefaultSoundName;
     config.autoPresentModal = YES;
-    config.serverURL = @"http://api.roverlabs.co/mobileapi/v1/";
+    config.serverURL = @"http://api.roverlabs.co/mobile/v2/";
     config.modalBackdropBlurRadius = 3;
     config.modalBackdropTintColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+    config.sandboxMode = NO;
+    config.modalViewControllerClass = NSClassFromString(@"RXModalViewController");
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Rover" ofType:@"plist"];
     NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:path];
@@ -448,6 +437,14 @@ static Rover *sharedInstance = nil;
     } else {
         _beaconUUIDs = [NSArray arrayWithObject:UUID];
     }
+}
+
+- (void)registerModalViewControllerClass:(Class)modalViewControllerClass {
+    if (![modalViewControllerClass isSubclassOfClass:[UIViewController class]]) {
+        NSLog(@"%@ warning - you must register a valid UIViewController class", self);
+        return;
+    }
+    _modalViewControllerClass = modalViewControllerClass;
 }
 
 @end

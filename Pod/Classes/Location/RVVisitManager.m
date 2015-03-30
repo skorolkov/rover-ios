@@ -82,9 +82,9 @@ NSString *const kRVVisitManagerLatestVisitVersionKey = @"_roverVersion";
     NSString *version = [standardDefault objectForKey:kRVVisitManagerLatestVisitVersionKey];
     
     // TODO: make this global somehwere
-    if (![version isEqualToString:@"0.30.0"]) {
+    if (![version isEqualToString:kRVVersion]) {
         [standardDefault removeObjectForKey:kRVVisitManagerLatestVisitPersistenceKey];
-        [standardDefault setObject:@"0.30.0" forKey:kRVVisitManagerLatestVisitVersionKey];
+        [standardDefault setObject:kRVVersion forKey:kRVVisitManagerLatestVisitVersionKey];
     }
     
     NSData *visitData = [standardDefault objectForKey:kRVVisitManagerLatestVisitPersistenceKey];
@@ -102,7 +102,7 @@ NSString *const kRVVisitManagerLatestVisitVersionKey = @"_roverVersion";
     CLBeaconRegion *beaconRegion = [note.userInfo objectForKey:@"beaconRegion"];
     
     [_operationQueue addOperationWithBlock:^{
-        if (self.latestVisit && [self.latestVisit isInLocationRegion:beaconRegion] && self.latestVisit.isAlive) {
+        if (self.latestVisit && [self.latestVisit isInLocationRegion:beaconRegion] && (self.latestVisit.currentTouchpoints.count > 0 || self.latestVisit.isAlive)) {
             
             // Touchpoint check
             if (![self.latestVisit isInTouchpointRegion:beaconRegion]) {
@@ -181,7 +181,6 @@ NSString *const kRVVisitManagerLatestVisitVersionKey = @"_roverVersion";
     self.latestVisit.majorNumber = beaconRegion.major;
     self.latestVisit.customer = [Rover shared].customer;
     self.latestVisit.timestamp = [NSDate date];
-    self.latestVisit.simulate = YES;
     
     [self.latestVisit save:^{
         RVLog(kRoverDidPostVisitNotification, nil);

@@ -36,7 +36,8 @@
     if (!_htmlText) {
         
         _htmlText = [[NSMutableAttributedString alloc] initWithData:[self.htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} documentAttributes:nil error:nil];
-        
+     
+        // TOOD: dry this out, its used in every block that can contain text 
         
         // Remove any trailing newline
         if (_htmlText.length) {
@@ -47,14 +48,11 @@
         }
     }
     
-//    NSLog(@"htmlString: %@", self.htmlString);
-//    NSLog(@"htmlText : %@", _htmlText);
-    
     return _htmlText;
 }
 
 - (CGFloat)heightForWidth:(CGFloat)width {
-    return [super heightForWidth:width] + [[self htmlText] boundingRectWithSize:CGSizeMake([self paddingAdjustedValueForWidth:width], MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height;
+    return [super heightForWidth:width] + round([[self htmlText] boundingRectWithSize:CGSizeMake([self paddingAdjustedValueForWidth:width], MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height);
 }
 
 #pragma mark - NSCoding

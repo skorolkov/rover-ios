@@ -60,7 +60,7 @@
 }
 
 - (CGFloat)heightForWidth:(CGFloat)width {
-    return [super heightForWidth:width] + [[self barcodeLabelAttributedString] boundingRectWithSize:CGSizeMake([self paddingAdjustedValueForWidth:width], MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height + (self.barcodeType == RVBarcodeTypePLU ? 0 : kRVBarcodeHeight);
+    return [super heightForWidth:width] + round([[self barcodeLabelAttributedString] boundingRectWithSize:CGSizeMake([self paddingAdjustedValueForWidth:width], MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading context:nil].size.height) + (self.barcodeType == RVBarcodeTypePLU ? 0 : kRVBarcodeHeight);
 }
 
 

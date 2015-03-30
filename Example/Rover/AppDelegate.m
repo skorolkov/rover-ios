@@ -18,17 +18,13 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     RVConfig *config = [RVConfig defaultConfig];
     config.autoPresentModal = YES;
+    config.sandboxMode = NO;
     
     Rover *rover = [Rover setup:config];
     
     [rover startMonitoring];
     
     return YES;
-}
-
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
-    NSLog(@"hell: %@", url);
-    return NO;
 }
 
 @end

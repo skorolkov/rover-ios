@@ -149,7 +149,11 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
 #pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLRegion *)region {
+    // TODO: remove this to make more efficient
+    
     RVLog(kRoverDidRangeBeaconsNotification, @{ @"count": [NSNumber numberWithUnsignedInteger:[beacons count]] });
+    
+    // TODO: use a mutable set (more efficient)
     
     NSMutableArray *wrappedBeacons = [NSMutableArray arrayWithCapacity:beacons.count];
     [beacons enumerateObjectsUsingBlock:^(CLBeacon *beacon, NSUInteger idx, BOOL *stop) {

@@ -8,6 +8,7 @@
 
 #import "RVVisitController.h"
 #import "Rover.h"
+#import "RVLog.h"
 
 @interface RVTouchpointInfo : NSObject <RVVisitTouchpointInfo>
 
@@ -26,7 +27,10 @@
 
 @end
 
-@interface RVVisitController ()
+@interface RVVisitController () {
+    BOOL _observingCards;
+    BOOL _observingTouchpointChanges;
+}
 
 @property (nonatomic, strong) RVVisit *visit;
 @property (nonatomic, strong) NSArray *touchpoints;
@@ -38,7 +42,9 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        [self.visit addObserver:self forKeyPath:@"visitedTouchpoints" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+        [self observeForTouchpointChanges];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterNewLocation:) name:kRoverWillPostVisitNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterNewLocation:) name:kRoverDidEnterLocationNotification object:nil];
     }
     return self;
 }
@@ -47,17 +53,40 @@
 // http://stackoverflow.com/questions/990069/when-should-i-remove-observers-error-about-deallocating-objects-before-removing
 
 - (void)dealloc {
-    [self.visit removeObserver:self forKeyPath:@"visitedTouchpoints"];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    [self removeTouchpointObserver];
     [self removeCardObservers];
     _touchpoints = nil;
 }
 
+#pragma mark - Observing Methods
+
+- (void)observeForTouchpointChanges {
+    _visit = nil;
+    if (!_observingTouchpointChanges) {
+        [self.visit addObserver:self forKeyPath:@"visitedTouchpoints" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
+    }
+    _observingTouchpointChanges = YES;
+}
+
+- (void)removeTouchpointObserver {
+    if (_observingTouchpointChanges) {
+        [self.visit removeObserver:self forKeyPath:@"visitedTouchpoints" context:nil];
+    }
+    _observingTouchpointChanges = NO;
+}
+
 - (void)removeCardObservers {
+    if (!_observingCards) {
+        return;
+    }
+    
     [_touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
         [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
             [self removeObserverForCard:card];
         }];
     }];
+    _observingCards = NO;
 }
 
 - (void)removeObserverForCard:(RVCard *)card {
@@ -66,7 +95,12 @@
 
 
 - (RVVisit *)visit {
-    return [[Rover shared] currentVisit];
+    if (_visit) {
+        return _visit;
+    }
+    
+    _visit = [[Rover shared] currentVisit];
+    return _visit;
 }
 
 - (NSPredicate *)predicate {
@@ -105,10 +139,12 @@
         //touchpointInfo.indexTitle = touchpoint.indexTitle;
         touchpointInfo.cards = [touchpoint.cards filteredArrayUsingPredicate:self.predicate];
         
+        // TODO: possibly move this out
         // Observe for card deletion
         [touchpointInfo.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger cardIdx, BOOL *stop) {
-            [card addObserver:self forKeyPath:@"isDeleted" options:NSKeyValueObservingOptionNew context:(__bridge void *)([NSIndexPath indexPathForRow:cardIdx inSection:touchpointIdx])];
+            [card addObserver:self forKeyPath:@"isDeleted" options:NSKeyValueObservingOptionNew context:(__bridge void *)(card)];
         }];
+        _observingCards = YES;
         
         [touchpoints insertObject:touchpointInfo atIndex:touchpointIdx];
     }];
@@ -135,13 +171,28 @@
     } else {
         
         // card delete
+        
+        NSIndexPath *indexPath = [self indexPathForCard:(__bridge RVCard *)(context)];
+        
         [self removeCardObservers];
         _touchpoints = nil;
         
         if ([self.delegate respondsToSelector:@selector(controller:didChangeCard:atIndexPath:forChangeType:)]) {
-            [self.delegate controller:self didChangeCard:object atIndexPath:(__bridge NSIndexPath *)(context) forChangeType:RVVisitChangeDelete];
+            
+            [self.delegate controller:self didChangeCard:object atIndexPath:indexPath forChangeType:RVVisitChangeDelete];
         }
     }
+}
+
+#pragma mark - Rover Notifications
+
+- (void)willEnterNewLocation:(NSNotification *)note {
+    [self removeTouchpointObserver];
+    [self removeCardObservers];
+}
+
+- (void)didEnterNewLocation:(NSNotification *)note {
+    [self observeForTouchpointChanges];
 }
 
 

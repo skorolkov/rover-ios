@@ -59,6 +59,8 @@ void RVLog(NSString *name, NSDictionary *data) {
 //        });
 //    }
 
-    [[NSNotificationCenter defaultCenter] postNotificationName:name object:[Rover class] userInfo:userInfo];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:name object:[Rover class] userInfo:userInfo];
+    });
 
 }

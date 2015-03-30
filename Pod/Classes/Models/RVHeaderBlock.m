@@ -41,6 +41,10 @@
     
 }
 
+- (UIEdgeInsets)padding {
+    return UIEdgeInsetsZero;
+}
+
 - (NSURL *)iconURL {
     return [NSURL URLWithString:self.iconPath];
 }

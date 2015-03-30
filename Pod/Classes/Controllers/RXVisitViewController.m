@@ -32,9 +32,22 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 {
     self = [super init];
     if (self) {
+        // Add tableView
+        _tableView = [[UITableView alloc] init];
+        _tableView.translatesAutoresizingMaskIntoConstraints = NO;
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+        _tableView.backgroundColor = [UIColor clearColor];
+        self.view.backgroundColor  = [UIColor clearColor];
+        [self.view addSubview:_tableView];
+        NSDictionary *views = NSDictionaryOfVariableBindings(_tableView);
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[_tableView]|" options:0 metrics:nil views:views]];
+        [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_tableView]|" options:0 metrics:nil views:views]];
+        
         // Account for status bar
         [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
         self.tableView.delaysContentTouches = NO;
+        self.tableView.opaque = NO;
     }
     return self;
 }
