@@ -22,6 +22,12 @@
     
     Rover *rover = [Rover setup:config];
     
+    RVCustomer *customer = [[Rover shared] customer];
+    customer.customerID = @"1234567";
+    [customer set:@"contractor" to:@YES];
+    [customer set:@"MyLowes" to:@YES];
+    [customer setName:@"John Smith"];
+    
     [rover startMonitoring];
     
     return YES;

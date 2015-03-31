@@ -121,7 +121,7 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
     }
     
     // attributes
-    NSDictionary *attributes = [JSON objectForKey:@"attributes"];
+    NSDictionary *attributes = [JSON objectForKey:@"traits"];
     if (attributes != (id)[NSNull null]) {
         self.attributes = [NSMutableDictionary dictionaryWithDictionary:attributes];
     }
@@ -145,9 +145,9 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
     
     // attributes
     if (self.attributes) {
-        [JSON setObject:self.attributes forKey:@"attributes"];
+        [JSON setObject:self.attributes forKey:@"traits"];
     } else {
-        [JSON setObject:@{} forKey:@"attributes"];
+        [JSON setObject:@{} forKey:@"traits"];
     }
     
     return JSON;
