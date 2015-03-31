@@ -311,8 +311,10 @@ static Rover *sharedInstance = nil;
         if (!touchpoint.notificationDelivered) {
             UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
             UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
+            Class detailViewControllerClass = NSClassFromString(@"RXDetailViewController");
             
-            if (self.config.autoPresentModal && [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive && ![currentViewController isKindOfClass:_config.modalViewControllerClass]) {
+            
+            if (self.config.autoPresentModal && [[UIApplication sharedApplication] applicationState] == UIApplicationStateActive && ![currentViewController isKindOfClass:_config.modalViewControllerClass] && ![currentViewController isKindOfClass:detailViewControllerClass]) {
                 [self presentModal];
             }
         }
