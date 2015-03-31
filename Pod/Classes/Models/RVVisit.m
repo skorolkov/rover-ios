@@ -364,7 +364,7 @@ NSString * platform()
     if((self = [super initWithCoder:decoder])) {
         self.UUID = [decoder decodeObjectForKey:@"UUID"];
         self.majorNumber = [decoder decodeObjectForKey:@"majorNumber"];
-        self.keepAlive = [[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
+        //self.keepAlive = [[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
         self.timestamp = [decoder decodeObjectForKey:@"timestamp"];
         self.organization = [decoder decodeObjectForKey:@"organization"];
         self.location = [decoder decodeObjectForKey:@"location"];
