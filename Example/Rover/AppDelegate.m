@@ -17,8 +17,12 @@
             
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     RVConfig *config = [RVConfig defaultConfig];
+    
+    // When a visit is triggered/simulated the modal is displayed automatically
     config.autoPresentModal = YES;
-    config.sandboxMode = NO;
+    
+    // In sandbox mode visit analytics arent tracked
+    config.sandboxMode = YES;
     
     Rover *rover = [Rover setup:config];
     

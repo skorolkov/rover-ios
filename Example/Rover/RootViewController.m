@@ -20,12 +20,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self setDelegate:self];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roverDidEnterLocation) name:kRoverDidEnterLocationNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(roverDidDisplayCardNotification) name:kRoverDidDisplayCardNotification object:nil];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive) name:UIApplicationDidBecomeActiveNotification object:nil];
 }
 
 - (void)dealloc {
@@ -40,44 +34,9 @@
     return YES;
 }
 
-- (void)updateBadgeNumber {
-// TODO: remove badges
-//    RVVisit *visit = [[Rover shared] currentVisit];
-//    int badgeNumber = (int)[visit.unreadCards count];
-//    
-//    UITabBarItem *item = [self.tabBar.items objectAtIndex:3];
-//    item.badgeValue = badgeNumber > 0 ? [NSString stringWithFormat:@"%d", badgeNumber] : nil;
-//    
-//    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badgeNumber];
-}
-
 - (void)displayModal {
     [[Rover shared] presentModal];
 }
 
-#pragma mark - Application Notifications
-
-- (void)applicationDidBecomeActive {
-    RVVisit *currentVisit = [[Rover shared] currentVisit];
-    //if (currentVisit.unreadCards.count > 0 && !currentVisit.openedAt) {
-    //    [self displayModal];
-    //}
-}
-
-#pragma mark - Rover Notifications
-
-- (void)roverDidEnterLocation {
-    [self updateBadgeNumber];
-}
-
-- (void)roverDidDisplayCardNotification {
-    [self updateBadgeNumber];
-}
-
-#pragma mark - ModalViewController delegate
-
-//- (void)modalViewControllerDidFinish:(RVModalViewController *)modalViewController {
-//    [self dismissViewControllerAnimated:YES completion:nil];
-//}
 
 @end
