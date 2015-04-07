@@ -42,21 +42,6 @@
 
 }
 
-
-//- (void)viewDidAppear:(BOOL)animated {
-//    UIWindow *window = [UIApplication sharedApplication].keyWindow;
-//    CGRect screenFrame = [UIScreen mainScreen].bounds;
-//    window.bounds = CGRectMake(0, -20, screenFrame.size.width, screenFrame.size.height - 40);
-//    UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, -140, screenFrame.size.width, 140)];
-//    view.backgroundColor = [UIColor redColor];
-//    [view addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(clicked)]];
-//    [window addSubview:view];
-//}
-//
-//- (void)clicked {
-//    NSLog(@"Clicked the top bar");
-//}
-
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -122,8 +107,8 @@
 }
 
 - (IBAction)simulateButtonPressed:(id)sender {
-    NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"5D1D81CF-B3F9-48EA-8D5B-324ADFADCF82"];
-    [[Rover shared] simulateBeaconWithUUID:UUID major:1 minor:19039];
+    NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"7931D3AA-299B-4A12-9FCC-D66F2C5D2462"];
+    [[Rover shared] simulateBeaconWithUUID:UUID major:18347 minor:12345];
 }
 
 @end

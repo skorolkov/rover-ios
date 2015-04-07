@@ -17,7 +17,6 @@
 		DBB10BD419E236920078E9B4 /* NewOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BD019E236920078E9B4 /* NewOffersViewController.m */; };
 		DBB10BD519E236920078E9B4 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BD119E236920078E9B4 /* ProfileViewController.m */; };
 		DBB10BD619E236920078E9B4 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BD219E236920078E9B4 /* RootViewController.m */; };
-		DBB10BD719E236920078E9B4 /* SavedOffersTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BD319E236920078E9B4 /* SavedOffersTableViewController.m */; };
 		DBB10BDA19E2395A0078E9B4 /* Rover.plist in Resources */ = {isa = PBXBuildFile; fileRef = DBB10BD919E2395A0078E9B4 /* Rover.plist */; };
 /* End PBXBuildFile section */
 
@@ -36,12 +35,10 @@
 		DBB10BCA19E236740078E9B4 /* NewOffersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewOffersViewController.h; sourceTree = "<group>"; };
 		DBB10BCB19E236740078E9B4 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
 		DBB10BCC19E236740078E9B4 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
-		DBB10BCD19E236740078E9B4 /* SavedOffersTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SavedOffersTableViewController.h; sourceTree = "<group>"; };
 		DBB10BCE19E236740078E9B4 /* DebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugViewController.m; sourceTree = "<group>"; };
 		DBB10BD019E236920078E9B4 /* NewOffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewOffersViewController.m; sourceTree = "<group>"; };
 		DBB10BD119E236920078E9B4 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
 		DBB10BD219E236920078E9B4 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
-		DBB10BD319E236920078E9B4 /* SavedOffersTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SavedOffersTableViewController.m; sourceTree = "<group>"; };
 		DBB10BD919E2395A0078E9B4 /* Rover.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Rover.plist; sourceTree = "<group>"; };
 		EF05A447F91BF240B292B882 /* libPods-Rover.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rover.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -128,8 +125,6 @@
 				DBB10BD119E236920078E9B4 /* ProfileViewController.m */,
 				DBB10BCC19E236740078E9B4 /* RootViewController.h */,
 				DBB10BD219E236920078E9B4 /* RootViewController.m */,
-				DBB10BCD19E236740078E9B4 /* SavedOffersTableViewController.h */,
-				DBB10BD319E236920078E9B4 /* SavedOffersTableViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -251,7 +246,6 @@
 				DBB10BD419E236920078E9B4 /* NewOffersViewController.m in Sources */,
 				DBB10BCF19E236740078E9B4 /* DebugViewController.m in Sources */,
 				DBB10BD519E236920078E9B4 /* ProfileViewController.m in Sources */,
-				DBB10BD719E236920078E9B4 /* SavedOffersTableViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
