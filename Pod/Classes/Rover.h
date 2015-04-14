@@ -8,58 +8,19 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
-// Views
-// WHAT?
-
 // Models
 #import "RVModel.h"
 #import "RVCustomer.h"
 #import "RVVisit.h"
 #import "RVCard.h"
 #import "RVTouchpoint.h"
+#import "RVNotifications.h"
 
 // Controllers
-//WHAT?
+#import "RVVisitController.h"
 
-#define kRVVersion @"0.30.0"
 
-extern NSString *const kRoverDidExpireVisitNotification;
 
-/** This notification will be posted when the customer exits a touchpoint region.
- */
-extern NSString *const kRoverDidExitTouchpointNotification;
-
-/** This notification will be posted when the customer enters a touchpoint region.
- */
-extern NSString *const kRoverDidEnterTouchpointNotification;
-
-/** This notification will be posted when the customer enters a location.
- */
-extern NSString *const kRoverDidEnterLocationNotification;
-
-/** This notification will be posted before the modal view controller is presented.
- */
-extern NSString *const kRoverWillPresentModalNotification;
-
-/** This notification will be posted after the modal view controller is presented.
- */
-extern NSString *const kRoverDidPresentModalNotification;
-
-/** This notification will be posted before the modal view controller is dismissed.
- */
-extern NSString *const kRoverWillDismissModalNotification;
-
-/** This notification will be posted after the modal view controller is dismissed.
- */
-extern NSString *const kRoverDidDismissModalNotification;
-
-/** This notification will be posted every time a new card is shown to the user. The card is available through the userInfo object.
- */
-extern NSString *const kRoverDidDisplayCardNotification;
-
-/** This notification will be posted every time the user swipes a card. The card is available through the userInfo object.
- */
-extern NSString *const kRoverDidSwipeCardNotification;
 
 @class RVConfig;
 
@@ -75,21 +36,17 @@ extern NSString *const kRoverDidSwipeCardNotification;
  */
 + (Rover *)shared;
 
-/** Rover framework configuration
+/** A boolean flag indicating weather user is currently visiting one of your locations.
  */
-//@property (readonly, strong, nonatomic) RVConfig *config;
+@property (nonatomic, readonly) BOOL isCurrentlyVisiting;
 
 /** After a customer enters a location a new RVVisit object will be retrieved from the Rover platform and can be accessed through this property.
  */
-@property (readonly, strong, nonatomic) RVVisit *currentVisit;
+@property (readonly, strong, nonatomic) RVVisit *currentVisit DEPRECATED_ATTRIBUTE;
 
 /** The customer object. You can set the name, email and external customer ID for your customer and it will be persisted to the server on the next visit.
  */
 @property (readonly, strong, nonatomic) RVCustomer *customer;
-
-/** Retrieve a list of all cards the customer has saved.
- */
-- (void)savedCards:(void (^)(NSArray *cards, NSString *error))block;
 
 /** After the framework has been initialized call startMonitoring to begin monitoring for your beacons. You must call the setApplicationID:beaconUUIDs: method before you can start monitoring.
  */
@@ -129,10 +86,6 @@ extern NSString *const kRoverDidSwipeCardNotification;
  */
 @interface RVConfig : NSObject
 
-/** The Application ID found on the settings page of the [Rover Admin Console](http://app.roverlabs.co/).
- */
-@property (strong, nonatomic) NSString *applicationID;
-
 /** Use the addBeaconUUID: to add a beacon uuid to this array.
  */
 @property (strong, nonatomic, readonly) NSArray *beaconUUIDs;
@@ -148,18 +101,6 @@ extern NSString *const kRoverDidSwipeCardNotification;
 /** Indicates whether Rover should automatically display the modal dialog when the customer visits a location. The default value is YES.
  */
 @property (nonatomic) BOOL autoPresentModal;
-
-/** Blur radius for the modal backdrop.
- */
-@property (nonatomic) NSUInteger modalBackdropBlurRadius;
-
-/** Tint color for the modal backdrop.
- */
-@property (nonatomic, strong) UIColor *modalBackdropTintColor;
-
-/** Don't change this.
- */
-@property (strong, nonatomic) NSString *serverURL;
 
 /** Sandbox mode. Visits will not be tracked when set to YES.
  */

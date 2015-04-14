@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.version          = "0.30.7"
   s.summary          = "Rover iOS SDK for developing apps using the Rover platform."
   s.description      = <<-DESC
-                       The Rover iOS SDK enables beacon detection and communication with the Rover platform. 
+                       The Rover iOS SDK enables beacon (iBeacon) detection and communication with the Rover platform. 
                        Requires an account with [www.roverlabs.co](http://www.roverlabs.co/). 
                        To integrate after adding this pod, continue with "Connect your app to Rover" in the [documentation](http://docs.roverlabs.co/v1.0/docs/getting-started).
                        DESC
@@ -17,7 +17,7 @@ Pod::Spec.new do |s|
   s.platform     = :ios, '7.0'
   s.requires_arc = true
 
-  s.source_files = 'Pod/Classes/**/*.{h,m}'
+  s.source_files = ['Pod/Classes/*.{h,m}']
   s.resource_bundles = {
     'Rover' => ['Pod/Assets/*.png']
   }
@@ -25,54 +25,24 @@ Pod::Spec.new do |s|
   s.frameworks = 'Accelerate', 'CoreLocation'
   s.dependency 'RSBarcodes', '~> 0.1'
   s.dependency 'UIActivityIndicator-for-SDWebImage', '~> 1.2'
- # s.dependency 'SDWebImage', :git => 'git@github.com:ata-n/SDWebImage.git', :branch => 'master'
 
-  #s.subspec 'RXManager' do |ss|
-  #  ss.source_files = 'Pod/Classes/RXManager'
-  #end
+  s.subspec 'UI' do |ss|
+    ss.source_files = 'Pod/Classes/UI/**/*.{h,m}'
+    ss.dependency 'Rover/Model'
+  end
 
-  
-  # s.subspec 'Networking' do |ss|
-  #   ss.dependency 'Rover/Models'
-  #   ss.source_files = 'Pod/Classes/Networking'
-  # end
-  #
-  # s.subspec 'Location' do |ss|
-  #   ss.source_files = 'Pod/Classes/Location'
-  # end
-  #
-  # s.subspec 'Models' do |ss|
-  #   ss.dependency 'Rover/Networking'
-  #   ss.dependency 'Rover/Utilities'
-  #   ss.source_files = 'Pod/Classes/Models'
-  # end
-  #
-  # s.subspec 'Utilities' do |ss|
-  #   ss.source_files = 'Pod/Classes/Utilities'
-  # end
-  #
-  # s.subspec 'Controllers' do |ss|
-  #   ss.source_files = 'Pod/Classes/Controllers'
-  # end
-  #
-  # s.subspec 'Notifications' do |ss|
-  #   ss.source_files = 'Pod/Classes/Notifications'
-  # end
-  #
-  # s.subspec 'Views' do |ss|
-  #   ss.subspec 'Card' do |sss|
-  #     sss.source_files = 'Pod/Classes/Views/Card'
-  #   end
-  #
-  #   ss.subspec 'CardDeck' do |sss|
-  #     sss.dependency 'Rover/Views/Card'
-  #     sss.source_files = 'Pod/Classes/Views/Card Deck'
-  #   end
-  #
-  #   ss.subspec 'Modal' do |sss|
-  #     sss.dependency 'Rover/Views/CardDeck'
-  #     sss.source_files = 'Pod/Classes/Views/Modal'
-  #   end
-  # end
-  
+  s.subspec 'Model' do |ss|
+   ss.source_files = 'Pod/Classes/Model/**/*.{h,m}'
+  end
+
+  s.subspec 'Core' do |ss|
+   ss.source_files = ['Pod/Classes/Core/**/*.{h,m}']
+   ss.dependency 'Rover/Model'
+  end
+
+	s.subspec 'Networking' do |ss|
+	 ss.source_files = ['Pod/Classes/Networking/**/*.{h,m}']
+	 ss.dependency 'Rover/Model'
+  end
+
 end

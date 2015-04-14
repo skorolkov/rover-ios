@@ -7,6 +7,8 @@
 //
 
 #import "RVNetworkingManager.h"
+#import "RVVisit.h"
+#import "RVModelProject.h"
 
 NSString *const kRVNetworkingManagerErrorDomain = @"co.roverlabs.error";
 NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs.error.response";
@@ -42,7 +44,31 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
         self.sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
         self.session = [NSURLSession sessionWithConfiguration:self.sessionConfig];
         
-        _loggingEnabled = NO;
+        // Load defaults
+        
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"Rover" ofType:@"plist"];
+        NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:path];
+        
+        id serverURL = [plist objectForKey:@"serverURL"];
+        if (serverURL) {
+            if (![serverURL isKindOfClass:[NSString class]]) {
+                NSLog(@"%@ warning serverURL property in Rover.plist is expected to be a string", self);
+            } else if ([serverURL length]) {
+                _serverURL = [NSURL URLWithString:serverURL];
+            }
+        } else {
+            _serverURL = [NSURL URLWithString:@"http://api.roverlabs.co/mobile/v2"];
+        }
+        
+        id applicationID = [plist objectForKey:@"applicationID"];
+        if (applicationID) {
+            if (![applicationID isKindOfClass:[NSString class]]) {
+                NSLog(@"%@ warning applicationID property in Rover.plist is expected to be a string", self);
+            } else if ([applicationID length]) {
+                _applicationID = applicationID;
+            }
+        }
+        
     }
     return self;
 }
@@ -57,7 +83,7 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
 #pragma mark - Utility Methods
 
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method path:(NSString *)path parameters:(NSDictionary *)parameters {
-    NSURL *URL = [self.baseURL URLByAppendingPathComponent:path];
+    NSURL *URL = [self.serverURL URLByAppendingPathComponent:path];
     
     // Add query string
     if (parameters && [method isEqualToString:@"GET"]) {
@@ -79,8 +105,8 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    if (self.authToken) {
-        [request setValue:self.authToken forHTTPHeaderField:@"Authorization"];
+    if (self.applicationID) {
+        [request setValue:[NSString stringWithFormat:@"Bearer %@", self.applicationID] forHTTPHeaderField:@"Authorization"];
     }
     
     return request;
@@ -157,6 +183,53 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
                                NSURLErrorFailingURLErrorKey:response.URL};
     
     return [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadServerResponse userInfo:userInfo];
+}
+
+#pragma mark - Visit Create
+
+- (void)postVisit:(RVVisit *)visit {
+    // Need a synchronous call
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [self sendRequestWithMethod:@"POST" path:@"visits" parameters:[visit toJSON] success:^(NSDictionary *data) {
+        NSDictionary *JSON = [data objectForKey:@"visit"];
+        
+        if (JSON) {
+            [visit updateWithJSON:JSON];
+        }
+        
+        dispatch_semaphore_signal(semaphore);
+    } failure:^(NSError *error) {
+        NSString *reason = [error.userInfo objectForKey:NSLocalizedDescriptionKey];
+        NSLog(@"ROVER-ERROR: Post /visits failed: %@", reason);
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
+
+#pragma mark - Event Tracking
+
+- (void)trackEvent:(NSString *)event params:(NSDictionary *)params visit:(RVVisit *)visit {
+    
+    if (visit.simulate) {
+        return;
+    }
+    
+    NSArray *eventComponents = [event componentsSeparatedByString:@"."];
+    
+    NSMutableDictionary *eventParams = [NSMutableDictionary dictionaryWithDictionary:@{@"object": eventComponents[0],
+                                                                                       @"action": eventComponents[1],
+                                                                                       @"timestamp": [[visit dateFormatter] stringFromDate:[NSDate date]]}];
+    
+    [eventParams addEntriesFromDictionary:params];
+    
+    NSString *path = [NSString stringWithFormat:@"visits/%@/events", visit.ID];
+    
+    [[RVNetworkingManager sharedManager] sendRequestWithMethod:@"POST" path:path parameters:eventParams success:^(NSDictionary *data) {
+    } failure:^(NSError *error) {
+        //NSLog(@"%@ failed: %@",event, error);
+    }];
 }
 
 @end
