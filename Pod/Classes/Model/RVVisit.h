@@ -15,6 +15,7 @@
 @class CLBeaconRegion;
 
 extern NSString *const kRoverDidCreateVisitNotification;
+extern NSString *const kRoverDidVisitTouchpointNotification;
 
 /** Represents a vist to a real-world physical location by a customer. A visit object will be created by the Rover Platform and delivered to the SDK when a customer enters a location.
  */

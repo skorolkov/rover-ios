@@ -8,7 +8,6 @@
 
 #import "RVVisitController.h"
 #import "RVLog.h"
-#import "RVNotifications.h"
 #import "RVVisit.h"
 #import "RVTouchpoint.h"
 #import "RVCard.h"
@@ -46,8 +45,8 @@
     self = [super init];
     if (self) {
         [self observeForTouchpointChanges];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterNewLocation:) name:kRoverWillPostVisitNotification object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterNewLocation:) name:kRoverDidEnterLocationNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(willEnterNewLocation:) name:kRoverWillPostVisitNotification object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(didEnterNewLocation:) name:kRoverDidEnterLocationNotification object:nil];
     }
     return self;
 }

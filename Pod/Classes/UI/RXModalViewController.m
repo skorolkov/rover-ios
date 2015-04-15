@@ -6,8 +6,6 @@
 //
 //
 
-#import "RXConfig.h"
-
 #import "RXModalViewController.h"
 #import "RXImageEffects.h"
 #import "RXCardViewCell.h"
@@ -39,18 +37,19 @@
     if (self) {
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
         //self.modalPresentationStyle = UIModalPresentationCustom;
-        self.backdropBlurRadius = [RXConfig defaultConfig].modalBackdropBlurRadius;
-        self.backdropTintColor = [RXConfig defaultConfig].modalBackdropTintColor;
         
-        [self createBlur];
+
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
     [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+        [self createBlur];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -134,9 +133,15 @@
     }
     
     if (!_hasDisplayedInitialAnimation) {
-
+        
+        NSInteger numberOfRowsInFirstSection = [self tableView:tableView numberOfRowsInSection:0];
+        CGFloat heightOffset = 0;
+        if (numberOfRowsInFirstSection > 0) {
+            heightOffset = [self tableView:tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]];
+        }
+        
         NSInteger cellIndex = (indexPath.section * [self tableView:tableView numberOfRowsInSection:indexPath.section]) + indexPath.row;
-        cell.transform = CGAffineTransformMakeTranslation(0, self.tableView.frame.size.height - [self tableView:tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0]]);
+        cell.transform = CGAffineTransformMakeTranslation(0, self.tableView.frame.size.height - heightOffset);
         [UIView animateWithDuration:0.7
                               delay:(0 + (cellIndex * 0.2))
                             options:UIViewAnimationOptionCurveEaseInOut

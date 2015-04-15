@@ -21,7 +21,6 @@
 		0DD6BAB17FF0D2A35582CAF4 /* RXModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C3358F8FB5D196D3B0C2ABA9 /* RXModalViewController.m */; };
 		0E0D26FE8A5E1DC7FF3F67F4 /* RVCard.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F19C49ABCAA7F2092B42098 /* RVCard.h */; };
 		0E5104827683B54494747844 /* RVModel.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A07BBB20AE8FD30DDD557F8 /* RVModel.h */; };
-		0F681A641FC96225A53B1135 /* RVNotifications.m in Sources */ = {isa = PBXBuildFile; fileRef = AF992EE6594C26A68BCB90E4 /* RVNotifications.m */; };
 		118FCF526B205B4CB3EA27B3 /* UIImageView+UIActivityIndicatorForSDWebImage.h in Headers */ = {isa = PBXBuildFile; fileRef = B5700A9ED64F6F2974CD7D67 /* UIImageView+UIActivityIndicatorForSDWebImage.h */; };
 		13BD389CC259D6272BA809D4 /* RXTextView.h in Headers */ = {isa = PBXBuildFile; fileRef = CAF299DB46DCD91D4D5C042B /* RXTextView.h */; };
 		1434B3E366E249F50BFCD8BF /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F022786F9203499047DF2FD1 /* UIImageView+WebCache.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
@@ -42,6 +41,8 @@
 		3632EE998D1D27D0D95DD0FB /* RSUPCEGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = B9C1486B60AB23E5A522FFE8 /* RSUPCEGenerator.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		37E9D31C334001C46F34D957 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 66A374AA43FA1750A49B290D /* NSData+ImageContentType.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		387577C2C793997109EF30A8 /* UIImageView+UIActivityIndicatorForSDWebImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B5A68DFFAFA0A91C7F575C1B /* UIImageView+UIActivityIndicatorForSDWebImage.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
+		3DB33A181ADEBBBE005F54E3 /* RVConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 3DB33A161ADEBBBE005F54E3 /* RVConfig.h */; };
+		3DB33A191ADEBBBE005F54E3 /* RVConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB33A171ADEBBBE005F54E3 /* RVConfig.m */; };
 		3EFAE47B7FE6438FAC859C48 /* SDWebImageOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4AE8B3F0F44E061C5570CC2F /* SDWebImageOperation.h */; };
 		41B424B2FBAF16DE4102C857 /* RSCode93Generator.m in Sources */ = {isa = PBXBuildFile; fileRef = 31F1221F352A51B1F8609BB4 /* RSCode93Generator.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		41C53ABA6B8C18866293B24F /* RVNotificationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = DE6E3E1A6E9F2821A7D4C3F0 /* RVNotificationCenter.m */; };
@@ -89,10 +90,8 @@
 		88D709C2F2F882AF5FA54D7E /* RSCodeView.h in Headers */ = {isa = PBXBuildFile; fileRef = 80563B443FD227AEA3555303 /* RSCodeView.h */; };
 		8B2E8BCD2F6E952217114448 /* RVViewDefinition.h in Headers */ = {isa = PBXBuildFile; fileRef = FB6FD0C46A258A9040ACA295 /* RVViewDefinition.h */; };
 		8DB987246B6D6F2D55088F54 /* RVHeaderBlock.h in Headers */ = {isa = PBXBuildFile; fileRef = 4123AD743E73C784791D4845 /* RVHeaderBlock.h */; };
-		90B863143673D3A808C8D327 /* RXConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = DB3466A3F03B0A70EB02B8B9 /* RXConfig.m */; };
 		926BA19EFE791E51D65A7BB0 /* Rover.m in Sources */ = {isa = PBXBuildFile; fileRef = C9F6E44FC0DBAA3EAB7EE95E /* Rover.m */; };
 		92E8A226CEC4066D32695D9E /* RXImageEffects.h in Headers */ = {isa = PBXBuildFile; fileRef = 38D990B486A43D95F61D80EF /* RXImageEffects.h */; };
-		93BCD35157DE5ED54FEEFDBA /* RVNotifications.h in Headers */ = {isa = PBXBuildFile; fileRef = DCF535F777536C9665B88F30 /* RVNotifications.h */; };
 		99BD57EEF9BA74DB021AB8F9 /* SDWebImageDownloader.h in Headers */ = {isa = PBXBuildFile; fileRef = 87BAEDD2FBA22B291951705B /* SDWebImageDownloader.h */; };
 		99CAF071D519E52E5138C33D /* RVRegionManager.h in Headers */ = {isa = PBXBuildFile; fileRef = B3A3B17619D77C3F9C7D9B76 /* RVRegionManager.h */; };
 		99E17C1F5B0CB9EBF136B749 /* RXCloseButton.h in Headers */ = {isa = PBXBuildFile; fileRef = AAB81CDA70F62E7F1B1C5B43 /* RXCloseButton.h */; };
@@ -114,7 +113,6 @@
 		B9AFAD324A31F9D3C07BDBF4 /* RXUpArrow.h in Headers */ = {isa = PBXBuildFile; fileRef = 70C31DCF28722EB8E985BD35 /* RXUpArrow.h */; };
 		B9FBD4A805FA2A57F323C052 /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CE5B2E617B2C049FA9FA372 /* CoreImage.framework */; };
 		BC7A0445DF4D04733A096DA3 /* RSCode39Generator.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EC39F1BA9662EB690E24F56 /* RSCode39Generator.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
-		BCE36957BB6F850142003685 /* RXConfig.h in Headers */ = {isa = PBXBuildFile; fileRef = 069ACBE5C432EAB36936C5B4 /* RXConfig.h */; };
 		BD044D3DE35EEEFED3E6F89B /* UIImageView+WebCache.h in Headers */ = {isa = PBXBuildFile; fileRef = DE5A655EF4269C809F1FA795 /* UIImageView+WebCache.h */; };
 		BDBF8774DF8FC6BA83E17CDC /* RVLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 762BC3D6558BEFF69640F1CB /* RVLog.m */; };
 		BEC405726C68864005183EF4 /* RVTextBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = B55D9CFC64B1609250BF5D5A /* RVTextBlock.m */; };
@@ -228,7 +226,6 @@
 		01F0F462D46F74F26923C21F /* RXTextView.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RXTextView.m; sourceTree = "<group>"; };
 		038A58B286C6815B006EB08F /* RSExtendedCode39Generator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RSExtendedCode39Generator.m; path = RSBarcodes/RSExtendedCode39Generator.m; sourceTree = "<group>"; };
 		064A81F153479FCFF378920E /* Podfile */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		069ACBE5C432EAB36936C5B4 /* RXConfig.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RXConfig.h; sourceTree = "<group>"; };
 		088EA9B6BAC95625DDCC7D22 /* SDWebImageCompat.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageCompat.m; path = SDWebImage/SDWebImageCompat.m; sourceTree = "<group>"; };
 		0893D9046DF7E48FD7BCE66C /* RVBlock.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RVBlock.m; sourceTree = "<group>"; };
 		08DB5DBC78B5861E403FEFCD /* Pods-Rover-UIActivityIndicator-for-SDWebImage-Private.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Rover-UIActivityIndicator-for-SDWebImage-Private.xcconfig"; sourceTree = "<group>"; };
@@ -266,6 +263,8 @@
 		3A07BBB20AE8FD30DDD557F8 /* RVModel.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RVModel.h; sourceTree = "<group>"; };
 		3C3A15C04DB16273C8803883 /* SDWebImageManager.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SDWebImageManager.m; path = SDWebImage/SDWebImageManager.m; sourceTree = "<group>"; };
 		3CA299AA6150F71B94A8100B /* RXUpArrow.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RXUpArrow.m; sourceTree = "<group>"; };
+		3DB33A161ADEBBBE005F54E3 /* RVConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RVConfig.h; sourceTree = "<group>"; };
+		3DB33A171ADEBBBE005F54E3 /* RVConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RVConfig.m; sourceTree = "<group>"; };
 		3EC2A8510AE0F7D6EB2559EC /* RSEAN13Generator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RSEAN13Generator.m; path = RSBarcodes/RSEAN13Generator.m; sourceTree = "<group>"; };
 		3F5000CD566DCBA371538A87 /* Pods-Rover-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Rover-acknowledgements.plist"; sourceTree = "<group>"; };
 		408C8AFFD4337361B0C2377B /* RVCustomer.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RVCustomer.m; sourceTree = "<group>"; };
@@ -340,7 +339,6 @@
 		ABF67452D3D21447FAA66320 /* Pods-Rover-SDWebImage.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Rover-SDWebImage.xcconfig"; sourceTree = "<group>"; };
 		AD47FEF84C1D79B8AB88F0AE /* Pods-Rover.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Rover.release.xcconfig"; sourceTree = "<group>"; };
 		AE03691CD74E2723F1D74E4C /* RVHeaderBlock.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RVHeaderBlock.m; sourceTree = "<group>"; };
-		AF992EE6594C26A68BCB90E4 /* RVNotifications.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RVNotifications.m; sourceTree = "<group>"; };
 		B1A5711E5B5C432C6349A2E6 /* RVLocation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RVLocation.h; sourceTree = "<group>"; };
 		B269A1E0F0BECC05C7AE8CCD /* RSEAN8Generator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RSEAN8Generator.h; path = RSBarcodes/RSEAN8Generator.h; sourceTree = "<group>"; };
 		B3A3B17619D77C3F9C7D9B76 /* RVRegionManager.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RVRegionManager.h; sourceTree = "<group>"; };
@@ -378,9 +376,7 @@
 		D68402057197F98BD2BEFCEA /* Pods-Rover-environment.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Rover-environment.h"; sourceTree = "<group>"; };
 		D9AFD9B2783979C5416F1A1E /* RSITF14Generator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RSITF14Generator.h; path = RSBarcodes/RSITF14Generator.h; sourceTree = "<group>"; };
 		D9CB86CDC92D7571AB29B23F /* RVBlock.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RVBlock.h; sourceTree = "<group>"; };
-		DB3466A3F03B0A70EB02B8B9 /* RXConfig.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RXConfig.m; sourceTree = "<group>"; };
 		DBFA6F762DCD53AE23CD4AD7 /* Pods-Rover-Rover.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Rover-Rover.xcconfig"; sourceTree = "<group>"; };
-		DCF535F777536C9665B88F30 /* RVNotifications.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RVNotifications.h; sourceTree = "<group>"; };
 		DE5A655EF4269C809F1FA795 /* UIImageView+WebCache.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImageView+WebCache.h"; path = "SDWebImage/UIImageView+WebCache.h"; sourceTree = "<group>"; };
 		DE6E3E1A6E9F2821A7D4C3F0 /* RVNotificationCenter.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RVNotificationCenter.m; sourceTree = "<group>"; };
 		DF21A608D8EBF820ED41A33D /* RVVisitController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RVVisitController.m; sourceTree = "<group>"; };
@@ -576,8 +572,6 @@
 				3A07BBB20AE8FD30DDD557F8 /* RVModel.h */,
 				FE20FC60342EA1B8CDBB037D /* RVModel.m */,
 				51B4C841ED211B325CF84493 /* RVModelProject.h */,
-				DCF535F777536C9665B88F30 /* RVNotifications.h */,
-				AF992EE6594C26A68BCB90E4 /* RVNotifications.m */,
 				11E7B96608F140F76CF52C2F /* RVOrganization.h */,
 				635A92964743E71E815AB9BE /* RVOrganization.m */,
 				34A164DF1AEED6235A089061 /* RVTextBlock.h */,
@@ -862,6 +856,8 @@
 			children = (
 				2748F1FBD3234AC0237FA378 /* Rover.h */,
 				C9F6E44FC0DBAA3EAB7EE95E /* Rover.m */,
+				3DB33A161ADEBBBE005F54E3 /* RVConfig.h */,
+				3DB33A171ADEBBBE005F54E3 /* RVConfig.m */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -900,8 +896,6 @@
 				BA158B799A928E743C184340 /* RXCardViewCell.m */,
 				AAB81CDA70F62E7F1B1C5B43 /* RXCloseButton.h */,
 				8DF07E982CD27A40210B3ED7 /* RXCloseButton.m */,
-				069ACBE5C432EAB36936C5B4 /* RXConfig.h */,
-				DB3466A3F03B0A70EB02B8B9 /* RXConfig.m */,
 				C51A41C7331D042D8A88B0E3 /* RXDetailViewController.h */,
 				4108F4D09398EBB9023D81F9 /* RXDetailViewController.m */,
 				38D990B486A43D95F61D80EF /* RXImageEffects.h */,
@@ -967,6 +961,7 @@
 				D05A47FA16C365F69F04DACB /* RVBarcodeBlock.h in Headers */,
 				78B8777C2C07BC6324E44BBC /* RVBlock.h in Headers */,
 				5FC5C7CAF1C8F1CC357CB883 /* RVButtonBlock.h in Headers */,
+				3DB33A181ADEBBBE005F54E3 /* RVConfig.h in Headers */,
 				0E0D26FE8A5E1DC7FF3F67F4 /* RVCard.h in Headers */,
 				717531E583138922380605D1 /* RVCardProject.h in Headers */,
 				6630259D5E76C660289CB319 /* RVCustomer.h in Headers */,
@@ -980,7 +975,6 @@
 				CEFA8C1EF9CD420F0F1E573E /* RVModelProject.h in Headers */,
 				FDA4C89F81BB753483072E7D /* RVNetworkingManager.h in Headers */,
 				9FC1285B3D3B155429C4CA68 /* RVNotificationCenter.h in Headers */,
-				93BCD35157DE5ED54FEEFDBA /* RVNotifications.h in Headers */,
 				ADC591BFC4842A19CAE7CACC /* RVOrganization.h in Headers */,
 				99CAF071D519E52E5138C33D /* RVRegionManager.h in Headers */,
 				DBFA9F32D42DAE1FD37AE248 /* RVTextBlock.h in Headers */,
@@ -993,7 +987,6 @@
 				01FC2174CA22124DC611D131 /* RXBlockView.h in Headers */,
 				74D18745D5A11C9F266F4F16 /* RXCardViewCell.h in Headers */,
 				99E17C1F5B0CB9EBF136B749 /* RXCloseButton.h in Headers */,
-				BCE36957BB6F850142003685 /* RXConfig.h in Headers */,
 				A50F175CC66C62B7E36D8FDB /* RXDetailViewController.h in Headers */,
 				92E8A226CEC4066D32695D9E /* RXImageEffects.h in Headers */,
 				D7B8C7D2FBCEF6163EB93270 /* RXModalViewController.h in Headers */,
@@ -1210,7 +1203,6 @@
 				C714F8037DAEF14AF7C27E9E /* RVModel.m in Sources */,
 				CA35F622D45D916A7525D4CF /* RVNetworkingManager.m in Sources */,
 				41C53ABA6B8C18866293B24F /* RVNotificationCenter.m in Sources */,
-				0F681A641FC96225A53B1135 /* RVNotifications.m in Sources */,
 				A411287CDDEEA3856F7C79AF /* RVOrganization.m in Sources */,
 				4944DA34EE6ECF4558337D98 /* RVRegionManager.m in Sources */,
 				BEC405726C68864005183EF4 /* RVTextBlock.m in Sources */,
@@ -1223,10 +1215,10 @@
 				C29B34CFD36C3A49E87E2CF1 /* RXBlockView.m in Sources */,
 				83333247431E2EB5D31F7952 /* RXCardViewCell.m in Sources */,
 				CB34B4B78D37ABB3FC353EC7 /* RXCloseButton.m in Sources */,
-				90B863143673D3A808C8D327 /* RXConfig.m in Sources */,
 				C9D2AF5D8D3C6C89F37FD45F /* RXDetailViewController.m in Sources */,
 				F5FF5A48DAA6525A224F6291 /* RXImageEffects.m in Sources */,
 				0DD6BAB17FF0D2A35582CAF4 /* RXModalViewController.m in Sources */,
+				3DB33A191ADEBBBE005F54E3 /* RVConfig.m in Sources */,
 				A884604118350C758A258845 /* RXTextView.m in Sources */,
 				ED49B1343A8388008127ABE8 /* RXUpArrow.m in Sources */,
 				FB162A7BE286455D57CB4752 /* RXVisitViewController.m in Sources */,

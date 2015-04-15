@@ -8,19 +8,28 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+#import "RVConfig.h"
+
 // Models
 #import "RVModel.h"
 #import "RVCustomer.h"
 #import "RVVisit.h"
 #import "RVCard.h"
 #import "RVTouchpoint.h"
-#import "RVNotifications.h"
-
-// Controllers
-#import "RVVisitController.h"
+#import "RVLocation.h"
+#import "RVOrganization.h"
 
 
+/** This notification will be posted before the modal view controller is presented.
+ */
+extern NSString *const kRoverWillPresentModalNotification;
 
+/** This notification will be posted after the modal view controller is presented.
+ */
+extern NSString *const kRoverDidPresentModalNotification;
+
+
+@protocol RoverDelegate;
 
 @class RVConfig;
 
@@ -36,13 +45,13 @@
  */
 + (Rover *)shared;
 
-/** A boolean flag indicating weather user is currently visiting one of your locations.
+/** The Rover delegate.
  */
-@property (nonatomic, readonly) BOOL isCurrentlyVisiting;
+@property (nonatomic, weak) id <RoverDelegate> delegate;
 
 /** After a customer enters a location a new RVVisit object will be retrieved from the Rover platform and can be accessed through this property.
  */
-@property (readonly, strong, nonatomic) RVVisit *currentVisit DEPRECATED_ATTRIBUTE;
+@property (readonly, strong, nonatomic) RVVisit *currentVisit;
 
 /** The customer object. You can set the name, email and external customer ID for your customer and it will be persisted to the server on the next visit.
  */
@@ -64,10 +73,6 @@
  */
 - (void)presentModal;
 
-/** Present the modal view controller with a subset of cards. E.g. only show unread cards.
- */
-//- (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options;
-
 /** You can use this method to simulate your app coming in range of a particular beacon.
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
  */
@@ -75,48 +80,26 @@
 
 /** Convenience method to find the current view controller
  */
-
 + (UIViewController *)findCurrentViewController:(UIViewController *)vc;
 
 @end
 
 
+@protocol RoverDelegate <NSObject>
 
-/** Contains all the configuration options used to initialize the Rover framework.
- */
-@interface RVConfig : NSObject
+@optional
+- (void)roverVisit:(RVVisit *)visit didEnterLocation:(RVLocation *)location;
+- (void)roverVisit:(RVVisit *)visit didEnterTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)roverVisit:(RVVisit *)visit didExitTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)roverVisit:(RVVisit *)visit didPotentiallyExitLocation:(RVLocation *)location aliveForAnother:(NSTimeInterval)keepAlive;
+- (void)roverVisitDidExpire:(RVVisit *)visit;
 
-/** Use the addBeaconUUID: to add a beacon uuid to this array.
- */
-@property (strong, nonatomic, readonly) NSArray *beaconUUIDs;
+- (BOOL)roverShouldCreateVisit:(RVVisit *)visit;
+- (void)roverDidCreateVisit:(RVVisit *)visit;
 
-/** Set the notification types required for the app (optional). This value defaults to badge, alert and sound, so it's only necessary to set it if you want to add or remove types.
- */
-@property (nonatomic) UIUserNotificationType allowedUserNotificationTypes;
-
-/** The sound used for notifications. By default this is set to UILocalNotificationDefaultSoundName.
- */
-@property (nonatomic, copy) NSString *notificationSoundName;
-
-/** Indicates whether Rover should automatically display the modal dialog when the customer visits a location. The default value is YES.
- */
-@property (nonatomic) BOOL autoPresentModal;
-
-/** Sandbox mode. Visits will not be tracked when set to YES.
- */
-@property (nonatomic, assign) BOOL sandboxMode;
-
-/** Register a UIViewController subclass to launch on RoverDidEnterLocationNotification.
- */
-@property (nonatomic, strong, setter=registerModalViewControllerClass:) Class modalViewControllerClass;
-
-/** Create an RVConfig instance with the default values and override as necessary.
- */
-+ (RVConfig *)defaultConfig;
-
-/** Add a beacon UUID found on the settings page of the [Rover Admin Console](http://app.roverlabs.co/). Add a separate UUID for each organization your app is configured to serve content from. For the majority of applications there will only be one UUID.
- */
-- (void)addBeaconUUID:(NSString *)UUIDString;
-
+- (void)roverVisit:(RVVisit *)visit didDisplayCard:(RVCard *)card;
+- (void)roverVisit:(RVVisit *)visit didDiscardCard:(RVCard *)card;
+- (void)roverVisit:(RVVisit *)visit didClickCard:(RVCard *)card withURL:(NSURL *)url;
 
 @end
+

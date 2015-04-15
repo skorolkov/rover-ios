@@ -43,32 +43,6 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
     if (self) {
         self.sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
         self.session = [NSURLSession sessionWithConfiguration:self.sessionConfig];
-        
-        // Load defaults
-        
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"Rover" ofType:@"plist"];
-        NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:path];
-        
-        id serverURL = [plist objectForKey:@"serverURL"];
-        if (serverURL) {
-            if (![serverURL isKindOfClass:[NSString class]]) {
-                NSLog(@"%@ warning serverURL property in Rover.plist is expected to be a string", self);
-            } else if ([serverURL length]) {
-                _serverURL = [NSURL URLWithString:serverURL];
-            }
-        } else {
-            _serverURL = [NSURL URLWithString:@"http://api.roverlabs.co/mobile/v2"];
-        }
-        
-        id applicationID = [plist objectForKey:@"applicationID"];
-        if (applicationID) {
-            if (![applicationID isKindOfClass:[NSString class]]) {
-                NSLog(@"%@ warning applicationID property in Rover.plist is expected to be a string", self);
-            } else if ([applicationID length]) {
-                _applicationID = applicationID;
-            }
-        }
-        
     }
     return self;
 }
@@ -83,7 +57,7 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
 #pragma mark - Utility Methods
 
 - (NSMutableURLRequest *)requestWithMethod:(NSString *)method path:(NSString *)path parameters:(NSDictionary *)parameters {
-    NSURL *URL = [self.serverURL URLByAppendingPathComponent:path];
+    NSURL *URL = [self.baseURL URLByAppendingPathComponent:path];
     
     // Add query string
     if (parameters && [method isEqualToString:@"GET"]) {
@@ -105,8 +79,8 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
-    if (self.applicationID) {
-        [request setValue:[NSString stringWithFormat:@"Bearer %@", self.applicationID] forHTTPHeaderField:@"Authorization"];
+    if (self.authToken) {
+        [request setValue:[NSString stringWithFormat:@"Bearer %@", self.authToken] forHTTPHeaderField:@"Authorization"];
     }
     
     return request;
@@ -202,6 +176,9 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
     } failure:^(NSError *error) {
         NSString *reason = [error.userInfo objectForKey:NSLocalizedDescriptionKey];
         NSLog(@"ROVER-ERROR: Post /visits failed: %@", reason);
+        
+        visit.valid = NO;
+        
         dispatch_semaphore_signal(semaphore);
     }];
     

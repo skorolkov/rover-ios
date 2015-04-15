@@ -17,13 +17,8 @@
  */
 + (id)sharedManager;
 
-/** The Application ID found on the settings page of the [Rover Admin Console](http://app.roverlabs.co/).
- */
-@property (strong, nonatomic) NSString *applicationID;
-
-/** Don't change this.
- */
-@property (strong, nonatomic) NSURL *serverURL;
+@property (strong, nonatomic) NSString *authToken;
+@property (strong, nonatomic) NSURL *baseURL;
 
 /** Sends an HTTP request to the Rover API server. This method is asynchronous.
  */

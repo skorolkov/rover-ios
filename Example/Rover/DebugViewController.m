@@ -35,6 +35,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:kRoverDidEnterLocationNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:UIApplicationDidBecomeActiveNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:kRoverDidExpireVisitNotification object:nil];
     
 
 }
@@ -54,10 +55,10 @@
 
 - (IBAction)simulateButtonPressed:(id)sender {
     NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"7931D3AA-299B-4A12-9FCC-D66F2C5D2462"];
-    [[Rover shared] simulateBeaconWithUUID:UUID major:18347 minor:23900];
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        [[Rover shared] simulateBeaconWithUUID:UUID major:18347 minor:23900];
-//    });
+    [[Rover shared] simulateBeaconWithUUID:UUID major:18347 minor:23905];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [[Rover shared] simulateBeaconWithUUID:UUID major:18347 minor:48847];
+    });
 }
 
 @end

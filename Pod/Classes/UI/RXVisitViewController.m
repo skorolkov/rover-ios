@@ -14,9 +14,11 @@
 #import "RVTouchpoint.h"
 #import "RVViewDefinition.h"
 #import "RVVisit.h"
-#import "RVNotifications.h"
 
 #define kCardViewAreaThreshold .5
+
+NSString *const kRoverWillDismissModalNotification = @"RoverWillDismissModalNotification";
+NSString *const kRoverDidDismissModalNotification = @"RoverDidDismissModalNotification";
 
 NSString *const kRoverDidDisplayCardNotification = @"RoverDidDisplayCardNotification";
 NSString *const kRoverDidSwipeCardNotification = @"RoverDidSwipeCardNotification";
@@ -71,6 +73,14 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     [self.tableView registerClass:[RXCardViewCell class] forCellReuseIdentifier:cellReuseIdentifier];
 }
 
+- (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillDismissModalNotification object:nil];
+    [super dismissViewControllerAnimated:flag completion:^{
+        [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidDismissModalNotification object:nil];
+        completion();
+    }];
+}
+
 //#pragma mark - Private Properties
 //
 //- (RVVisitController *)visitController {
@@ -87,9 +97,7 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 #pragma mark - Helper Methods
 
 - (RVCard *)cardAtIndexPath:(NSIndexPath *)indexPath {
-    NSLog(@"indexPath: %@", indexPath);
-    RVTouchpoint *touchpoint = self.visitedTouchpoints[indexPath.section];
-    NSLog(@"touchpoint: %@", touchpoint.cards);
+    RVTouchpoint *touchpoint = self.touchpoints[indexPath.section];
     RVCard *card = [self nonDeletedCardsFromCardsArray:touchpoint.cards][indexPath.row];
     return card;
 }
@@ -101,13 +109,11 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSLog(@"count: %lu", (unsigned long)self.visitedTouchpoints.count);
-    return self.visitedTouchpoints.count;
+    return self.touchpoints.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSLog(@"rows in section %ld, = %lu", (long)section, (unsigned long)[self nonDeletedCardsFromCardsArray:((RVTouchpoint *)self.visitedTouchpoints[section]).cards].count);
-    return [self nonDeletedCardsFromCardsArray:((RVTouchpoint *)self.visitedTouchpoints[section]).cards].count;
+    return [self nonDeletedCardsFromCardsArray:((RVTouchpoint *)self.touchpoints[section]).cards].count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -226,8 +232,8 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 }
 
 - (BOOL)hasNoCards {
-    for (RVTouchpoint *touchpoint in self.visitedTouchpoints) {
-        if ([self nonDeletedCardsFromCardsArray:touchpoint.cards] > 0) {
+    for (RVTouchpoint *touchpoint in self.touchpoints) {
+        if ([self nonDeletedCardsFromCardsArray:touchpoint.cards].count > 0) {
             return NO;
         }
     }
