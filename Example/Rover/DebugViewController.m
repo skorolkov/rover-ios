@@ -46,7 +46,7 @@
 
 
 - (void)toggleHeaderIfNecessary {
-    if ([Rover shared].isCurrentlyVisiting) {
+    if ([Rover shared].currentVisit) {
         _instoreHeaderView.hidden = NO;
     } else {
         _instoreHeaderView.hidden = YES;

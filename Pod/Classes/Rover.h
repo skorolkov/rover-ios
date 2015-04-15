@@ -10,7 +10,13 @@
 
 #import "RVConfig.h"
 
-// Models
+// Core
+#import "RVRegionManager.h"
+#import "RVVisitManager.h"
+
+// Model
+#import "RVCustomerProject.h"
+#import "RVLog.h"
 #import "RVModel.h"
 #import "RVCustomer.h"
 #import "RVVisit.h"
@@ -18,6 +24,15 @@
 #import "RVTouchpoint.h"
 #import "RVLocation.h"
 #import "RVOrganization.h"
+
+// UI
+#import "RXVisitViewController.h"
+#import "RXDetailViewController.h"
+#import "RXModalViewController.h"
+
+// Networking
+#import "RVNetworkingManager.h"
+#import "RVImagePrefetcher.h"
 
 
 /** This notification will be posted before the modal view controller is presented.

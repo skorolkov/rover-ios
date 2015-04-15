@@ -8,22 +8,7 @@
 
 #import "Rover.h"
 
-// Core
-#import "RVRegionManager.h"
-#import "RVVisitManager.h"
 
-// Model
-#import "RVCustomerProject.h"
-#import "RVLog.h"
-
-// UI
-#import "RXVisitViewController.h"
-#import "RXDetailViewController.h"
-#import "RXModalViewController.h"
-
-// Networking
-#import "RVNetworkingManager.h"
-#import "RVImagePrefetcher.h"
 
 
 NSString *const kRoverWillPresentModalNotification = @"RoverWillPresentModalNotification";

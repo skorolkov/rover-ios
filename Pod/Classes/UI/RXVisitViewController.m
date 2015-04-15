@@ -77,7 +77,9 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillDismissModalNotification object:nil];
     [super dismissViewControllerAnimated:flag completion:^{
         [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidDismissModalNotification object:nil];
-        completion();
+        if (completion) {
+            completion();
+        }
     }];
 }
 
