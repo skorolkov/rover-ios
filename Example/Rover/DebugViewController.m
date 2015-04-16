@@ -32,10 +32,10 @@
     
     [self.view addSubview:_instoreHeaderView];
     
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:kRoverDidEnterLocationNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:UIApplicationDidBecomeActiveNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:kRoverDidExpireVisitNotification object:nil];
+//    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:kRoverDidEnterLocationNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:UIApplicationDidBecomeActiveNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toggleHeaderIfNecessary) name:kRoverDidExpireVisitNotification object:nil];
     
 
 }

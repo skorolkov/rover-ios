@@ -17,15 +17,7 @@
 
 #define kCardViewAreaThreshold .5
 
-NSString *const kRoverWillDismissModalNotification = @"RoverWillDismissModalNotification";
-NSString *const kRoverDidDismissModalNotification = @"RoverDidDismissModalNotification";
-
-NSString *const kRoverDidDisplayCardNotification = @"RoverDidDisplayCardNotification";
-NSString *const kRoverDidSwipeCardNotification = @"RoverDidSwipeCardNotification";
-NSString *const kRoverDidClickCardNotification = @"RoverDidClickCardNotification";
-
 @interface RXVisitViewController () <RXCardViewCellDelegate>
-
 
 @end
 
@@ -39,6 +31,8 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 {
     self = [super init];
     if (self) {
+        _touchpoints = @[];
+        
         // Add tableView
         _tableView = [[UITableView alloc] init];
         _tableView.translatesAutoresizingMaskIntoConstraints = NO;
@@ -61,10 +55,6 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     return self;
 }
 
-//- (void)dealloc {
-//    _visitController = nil; // to call its dealloc method
-//}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -74,27 +64,18 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 }
 
 - (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion {
-    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverWillDismissModalNotification object:nil];
+    if ([self.delegate respondsToSelector:@selector(visitViewControllerWillGetDismissed:)]) {
+        [self.delegate visitViewControllerWillGetDismissed:self];
+    }
     [super dismissViewControllerAnimated:flag completion:^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidDismissModalNotification object:nil];
+        if ([self.delegate respondsToSelector:@selector(visitViewControllerDidGetDismissed:)]) {
+            [self.delegate visitViewControllerDidGetDismissed:self];
+        }
         if (completion) {
             completion();
         }
     }];
 }
-
-//#pragma mark - Private Properties
-//
-//- (RVVisitController *)visitController {
-//    if (_visitController) {
-//        return _visitController;
-//    }
-//    
-//    _visitController = [[RVVisitController alloc] init];
-//    _visitController.delegate = self;
-//    
-//    return _visitController;
-//}
 
 #pragma mark - Helper Methods
 
@@ -164,7 +145,9 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
         if (percentageInView > kCardViewAreaThreshold) {
             card.isViewed = YES;
             
-            [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidDisplayCardNotification object:nil userInfo:@{ @"card": card}];
+            if ([self.delegate respondsToSelector:@selector(visitViewController:didDisplayCard:)]) {
+                [self.delegate visitViewController:self didDisplayCard:card];
+            }
         }
     }
 }
@@ -179,14 +162,19 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     if ([self hasNoCards]) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
-    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidSwipeCardNotification object:nil userInfo:@{ @"card": card}];
+    
+    if ([self.delegate respondsToSelector:@selector(visitViewController:didDiscardCard:)]) {
+        [self.delegate visitViewController:self didDiscardCard:card];
+    }
 }
 
 - (BOOL)cardViewCell:(RXCardViewCell *)cell shouldOpenURL:(NSURL *)url {
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     RVCard *card = [self cardAtIndexPath:indexPath];
     
-    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidClickCardNotification object:nil userInfo:@{ @"card": card, @"url": url}];
+    if ([self.delegate respondsToSelector:@selector(visitViewController:didClickCard:URL:)]) {
+        [self.delegate visitViewController:self didClickCard:card URL:url];
+    }
     
     if ([url.scheme isEqualToString:@"rover"]) {
         if ([url.host isEqualToString:@"view"] && url.path.length > 1) {
@@ -210,7 +198,10 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 
     [self willAddTouchpoint:touchpoint];
     
-
+    NSMutableArray *touchpointsArray = [self.touchpoints mutableCopy];
+    [touchpointsArray insertObject:touchpoint atIndex:0];
+    
+    _touchpoints = [NSArray arrayWithArray:touchpointsArray];
     
     [self didAddTouchpoint:touchpoint];
 
@@ -221,7 +212,6 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 // Implement in subclass
 - (void)willAddTouchpoint:(RVTouchpoint *)touchpoint {}
 - (void)didAddTouchpoint:(RVTouchpoint *)touchpoint {
-    //[self.visitedTouchpoints insertObject:touchpoint atIndex:0];
     
     NSInteger rows = [self tableView:self.tableView numberOfRowsInSection:0];
     CGFloat yOffset = self.tableView.contentOffset.y;

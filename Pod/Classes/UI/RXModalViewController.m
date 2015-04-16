@@ -310,7 +310,7 @@
     _minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:0];
     _minIndexPathSection = 1;
     
-    if (touchpoint.cards.count > 0) {
+    if (self.isViewLoaded && touchpoint.cards.count > 0) {
         [self dropPill];
     }
 }

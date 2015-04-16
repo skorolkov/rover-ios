@@ -10,43 +10,24 @@
 #import "RVNotificationCenter.h"
 #import "RVLog.h"
 
-#define TWO_HOURS 7200
-
-NSString *const kRVRegionManagerDidEnterRegionNotification = @"RVRegionManagerDidEnterRegionNotification";
-NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDidExitRegionNotification";
 
 @interface RVRegionManager ()
 
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLLocationManager *specificLocationManager;
 @property (strong, nonatomic) NSDate *beaconDetectedAt;
-
-@property (readonly, nonatomic) NSTimeInterval timeSinceBeaconDetected; // This may not be needed anymore.
-
 @property (nonatomic, strong) NSSet *currentRegions;
 
 @end
 
 @implementation RVRegionManager
 
-#pragma mark - Class Methods
-
-+ (id)sharedManager {
-    static RVRegionManager *sharedManager = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sharedManager = [[self alloc] init];
-    });
-    
-    return sharedManager;
-}
-
 #pragma mark - Instance Methods
 
 - (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor {
     CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID major:major minor:minor identifier:[self identifierForUUID:UUID major:major minor:minor]];
-    [self postEnterNotification:beaconRegion];
-    [self postExitNotification:beaconRegion];
+    [self.delegate regionManager:self didEnterRegion:beaconRegion totalRegions:self.currentRegions];
+    [self.delegate regionManager:self didExitRegion:beaconRegion totalRegions:self.currentRegions];
 }
 
 #pragma mark - Properties
@@ -127,17 +108,6 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
     _specificRegions = nil;
 }
 
-#pragma mark - Notifications
-
-- (void)postEnterNotification:(CLBeaconRegion *)beaconRegion {
-    [[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidEnterRegionNotification object:self userInfo:@{ @"beaconRegion": beaconRegion}];
-}
-
-- (void)postExitNotification:(CLBeaconRegion *)beaconRegion {
-    [[RVNotificationCenter defaultCenter] postNotificationName:kRVRegionManagerDidExitRegionNotification object:self userInfo:@{ @"beaconRegion": beaconRegion,
-                                                                                                                                 @"allRegions": self.currentRegions}];
-}
-
 #pragma mark - Helper Methods
 
 - (void)setupBeaconRegionsForUUIDs:(NSArray *)UUIDs {
@@ -189,11 +159,11 @@ NSString *const kRVRegionManagerDidExitRegionNotification = @"RVRegionManagerDid
         self.currentRegions = regions;
         
         [exitedRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, BOOL *stop) {
-            [self postExitNotification:beaconRegion];
+            [self.delegate regionManager:self didExitRegion:beaconRegion totalRegions:self.currentRegions];
         }];
         
         [enteredRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, BOOL *stop) {
-            [self postEnterNotification:beaconRegion];
+            [self.delegate regionManager:self didEnterRegion:beaconRegion totalRegions:self.currentRegions];
         }];
         
 

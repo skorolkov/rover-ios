@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "RVModel.h"
 
 @class RVVisit;
 

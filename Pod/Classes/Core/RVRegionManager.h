@@ -9,13 +9,11 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
-extern NSString *const kRVRegionManagerDidEnterRegionNotification;
-extern NSString *const kRVRegionManagerDidExitRegionNotification;
+@protocol RVRegionManagerDelegate;
 
 @interface RVRegionManager : NSObject <CLLocationManagerDelegate>
 
-+ (id)sharedManager;
-
+@property (nonatomic, weak) id <RVRegionManagerDelegate> delegate;
 @property (strong, nonatomic) NSArray *beaconUUIDs;
 @property (strong, nonatomic) NSMutableArray *beaconRegions;
 @property (nonatomic, readonly) NSSet *currentRegions;
@@ -27,5 +25,13 @@ extern NSString *const kRVRegionManagerDidExitRegionNotification;
 - (void)stopMonitoringForAllSpecificRegions;
 
 - (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor;
+
+@end
+
+
+@protocol RVRegionManagerDelegate <NSObject>
+
+- (void)regionManager:(RVRegionManager *)manager didEnterRegion:(CLRegion *)region totalRegions:(NSSet *)regions;
+- (void)regionManager:(RVRegionManager *)manager didExitRegion:(CLRegion *)region totalRegions:(NSSet *)regions;
 
 @end

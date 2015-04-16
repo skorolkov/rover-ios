@@ -212,7 +212,7 @@
         return NO;
     }
     CGPoint translation = [gesture translationInView: self.superview];
-    return (fabsf(translation.x) > fabsf(translation.y));
+    return (fabs(translation.x) > fabs(translation.y));
 }
 
 #pragma mark - Layout Constraints

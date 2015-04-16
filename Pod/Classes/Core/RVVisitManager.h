@@ -8,38 +8,30 @@
 
 #import <Foundation/Foundation.h>
 
-//extern NSString *const kRVVisitManagerDidEnterLocationNotification;
-//extern NSString *const kRVVisitManagerDidPotentiallyExitLocationNotification;
-//extern NSString *const kRVVisitManagerDidExpireVisitNotification;
-//extern NSString *const kRVVisitManagerDidEnterTouchpointNotification;
-//extern NSString *const kRVVisitManagerDidExitTouchpointNotification;
-
-/** This notification will be posted when there are no more beacons in range.
- */
-extern NSString *const kRoverDidPotentiallyExitLocationNotification;
-
-/** This notification will be posted when the customer's visit has expired. A visit expires if no beacons are detected for keepAlive time after the kRoverDidPotentiallyExitLocationNotification notification.
- */
-extern NSString *const kRoverDidExpireVisitNotification;
-
-/** This notification will be posted when the customer exits a touchpoint region.
- */
-extern NSString *const kRoverDidExitTouchpointNotification;
-
-/** This notification will be posted when the customer enters a touchpoint region.
- */
-extern NSString *const kRoverDidEnterTouchpointNotification;
-
-/** This notification will be posted when the customer enters a location.
- */
-extern NSString *const kRoverDidEnterLocationNotification;
-
 @class RVVisit;
+@class RVLocation;
+@class RVTouchpoint;
+@protocol RVVisitManagerDelegate;
 
 @interface RVVisitManager : NSObject
 
-+ (id)sharedManager;
-
+@property (nonatomic, weak) NSObject <RVVisitManagerDelegate> *delegate;
+@property (strong, nonatomic, readonly) RVRegionManager *regionManager;
 @property (strong, nonatomic, readonly) RVVisit *latestVisit;
+
+@end
+
+@protocol RVVisitManagerDelegate <NSObject>
+
+@optional
+// NOT MAIN THREAD
+- (BOOL)visitManager:(RVVisitManager *)manager shouldCreateVisit:(RVVisit *)visit;
+
+- (void)visitManager:(RVVisitManager *)manager didEnterLocation:(RVLocation *)location visit:(RVVisit *)visit;
+- (void)visitManager:(RVVisitManager *)manager didPotentiallyExitLocation:(RVLocation *)location visit:(RVVisit *)visit;
+- (void)visitManager:(RVVisitManager *)manager didExpireVisit:(RVVisit *)visit;
+
+- (void)visitManager:(RVVisitManager *)manager didEnterTouchpoint:(RVTouchpoint *)touchpoint visit:(RVVisit *)visit;
+- (void)visitManager:(RVVisitManager *)manager didExitTouchpoint:(RVTouchpoint *)touchpoint visit:(RVVisit *)visit;
 
 @end

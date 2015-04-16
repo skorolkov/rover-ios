@@ -8,6 +8,7 @@
 
 #import "RVNetworkingManager.h"
 #import "RVVisit.h"
+// TODO: remove private headers, everything can be public
 #import "RVModelProject.h"
 
 NSString *const kRVNetworkingManagerErrorDomain = @"co.roverlabs.error";

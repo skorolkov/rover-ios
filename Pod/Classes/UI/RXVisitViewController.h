@@ -8,44 +8,37 @@
 
 #import <UIKit/UIKit.h>
 
-/** This notification will be posted before the modal view controller is dismissed.
- */
-extern NSString *const kRoverWillDismissModalNotification;
-
-/** This notification will be posted after the modal view controller is dismissed.
- */
-extern NSString *const kRoverDidDismissModalNotification;
-
-/** This notification will be posted every time a new card is shown to the user. The card is available through the userInfo object.
- */
-extern NSString *const kRoverDidDisplayCardNotification;
-
-/** This notification will be posted every time the user swipes a card. The card is available through the userInfo object.
- */
-extern NSString *const kRoverDidSwipeCardNotification;
-
-/** This notification will be posted every time the user clicks a link (Button/Image) on a card.
- */
-extern NSString *const kRoverDidClickCardNotification;
-
-
-
 @class RVTouchpoint;
 @class RXCardViewCell;
 @class RVCard;
+@protocol RXVisitViewControllerDelegate;
 
 @interface RXVisitViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
+@property (nonatomic, weak) id <RXVisitViewControllerDelegate> delegate;
 @property (nonatomic, strong, readonly) UITableView *tableView;
-@property (nonatomic, strong) NSArray *touchpoints;
-//@property (nonatomic, readonly) RVVisitController *visitController;
+@property (nonatomic, strong, readonly) NSArray *touchpoints;
 
 - (RVCard *)cardAtIndexPath:(NSIndexPath *)indexPath;
+
+- (void)addTouchpoint:(RVTouchpoint *)touchpoint;
 
 - (void)willAddTouchpoint:(RVTouchpoint *)touchpoint;
 - (void)didAddTouchpoint:(RVTouchpoint *)touchpoint;
 
 @end
 
+
+@protocol RXVisitViewControllerDelegate <NSObject>
+
+@optional
+- (void)visitViewController:(RXVisitViewController *)viewController didDisplayCard:(RVCard *)card;
+- (void)visitViewController:(RXVisitViewController *)viewController didDiscardCard:(RVCard *)card;
+- (void)visitViewController:(RXVisitViewController *)viewController didClickCard:(RVCard *)card URL:(NSURL *)url;
+
+- (void)visitViewControllerWillGetDismissed:(RXVisitViewController *)viewController;
+- (void)visitViewControllerDidGetDismissed:(RXVisitViewController *)viewController;
+
+@end
 
 

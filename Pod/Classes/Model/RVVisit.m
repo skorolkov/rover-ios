@@ -41,10 +41,6 @@ NSString * platform()
     return getSysInfoByName("hw.machine");
 }
 
-
-NSString *const kRoverDidCreateVisitNotification = @"RoverDidCreateVisitNotification";
-NSString *const kRoverDidVisitTouchpointNotification = @"RoverDidVisitTouchpointNotification";
-
 NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
 NSString *const kRVVisitManagerLatestVisitVersionKey = @"_roverVersion";
 
@@ -289,10 +285,6 @@ static RVVisit *_latestVisit;
     return JSON;
 }
 
-- (void)postNewVisitCreatedNotification {
-    [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidCreateVisitNotification object:nil userInfo:@{@"visit": self}];
-}
-
 #pragma mark - Touchpoint Tracking
 
 - (void)addToCurrentTouchpoints:(RVTouchpoint *)touchpoint {
@@ -302,7 +294,6 @@ static RVVisit *_latestVisit;
         touchpoint.isVisited = YES;
         [_mVisitedTouchpoints insertObject:touchpoint atIndex:0];
         [self didChangeValueForKey:@"visitedTouchpoints"];
-        [[NSNotificationCenter defaultCenter] postNotificationName:kRoverDidVisitTouchpointNotification object:nil userInfo:@{@"visit": self, @"touchpoint": touchpoint}];
     }
 }
 

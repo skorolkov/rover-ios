@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import <Rover/Rover.h>
 
-@interface AppDelegate ()
+@interface AppDelegate () <RoverDelegate>
 
 @end
 
@@ -29,6 +29,30 @@
     [rover startMonitoring];
     
     return YES;
+}
+
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [self toggleHeader];
+}
+
+
+- (void)roverVisit:(RVVisit *)visit didEnterLocation:(RVLocation *)location {
+    [self toggleHeader];
+}
+
+- (void)roverVisitDidExpire:(RVVisit *)visit {
+    [self toggleHeader];
+}
+
+- (void)toggleHeader {
+    if ([Rover shared].currentVisit) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"showFooter" object:nil];
+    } else {
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"hideFooter" object:nil];
+    }
+    
 }
 
 @end
