@@ -9,10 +9,9 @@
 #import "Rover.h"
 #import "RVVisitManager.h"
 
-#import "RVCardProject.h"
-#import "RVCustomerProject.h"
+#import "RVCard.h"
+#import "RVCustomer.h"
 #import "RVLog.h"
-#import "RVNotificationCenter.h"
 #import "RVRegionManager.h"
 #import "RVVisit.h"
 #import "RVTouchpoint.h"
@@ -152,7 +151,7 @@
     if (shouldCreateVisit) {
         self.latestVisit = newVisit;
         
-        NSLog(@"touchpoint: %@", newVisit.touchpoints);
+        NSLog(@"touchpoints: %@", newVisit.touchpoints);
         
         // Delegate
         if ([self.delegate respondsToSelector:@selector(visitManager:didEnterLocation:visit:)]) {

@@ -7,7 +7,6 @@
 //
 
 #import "RVRegionManager.h"
-#import "RVNotificationCenter.h"
 #import "RVLog.h"
 
 
@@ -43,16 +42,6 @@
     [self stopMonitoring];
     [self setupBeaconRegions];
 }
-
-//- (NSTimeInterval)timeSinceBeaconDetected {
-//    if (!self.beaconDetectedAt) {
-//        return 0;
-//    }
-//    
-//    NSDate *now = [NSDate date];
-//    return [now timeIntervalSinceDate:self.beaconDetectedAt];
-//}
-
 
 #pragma mark - Initialization
 

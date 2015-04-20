@@ -11,8 +11,6 @@
 #import "RXCardViewCell.h"
 #import "RVTouchpoint.h"
 
-#import "RVVisitController.h"
-
 #import "RXUpArrow.h"
 
 #import "RVCard.h"
@@ -164,12 +162,19 @@
     if (cellCount == 0)
         return;
     
-    if (_minIndexPathRow == 0 && _minIndexPathSection ==0 && _pillView.superview) {
-        RVCard *card = [self cardAtIndexPath:[self.tableView indexPathForCell:cells[0]]];
-        if (card.isViewed) {
-            [self retractPill];
-        }
+    NSIndexPath *firstIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+//    RXCardViewCell *cell = [self.tableView cellForRowAtIndexPath:firstIndexPath];
+    RVCard *card = [self cardAtIndexPath:firstIndexPath];
+    
+    if (_pillView.superview && card.isViewed) {
+        [self retractPill];
     }
+    
+//    if (_minIndexPathRow == 0 && _minIndexPathSection ==0 && _pillView.superview) {
+//        NSLog(@"fdfd");
+//        RVCard *card = [self cardAtIndexPath:[self.tableView indexPathForCell:cells[0]]];
+//
+//    }
     
     // Check against the maximum index path
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[cells lastObject]];
@@ -310,7 +315,7 @@
     _minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:0];
     _minIndexPathSection = 1;
     
-    if (self.isViewLoaded && touchpoint.cards.count > 0) {
+    if (self.isViewLoaded && self.view.window && touchpoint.cards.count > 0) {
         [self dropPill];
     }
 }

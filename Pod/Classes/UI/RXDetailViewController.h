@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class RVViewDefinition;
+@class RXBlockView;
 
 @interface RXDetailViewController : UIViewController
 
@@ -21,6 +22,10 @@
 @property (nonatomic, strong, readonly) NSLayoutConstraint *scrollViewHeightConstraint;
 
 - (instancetype)initWithViewDefinition:(RVViewDefinition *)viewDefinition;
+
+- (void)addBlockView:(RXBlockView *)blockView;
+- (void)addHeaderBlockView:(RXBlockView *)blockView;
+- (void)addBottomStickyBlockView:(RXBlockView *)blockView;
 
 
 @end

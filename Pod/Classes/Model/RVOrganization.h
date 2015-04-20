@@ -10,4 +10,6 @@
 
 @interface RVOrganization : RVModel
 
+@property (nonatomic, strong) NSString *title;
+
 @end

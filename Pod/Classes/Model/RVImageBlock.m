@@ -7,8 +7,6 @@
 //
 
 #import "RVImageBlock.h"
-#import "RVModelProject.h"
-
 
 @interface RVImageBlock ()
 
@@ -19,43 +17,6 @@
 @end
 
 @implementation RVImageBlock
-
-- (void)updateWithJSON:(NSDictionary *)JSON {
-    [super updateWithJSON:JSON];
-    
-    // imagePath
-    NSString *imagePath = [JSON objectForKey:@"imageUrl"];
-    if (imagePath && imagePath != (id)[NSNull null]) {
-        self.imagePath = imagePath;
-    }
-    
-    // imageAspectRatio
-    NSNumber *aspectRatio = [JSON objectForKey:@"imageAspectRatio"];
-    if (aspectRatio && aspectRatio != (id)[NSNull null]) {
-        self.aspectRatio = [aspectRatio floatValue];
-    }
-    
-    // imageOffset
-    NSNumber *imageOffset = [JSON objectForKey:@"imageOffsetRatio"];
-    if (imageOffset && imageOffset != (id)[NSNull null]) {
-        self.yOffset = [imageOffset floatValue];
-    }
-    
-    // originalImageWidth
-    NSNumber *originalImageWidth = [JSON objectForKey:@"imageWidth"];
-    if (originalImageWidth && originalImageWidth != (id)[NSNull null]) {
-        self.originalImageWidth = [originalImageWidth floatValue];
-    }
-    
-    // originalImageHeight
-    NSNumber *originalImageHeight = [JSON objectForKey:@"imageHeight"];
-    if (originalImageHeight && originalImageHeight != (id)[NSNull null]) {
-        self.originalImageHeight = [originalImageHeight floatValue];
-    }
-    
-//    self.borderWidth = UIEdgeInsetsMake(1, 1, 1, 1);
-//    self.borderColor = [UIColor yellowColor];
-}
 
 - (NSURL *)imageURL
 {

@@ -12,9 +12,9 @@
  */
 @interface RVConfig : NSObject
 
-/** The Application ID found on the settings page of the [Rover Admin Console](http://app.roverlabs.co/).
+/** The Application Token found on the settings page of the [Rover Admin Console](http://app.roverlabs.co/).
  */
-@property (strong, nonatomic) NSString *applicationID;
+@property (strong, nonatomic) NSString *applicationToken;
 
 /** Use the addBeaconUUID: to add a beacon uuid to this array.
  */

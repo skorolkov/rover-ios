@@ -6,40 +6,18 @@
 //  Copyright (c) 2014 Rover Labs Inc. All rights reserved.
 //
 
-#import "RVModelProject.h"
 #import "RVVisit.h"
-#import "RVCardProject.h"
 #import "RVLocation.h"
 #import "RVTouchpoint.h"
 #import "RVViewDefinition.h"
 #import "RVCustomer.h"
+#import "RVCard.h"
 
 #import "RVBlock.h"
 #import "RVImageBlock.h"
 
 #define kRVVersion @"0.30.0"
 
-#pragma mark - SystemCalls
-
-#include <sys/sysctl.h>
-NSString * getSysInfoByName(char *typeSpecifier)
-{
-    size_t size;
-    sysctlbyname(typeSpecifier, NULL, &size, NULL, 0);
-    
-    char *answer = malloc(size);
-    sysctlbyname(typeSpecifier, answer, &size, NULL, 0);
-    
-    NSString *results = [NSString stringWithCString:answer encoding: NSUTF8StringEncoding];
-    
-    free(answer);
-    return results;
-}
-
-NSString * platform()
-{
-    return getSysInfoByName("hw.machine");
-}
 
 NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
 NSString *const kRVVisitManagerLatestVisitVersionKey = @"_roverVersion";
@@ -214,75 +192,6 @@ static RVVisit *_latestVisit;
         _currentTouchpoints = [NSMutableSet set];
     }
     return self;
-}
-
-- (void)updateWithJSON:(NSDictionary *)JSON {
-    [super updateWithJSON:JSON];
-
-    // TODO: investigate this (how does this impact [Rover shared].custome)
-    // customer
-//    NSString *customerID = [JSON objectForKey:@"customer"];
-//    if (customerID && customerID != (id)[NSNull null] && [customerID length] > 0) {
-//        self.customer = customerID;
-//    }
-    
-    // keepAlive
-    NSNumber *keepAlive = [JSON objectForKey:@"keepAlive"];
-    if (keepAlive && keepAlive != (id)[NSNull null]) {
-        self.keepAlive = [keepAlive doubleValue] * 60;
-    }
-    
-    //location
-    NSDictionary *locationData = [JSON objectForKey:@"location"];
-    if (locationData) {
-        RVLocation *location = [[RVLocation alloc] initWithJSON:locationData];
-        self.location = location;
-    }
-    
-    //touchpoints
-    NSArray *touchpointsData = [JSON objectForKey:@"touchpoints"];
-    if (touchpointsData && touchpointsData != (id)[NSNull null]) {
-        NSMutableArray *touchpoints = [NSMutableArray arrayWithCapacity:[touchpointsData count]];
-        [touchpointsData enumerateObjectsUsingBlock:^(NSDictionary *touchpointData, NSUInteger idx, BOOL *stop) {
-            RVTouchpoint *touchpoint = [[RVTouchpoint alloc] initWithJSON:touchpointData];
-            [touchpoints addObject:touchpoint];
-        }];
-        self.touchpoints = [touchpoints copy];
-    }
-    
-}
-
-- (NSDictionary *)toJSON {
-    NSMutableDictionary *JSON = [NSMutableDictionary dictionary];
-    
-    // UUID
-    [JSON setObject:RVNullSafeValueFromObject(self.UUID.UUIDString) forKey:@"uuid"];
-
-    // major
-    [JSON setObject:RVNullSafeValueFromObject(self.majorNumber) forKey:@"majorNumber"];
-
-    // customer
-    [JSON setObject:RVNullSafeValueFromObject([self.customer toJSON]) forKey:@"customer"];
-    
-    // device
-    [JSON setObject:platform() forKey:@"device"];
-    
-    // operatingSystem
-    [JSON setObject:[[UIDevice currentDevice] systemName] forKey:@"operatingSystem"];
-    
-    // operatingSystemVersion
-    [JSON setObject:[[UIDevice currentDevice] systemVersion] forKey:@"osVersion"];
-    
-    // timestamp
-    [JSON setObject:[[self dateFormatter] stringFromDate:self.timestamp] forKey:@"timestamp"];
-    
-    // version (SDK)
-    [JSON setObject:kRVVersion forKey:@"sdkVersion"];
-    
-    // simulate
-    [JSON setObject:[NSNumber numberWithBool:self.simulate] forKey:@"simulate"];
-    
-    return JSON;
 }
 
 #pragma mark - Touchpoint Tracking

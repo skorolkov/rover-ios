@@ -17,10 +17,14 @@ extern NSObject* RVNullSafeValueFromObject(NSObject *object);
  
  The one potentially useful case for this property is to determine if a model has been saved. If the ID property of a model is not set, it means it has not been persisted to the Rover platform.
  */
-@property (readonly, strong, nonatomic) NSString *ID;
+@property (strong, nonatomic) NSString *ID;
 
 /** Any meta data associated with the model.
  */
-@property (nonatomic, strong, readonly) NSDictionary *meta;
+@property (nonatomic, strong) NSDictionary *meta;
+
+
+- (BOOL)isPersisted;
+- (NSString *)modelName;
 
 @end

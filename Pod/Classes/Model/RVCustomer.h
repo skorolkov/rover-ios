@@ -40,4 +40,9 @@
  */
 @property (nonatomic, assign) BOOL hasSeenTutorial;
 
+
++ (RVCustomer *)cachedCustomer;
+
+@property (readonly, nonatomic) BOOL dirty;
+
 @end

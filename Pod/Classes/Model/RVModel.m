@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Rover Labs Inc. All rights reserved.
 //
 
-#import "RVModelProject.h"
+#import "RVModel.h"
 
 extern inline NSObject* RVNullSafeValueFromObject(NSObject *object) {
     if (object) {
@@ -24,65 +24,8 @@ extern inline NSObject* RVNullSafeValueFromObject(NSObject *object) {
     return @"";
 }
 
-- (NSString *)createPath {
-    return [NSString stringWithFormat:@"%@s", [self modelName]];
-}
-
-- (NSString *)updatePath {
-    return [NSString stringWithFormat:@"%@s/%@", [self modelName], self.ID];
-}
-
 - (BOOL)isPersisted {
     return self.ID != nil;
-}
-
-- (NSDateFormatter *)dateFormatter {
-    static NSDateFormatter *dateFormatter;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        dateFormatter = [[NSDateFormatter alloc] init];
-        NSLocale *enUSPOSIXLocale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
-        [dateFormatter setLocale:enUSPOSIXLocale];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.000ZZZZZ"];
-    });
-    return dateFormatter;
-}
-
-#pragma mark - Serialization
-
-- (id)initWithJSON:(NSDictionary *)JSON {
-    self = [super init];
-    if (self) {
-        [self updateWithJSON:JSON];
-    }
-    return self;
-}
-
-- (void)updateWithJSON:(NSDictionary *)JSON {
-    id ID = [JSON objectForKey:@"id"];
-    if (ID != (id)[NSNull null]) {
-        if ([ID isKindOfClass:[NSString class]]) {
-            self.ID = ID;
-        } else {
-            // Number
-            self.ID = [ID stringValue];
-        }
-    }
-    
-    
-    // meta
-    NSDictionary *meta = [JSON objectForKey:@"meta"];
-    if (meta && meta != (id)[NSNull null]) {
-        _meta = meta;
-    }
-}
-
-- (NSDictionary *)toJSON {
-    if (self.ID) {
-        return @{ @"id": self.ID };
-    } else {
-        return @{ @"id": [NSNull null] };
-    }
 }
 
 #pragma mark - NSCoding

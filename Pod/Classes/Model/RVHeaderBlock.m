@@ -7,7 +7,6 @@
 //
 
 #import "RVHeaderBlock.h"
-#import "RVModelProject.h"
 
 @interface RVHeaderBlock ()
 
@@ -22,23 +21,6 @@
 - (void)setTitleString:(NSString *)titleString {
     _titleString = titleString;
     _title = nil;
-}
-
-- (void)updateWithJSON:(NSDictionary *)JSON {
-    [super updateWithJSON:JSON];
-    
-    // title
-    NSString *titleString = [JSON objectForKey:@"headerTitle"];
-    if (titleString && titleString != (id)[NSNull null]) {
-        self.titleString = titleString;
-    }
-    
-    // iconPath
-    NSString *iconPath = [JSON objectForKey:@"iconPath"];
-    if (iconPath && iconPath != (id)[NSNull null]) {
-        self.iconPath = iconPath;
-    }
-    
 }
 
 - (UIEdgeInsets)padding {

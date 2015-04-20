@@ -20,8 +20,6 @@ typedef NS_ENUM(NSInteger, RVBlockType) {
 
 @interface RVBlock : RVModel <RVBackgroundImage>
 
-+ (RVBlock *)appropriateBlockWithJSON:(NSDictionary *)JSON;
-
 @property (nonatomic, strong) UIColor *borderColor;
 @property (nonatomic, assign) UIEdgeInsets borderWidth;
 @property (nonatomic, assign) UIEdgeInsets padding;

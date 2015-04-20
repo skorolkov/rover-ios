@@ -8,8 +8,9 @@
 
 #import "RVNetworkingManager.h"
 #import "RVVisit.h"
-// TODO: remove private headers, everything can be public
-#import "RVModelProject.h"
+
+#import "RVMapper.h"
+
 
 NSString *const kRVNetworkingManagerErrorDomain = @"co.roverlabs.error";
 NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs.error.response";
@@ -18,6 +19,7 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
 
 @property NSURLSession *session;
 @property NSURLSessionConfiguration *sessionConfig;
+@property (nonatomic, strong) RVMapper *mapper;
 
 @end
 
@@ -44,6 +46,7 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
     if (self) {
         self.sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
         self.session = [NSURLSession sessionWithConfiguration:self.sessionConfig];
+        self.mapper = [RVMapper new];
     }
     return self;
 }
@@ -166,11 +169,12 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
     // Need a synchronous call
     dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
-    [self sendRequestWithMethod:@"POST" path:@"visits" parameters:[visit toJSON] success:^(NSDictionary *data) {
+    [self sendRequestWithMethod:@"POST" path:@"visits" parameters:[self.mapper JSONfromObject:visit] success:^(NSDictionary *data) {
         NSDictionary *JSON = [data objectForKey:@"visit"];
         
         if (JSON) {
-            [visit updateWithJSON:JSON];
+            [self.mapper mapJSON:JSON toObject:visit];
+            //[visit updateWithJSON:JSON];
         }
         
         dispatch_semaphore_signal(semaphore);
@@ -198,7 +202,7 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
     
     NSMutableDictionary *eventParams = [NSMutableDictionary dictionaryWithDictionary:@{@"object": eventComponents[0],
                                                                                        @"action": eventComponents[1],
-                                                                                       @"timestamp": [[visit dateFormatter] stringFromDate:[NSDate date]]}];
+                                                                                       @"timestamp": [[RVMapper dateFormatter] stringFromDate:[NSDate date]]}];
     
     [eventParams addEntriesFromDictionary:params];
     

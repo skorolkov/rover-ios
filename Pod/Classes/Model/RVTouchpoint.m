@@ -7,55 +7,10 @@
 //
 
 #import "RVTouchpoint.h"
-#import "RVModelProject.h"
 #import "RVLocation.h"
 #import "RVCard.h"
 
 @implementation RVTouchpoint
-
-- (void)updateWithJSON:(NSDictionary *)JSON {
-    [super updateWithJSON:JSON];
-    
-    // trigger
-    NSString *triggerString = [JSON objectForKey:@"trigger"];
-    if (triggerString && triggerString != (id)[NSNull null]) {
-        if ([triggerString isEqualToString:@"beacon"]) {
-            self.trigger = RVTouchpointTriggerMinorNumber;
-        } else {
-            self.trigger = RVTouchpointTriggerVisit;
-        }
-    }
-    
-    // minorNumber
-    NSNumber *minorNumber = [JSON objectForKey:@"minorNumber"];
-    if (minorNumber && minorNumber != (id)[NSNull null]) {
-        self.minorNumber = minorNumber;
-    }
-    
-    // title
-    NSString *title = [JSON objectForKey:@"title"];
-    if (title && title != (id)[NSNull null]) {
-        self.title = title;
-    }
-    
-    // notification
-    NSString *notification = [JSON objectForKey:@"notification"];
-    if (notification && notification != (id)[NSNull null] && ![notification isEqualToString:@""]) {
-        self.notification = notification;
-    }
-    
-    // cards
-    NSArray *cardsData = [JSON objectForKey:@"cards"];
-    if (cardsData && cardsData != (id)[NSNull null]) {
-        NSMutableArray *cards = [NSMutableArray arrayWithCapacity:[cardsData count]];
-        [cardsData enumerateObjectsUsingBlock:^(NSDictionary *cardData, NSUInteger idx, BOOL *stop) {
-            RVCard *card = [[RVCard alloc] initWithJSON:cardData];
-            [cards addObject:card];
-        }];
-        self.cards = [NSArray arrayWithArray:cards];
-    }
-    
-}
 
 - (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion
 {

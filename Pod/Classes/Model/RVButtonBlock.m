@@ -7,7 +7,6 @@
 //
 
 #import "RVButtonBlock.h"
-#import "RVModelProject.h"
 
 @interface RVButtonBlock()
 
@@ -21,22 +20,6 @@
 - (void)setLabelString:(NSString *)labelString {
     _labelString = labelString;
     _label = nil;
-}
-
-- (void)updateWithJSON:(NSDictionary *)JSON {
-    [super updateWithJSON:JSON];
-    
-    // label
-    NSString *label = [JSON objectForKey:@"buttonLabel"];
-    if (label && label != (id)[NSNull null]) {
-        self.labelString = label;
-    }
-    
-    // iconPath
-    NSString *iconPath = [JSON objectForKey:@"iconPath"];
-    if (iconPath && iconPath != (id)[NSNull null]) {
-        self.iconPath = iconPath;
-    }
 }
 
 - (NSAttributedString *)label {

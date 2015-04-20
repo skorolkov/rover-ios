@@ -26,7 +26,7 @@
 
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
 
-@property (nonatomic, assign) UIEdgeInsets margins;
+@property (nonatomic, strong) NSLayoutConstraint *lastBlockLayoutConstraint;
 
 @end
 
@@ -109,12 +109,20 @@
 - (void)configureLayoutForLastBlockView:(UIView *)blockView
 {
     // TODO: this is not always accurate
-    [_containerView addConstraint:[NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0]];
+    
+    _lastBlockLayoutConstraint = [NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    
+    [_containerView addConstraint:_lastBlockLayoutConstraint];
 }
 
 - (void)addBlockView:(UIView *)blockView {
     [_containerView addSubview:blockView];
     [self configureLayoutForBlockView:blockView ];
+    
+    if (_lastBlockLayoutConstraint) {
+        [_containerView removeConstraint:_lastBlockLayoutConstraint];
+        [self configureLayoutForLastBlockView:blockView];
+    }
 }
 
 - (void)setViewDefinition:(RVViewDefinition *)viewDefinition {

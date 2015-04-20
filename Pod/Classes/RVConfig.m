@@ -34,12 +34,12 @@
         }
     }
     
-    id applicationID = [plist objectForKey:@"applicationID"];
-    if (applicationID) {
-        if (![applicationID isKindOfClass:[NSString class]]) {
+    id applicationToken = [plist objectForKey:@"applicationID"];
+    if (applicationToken) {
+        if (![applicationToken isKindOfClass:[NSString class]]) {
             NSLog(@"%@ warning applicationID property in Rover.plist is expected to be a string", self);
-        } else if ([applicationID length]) {
-            config.applicationID = applicationID;
+        } else if ([applicationToken length]) {
+            config.applicationToken = applicationToken;
         }
     }
     id beaconUUIDs = [plist objectForKey:@"beaconUUIDs"];

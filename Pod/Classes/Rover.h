@@ -11,12 +11,11 @@
 #import "RVConfig.h"
 
 // Core
+#import "RVLog.h"
 #import "RVRegionManager.h"
 #import "RVVisitManager.h"
 
 // Model
-#import "RVCustomerProject.h"
-#import "RVLog.h"
 #import "RVModel.h"
 #import "RVCustomer.h"
 #import "RVVisit.h"
@@ -29,6 +28,8 @@
 #import "RXVisitViewController.h"
 #import "RXDetailViewController.h"
 #import "RXModalViewController.h"
+#import "RXCardViewCell.h"
+#import "RXBlockView.h"
 
 // Networking
 #import "RVNetworkingManager.h"

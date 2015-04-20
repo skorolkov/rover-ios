@@ -49,8 +49,6 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
         [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
         self.tableView.delaysContentTouches = NO;
         self.tableView.opaque = NO;
-        
-        NSLog(@"init");
     }
     return self;
 }

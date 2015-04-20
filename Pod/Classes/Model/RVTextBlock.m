@@ -7,7 +7,6 @@
 //
 
 #import "RVTextBlock.h"
-#import "RVModelProject.h"
 
 @interface RVTextBlock ()
 
@@ -17,20 +16,6 @@
 
 @implementation RVTextBlock
 
-//- (void)setHtmlString:(NSString *)htmlString {
-//    _htmlString = htmlString;
-//    _attributedHtmlString = nil;
-//}
-
-- (void)updateWithJSON:(NSDictionary *)JSON {
-    [super updateWithJSON:JSON];
-    
-    // htmlText
-    NSString *htmlText = [JSON objectForKey:@"textContent"];
-    if (htmlText && htmlText != (id)[NSNull null]) {
-        self.htmlString = htmlText;
-    }
-}
 
 - (NSAttributedString *)htmlText {
     if (!_htmlText) {

@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Rover Labs Inc. All rights reserved.
 //
 
-#import "RVCustomerProject.h"
+#import "RVCustomer.h"
 
 NSString *const kRVCustomerKey = @"RVCustomerKey";
 
@@ -95,60 +95,6 @@ NSString *const kRVCustomerKey = @"RVCustomerKey";
 - (void)setDirty:(BOOL)dirty {
     _dirty = dirty;
     [self cache];
-}
-
-#pragma mark - Overridden Methods 
-
-- (void)updateWithJSON:(NSDictionary *)JSON {    
-    // customerID
-    NSString *customerID = [JSON objectForKey:@"customerId"];
-    if (customerID != (id)[NSNull null] && [customerID length] > 0) {
-        self.customerID = customerID;
-    }
-    
-    // name
-    NSString *name = [JSON objectForKey:@"name"];
-    if (name != (id)[NSNull null] && [name length] > 0) {
-        self.name = name;
-    }
-    
-    // email
-    NSString *email = [JSON objectForKey:@"email"];
-    if (email != (id)[NSNull null] && [email length] > 0) {
-        self.email = email;
-    }
-    
-    // attributes
-    NSDictionary *attributes = [JSON objectForKey:@"traits"];
-    if (attributes != (id)[NSNull null]) {
-        self.attributes = [NSMutableDictionary dictionaryWithDictionary:attributes];
-    }
-}
-
-- (NSDictionary *)toJSON {
-    NSMutableDictionary *JSON = [NSMutableDictionary dictionaryWithCapacity:4];
-    
-    // customerID
-    [JSON setObject:RVNullSafeValueFromObject(self.customerID) forKey:@"customerId"];
-    
-    // name
-    if (self.name) {
-        [JSON setObject:RVNullSafeValueFromObject(self.name) forKey:@"name"];
-    }
-    
-    // email
-    if (self.email) {
-        [JSON setObject:RVNullSafeValueFromObject(self.email) forKey:@"email"];
-    }
-    
-    // attributes
-    if (self.attributes) {
-        [JSON setObject:self.attributes forKey:@"traits"];
-    } else {
-        [JSON setObject:@{} forKey:@"traits"];
-    }
-    
-    return JSON;
 }
 
 #pragma mark - Initialization

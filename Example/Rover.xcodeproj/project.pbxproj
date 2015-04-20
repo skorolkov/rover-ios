@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3DE85FF21AE558E000CDCD7B /* MyModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DE85FF11AE558E000CDCD7B /* MyModalViewController.m */; };
 		7A1AF948827E2A7C1B112DFF /* libPods-Rover.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EF05A447F91BF240B292B882 /* libPods-Rover.a */; };
 		DBB10BA619E230950078E9B4 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BA519E230950078E9B4 /* main.m */; };
 		DBB10BA919E230950078E9B4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BA819E230950078E9B4 /* AppDelegate.m */; };
@@ -14,13 +15,12 @@
 		DBB10BB119E230950078E9B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBB10BB019E230950078E9B4 /* Images.xcassets */; };
 		DBB10BB419E230950078E9B4 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DBB10BB219E230950078E9B4 /* LaunchScreen.xib */; };
 		DBB10BCF19E236740078E9B4 /* DebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BCE19E236740078E9B4 /* DebugViewController.m */; };
-		DBB10BD419E236920078E9B4 /* NewOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BD019E236920078E9B4 /* NewOffersViewController.m */; };
-		DBB10BD519E236920078E9B4 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BD119E236920078E9B4 /* ProfileViewController.m */; };
-		DBB10BD619E236920078E9B4 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BD219E236920078E9B4 /* RootViewController.m */; };
 		DBB10BDA19E2395A0078E9B4 /* Rover.plist in Resources */ = {isa = PBXBuildFile; fileRef = DBB10BD919E2395A0078E9B4 /* Rover.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3DE85FF01AE558E000CDCD7B /* MyModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyModalViewController.h; sourceTree = "<group>"; };
+		3DE85FF11AE558E000CDCD7B /* MyModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyModalViewController.m; sourceTree = "<group>"; };
 		92B5C43F52D9A234F9BAB4B8 /* Pods-Rover.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rover.release.xcconfig"; path = "Pods/Target Support Files/Pods-Rover/Pods-Rover.release.xcconfig"; sourceTree = "<group>"; };
 		B698DB8A6FC47A1548DF3FDA /* Pods-Rover.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Rover.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Rover/Pods-Rover.debug.xcconfig"; sourceTree = "<group>"; };
 		DBB10BA019E230950078E9B4 /* Rover.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rover.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -32,13 +32,7 @@
 		DBB10BB019E230950078E9B4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DBB10BB319E230950078E9B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		DBB10BC919E236740078E9B4 /* DebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugViewController.h; sourceTree = "<group>"; };
-		DBB10BCA19E236740078E9B4 /* NewOffersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewOffersViewController.h; sourceTree = "<group>"; };
-		DBB10BCB19E236740078E9B4 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
-		DBB10BCC19E236740078E9B4 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		DBB10BCE19E236740078E9B4 /* DebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugViewController.m; sourceTree = "<group>"; };
-		DBB10BD019E236920078E9B4 /* NewOffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewOffersViewController.m; sourceTree = "<group>"; };
-		DBB10BD119E236920078E9B4 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
-		DBB10BD219E236920078E9B4 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		DBB10BD919E2395A0078E9B4 /* Rover.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Rover.plist; sourceTree = "<group>"; };
 		EF05A447F91BF240B292B882 /* libPods-Rover.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rover.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -119,12 +113,8 @@
 			children = (
 				DBB10BC919E236740078E9B4 /* DebugViewController.h */,
 				DBB10BCE19E236740078E9B4 /* DebugViewController.m */,
-				DBB10BCA19E236740078E9B4 /* NewOffersViewController.h */,
-				DBB10BD019E236920078E9B4 /* NewOffersViewController.m */,
-				DBB10BCB19E236740078E9B4 /* ProfileViewController.h */,
-				DBB10BD119E236920078E9B4 /* ProfileViewController.m */,
-				DBB10BCC19E236740078E9B4 /* RootViewController.h */,
-				DBB10BD219E236920078E9B4 /* RootViewController.m */,
+				3DE85FF01AE558E000CDCD7B /* MyModalViewController.h */,
+				3DE85FF11AE558E000CDCD7B /* MyModalViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -240,12 +230,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DE85FF21AE558E000CDCD7B /* MyModalViewController.m in Sources */,
 				DBB10BA919E230950078E9B4 /* AppDelegate.m in Sources */,
 				DBB10BA619E230950078E9B4 /* main.m in Sources */,
-				DBB10BD619E236920078E9B4 /* RootViewController.m in Sources */,
-				DBB10BD419E236920078E9B4 /* NewOffersViewController.m in Sources */,
 				DBB10BCF19E236740078E9B4 /* DebugViewController.m in Sources */,
-				DBB10BD519E236920078E9B4 /* ProfileViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

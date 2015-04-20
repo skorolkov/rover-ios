@@ -7,7 +7,6 @@
 //
 
 #import "RVBarcodeBlock.h"
-#import "RVModelProject.h"
 
 @interface RVBarcodeBlock ()
 
@@ -16,32 +15,6 @@
 @end
 
 @implementation RVBarcodeBlock
-
-- (void)updateWithJSON:(NSDictionary *)JSON {
-    [super updateWithJSON:JSON];
-    
-    // barcodeString
-    NSString *barcodeString = [JSON objectForKey:@"barcodeString"];
-    if (barcodeString && barcodeString != (id)[NSNull null]) {
-        self.barcodeString = barcodeString;
-    }
-    
-    // barcodeLabel
-    NSString *barcodeLabel = [JSON objectForKey:@"barcodeLabel"];
-    if (barcodeLabel && barcodeLabel != (id)[NSNull null]) {
-        self.barcodeLabel = barcodeLabel;
-    }
-    
-    // barcodeType
-    NSString *barcodeFormat = [JSON objectForKey:@"barcodeFormat"];
-    if (barcodeFormat && barcodeFormat != (id)[NSNull null]) {
-        if ([barcodeFormat isEqualToString:@"code128"]) {
-            self.barcodeType = RVBarcodeTypeCode128;
-        } else {
-            self.barcodeType = RVBarcodeTypePLU;
-        }
-    }
-}
 
 - (NSAttributedString *)barcodeLabelAttributedString {
     if (!_barcodeLabelAttributedString) {

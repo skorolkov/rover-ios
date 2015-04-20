@@ -18,6 +18,12 @@
 @property (nonatomic, readonly) UIView *containerView;
 @property (nonatomic, weak) RVViewDefinition *viewDefinition;
 
+@property (nonatomic, assign) UIEdgeInsets margins;
+
+@property (nonatomic, readonly) UIPanGestureRecognizer *panGestureRecognizer;
+
+- (void)addBlockView:(UIView *)blockView;
+
 @end
 
 @protocol RXCardViewCellDelegate <NSObject>

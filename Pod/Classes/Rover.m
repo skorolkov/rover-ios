@@ -129,10 +129,10 @@ static Rover *sharedInstance = nil;
             NSLog(@"%@ warning empty server URL", self);
         }
         
-        if ([config.applicationID length]) {
-            [[RVNetworkingManager sharedManager] setAuthToken:config.applicationID];
+        if ([config.applicationToken length]) {
+            [[RVNetworkingManager sharedManager] setAuthToken:config.applicationToken];
         } else {
-            NSLog(@"%@ warning empty application id", self);
+            NSLog(@"%@ warning empty application token", self);
         }
         
         if ([config.beaconUUIDs count]) {
@@ -144,37 +144,6 @@ static Rover *sharedInstance = nil;
     }
     return self;
 }
-
-//- (void)setupListeners {
-//    NSNotificationCenter *defaultNotificationCenter = [NSNotificationCenter defaultCenter];
-//    
-//    [defaultNotificationCenter addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-//    
-//    // Location Notifications
-//    [defaultNotificationCenter addObserver:self selector:@selector(visitManagerDidEnterLocation:) name:kRoverDidEnterLocationNotification object:nil];
-//    [defaultNotificationCenter addObserver:self selector:@selector(visitManagerDidPotentiallyExitLocation:) name:kRoverDidPotentiallyExitLocationNotification object:nil];
-//    [defaultNotificationCenter addObserver:self selector:@selector(visitManagerDidExpireVisit:) name:kRoverDidExpireVisitNotification object:nil];
-//    
-//    // Touchpoint Notifications
-//    [defaultNotificationCenter addObserver:self selector:@selector(visitManagerDidEnterTouchpoint:) name:kRoverDidEnterTouchpointNotification object:nil];
-//    [defaultNotificationCenter addObserver:self selector:@selector(visitManagerDidExitTouchpoint:) name:kRoverDidExitTouchpointNotification object:nil];
-//    
-//    // Visit Notificaitons
-//    [defaultNotificationCenter addObserver:self selector:@selector(roverDidCreateVisit:) name:kRoverDidCreateVisitNotification object:nil];
-//    [defaultNotificationCenter addObserver:self selector:@selector(roverDidVisitTouchpoint:) name:kRoverDidVisitTouchpointNotification object:nil];
-//    
-//    // Card Notifications
-//    [defaultNotificationCenter addObserver:self selector:@selector(roverDidDisplayCard:) name:kRoverDidDisplayCardNotification object:nil];
-//    [defaultNotificationCenter addObserver:self selector:@selector(roverDidSwipeCard:) name:kRoverDidSwipeCardNotification object:nil];
-//    [defaultNotificationCenter addObserver:self selector:@selector(roverDidClickCard:) name:kRoverDidClickCardNotification object:nil];
-//    
-//    // Modal Notifications
-//    [defaultNotificationCenter addObserver:self selector:@selector(roverDidDismissModal:) name:kRoverDidDismissModalNotification object:nil];
-//}
-//
-//- (void)dealloc {
-//    [[NSNotificationCenter defaultCenter] removeObserver:self];
-//}
 
 #pragma mark - Public methods
 
@@ -338,9 +307,10 @@ static Rover *sharedInstance = nil;
 }
 
 - (BOOL)visitManager:(RVVisitManager *)manager shouldCreateVisit:(RVVisit *)visit {
+    // Delegate
     if ([self.delegate respondsToSelector:@selector(roverShouldCreateVisit:)]) {
         if (![self.delegate roverShouldCreateVisit:visit]) {
-            visit.valid = NO;
+            visit.valid = NO; // TODO: remove this
             return NO;
         }
     }
