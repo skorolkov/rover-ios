@@ -7,16 +7,28 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "RVModel.h"
+
+@class RVVisit;
 
 @interface RVNetworkingManager : NSObject
 
+/** The singleton instance of the Rover networking manager.
+ */
 + (id)sharedManager;
 
 @property (strong, nonatomic) NSString *authToken;
 @property (strong, nonatomic) NSURL *baseURL;
-@property (nonatomic) BOOL loggingEnabled;
 
+/** Sends an HTTP request to the Rover API server. This method is asynchronous.
+ */
 - (void)sendRequestWithMethod:(NSString *)method path:(NSString *)path parameters:(NSDictionary *)parameters success:(void (^)(NSDictionary *data))success failure:(void (^)(NSError *error))failure;
+
+/** Posts a visit object to the Rover API server. This is a synchronous method and should always be called from a background thread.
+ */
+- (void)postVisit:(RVVisit *)visit;
+
+/** Posts an event to the Rover API server. The event param must be of format ":object.:action".
+ */
+- (void)trackEvent:(NSString *)event params:(NSDictionary *)params visit:(RVVisit *)visit;
 
 @end

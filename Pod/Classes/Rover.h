@@ -8,34 +8,33 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
-// Views
-// WHAT?
+#import "RVConfig.h"
 
-// Models
+// Core
+#import "RVLog.h"
+#import "RVRegionManager.h"
+#import "RVVisitManager.h"
+
+// Model
 #import "RVModel.h"
 #import "RVCustomer.h"
 #import "RVVisit.h"
 #import "RVCard.h"
 #import "RVTouchpoint.h"
+#import "RVLocation.h"
+#import "RVOrganization.h"
 
-// Controllers
-//WHAT?
+// UI
+#import "RXVisitViewController.h"
+#import "RXDetailViewController.h"
+#import "RXModalViewController.h"
+#import "RXCardViewCell.h"
+#import "RXBlockView.h"
 
-#define kRVVersion @"0.30.0"
+// Networking
+#import "RVNetworkingManager.h"
+#import "RVImagePrefetcher.h"
 
-extern NSString *const kRoverDidExpireVisitNotification;
-
-/** This notification will be posted when the customer exits a touchpoint region.
- */
-extern NSString *const kRoverDidExitTouchpointNotification;
-
-/** This notification will be posted when the customer enters a touchpoint region.
- */
-extern NSString *const kRoverDidEnterTouchpointNotification;
-
-/** This notification will be posted when the customer enters a location.
- */
-extern NSString *const kRoverDidEnterLocationNotification;
 
 /** This notification will be posted before the modal view controller is presented.
  */
@@ -45,21 +44,8 @@ extern NSString *const kRoverWillPresentModalNotification;
  */
 extern NSString *const kRoverDidPresentModalNotification;
 
-/** This notification will be posted before the modal view controller is dismissed.
- */
-extern NSString *const kRoverWillDismissModalNotification;
 
-/** This notification will be posted after the modal view controller is dismissed.
- */
-extern NSString *const kRoverDidDismissModalNotification;
-
-/** This notification will be posted every time a new card is shown to the user. The card is available through the userInfo object.
- */
-extern NSString *const kRoverDidDisplayCardNotification;
-
-/** This notification will be posted every time the user swipes a card. The card is available through the userInfo object.
- */
-extern NSString *const kRoverDidSwipeCardNotification;
+@protocol RoverDelegate;
 
 @class RVConfig;
 
@@ -75,9 +61,9 @@ extern NSString *const kRoverDidSwipeCardNotification;
  */
 + (Rover *)shared;
 
-/** Rover framework configuration
+/** The Rover delegate.
  */
-//@property (readonly, strong, nonatomic) RVConfig *config;
+@property (nonatomic, weak) id <RoverDelegate> delegate;
 
 /** After a customer enters a location a new RVVisit object will be retrieved from the Rover platform and can be accessed through this property.
  */
@@ -86,10 +72,6 @@ extern NSString *const kRoverDidSwipeCardNotification;
 /** The customer object. You can set the name, email and external customer ID for your customer and it will be persisted to the server on the next visit.
  */
 @property (readonly, strong, nonatomic) RVCustomer *customer;
-
-/** Retrieve a list of all cards the customer has saved.
- */
-- (void)savedCards:(void (^)(NSArray *cards, NSString *error))block;
 
 /** After the framework has been initialized call startMonitoring to begin monitoring for your beacons. You must call the setApplicationID:beaconUUIDs: method before you can start monitoring.
  */
@@ -107,10 +89,6 @@ extern NSString *const kRoverDidSwipeCardNotification;
  */
 - (void)presentModal;
 
-/** Present the modal view controller with a subset of cards. E.g. only show unread cards.
- */
-//- (void)presentModalForCardSet:(ModalViewCardSet)cardSet withOptions:(NSDictionary *)options;
-
 /** You can use this method to simulate your app coming in range of a particular beacon.
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
  */
@@ -118,64 +96,26 @@ extern NSString *const kRoverDidSwipeCardNotification;
 
 /** Convenience method to find the current view controller
  */
-
 + (UIViewController *)findCurrentViewController:(UIViewController *)vc;
 
 @end
 
 
+@protocol RoverDelegate <NSObject>
 
-/** Contains all the configuration options used to initialize the Rover framework.
- */
-@interface RVConfig : NSObject
+@optional
+- (void)roverVisit:(RVVisit *)visit didEnterLocation:(RVLocation *)location;
+- (void)roverVisit:(RVVisit *)visit didEnterTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)roverVisit:(RVVisit *)visit didExitTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)roverVisit:(RVVisit *)visit didPotentiallyExitLocation:(RVLocation *)location aliveForAnother:(NSTimeInterval)keepAlive;
+- (void)roverVisitDidExpire:(RVVisit *)visit;
 
-/** The Application ID found on the settings page of the [Rover Admin Console](http://app.roverlabs.co/).
- */
-@property (strong, nonatomic) NSString *applicationID;
+- (BOOL)roverShouldCreateVisit:(RVVisit *)visit;
+- (void)roverDidCreateVisit:(RVVisit *)visit;
 
-/** Use the addBeaconUUID: to add a beacon uuid to this array.
- */
-@property (strong, nonatomic, readonly) NSArray *beaconUUIDs;
-
-/** Set the notification types required for the app (optional). This value defaults to badge, alert and sound, so it's only necessary to set it if you want to add or remove types.
- */
-@property (nonatomic) UIUserNotificationType allowedUserNotificationTypes;
-
-/** The sound used for notifications. By default this is set to UILocalNotificationDefaultSoundName.
- */
-@property (nonatomic, copy) NSString *notificationSoundName;
-
-/** Indicates whether Rover should automatically display the modal dialog when the customer visits a location. The default value is YES.
- */
-@property (nonatomic) BOOL autoPresentModal;
-
-/** Blur radius for the modal backdrop.
- */
-@property (nonatomic) NSUInteger modalBackdropBlurRadius;
-
-/** Tint color for the modal backdrop.
- */
-@property (nonatomic, strong) UIColor *modalBackdropTintColor;
-
-/** Don't change this.
- */
-@property (strong, nonatomic) NSString *serverURL;
-
-/** Sandbox mode. Visits will not be tracked when set to YES.
- */
-@property (nonatomic, assign) BOOL sandboxMode;
-
-/** Register a UIViewController subclass to launch on RoverDidEnterLocationNotification.
- */
-@property (nonatomic, strong, setter=registerModalViewControllerClass:) Class modalViewControllerClass;
-
-/** Create an RVConfig instance with the default values and override as necessary.
- */
-+ (RVConfig *)defaultConfig;
-
-/** Add a beacon UUID found on the settings page of the [Rover Admin Console](http://app.roverlabs.co/). Add a separate UUID for each organization your app is configured to serve content from. For the majority of applications there will only be one UUID.
- */
-- (void)addBeaconUUID:(NSString *)UUIDString;
-
+- (void)roverVisit:(RVVisit *)visit didDisplayCard:(RVCard *)card;
+- (void)roverVisit:(RVVisit *)visit didDiscardCard:(RVCard *)card;
+- (void)roverVisit:(RVVisit *)visit didClickCard:(RVCard *)card withURL:(NSURL *)url;
 
 @end
+

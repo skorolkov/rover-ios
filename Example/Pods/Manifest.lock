@@ -1,9 +1,24 @@
 PODS:
-  - Rover (0.24.4):
-    - Rover/RXManager (= 0.24.4)
+  - Rover (0.30.7):
+    - Rover/Core (= 0.30.7)
+    - Rover/Model (= 0.30.7)
+    - Rover/Networking (= 0.30.7)
+    - Rover/UI (= 0.30.7)
     - RSBarcodes (~> 0.1)
     - UIActivityIndicator-for-SDWebImage (~> 1.2)
-  - Rover/RXManager (0.24.4):
+  - Rover/Core (0.30.7):
+    - Rover/Model
+    - RSBarcodes (~> 0.1)
+    - UIActivityIndicator-for-SDWebImage (~> 1.2)
+  - Rover/Model (0.30.7):
+    - RSBarcodes (~> 0.1)
+    - UIActivityIndicator-for-SDWebImage (~> 1.2)
+  - Rover/Networking (0.30.7):
+    - Rover/Model
+    - RSBarcodes (~> 0.1)
+    - UIActivityIndicator-for-SDWebImage (~> 1.2)
+  - Rover/UI (0.30.7):
+    - Rover/Model
     - RSBarcodes (~> 0.1)
     - UIActivityIndicator-for-SDWebImage (~> 1.2)
   - RSBarcodes (0.1)
@@ -18,12 +33,12 @@ DEPENDENCIES:
 
 EXTERNAL SOURCES:
   Rover:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
-  Rover: 080f087dac6c9966793d585f585349440102f580
-  RSBarcodes: c4d54f52033f9af3d781230292568529ade14b78
+  Rover: 20eabecac72f0b234d154bac8ab75d975517d6dd
+  RSBarcodes: 96ad32377a0142aa9dcc547cbc60b8e9bb20b2fb
   SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
-  UIActivityIndicator-for-SDWebImage: 8bd92c15280fbe54816448c6b14674145eee05c7
+  UIActivityIndicator-for-SDWebImage: 7bf7ebbf0ed1747dedc0d6e949c4603a6d0f9e0c
 
-COCOAPODS: 0.35.0
+COCOAPODS: 0.36.3

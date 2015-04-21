@@ -9,7 +9,7 @@
 #import "AppDelegate.h"
 #import <Rover/Rover.h>
 
-@interface AppDelegate ()
+@interface AppDelegate () <RoverDelegate>
 
 @end
 

@@ -14,9 +14,6 @@
 		DBB10BB119E230950078E9B4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DBB10BB019E230950078E9B4 /* Images.xcassets */; };
 		DBB10BB419E230950078E9B4 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = DBB10BB219E230950078E9B4 /* LaunchScreen.xib */; };
 		DBB10BCF19E236740078E9B4 /* DebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BCE19E236740078E9B4 /* DebugViewController.m */; };
-		DBB10BD419E236920078E9B4 /* NewOffersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BD019E236920078E9B4 /* NewOffersViewController.m */; };
-		DBB10BD519E236920078E9B4 /* ProfileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BD119E236920078E9B4 /* ProfileViewController.m */; };
-		DBB10BD619E236920078E9B4 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = DBB10BD219E236920078E9B4 /* RootViewController.m */; };
 		DBB10BDA19E2395A0078E9B4 /* Rover.plist in Resources */ = {isa = PBXBuildFile; fileRef = DBB10BD919E2395A0078E9B4 /* Rover.plist */; };
 /* End PBXBuildFile section */
 
@@ -32,13 +29,7 @@
 		DBB10BB019E230950078E9B4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		DBB10BB319E230950078E9B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		DBB10BC919E236740078E9B4 /* DebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DebugViewController.h; sourceTree = "<group>"; };
-		DBB10BCA19E236740078E9B4 /* NewOffersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewOffersViewController.h; sourceTree = "<group>"; };
-		DBB10BCB19E236740078E9B4 /* ProfileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewController.h; sourceTree = "<group>"; };
-		DBB10BCC19E236740078E9B4 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootViewController.h; sourceTree = "<group>"; };
 		DBB10BCE19E236740078E9B4 /* DebugViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DebugViewController.m; sourceTree = "<group>"; };
-		DBB10BD019E236920078E9B4 /* NewOffersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NewOffersViewController.m; sourceTree = "<group>"; };
-		DBB10BD119E236920078E9B4 /* ProfileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewController.m; sourceTree = "<group>"; };
-		DBB10BD219E236920078E9B4 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootViewController.m; sourceTree = "<group>"; };
 		DBB10BD919E2395A0078E9B4 /* Rover.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Rover.plist; sourceTree = "<group>"; };
 		EF05A447F91BF240B292B882 /* libPods-Rover.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Rover.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -119,12 +110,6 @@
 			children = (
 				DBB10BC919E236740078E9B4 /* DebugViewController.h */,
 				DBB10BCE19E236740078E9B4 /* DebugViewController.m */,
-				DBB10BCA19E236740078E9B4 /* NewOffersViewController.h */,
-				DBB10BD019E236920078E9B4 /* NewOffersViewController.m */,
-				DBB10BCB19E236740078E9B4 /* ProfileViewController.h */,
-				DBB10BD119E236920078E9B4 /* ProfileViewController.m */,
-				DBB10BCC19E236740078E9B4 /* RootViewController.h */,
-				DBB10BD219E236920078E9B4 /* RootViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -242,10 +227,7 @@
 			files = (
 				DBB10BA919E230950078E9B4 /* AppDelegate.m in Sources */,
 				DBB10BA619E230950078E9B4 /* main.m in Sources */,
-				DBB10BD619E236920078E9B4 /* RootViewController.m in Sources */,
-				DBB10BD419E236920078E9B4 /* NewOffersViewController.m in Sources */,
 				DBB10BCF19E236740078E9B4 /* DebugViewController.m in Sources */,
-				DBB10BD519E236920078E9B4 /* ProfileViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
