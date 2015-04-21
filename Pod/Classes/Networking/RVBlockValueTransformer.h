@@ -16,8 +16,6 @@ typedef id (^RVTransformationBlock)(id inputValue);
 - (id)transformedValue:(id)value;
 
 
-// Convenience Methods
-
 + (instancetype)UIEdgeInsetValueTransformer;
 + (instancetype)UIColorValueTransformer;
 + (instancetype)backgroundContentModeValueTransformer;

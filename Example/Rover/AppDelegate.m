@@ -8,7 +8,6 @@
 
 #import "AppDelegate.h"
 #import <Rover/Rover.h>
-#import "MyModalViewController.h"
 
 @interface AppDelegate () <RoverDelegate>
 
@@ -24,8 +23,6 @@
     
     // In sandbox mode visit analytics arent tracked
     config.sandboxMode = YES;
-    
-    config.modalViewControllerClass = [MyModalViewController class];
     
     Rover *rover = [Rover setup:config];
     
