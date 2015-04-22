@@ -79,8 +79,12 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 
 - (RVCard *)cardAtIndexPath:(NSIndexPath *)indexPath {
     RVTouchpoint *touchpoint = self.touchpoints[indexPath.section];
-    RVCard *card = [self nonDeletedCardsFromCardsArray:touchpoint.cards][indexPath.row];
-    return card;
+    NSArray *nonDeletedCards = [self nonDeletedCardsFromCardsArray:touchpoint.cards];
+    if (indexPath.row < nonDeletedCards.count) {
+        RVCard *card = [self nonDeletedCardsFromCardsArray:touchpoint.cards][indexPath.row];
+        return card;
+    }
+    return nil;git 
 }
 
 - (NSArray *)nonDeletedCardsFromCardsArray:(NSArray *)cards {
