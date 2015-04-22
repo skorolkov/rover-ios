@@ -84,7 +84,7 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
         RVCard *card = [self nonDeletedCardsFromCardsArray:touchpoint.cards][indexPath.row];
         return card;
     }
-    return nil;git 
+    return nil;
 }
 
 - (NSArray *)nonDeletedCardsFromCardsArray:(NSArray *)cards {
