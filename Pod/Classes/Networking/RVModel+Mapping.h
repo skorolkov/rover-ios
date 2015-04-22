@@ -14,6 +14,7 @@
 - (NSDictionary *)inboundMapping;
 - (NSDictionary *)classMapping;
 - (NSDictionary *)valueTransformers;
+- (NSDictionary *)outboundValueTransformers;
 
 - (Class)mappingClassForProperty:(NSString *)property dictionary:(NSDictionary *)dictionary;
 

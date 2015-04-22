@@ -34,6 +34,8 @@
 
 - (NSDictionary *)valueTransformers { return @{}; }
 
+- (NSDictionary *)outboundValueTransformers { return @{}; }
+
 - (Class)mappingClassForProperty:(NSString *)property dictionary:(NSDictionary *)dictionary { return nil; }
 
 @end
@@ -76,6 +78,12 @@
                                 NSInteger integer = [inputValue integerValue];
                                 return [NSNumber numberWithInteger:integer * 60];
                             }]};
+}
+
+- (NSDictionary *)outboundValueTransformers {
+    return @{@"simulate": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
+        return [NSNumber numberWithBool:[inputValue boolValue]];
+    }]};
 }
 
 @end

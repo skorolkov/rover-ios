@@ -28,6 +28,9 @@
     
     NSMutableDictionary *JSON = [[NSMutableDictionary alloc] init];
     
+    
+    NSDictionary *outboundValueTransformers = [object outboundValueTransformers];
+    
     // TODO: do nullsafe stuff
     
     NSDictionary *outboundMapping = [object outboundMapping];
@@ -42,6 +45,13 @@
         }
         
         id value = [object valueForKeyPath:obj];
+        
+        // outboundValueTransform
+        NSValueTransformer *outboundValueTransformer = [outboundValueTransformers objectForKey:key];
+        if (outboundValueTransformer) {
+            value = [outboundValueTransformer transformedValue:value];
+        }
+        
         if (value) {
             if ([value isKindOfClass:[NSDate class]]) {
                 [JSON setObject:[[RVMapper dateFormatter] stringFromDate:value] forKey:key];
@@ -52,7 +62,6 @@
             }
         }
     }];
-    
     
     return JSON;
 

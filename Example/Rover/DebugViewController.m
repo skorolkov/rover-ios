@@ -27,4 +27,8 @@
     [[Rover shared] simulateBeaconWithUUID:UUID major:18347 minor:23905];
 }
 
+- (IBAction)showModalPressed:(id)sender {
+    [[Rover shared] presentModal];
+}
+
 @end
