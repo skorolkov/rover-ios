@@ -23,7 +23,8 @@
 @property (nonatomic, strong) UIView *footerView;
 
 @property (nonatomic, strong) NSLayoutConstraint *containerBarBottomConstraint;
-
+@property (nonatomic, strong, readonly) NSLayoutConstraint *titleBarTopConstraint;
+@property (nonatomic, strong, readonly) NSLayoutConstraint *scrollViewHeightConstraint;
 
 @end
 

@@ -31,7 +31,7 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 {
     self = [super init];
     if (self) {
-        _touchpoints = @[];
+        _touchpoints = [NSMutableArray array];
         
         // Add tableView
         _tableView = [[UITableView alloc] init];
@@ -78,6 +78,9 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 #pragma mark - Helper Methods
 
 - (RVCard *)cardAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.section >= self.touchpoints.count) {
+        return nil;
+    }
     RVTouchpoint *touchpoint = self.touchpoints[indexPath.section];
     NSArray *nonDeletedCards = [self nonDeletedCardsFromCardsArray:touchpoint.cards];
     if (indexPath.row < nonDeletedCards.count) {
@@ -98,6 +101,9 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    if (section >= self.touchpoints.count) {
+        return 0;
+    }
     return [self nonDeletedCardsFromCardsArray:((RVTouchpoint *)self.touchpoints[section]).cards].count;
 }
 
@@ -197,16 +203,22 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 
 
 - (void)addTouchpoint:(RVTouchpoint *)touchpoint {
-
     [self willAddTouchpoint:touchpoint];
-    
-    NSMutableArray *touchpointsArray = [self.touchpoints mutableCopy];
-    [touchpointsArray insertObject:touchpoint atIndex:0];
-    
-    _touchpoints = [NSArray arrayWithArray:touchpointsArray];
-    
+    //[self.tableView beginUpdates];
+    [_touchpoints insertObject:touchpoint atIndex:0];
+    //[self.tableView endUpdates];
     [self didAddTouchpoint:touchpoint];
 
+}
+
+- (void)removeTouchpoint:(RVTouchpoint *)touchpoint {
+    [self willRemoveTouchpoint:touchpoint];
+    [self.tableView beginUpdates];
+    [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:[_touchpoints indexOfObject:touchpoint]] withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    [_touchpoints removeObject:touchpoint];
+    [self.tableView endUpdates];
+    [self didRemoveTouchpoint:touchpoint];
 }
 
 #pragma mark - Event Hooks
@@ -223,6 +235,10 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     
     [self.tableView reloadData];
     [self.tableView setContentOffset:CGPointMake(0, yOffset) animated:NO];
+}
+- (void)willRemoveTouchpoint:(RVTouchpoint *)touchpoint {}
+- (void)didRemoveTouchpoint:(RVTouchpoint *)touchpoint {
+    [self.tableView reloadData];
 }
 
 - (BOOL)hasNoCards {

@@ -81,6 +81,7 @@
 }
 
 - (NSDictionary *)outboundValueTransformers {
+    // This force of __NSCFBoolean is needed for 32-bit devices (iPhone 4S)
     return @{@"simulate": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
         return [NSNumber numberWithBool:[inputValue boolValue]];
     }]};

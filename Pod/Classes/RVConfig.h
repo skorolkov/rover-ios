@@ -32,6 +32,10 @@
  */
 @property (nonatomic) BOOL autoPresentModal;
 
+/** Indicates whether cards accumulate as the user goes through touchpoints.
+ */
+@property (nonatomic) BOOL accumulatingTouchpoints;
+
 /** Blur radius for the modal backdrop.
  */
 @property (nonatomic) NSUInteger modalBackdropBlurRadius;

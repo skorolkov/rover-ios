@@ -16,7 +16,12 @@
  */
 + (id)sharedManager;
 
+/** The authorization token to set in the HTTP header.
+ */
 @property (strong, nonatomic) NSString *authToken;
+
+/** The base URL to make all network calls to.
+ */
 @property (strong, nonatomic) NSURL *baseURL;
 
 /** Sends an HTTP request to the Rover API server. This method is asynchronous.

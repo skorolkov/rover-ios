@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Rover Labs Inc. All rights reserved.
 //
 
-#import "Rover.h"
 #import "RVVisitManager.h"
 
 #import "RVCard.h"
@@ -97,9 +96,12 @@
                 
                 // Delegate
                 if ([self.delegate respondsToSelector:@selector(visitManager:didExitTouchpoint:visit:)]) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
+//                    dispatch_sync(dispatch_get_main_queue(), ^{
+//                        [self.delegate visitManager:self didExitTouchpoint:touchpoint visit:self.latestVisit];
+//                    });
+                    [self executeOnMainQueue:^{
                         [self.delegate visitManager:self didExitTouchpoint:touchpoint visit:self.latestVisit];
-                    });
+                    }];
                 }
                 
             }
@@ -116,9 +118,12 @@
                 
                 // Delegate
                 if ([self.delegate respondsToSelector:@selector(visitManager:didPotentiallyExitLocation:visit:)]) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
+//                    dispatch_sync(dispatch_get_main_queue(), ^{
+//                        [self.delegate visitManager:self didPotentiallyExitLocation:self.latestVisit.location visit:self.latestVisit];
+//                    });
+                    [self executeOnMainQueue:^{
                         [self.delegate visitManager:self didPotentiallyExitLocation:self.latestVisit.location visit:self.latestVisit];
-                    });
+                    }];
                 }
                 
                 [self performSelectorOnMainThread:@selector(startExpirationTimer) withObject:nil waitUntilDone:NO];
@@ -135,8 +140,8 @@
     RVVisit *newVisit = [RVVisit new];
     newVisit.UUID = beaconRegion.proximityUUID;
     newVisit.majorNumber = beaconRegion.major;
-    newVisit.customer = [Rover shared].customer;
-    newVisit.simulate = [[[Rover shared] configValueForKey:@"sandboxMode"] boolValue];
+    newVisit.customer = [RVCustomer cachedCustomer]; //[Rover shared].customer;
+    //newVisit.simulate = [[[Rover shared] configValueForKey:@"sandboxMode"] boolValue];
     newVisit.timestamp = [NSDate date];
     newVisit.valid = YES; // New visit is valid by default
     
@@ -155,9 +160,12 @@
         
         // Delegate
         if ([self.delegate respondsToSelector:@selector(visitManager:didEnterLocation:visit:)]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+//            dispatch_sync(dispatch_get_main_queue(), ^{
+//                [self.delegate visitManager:self didEnterLocation:newVisit.location visit:newVisit];
+//            });
+            [self executeOnMainQueue:^{
                 [self.delegate visitManager:self didEnterLocation:newVisit.location visit:newVisit];
-            });
+            }];
         }
 
         // START MONITORING
@@ -173,13 +181,13 @@
 
 #pragma mark - Helper Methods
 
-- (void)postNotificationName:(NSString *)notificationName userInfo:(NSDictionary *)userInfo {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:self userInfo:userInfo];
-    });
+- (void)executeOnMainQueue:(void(^)())block {
+    if ([NSThread isMainThread]) {
+        block();
+    } else {
+        dispatch_sync(dispatch_get_main_queue(), block);
+    }
 }
-
-// NOTE: this method should always be called from the main thread
 
 - (void)movedToRegion:(CLBeaconRegion *)beaconRegion {
     if (![self.latestVisit.currentTouchpoints containsObject:self.latestVisit.wildcardTouchpoints.anyObject]) {
@@ -189,9 +197,12 @@
             
             // Delegate
             if ([self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoint:visit:)]) {
-                dispatch_async(dispatch_get_main_queue(), ^{
+//                dispatch_sync(dispatch_get_main_queue(), ^{
+//                    [self.delegate visitManager:self didEnterTouchpoint:touchpoint visit:self.latestVisit];
+//                });
+                [self executeOnMainQueue:^{
                     [self.delegate visitManager:self didEnterTouchpoint:touchpoint visit:self.latestVisit];
-                });
+                }];
             }
         }];
     }
@@ -205,9 +216,12 @@
         
         // Delegate
         if ([self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoint:visit:)]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+//            dispatch_sync(dispatch_get_main_queue(), ^{
+//                [self.delegate visitManager:self didEnterTouchpoint:touchpoint visit:self.latestVisit];
+//            });
+            [self executeOnMainQueue:^{
                 [self.delegate visitManager:self didEnterTouchpoint:touchpoint visit:self.latestVisit];
-            });
+            }];
         }
         
     } else {
@@ -221,9 +235,12 @@
 
         // Delegate
         if ([self.delegate respondsToSelector:@selector(visitManager:didExitTouchpoint:visit:)]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
+//            dispatch_sync(dispatch_get_main_queue(), ^{
+//                [self.delegate visitManager:self didExitTouchpoint:touchpoint visit:self.latestVisit];
+//            });
+            [self executeOnMainQueue:^{
                 [self.delegate visitManager:self didExitTouchpoint:touchpoint visit:self.latestVisit];
-            });
+            }];
         }
     }];
 }

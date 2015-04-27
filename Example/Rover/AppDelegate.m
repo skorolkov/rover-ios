@@ -24,6 +24,8 @@
     // In sandbox mode visit analytics arent tracked
     config.sandboxMode = YES;
     
+    config.accumulatingTouchpoints = NO;
+    
     Rover *rover = [Rover setup:config];
     
     [rover startMonitoring];
