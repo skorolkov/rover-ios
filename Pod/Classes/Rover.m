@@ -135,6 +135,8 @@ static Rover *sharedInstance = nil;
             NSLog(@"%@ warning empty beacon uuids", self);
         }
         
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
+        
     }
     return self;
 }
@@ -263,7 +265,12 @@ static Rover *sharedInstance = nil;
     if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
         RXVisitViewController *visitViewController = (RXVisitViewController *)_modalViewController;
         if (![visitViewController.touchpoints containsObject:touchpoint]) {
-            [visitViewController addTouchpoint:touchpoint];
+            if (self.config.accumulatingTouchpoints) {
+                [visitViewController addTouchpoint:touchpoint];
+            } else {
+                [visitViewController setTouchpoints:[[visit.currentTouchpoints allObjects] mutableCopy]];
+                [visitViewController.tableView reloadData];
+            }
         }
     }
     
@@ -273,7 +280,7 @@ static Rover *sharedInstance = nil;
         // Touchpoint Tracking
         [self trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID}];
         
-        if (!touchpoint.notificationDelivered) {
+        if (!touchpoint.notificationDelivered || !self.config.accumulatingTouchpoints) {
             UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
             UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
             
@@ -284,6 +291,9 @@ static Rover *sharedInstance = nil;
         
         touchpoint.notificationDelivered = YES;
     } else if (!touchpoint.notificationDelivered) {
+        
+        NSLog(@"touchpoint: %@", touchpoint);
+        NSLog(@"noti: %@", touchpoint.notification);
         
         if (touchpoint.notification) {
             [self sendNotification:touchpoint.notification];
@@ -306,7 +316,14 @@ static Rover *sharedInstance = nil;
     if (!self.config.accumulatingTouchpoints && _modalViewController) {
         if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [((RXVisitViewController *)_modalViewController) removeTouchpoint:touchpoint];
+                RXVisitViewController *visitModalViewController = (RXVisitViewController *)_modalViewController;
+                
+                [visitModalViewController setTouchpoints:[[visit.currentTouchpoints allObjects] mutableCopy]];
+                [visitModalViewController.tableView reloadData];
+                
+                if (visitModalViewController.touchpoints.count == 0) {
+                    [visitModalViewController dismissViewControllerAnimated:YES completion:nil];
+                }
             });
         }
     }
@@ -323,7 +340,6 @@ static Rover *sharedInstance = nil;
     // Delegate
     if ([self.delegate respondsToSelector:@selector(roverShouldCreateVisit:)]) {
         if (![self.delegate roverShouldCreateVisit:visit]) {
-            visit.valid = NO; // TODO: remove this
             return NO;
         }
     }
@@ -342,7 +358,7 @@ static Rover *sharedInstance = nil;
 #pragma mark - Application Notifications
 
 - (void)applicationDidBecomeActive:(NSNotification *)note {
-
+    
     if (self.currentVisit) {
         // Touchpoint Tracking
         [self.currentVisit.currentTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
@@ -360,6 +376,7 @@ static Rover *sharedInstance = nil;
             } else if (![currentViewController isKindOfClass:_config.modalViewControllerClass]) {
                 
                 [self presentModal];
+                NSLog(@"present");
             }
         }
     }

@@ -181,8 +181,7 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
     } failure:^(NSError *error) {
         NSString *reason = [error.userInfo objectForKey:NSLocalizedDescriptionKey];
         NSLog(@"ROVER-ERROR: Post /visits failed: %@", reason);
-        
-        visit.valid = NO;
+
         
         dispatch_semaphore_signal(semaphore);
     }];

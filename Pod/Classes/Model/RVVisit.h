@@ -22,7 +22,6 @@
 @property (readonly) BOOL isAlive;
 
 
-@property (nonatomic, assign) BOOL valid;
 
 //_____REQUEST ______
 

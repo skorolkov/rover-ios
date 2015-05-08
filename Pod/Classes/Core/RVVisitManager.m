@@ -143,7 +143,6 @@
     newVisit.customer = [RVCustomer cachedCustomer]; //[Rover shared].customer;
     //newVisit.simulate = [[[Rover shared] configValueForKey:@"sandboxMode"] boolValue];
     newVisit.timestamp = [NSDate date];
-    newVisit.valid = YES; // New visit is valid by default
     
     BOOL shouldCreateVisit;
     

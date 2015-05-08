@@ -160,7 +160,14 @@
 }
 
 - (void)locationManager:(CLLocationManager *)manager monitoringDidFailForRegion:(CLRegion *)region withError:(NSError *)error {
-    NSLog(@"Monitoring failed - probably because you have run out of slots - : %@", error);
+#if TARGET_IPHONE_SIMULATOR
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSLog(@"ROVER - WARNING: The iOS Simulator does not support monitoring for beacons. To simulate a beacon use the [Rover simulateBeaconWithUUID:major:minor:] method. See http://dev.roverlabs.co/v1.0/docs/getting-started#simulate-a-beacon for more details.");
+    });
+#else
+    NSLog(@"ROVER - WARNING: Monitoring failed - probably because you have run out of slots - : %@", error);
+#endif
 }
 
 @end

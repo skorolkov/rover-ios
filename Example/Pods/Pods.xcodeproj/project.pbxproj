@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		3DCCCEFE1AEE8F7D00BFFDBF /* Documentation */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 3DCCCF011AEE8F7D00BFFDBF /* Build configuration list for PBXAggregateTarget "Documentation" */;
+			buildPhases = (
+				3DCCCF021AEE8F9D00BFFDBF /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = Documentation;
+			productName = Documentation;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		035CA2F2046DEDC912684C40 /* UIImageView+HighlightedWebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = AC5B430A287A230A43C0B20E /* UIImageView+HighlightedWebCache.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		05613AF1F96EB7574704C28C /* SDWebImageDownloaderOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 32C391D6787B5C9069B22B80 /* SDWebImageDownloaderOperation.h */; };
@@ -1136,6 +1150,11 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0510;
+				TargetAttributes = {
+					3DCCCEFE1AEE8F7D00BFFDBF = {
+						CreatedOnToolsVersion = 6.3;
+					};
+				};
 			};
 			buildConfigurationList = FDF63D948CEBC63FD921A896 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1155,6 +1174,7 @@
 				E86D8D8095D7CF89E4FBE674 /* Pods-Rover-Rover-Rover */,
 				9B18BC72AC12F1297E899A94 /* Pods-Rover-SDWebImage */,
 				A483848048192340BF4073EE /* Pods-Rover-UIActivityIndicator-for-SDWebImage */,
+				3DCCCEFE1AEE8F7D00BFFDBF /* Documentation */,
 			);
 		};
 /* End PBXProject section */
@@ -1168,6 +1188,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3DCCCF021AEE8F9D00BFFDBF /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#appledoc Xcode script\n# Start constants\ncompany=\"Rover\";\ncompanyID=\"co.roverlabs\";\ncompanyURL=\"http://www.roverlabs.co\";\ntarget=\"iphoneos\";\n#target=\"macosx\";\noutputPath=\"~/help\";\n# End constants\n/usr/local/bin/appledoc \\\n--project-name \"Rover iOS SDK\" \\\n--project-company \"${company}\" \\\n--company-id \"${companyID}\" \\\n--docset-atom-filename \"${company}.atom\" \\\n--docset-feed-url \"${companyURL}/${company}/%DOCSETATOMFILENAME\" \\\n--docset-package-url \"${companyURL}/${company}/%DOCSETPACKAGEFILENAME\" \\\n--docset-fallback-url \"${companyURL}/${company}\" \\\n--output \"${outputPath}\" \\\n--publish-docset \\\n--docset-platform-family \"${target}\" \\\n--logformat xcode \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--exit-threshold 2 \\\n\"${PROJECT_DIR}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		107F0EFA4EF142A7E2D24D70 /* Sources */ = {
@@ -1365,6 +1401,20 @@
 				WRAPPER_EXTENSION = bundle;
 			};
 			name = Debug;
+		};
+		3DCCCEFF1AEE8F7D00BFFDBF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		3DCCCF001AEE8F7D00BFFDBF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
 		};
 		67D5DEB8170644AEF2F8236F /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1597,6 +1647,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3DCCCF011AEE8F7D00BFFDBF /* Build configuration list for PBXAggregateTarget "Documentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3DCCCEFF1AEE8F7D00BFFDBF /* Debug */,
+				3DCCCF001AEE8F7D00BFFDBF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		4119AAF0D7AB3796402B8DD0 /* Build configuration list for PBXNativeTarget "Pods-Rover-Rover" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

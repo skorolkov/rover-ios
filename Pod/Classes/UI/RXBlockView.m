@@ -197,7 +197,7 @@
         UIImageView *backgroundImageView = [UIImageView new];
         backgroundImageView.translatesAutoresizingMaskIntoConstraints = NO;
         backgroundImageView.contentMode = UIViewContentModeFromRVBackgroundContentMode(contentmode);
-        [backgroundImageView sd_setImageWithURL:url];
+        //[backgroundImageView sd_setImageWithURL:url];
         
         [self addSubview:backgroundImageView];
         

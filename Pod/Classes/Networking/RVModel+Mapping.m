@@ -228,7 +228,7 @@
              }],
              @"margin": [RVBlockValueTransformer UIEdgeInsetValueTransformer],
              @"backgroundContentMode": [RVBlockValueTransformer backgroundContentModeValueTransformer],
-             @"backgroundImageURL": [RVBlockValueTransformer NSURLValueTransformer],
+             @"backgroundImageUrl": [RVBlockValueTransformer NSURLValueTransformer],
              @"backgroundColor": [RVBlockValueTransformer UIColorValueTransformer]};
 }
 
@@ -254,8 +254,9 @@
              @"borderColor": [RVBlockValueTransformer UIColorValueTransformer],
              @"padding": [RVBlockValueTransformer UIEdgeInsetValueTransformer],
              @"borderWidth": [RVBlockValueTransformer UIEdgeInsetValueTransformer],
-             @"backgroundImageURL": [RVBlockValueTransformer NSURLValueTransformer],
-             @"backgroundContentMode": [RVBlockValueTransformer backgroundContentModeValueTransformer]};
+             @"backgroundImageUrl": [RVBlockValueTransformer NSURLValueTransformer],
+             @"backgroundContentMode": [RVBlockValueTransformer backgroundContentModeValueTransformer],
+             @"url": [RVBlockValueTransformer NSURLValueTransformer]};
 }
 
 @end
@@ -333,7 +334,7 @@
 
 - (NSDictionary *)valueTransformers {
     NSMutableDictionary *valueTransformers = [[super valueTransformers] mutableCopy];
-    [valueTransformers addEntriesFromDictionary:@{@"barcodeType": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
+    [valueTransformers addEntriesFromDictionary:@{@"barcodeFormat": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
         if ([inputValue isEqualToString:@"code128"]) {
             return [NSNumber numberWithInteger:RVBarcodeTypeCode128];
         } else {

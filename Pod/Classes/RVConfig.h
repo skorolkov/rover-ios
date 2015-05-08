@@ -6,7 +6,7 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+@import UIKit;
 
 /** Contains all the configuration options used to initialize the Rover framework.
  */
