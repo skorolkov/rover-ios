@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DebugViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, UITabBarDelegate>
+@interface DebugViewController : UIViewController <UITabBarDelegate>
 
 
 @end

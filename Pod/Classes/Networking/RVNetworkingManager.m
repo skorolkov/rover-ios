@@ -7,6 +7,10 @@
 //
 
 #import "RVNetworkingManager.h"
+#import "RVVisit.h"
+
+#import "RVMapper.h"
+
 
 NSString *const kRVNetworkingManagerErrorDomain = @"co.roverlabs.error";
 NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs.error.response";
@@ -15,6 +19,7 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
 
 @property NSURLSession *session;
 @property NSURLSessionConfiguration *sessionConfig;
+@property (nonatomic, strong) RVMapper *mapper;
 
 @end
 
@@ -41,8 +46,7 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
     if (self) {
         self.sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
         self.session = [NSURLSession sessionWithConfiguration:self.sessionConfig];
-        
-        _loggingEnabled = NO;
+        self.mapper = [RVMapper new];
     }
     return self;
 }
@@ -80,7 +84,7 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     
     if (self.authToken) {
-        [request setValue:self.authToken forHTTPHeaderField:@"Authorization"];
+        [request setValue:[NSString stringWithFormat:@"Bearer %@", self.authToken] forHTTPHeaderField:@"Authorization"];
     }
     
     return request;
@@ -157,6 +161,56 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
                                NSURLErrorFailingURLErrorKey:response.URL};
     
     return [NSError errorWithDomain:NSURLErrorDomain code:NSURLErrorBadServerResponse userInfo:userInfo];
+}
+
+#pragma mark - Visit Create
+
+- (void)postVisit:(RVVisit *)visit {
+    // Need a synchronous call
+    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    
+    [self sendRequestWithMethod:@"POST" path:@"visits" parameters:[self.mapper JSONfromObject:visit] success:^(NSDictionary *data) {
+        NSDictionary *JSON = [data objectForKey:@"visit"];
+        
+        if (JSON) {
+            [self.mapper mapJSON:JSON toObject:visit];
+            //[visit updateWithJSON:JSON];
+        }
+        
+        dispatch_semaphore_signal(semaphore);
+    } failure:^(NSError *error) {
+        NSString *reason = [error.userInfo objectForKey:NSLocalizedDescriptionKey];
+        NSLog(@"ROVER-ERROR: Post /visits failed: %@", reason);
+
+        
+        dispatch_semaphore_signal(semaphore);
+    }];
+    
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
+
+#pragma mark - Event Tracking
+
+- (void)trackEvent:(NSString *)event params:(NSDictionary *)params visit:(RVVisit *)visit {
+    
+    if (visit.simulate) {
+        return;
+    }
+    
+    NSArray *eventComponents = [event componentsSeparatedByString:@"."];
+    
+    NSMutableDictionary *eventParams = [NSMutableDictionary dictionaryWithDictionary:@{@"object": eventComponents[0],
+                                                                                       @"action": eventComponents[1],
+                                                                                       @"timestamp": [[RVMapper dateFormatter] stringFromDate:[NSDate date]]}];
+    
+    [eventParams addEntriesFromDictionary:params];
+    
+    NSString *path = [NSString stringWithFormat:@"visits/%@/events", visit.ID];
+    
+    [[RVNetworkingManager sharedManager] sendRequestWithMethod:@"POST" path:path parameters:eventParams success:^(NSDictionary *data) {
+    } failure:^(NSError *error) {
+        //NSLog(@"%@ failed: %@",event, error);
+    }];
 }
 
 @end

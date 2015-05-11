@@ -7,8 +7,8 @@
 //
 
 #import "RVImagePrefetcher.h"
-#import <SDWebImage/SDWebImageManager.h>
 #import <SDWebImage/UIImage+MultiFormat.h>
+#import <SDWebImage/SDWebImageManager.h>
 
 @interface RVImagePrefetcher () <NSURLSessionDownloadDelegate>
 
