@@ -61,6 +61,7 @@ static RVVisit *_latestVisit;
 
 + (void)clearLatestVisit {
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kRVVisitManagerLatestVisitPersistenceKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
     _latestVisit = nil;
 }
 

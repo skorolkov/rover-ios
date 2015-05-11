@@ -131,7 +131,7 @@
     }
     
     if (!_hasDisplayedInitialAnimation) {
-        
+        NSLog(@"disssss");
         NSInteger numberOfRowsInFirstSection = [self tableView:tableView numberOfRowsInSection:0];
         CGFloat heightOffset = 0;
         if (numberOfRowsInFirstSection > 0) {
@@ -171,7 +171,6 @@
     }
     
 //    if (_minIndexPathRow == 0 && _minIndexPathSection ==0 && _pillView.superview) {
-//        NSLog(@"fdfd");
 //        RVCard *card = [self cardAtIndexPath:[self.tableView indexPathForCell:cells[0]]];
 //
 //    }

@@ -181,7 +181,9 @@ static Rover *sharedInstance = nil;
         
         NSArray *touchpoints = _config.accumulatingTouchpoints ? [[self.currentVisit.visitedTouchpoints reverseObjectEnumerator] allObjects] : [self.currentVisit.currentTouchpoints allObjects];
         
-        [((RXVisitViewController *)_modalViewController) setTouchpoints:[touchpoints mutableCopy]];
+        [((RXVisitViewController *)_modalViewController) setTouchpoints:[[touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
+            return touchpoint.cards.count > 0;
+        }]] mutableCopy]];
     }
     
     if ([_modalViewController isKindOfClass:[RXModalViewController class]]) {
@@ -266,7 +268,9 @@ static Rover *sharedInstance = nil;
         RXVisitViewController *visitViewController = (RXVisitViewController *)_modalViewController;
         if (![visitViewController.touchpoints containsObject:touchpoint]) {
             if (self.config.accumulatingTouchpoints) {
-                [visitViewController addTouchpoint:touchpoint];
+                if (touchpoint.cards.count > 0) {
+                    [visitViewController addTouchpoint:touchpoint];
+                }
             } else {
                 [visitViewController setTouchpoints:[[visit.currentTouchpoints allObjects] mutableCopy]];
                 [visitViewController.tableView reloadData];

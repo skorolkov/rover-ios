@@ -246,7 +246,7 @@
              @"borderWidth": @"borderWidth",
              @"url": @"url",
              @"backgroundImageURL": @"backgroundImageUrl",
-             @"backgroundContentMode": @"backgroundContedMode"};
+             @"backgroundContentMode": @"backgroundContentMode"};
 }
 
 - (NSDictionary *)valueTransformers {

@@ -64,7 +64,7 @@
             
             // Touchpoint check
             if (![self.latestVisit isInTouchpointRegion:beaconRegion]) {
-                [self performSelectorOnMainThread:@selector(movedToRegion:) withObject:beaconRegion waitUntilDone:YES];
+                [self movedToRegion:beaconRegion];
             }
             
             NSDate *now = [NSDate date];
@@ -96,9 +96,7 @@
                 
                 // Delegate
                 if ([self.delegate respondsToSelector:@selector(visitManager:didExitTouchpoint:visit:)]) {
-//                    dispatch_sync(dispatch_get_main_queue(), ^{
-//                        [self.delegate visitManager:self didExitTouchpoint:touchpoint visit:self.latestVisit];
-//                    });
+
                     [self executeOnMainQueue:^{
                         [self.delegate visitManager:self didExitTouchpoint:touchpoint visit:self.latestVisit];
                     }];
@@ -118,9 +116,7 @@
                 
                 // Delegate
                 if ([self.delegate respondsToSelector:@selector(visitManager:didPotentiallyExitLocation:visit:)]) {
-//                    dispatch_sync(dispatch_get_main_queue(), ^{
-//                        [self.delegate visitManager:self didPotentiallyExitLocation:self.latestVisit.location visit:self.latestVisit];
-//                    });
+
                     [self executeOnMainQueue:^{
                         [self.delegate visitManager:self didPotentiallyExitLocation:self.latestVisit.location visit:self.latestVisit];
                     }];
@@ -196,9 +192,7 @@
             
             // Delegate
             if ([self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoint:visit:)]) {
-//                dispatch_sync(dispatch_get_main_queue(), ^{
-//                    [self.delegate visitManager:self didEnterTouchpoint:touchpoint visit:self.latestVisit];
-//                });
+
                 [self executeOnMainQueue:^{
                     [self.delegate visitManager:self didEnterTouchpoint:touchpoint visit:self.latestVisit];
                 }];
@@ -215,9 +209,7 @@
         
         // Delegate
         if ([self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoint:visit:)]) {
-//            dispatch_sync(dispatch_get_main_queue(), ^{
-//                [self.delegate visitManager:self didEnterTouchpoint:touchpoint visit:self.latestVisit];
-//            });
+
             [self executeOnMainQueue:^{
                 [self.delegate visitManager:self didEnterTouchpoint:touchpoint visit:self.latestVisit];
             }];
@@ -234,9 +226,7 @@
 
         // Delegate
         if ([self.delegate respondsToSelector:@selector(visitManager:didExitTouchpoint:visit:)]) {
-//            dispatch_sync(dispatch_get_main_queue(), ^{
-//                [self.delegate visitManager:self didExitTouchpoint:touchpoint visit:self.latestVisit];
-//            });
+
             [self executeOnMainQueue:^{
                 [self.delegate visitManager:self didExitTouchpoint:touchpoint visit:self.latestVisit];
             }];
