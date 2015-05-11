@@ -269,7 +269,17 @@ static Rover *sharedInstance = nil;
         if (![visitViewController.touchpoints containsObject:touchpoint]) {
             if (self.config.accumulatingTouchpoints) {
                 if (touchpoint.cards.count > 0) {
-                    [visitViewController addTouchpoint:touchpoint];
+                    
+                    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(.6 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                            
+                            [visitViewController addTouchpoint:touchpoint];
+                        });
+                    } else {
+                        
+                        [visitViewController addTouchpoint:touchpoint];
+                    }
+                    
                 }
             } else {
                 [visitViewController setTouchpoints:[[visit.currentTouchpoints allObjects] mutableCopy]];
@@ -295,9 +305,6 @@ static Rover *sharedInstance = nil;
         
         touchpoint.notificationDelivered = YES;
     } else if (!touchpoint.notificationDelivered) {
-        
-        NSLog(@"touchpoint: %@", touchpoint);
-        NSLog(@"noti: %@", touchpoint.notification);
         
         if (touchpoint.notification) {
             [self sendNotification:touchpoint.notification];

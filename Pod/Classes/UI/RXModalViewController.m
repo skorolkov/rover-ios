@@ -131,7 +131,6 @@
     }
     
     if (!_hasDisplayedInitialAnimation) {
-        NSLog(@"disssss");
         NSInteger numberOfRowsInFirstSection = [self tableView:tableView numberOfRowsInSection:0];
         CGFloat heightOffset = 0;
         if (numberOfRowsInFirstSection > 0) {
