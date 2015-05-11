@@ -135,10 +135,7 @@
     // Corner Radius
     _containerView.layer.cornerRadius = viewDefinition.cornerRadius;
     
-    // Background Image
-    if (viewDefinition.backgroundImageURL) {
-        [self setBackgroundImageWithURL:viewDefinition.backgroundImageURL contentMode:viewDefinition.backgroundContentMode];
-    }
+
     
     // Blocks
     [viewDefinition.blocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
@@ -149,6 +146,11 @@
     
     if (_containerView.subviews.count > 0) {
         [self configureLayoutForLastBlockView:_containerView.subviews[_containerView.subviews.count - 1]];
+    }
+    
+    // Background Image
+    if (viewDefinition.backgroundImageURL) {
+        [self setBackgroundImageWithURL:viewDefinition.backgroundImageURL contentMode:viewDefinition.backgroundContentMode];
     }
     
     _viewDefinition = viewDefinition;
@@ -166,12 +168,14 @@
         backgroundImageView.contentMode = UIViewContentModeFromRVBackgroundContentMode(contentmode);
         [backgroundImageView sd_setImageWithURL:url];
         
-        [self addSubview:backgroundImageView];
+        [self.containerView addSubview:backgroundImageView];
         
         NSDictionary *views = NSDictionaryOfVariableBindings(backgroundImageView);
         
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[backgroundImageView]|" options:0 metrics:nil views:views]];
-        [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundImageView]|" options:0 metrics:nil views:views]];
+        [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[backgroundImageView]|" options:0 metrics:nil views:views]];
+        [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundImageView]|" options:0 metrics:nil views:views]];
+        
+        [self.containerView sendSubviewToBack:backgroundImageView];
     }
 }
 

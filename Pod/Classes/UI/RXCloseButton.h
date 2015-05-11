@@ -10,6 +10,8 @@
 
 @interface RXCloseButton : UIButton
 
+/** Color for the X.
+ */
 @property (nonatomic, strong) UIColor *color;
 
 @end

@@ -81,6 +81,7 @@
 }
 
 - (NSDictionary *)outboundValueTransformers {
+    // This force of __NSCFBoolean is needed for 32-bit devices (iPhone 4S)
     return @{@"simulate": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
         return [NSNumber numberWithBool:[inputValue boolValue]];
     }]};
@@ -227,7 +228,7 @@
              }],
              @"margin": [RVBlockValueTransformer UIEdgeInsetValueTransformer],
              @"backgroundContentMode": [RVBlockValueTransformer backgroundContentModeValueTransformer],
-             @"backgroundImageURL": [RVBlockValueTransformer NSURLValueTransformer],
+             @"backgroundImageUrl": [RVBlockValueTransformer NSURLValueTransformer],
              @"backgroundColor": [RVBlockValueTransformer UIColorValueTransformer]};
 }
 
@@ -245,7 +246,7 @@
              @"borderWidth": @"borderWidth",
              @"url": @"url",
              @"backgroundImageURL": @"backgroundImageUrl",
-             @"backgroundContentMode": @"backgroundContedMode"};
+             @"backgroundContentMode": @"backgroundContentMode"};
 }
 
 - (NSDictionary *)valueTransformers {
@@ -253,8 +254,9 @@
              @"borderColor": [RVBlockValueTransformer UIColorValueTransformer],
              @"padding": [RVBlockValueTransformer UIEdgeInsetValueTransformer],
              @"borderWidth": [RVBlockValueTransformer UIEdgeInsetValueTransformer],
-             @"backgroundImageURL": [RVBlockValueTransformer NSURLValueTransformer],
-             @"backgroundContentMode": [RVBlockValueTransformer backgroundContentModeValueTransformer]};
+             @"backgroundImageUrl": [RVBlockValueTransformer NSURLValueTransformer],
+             @"backgroundContentMode": [RVBlockValueTransformer backgroundContentModeValueTransformer],
+             @"url": [RVBlockValueTransformer NSURLValueTransformer]};
 }
 
 @end
@@ -332,7 +334,7 @@
 
 - (NSDictionary *)valueTransformers {
     NSMutableDictionary *valueTransformers = [[super valueTransformers] mutableCopy];
-    [valueTransformers addEntriesFromDictionary:@{@"barcodeType": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
+    [valueTransformers addEntriesFromDictionary:@{@"barcodeFormat": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
         if ([inputValue isEqualToString:@"code128"]) {
             return [NSNumber numberWithInteger:RVBarcodeTypeCode128];
         } else {

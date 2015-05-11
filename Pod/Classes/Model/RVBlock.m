@@ -8,20 +8,7 @@
 
 #import "RVBlock.h"
 
-#import "RVHeaderBlock.h"
-#import "RVTextBlock.h"
-#import "RVImageBlock.h"
-#import "RVBarcodeBlock.h"
-#import "RVButtonBlock.h"
-
-NSString *const sRVBlockImageType = @"imageBlock";
-NSString *const sRVBlockTextType = @"textBlock";
-NSString *const sRVBlockBarcodeType = @"barcodeBlock";
-NSString *const sRVBlockButtonType = @"buttonBlock";
-NSString *const sRVBlockHeaderType = @"headerBlock";
-
 @interface RVBlock ()
-
 
 @end
 
