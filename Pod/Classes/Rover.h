@@ -36,15 +36,6 @@
 #import "RVImagePrefetcher.h"
 
 
-/** This notification will be posted before the modal view controller is presented.
- */
-extern NSString *const kRoverWillPresentModalNotification;
-
-/** This notification will be posted after the modal view controller is presented.
- */
-extern NSString *const kRoverDidPresentModalNotification;
-
-
 @protocol RoverDelegate;
 
 @class RVConfig;

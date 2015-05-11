@@ -8,12 +8,10 @@
 #import <Foundation/Foundation.h>
 #import "RVModel.h"
 
-/** The RVCustomer class represents the current user of your app. You shouldn't create an instance of the RVCustomer class directly. Instead, you access the current customer object from the [Rover shared].customer property. After setting the name, email or customer attributes on a customer you do not need to call the save:failure: method. The customer will automatically be persisted to the Rover Platform the next time the customer visits a location.
+/** The RVCustomer class represents the current user of your app. You shouldn't create an instance of the RVCustomer class directly. Instead, you access the current customer object from the `cachedCustomer` class method. After setting the name, email or customer attributes on a customer, the customer will automatically be persisted to the Rover Platform the next time the customer visits a location.
  */
 @interface RVCustomer : RVModel <NSCoding>
 
-/** 
- */
 @property (strong, nonatomic) NSString *customerID;
 
 /** The name of the current customer. After setting this property you should call the save method to persist your changes to the Rover Platform.
@@ -35,11 +33,6 @@
  @see setAttribute:value:
  */
 - (id)get:(NSString *)attribute;
-
-/** Indicates weather the customer has seen the tutorial on this device.
- */
-@property (nonatomic, assign) BOOL hasSeenTutorial;
-
 
 + (RVCustomer *)cachedCustomer;
 
