@@ -202,42 +202,49 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 }
 
 
-- (void)addTouchpoint:(RVTouchpoint *)touchpoint {
-    [self willAddTouchpoint:touchpoint];
-    //[self.tableView beginUpdates];
-    [_touchpoints insertObject:touchpoint atIndex:0];
-    //[self.tableView endUpdates];
-    [self didAddTouchpoint:touchpoint];
+- (void)addTouchpoints:(NSArray *)touchpoints {
+    [self willAddTouchpoints:touchpoints];
+    [_touchpoints insertObjects:touchpoints atIndexes:[NSIndexSet indexSetWithIndex:0]];
+    [self didAddTouchpoints:touchpoints];
 
 }
 
-- (void)removeTouchpoint:(RVTouchpoint *)touchpoint {
-    [self willRemoveTouchpoint:touchpoint];
+- (void)removeTouchpoints:(NSArray *)touchpoints {
+    [self willRemoveTouchpoints:touchpoints];
     [self.tableView beginUpdates];
-    [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:[_touchpoints indexOfObject:touchpoint]] withRowAnimation:UITableViewRowAnimationAutomatic];
     
-    [_touchpoints removeObject:touchpoint];
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
+        [indexSet addIndex:[_touchpoints indexOfObject:touchpoint]];
+    }];
+    
+    [self.tableView deleteSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    [_touchpoints removeObjectsInArray:touchpoints];
     [self.tableView endUpdates];
-    [self didRemoveTouchpoint:touchpoint];
+    [self didRemoveTouchpoints:touchpoints];
 }
 
 #pragma mark - Event Hooks
 
 // Implement in subclass
-- (void)willAddTouchpoint:(RVTouchpoint *)touchpoint {}
-- (void)didAddTouchpoint:(RVTouchpoint *)touchpoint {
+- (void)willAddTouchpoints:(NSArray *)touchpoints {}
+- (void)didAddTouchpoints:(NSArray *)touchpoints {
     
-    NSInteger rows = [self tableView:self.tableView numberOfRowsInSection:0];
-    CGFloat yOffset = self.tableView.contentOffset.y;
-    for (int i=0; i<rows; i++) {
-        yOffset += [self tableView:self.tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]];
-    }
+    __block CGFloat yOffset = self.tableView.contentOffset.y;
+    
+    [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
+        NSInteger rows = [self tableView:self.tableView numberOfRowsInSection:idx];
+        for (int i=0; i<rows; i++) {
+            yOffset += [self tableView:self.tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:idx]];
+        }
+    }];
     
     [self.tableView reloadData];
     [self.tableView setContentOffset:CGPointMake(0, yOffset) animated:NO];
 }
-- (void)willRemoveTouchpoint:(RVTouchpoint *)touchpoint {}
-- (void)didRemoveTouchpoint:(RVTouchpoint *)touchpoint {
+- (void)willRemoveTouchpoints:(NSArray *)touchpoints {}
+- (void)didRemoveTouchpoints:(NSArray *)touchpoints {
     [self.tableView reloadData];
 }
 

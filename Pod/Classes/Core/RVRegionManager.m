@@ -25,8 +25,8 @@
 
 - (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor {
     CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID major:major minor:minor identifier:[self identifierForUUID:UUID major:major minor:minor]];
-    [self.delegate regionManager:self didEnterRegion:beaconRegion totalRegions:self.currentRegions];
-    [self.delegate regionManager:self didExitRegion:beaconRegion totalRegions:self.currentRegions];
+    [self.delegate regionManager:self didEnterRegions:[NSSet setWithObject:beaconRegion]];
+    [self.delegate regionManager:self didExitRegions:[NSSet setWithObject:beaconRegion]];
 }
 
 #pragma mark - Properties
@@ -144,17 +144,11 @@
         NSMutableSet *exitedRegions = [NSMutableSet setWithSet:self.currentRegions];
         [exitedRegions minusSet:regions];
         
-        
         self.currentRegions = regions;
+
+        [self.delegate regionManager:self didExitRegions:exitedRegions];
         
-        [exitedRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, BOOL *stop) {
-            [self.delegate regionManager:self didExitRegion:beaconRegion totalRegions:self.currentRegions];
-        }];
-        
-        [enteredRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, BOOL *stop) {
-            [self.delegate regionManager:self didEnterRegion:beaconRegion totalRegions:self.currentRegions];
-        }];
-        
+        [self.delegate regionManager:self didEnterRegions:enteredRegions];
 
     }
 }

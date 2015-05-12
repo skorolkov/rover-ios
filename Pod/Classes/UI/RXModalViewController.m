@@ -300,20 +300,15 @@
 
 #pragma mark - RXVisitViewController Event Hooks
 
-- (void)willAddTouchpoint:(RVTouchpoint *)touchpoint {
-
-}
-
-
-- (void)didAddTouchpoint:(RVTouchpoint *)touchpoint {
-    [super didAddTouchpoint:touchpoint];
+- (void)didAddTouchpoints:(NSArray *)touchpoints {
+    [super didAddTouchpoints:touchpoints];
     
     // get smarter
     _maxIndexPathSection++;
-    _minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:0];
-    _minIndexPathSection = 1;
+    _minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:touchpoints.count - 1];
+    _minIndexPathSection = touchpoints.count - 1;
     
-    if (self.isViewLoaded && self.view.window && touchpoint.cards.count > 0) {
+    if (self.isViewLoaded && self.view.window) {
         [self dropPill];
     }
 }

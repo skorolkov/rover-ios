@@ -101,11 +101,11 @@
 
 /** Called when the user enters a touchpoint.
  */
-- (void)roverVisit:(RVVisit *)visit didEnterTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints;
 
 /** Called when the user exits a touchpoint.
  */
-- (void)roverVisit:(RVVisit *)visit didExitTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)roverVisit:(RVVisit *)visit didExitTouchpoints:(NSArray *)touchpoints;
 
 /** Called when the user is no longer in range of any beacons.
  */

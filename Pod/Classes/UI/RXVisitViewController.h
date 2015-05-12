@@ -35,29 +35,29 @@
  */
 - (RVCard *)cardAtIndexPath:(NSIndexPath *)indexPath;
 
-/** Adds a touchpoint to the touchpoints array.
+/** Adds an array of touchpoints to the touchpoints array.
  */
-- (void)addTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)addTouchpoints:(NSArray *)touchpoints;
 
-/** Removes a touchpoint from the touchpoints array.
+/** Removes an array of touchpoints from the touchpoints array.
  */
-- (void)removeTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)removeTouchpoints:(NSArray *)touchpoints;
 
-/** Called before a touchpoint is added.
+/** Called before an array of touchpoints is added.
  */
-- (void)willAddTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)willAddTouchpoints:(NSArray *)touchpoints;
 
-/** Called after the touchpoint is added.
+/** Called after the array of touchpoints is added.
  */
-- (void)didAddTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)didAddTouchpoints:(NSArray *)touchpoints;
 
-/** Called before the touchpoint is removed.
+/** Called before the array of touchpoints is removed.
  */
-- (void)willRemoveTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)willRemoveTouchpoints:(NSArray *)touchpoints;
 
-/** Called after the touchpoint is removed.
+/** Called after the array of touchpoints is removed.
  */
-- (void)didRemoveTouchpoint:(RVTouchpoint *)touchpoint;
+- (void)didRemoveTouchpoints:(NSArray *)touchpoints;
 
 @end
 
