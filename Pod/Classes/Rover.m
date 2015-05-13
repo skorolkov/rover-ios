@@ -255,19 +255,24 @@ static Rover *sharedInstance = nil;
 
 - (void)visitManager:(RVVisitManager *)manager didEnterTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit {
     
+    NSLog(@"entered touchpoints: %@", touchpoints);
+    
     // Current Modal Update
     if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
         RXVisitViewController *visitViewController = (RXVisitViewController *)_modalViewController;
         
         NSMutableArray *touchpointsDifference = [NSMutableArray arrayWithArray:touchpoints];
         [touchpointsDifference removeObjectsInArray:visitViewController.touchpoints];
-        if (touchpointsDifference.count > 0) {
+        
+        NSMutableArray *touchpointsWithCards = [[touchpointsDifference filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
+            return touchpoint.cards.count > 0;
+        }]] mutableCopy];
+        
+        if (touchpointsWithCards.count > 0) {
             if (self.config.accumulatingTouchpoints) {
-                if (/*has cards*/ YES) {
-                    [visitViewController addTouchpoints:touchpointsDifference];
-                }
+                [visitViewController addTouchpoints:touchpointsWithCards];
             } else {
-                [visitViewController setTouchpoints:touchpointsDifference];
+                [visitViewController setTouchpoints:touchpointsWithCards];
                 [visitViewController.tableView reloadData];
             }
         }
@@ -298,15 +303,15 @@ static Rover *sharedInstance = nil;
                 }
             }
             
-            touchpoint.notificationDelivered = YES;
         } else if (!touchpoint.notificationDelivered) {
             
             if (touchpoint.notification) {
                 [self sendNotification:touchpoint.notification];
             }
             
-            touchpoint.notificationDelivered = YES;
         }
+        
+        touchpoint.notificationDelivered = YES;
     }];
     
     // Delegate
@@ -317,6 +322,9 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)visitManager:(RVVisitManager *)manager didExitTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit {
+    
+    NSLog(@"Exited touchpoints: %@", touchpoints);
+    
     // Touchpoint tracking
     [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
         [self trackEvent:@"touchpoint.exit" params:@{@"touchpoint": touchpoint.ID}];

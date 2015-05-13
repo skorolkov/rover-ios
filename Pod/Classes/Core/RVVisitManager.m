@@ -78,7 +78,7 @@
                 
                 // Touchpoint check
                 NSSet *newTouchpointRegions = [regions filteredSetUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(CLBeaconRegion *beaconRegion, NSDictionary *bindings) {
-                    return [self.latestVisit isInTouchpointRegion:beaconRegion];
+                    return ![self.latestVisit isInTouchpointRegion:beaconRegion];
                 }]];
                 if (newTouchpointRegions.count > 0) {
                     [self movedToRegions:newTouchpointRegions];
@@ -126,7 +126,7 @@
             }
             
             // Delegate
-            if ([self.delegate respondsToSelector:@selector(visitManager:didExitTouchpoints:visit:)]) {
+            if (exitedTouchpoints.count > 0 && [self.delegate respondsToSelector:@selector(visitManager:didExitTouchpoints:visit:)]) {
                 
                 [self executeOnMainQueue:^{
                     [self.delegate visitManager:self didExitTouchpoints:exitedTouchpoints visit:self.latestVisit];
@@ -220,7 +220,7 @@
     }];
     
     // Delegate
-    if ([self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoints:visit:)]) {
+    if (enteredTouchpoints.count > 0 && [self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoints:visit:)]) {
         
         [self executeOnMainQueue:^{
             [self.delegate visitManager:self didEnterTouchpoints:enteredTouchpoints visit:self.latestVisit];

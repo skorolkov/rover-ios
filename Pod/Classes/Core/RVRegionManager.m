@@ -146,10 +146,13 @@
         
         self.currentRegions = regions;
 
-        [self.delegate regionManager:self didExitRegions:exitedRegions];
+        if (exitedRegions.count > 0) {
+            [self.delegate regionManager:self didExitRegions:exitedRegions];
+        }
         
-        [self.delegate regionManager:self didEnterRegions:enteredRegions];
-
+        if (enteredRegions.count > 0) {
+            [self.delegate regionManager:self didEnterRegions:enteredRegions];
+        }
     }
 }
 
