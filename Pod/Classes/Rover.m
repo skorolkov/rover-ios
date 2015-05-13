@@ -254,9 +254,7 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)visitManager:(RVVisitManager *)manager didEnterTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit {
-    
-    NSLog(@"entered touchpoints: %@", touchpoints);
-    
+
     // Current Modal Update
     if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
         RXVisitViewController *visitViewController = (RXVisitViewController *)_modalViewController;
@@ -322,8 +320,6 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)visitManager:(RVVisitManager *)manager didExitTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit {
-    
-    NSLog(@"Exited touchpoints: %@", touchpoints);
     
     // Touchpoint tracking
     [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
@@ -394,7 +390,6 @@ static Rover *sharedInstance = nil;
             } else if (![currentViewController isKindOfClass:_config.modalViewControllerClass]) {
                 
                 [self presentModal];
-                NSLog(@"present");
             }
         }
     }
