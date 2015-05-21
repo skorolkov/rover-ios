@@ -174,8 +174,8 @@ static Rover *sharedInstance = nil;
     _modalViewController = [[self.config.modalViewControllerClass alloc] init];
     
     // Delegate
-    if ([self.experienceManager respondsToSelector:@selector(roverWillDisplayModalViewController:)]) {
-        [self.experienceManager roverWillDisplayModalViewController:_modalViewController];
+    if ([self.delegate respondsToSelector:@selector(roverWillDisplayModalViewController:)]) {
+        [self.delegate roverWillDisplayModalViewController:_modalViewController];
     }
     
     if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
@@ -196,8 +196,8 @@ static Rover *sharedInstance = nil;
     [currentViewController presentViewController:_modalViewController animated:YES completion:nil];
     
     // Delegate
-    if ([self.experienceManager respondsToSelector:@selector(roverDidDisplayModalViewController:)]) {
-        [self.experienceManager roverDidDisplayModalViewController:_modalViewController];
+    if ([self.delegate respondsToSelector:@selector(roverDidDisplayModalViewController:)]) {
+        [self.delegate roverDidDisplayModalViewController:_modalViewController];
     }
 }
 
@@ -230,8 +230,8 @@ static Rover *sharedInstance = nil;
     [self trackEvent:@"location.enter" params:nil];
     
     // Delegate
-    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didEnterLocation:)]) {
-        [self.experienceManager roverVisit:_currentVisit didEnterLocation:_currentVisit.location];
+    if ([self.delegate respondsToSelector:@selector(roverVisit:didEnterLocation:)]) {
+        [self.delegate roverVisit:_currentVisit didEnterLocation:_currentVisit.location];
     }
 }
 
@@ -239,15 +239,15 @@ static Rover *sharedInstance = nil;
     [self trackEvent:@"location.exit" params:nil];
     
     // Delegate
-    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didPotentiallyExitLocation:aliveForAnother:)]) {
-        [self.experienceManager roverVisit:visit didPotentiallyExitLocation:visit.location aliveForAnother:visit.keepAlive];
+    if ([self.delegate respondsToSelector:@selector(roverVisit:didPotentiallyExitLocation:aliveForAnother:)]) {
+        [self.delegate roverVisit:visit didPotentiallyExitLocation:visit.location aliveForAnother:visit.keepAlive];
     }
 }
 
 - (void)visitManager:(RVVisitManager *)manager didExpireVisit:(RVVisit *)visit {
     // Delegate
-    if ([self.experienceManager respondsToSelector:@selector(roverVisitDidExpire:)]) {
-        [self.experienceManager roverVisitDidExpire:visit];
+    if ([self.delegate respondsToSelector:@selector(roverVisitDidExpire:)]) {
+        [self.delegate roverVisitDidExpire:visit];
     }
 }
 
@@ -273,8 +273,8 @@ static Rover *sharedInstance = nil;
     }];
     
     // Delegate
-    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didEnterTouchpoints:)]) {
-        [self.experienceManager roverVisit:visit didEnterTouchpoints:touchpoints];
+    if ([self.delegate respondsToSelector:@selector(roverVisit:didEnterTouchpoints:)]) {
+        [self.delegate roverVisit:visit didEnterTouchpoints:touchpoints];
     }
     
 }
@@ -287,8 +287,8 @@ static Rover *sharedInstance = nil;
     }];
     
     // Delegate
-    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didExitTouchpoints:)]) {
-        [self.experienceManager roverVisit:visit didExitTouchpoints:touchpoints];
+    if ([self.delegate respondsToSelector:@selector(roverVisit:didExitTouchpoints:)]) {
+        [self.delegate roverVisit:visit didExitTouchpoints:touchpoints];
     }
 }
 
@@ -296,8 +296,8 @@ static Rover *sharedInstance = nil;
     visit.simulate = self.config.sandboxMode;
     
     // Delegate
-    if ([self.experienceManager respondsToSelector:@selector(roverShouldCreateVisit:)]) {
-        if (![self.experienceManager roverShouldCreateVisit:visit]) {
+    if ([self.delegate respondsToSelector:@selector(roverShouldCreateVisit:)]) {
+        if (![self.delegate roverShouldCreateVisit:visit]) {
             return NO;
         }
     }
@@ -305,8 +305,8 @@ static Rover *sharedInstance = nil;
     [[RVNetworkingManager sharedManager] postVisit:visit];
     
     // Delegate
-    if ([self.experienceManager respondsToSelector:@selector(roverDidCreateVisit:)]) {
-        [self.experienceManager roverDidCreateVisit:visit];
+    if ([self.delegate respondsToSelector:@selector(roverDidCreateVisit:)]) {
+        [self.delegate roverDidCreateVisit:visit];
     }
     
     return YES;
@@ -324,8 +324,8 @@ static Rover *sharedInstance = nil;
         }];
         
         // Delegate
-        if ([self.experienceManager respondsToSelector:@selector(applicationDidBecomeActiveDuringVisit:)]) {
-            [self.experienceManager applicationDidBecomeActiveDuringVisit:self.currentVisit];
+        if ([self.delegate respondsToSelector:@selector(applicationDidBecomeActiveDuringVisit:)]) {
+            [self.delegate applicationDidBecomeActiveDuringVisit:self.currentVisit];
         }
     }
 
@@ -336,24 +336,24 @@ static Rover *sharedInstance = nil;
 - (void)visitViewController:(RXVisitViewController *)viewController didDisplayCard:(RVCard *)card {
     [self trackEvent:@"card.view" params:@{@"card": card.ID}];
     
-    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didDisplayCard:)]) {
-        [self.experienceManager roverVisit:self.currentVisit didDisplayCard:card];
+    if ([self.delegate respondsToSelector:@selector(roverVisit:didDisplayCard:)]) {
+        [self.delegate roverVisit:self.currentVisit didDisplayCard:card];
     }
 }
 
 - (void)visitViewController:(RXVisitViewController *)viewController didDiscardCard:(RVCard *)card {
     [self trackEvent:@"card.discard" params:@{@"card": card.ID}];
     
-    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didDiscardCard:)]) {
-        [self.experienceManager roverVisit:self.currentVisit didDiscardCard:card];
+    if ([self.delegate respondsToSelector:@selector(roverVisit:didDiscardCard:)]) {
+        [self.delegate roverVisit:self.currentVisit didDiscardCard:card];
     }
 }
 
 - (void)visitViewController:(RXVisitViewController *)viewController didClickCard:(RVCard *)card URL:(NSURL *)url {
     [self trackEvent:@"card.click" params:@{@"card": card.ID, @"url": url.absoluteString}];
     
-    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didClickCard:withURL:)]) {
-        [self.experienceManager roverVisit:self.currentVisit didClickCard:card withURL:url];
+    if ([self.delegate respondsToSelector:@selector(roverVisit:didClickCard:withURL:)]) {
+        [self.delegate roverVisit:self.currentVisit didClickCard:card withURL:url];
     }
 }
 

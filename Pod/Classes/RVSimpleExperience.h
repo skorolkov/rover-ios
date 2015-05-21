@@ -7,9 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "Rover.h"
+#import "RoverDelegate.h"
 
-@interface RVSimpleExperience : NSObject <RVExperienceManager>
+@interface RVSimpleExperience : NSObject <RoverDelegate>
 
 
 

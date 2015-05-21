@@ -7,14 +7,16 @@
 //
 
 #import "RVRetailExperience.h"
+#import "Rover.h"
 
 @implementation RVRetailExperience
 
-#pragma mark - RVExperienceManager
+#pragma mark - RoverDelegate
 
 - (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints {
     
-    // Current Modal Update
+    // Update the current modal view controller if it is present
+    
     if ([[Rover shared].modalViewController isKindOfClass:[RXVisitViewController class]]) {
         RXVisitViewController *visitViewController = (RXVisitViewController *)[Rover shared].modalViewController;
         
@@ -33,7 +35,8 @@
     
     [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
 
-        // Modal / Notification
+        // If the app is in the foreground present modal, otherwise send a local notification
+        
         if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
             
             if (!touchpoint.notificationDelivered ) {
@@ -53,6 +56,8 @@
             
         }
         
+        // Mark the touchpoint as visited, so we only send notifications once per touchpoint
+        
         touchpoint.notificationDelivered = YES;
     }];
 }
@@ -65,8 +70,13 @@
         UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
         
         if ([currentViewController isKindOfClass:[RXDetailViewController class]]) {
+            
+            // If already in a Detail view, dismiss the view and go back to the card view
+            
             [currentViewController dismissViewControllerAnimated:YES completion:nil];
         } else if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]]) {
+            
+            // Present the card modal
             
             [self presentModalForVisit:visit];
         }

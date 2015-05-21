@@ -7,15 +7,17 @@
 //
 
 #import "RVSimpleExperience.h"
+#import "Rover.h"
 
 @implementation RVSimpleExperience
 
-#pragma mark - RVExperienceManager
+#pragma mark - RoverDelegate
 
 
 - (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints {
     
-    // Current Modal Update
+    // If the modal view controller is currently present, set and reload its content
+    
     if ([[Rover shared].modalViewController isKindOfClass:[RXVisitViewController class]]) {
         RXVisitViewController *visitViewController = (RXVisitViewController *)[Rover shared].modalViewController;
         
@@ -35,7 +37,8 @@
     
     [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
         
-        // Modal / Notification
+        // If app is in the foreground present the modal
+        
         if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
             
             UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
@@ -48,11 +51,15 @@
             
         } else if (!touchpoint.notificationDelivered) {
             
+            // Send local notification
+            
             if (touchpoint.notification) {
                 [[Rover shared] presentLocalNotification:touchpoint.notification];
             }
             
         }
+        
+        // Mark the touchpoint as visited, so we only send notifications once per touchpoint
         
         touchpoint.notificationDelivered = YES;
     }];
