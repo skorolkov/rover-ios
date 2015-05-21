@@ -20,6 +20,7 @@
     config.serverURL = @"http://api.roverlabs.co/mobile/v2/";
     config.modalBackdropBlurRadius = 3;
     config.modalBackdropTintColor = [UIColor colorWithWhite:0.0 alpha:0.5];
+    config.experience = RVExperienceSimple;
     
     NSString *path = [[NSBundle mainBundle] pathForResource:@"Rover" ofType:@"plist"];
     NSDictionary *plist = [[NSDictionary alloc] initWithContentsOfFile:path];
