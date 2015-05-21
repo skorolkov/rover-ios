@@ -160,26 +160,26 @@ static Rover *sharedInstance = nil;
     [_visitManager.regionManager simulateBeaconWithUUID:UUID major:major minor:minor];
 }
 
-- (void)presentModal {
+#pragma mark - Utility
+
+- (void)presentModalWithTouchpoints:(NSArray *)touchpoints {
     
-    if ([self.currentVisit.visitedTouchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
+    if ([touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
         return touchpoint.cards.count > 0;
     }]].count == 0) {
         NSLog(@"%@ warning showModal called but there are no cards to display", self);
         return;
     }
-    
-    // Delegate
-    if ([self.delegate respondsToSelector:@selector(roverWillDisplayModalViewController)]) {
-        [self.delegate roverWillDisplayModalViewController];
-    }
 
     _modalViewController = [[self.config.modalViewControllerClass alloc] init];
     
+    // Delegate
+    if ([self.delegate respondsToSelector:@selector(roverWillDisplayModalViewController:)]) {
+        [self.delegate roverWillDisplayModalViewController:_modalViewController];
+    }
+    
     if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
         ((RXVisitViewController *)_modalViewController).delegate = self;
-        
-        NSArray *touchpoints = _config.accumulatingTouchpoints ? [[self.currentVisit.visitedTouchpoints reverseObjectEnumerator] allObjects] : [self.currentVisit.currentTouchpoints allObjects];
         
         [((RXVisitViewController *)_modalViewController) setTouchpoints:[[touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
             return touchpoint.cards.count > 0;
@@ -196,14 +196,12 @@ static Rover *sharedInstance = nil;
     [currentViewController presentViewController:_modalViewController animated:YES completion:nil];
     
     // Delegate
-    if ([self.delegate respondsToSelector:@selector(roverDidDisplayModalViewController)]) {
-        [self.delegate roverDidDisplayModalViewController];
+    if ([self.delegate respondsToSelector:@selector(roverDidDisplayModalViewController:)]) {
+        [self.delegate roverDidDisplayModalViewController:_modalViewController];
     }
 }
 
-#pragma mark - Utility
-
-- (void)sendNotification:(NSString *)message {
+- (void)presentLocalNotification:(NSString *)message {
     // TODO: consider the case where the first noti has already been delivered (want to be silent)
     
     UILocalNotification *note = [[UILocalNotification alloc] init];
@@ -254,27 +252,6 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)visitManager:(RVVisitManager *)manager didEnterTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit {
-
-    // Current Modal Update
-    if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
-        RXVisitViewController *visitViewController = (RXVisitViewController *)_modalViewController;
-        
-        NSMutableArray *touchpointsDifference = [NSMutableArray arrayWithArray:touchpoints];
-        [touchpointsDifference removeObjectsInArray:visitViewController.touchpoints];
-        
-        NSMutableArray *touchpointsWithCards = [[touchpointsDifference filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-            return touchpoint.cards.count > 0;
-        }]] mutableCopy];
-        
-        if (touchpointsWithCards.count > 0) {
-            if (self.config.accumulatingTouchpoints) {
-                [visitViewController addTouchpoints:touchpointsWithCards];
-            } else {
-                [visitViewController setTouchpoints:touchpointsWithCards];
-                [visitViewController.tableView reloadData];
-            }
-        }
-    }
     
     [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
         
@@ -291,25 +268,8 @@ static Rover *sharedInstance = nil;
 
             // Touchpoint Tracking
             [self trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID}];
-            
-            if (!touchpoint.notificationDelivered || !self.config.accumulatingTouchpoints) {
-                UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-                UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-                
-                if (self.config.autoPresentModal && ![currentViewController isKindOfClass:_config.modalViewControllerClass] && ![currentViewController isKindOfClass:[RXDetailViewController class]]) {
-                    [self presentModal];
-                }
-            }
-            
-        } else if (!touchpoint.notificationDelivered) {
-            
-            if (touchpoint.notification) {
-                [self sendNotification:touchpoint.notification];
-            }
-            
         }
         
-        touchpoint.notificationDelivered = YES;
     }];
     
     // Delegate
@@ -325,22 +285,6 @@ static Rover *sharedInstance = nil;
     [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
         [self trackEvent:@"touchpoint.exit" params:@{@"touchpoint": touchpoint.ID}];
     }];
-    
-    // Modal
-    if (!self.config.accumulatingTouchpoints && _modalViewController) {
-        if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                RXVisitViewController *visitModalViewController = (RXVisitViewController *)_modalViewController;
-                
-                [visitModalViewController setTouchpoints:[[visit.currentTouchpoints allObjects] mutableCopy]];
-                [visitModalViewController.tableView reloadData];
-                
-                if (visitModalViewController.touchpoints.count == 0) {
-                    [visitModalViewController dismissViewControllerAnimated:YES completion:nil];
-                }
-            });
-        }
-    }
     
     // Delegate
     if ([self.delegate respondsToSelector:@selector(roverVisit:didExitTouchpoints:)]) {
@@ -379,18 +323,9 @@ static Rover *sharedInstance = nil;
             [self trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID}];
         }];
         
-        // Auto Modal
-        if (self.config.autoPresentModal && self.currentVisit.visitedTouchpoints.count > 0) {
-
-            UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-            UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-            
-            if ([currentViewController isKindOfClass:[RXDetailViewController class]]) {
-                [currentViewController dismissViewControllerAnimated:YES completion:nil];
-            } else if (![currentViewController isKindOfClass:_config.modalViewControllerClass]) {
-                
-                [self presentModal];
-            }
+        // Delegate
+        if ([self.delegate respondsToSelector:@selector(applicationDidBecomeActiveDuringVisit:)]) {
+            [self.delegate applicationDidBecomeActiveDuringVisit:self.currentVisit];
         }
     }
 

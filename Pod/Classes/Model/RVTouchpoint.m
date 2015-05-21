@@ -24,6 +24,10 @@
     return [self.ID isEqualToString:otherTouchpoint.ID];
 }
 
+- (BOOL)isMasterTouchpoint {
+    return self.trigger == RVTouchpointTriggerVisit;
+}
+
 - (NSUInteger)hash {
     return [self.ID hash];
 }

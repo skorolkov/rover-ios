@@ -28,14 +28,6 @@
  */
 @property (nonatomic, copy) NSString *notificationSoundName;
 
-/** Indicates whether Rover should automatically display the modal dialog when the customer visits a location. The default value is YES.
- */
-@property (nonatomic) BOOL autoPresentModal;
-
-/** Indicates whether cards accumulate as the user goes through touchpoints.
- */
-@property (nonatomic) BOOL accumulatingTouchpoints;
-
 /** Blur radius for the modal backdrop.
  */
 @property (nonatomic) NSUInteger modalBackdropBlurRadius;

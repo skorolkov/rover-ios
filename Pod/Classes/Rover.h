@@ -9,6 +9,7 @@
 #import <CoreLocation/CoreLocation.h>
 
 #import "RVConfig.h"
+//#import "RoverDelegate.h"
 
 // Core
 #import "RVLog.h"
@@ -35,6 +36,9 @@
 #import "RVNetworkingManager.h"
 #import "RVImagePrefetcher.h"
 
+// Experience
+#import "RVRetailExperience.h" // for convenience
+#import "RVSimpleExperience.h" // for convenience
 
 @protocol RoverDelegate;
 
@@ -52,7 +56,7 @@
  */
 + (Rover *)shared;
 
-/** The Rover delegate.
+/** The Rover experience manager. An NSObject conforming to the RVExperienceManager protocol.
  */
 @property (nonatomic, weak) id <RoverDelegate> delegate;
 
@@ -63,6 +67,10 @@
 /** The customer object. You can set the name, email and external customer ID for your customer and it will be persisted to the server on the next visit.
  */
 @property (readonly, strong, nonatomic) RVCustomer *customer;
+
+/** A reference to the modal view controller if present. Returns nil if the modal is not currently presented.
+ */
+@property (nonatomic, readonly) UIViewController *modalViewController;
 
 /** After the framework has been initialized call startMonitoring to begin monitoring for your beacons. You must call the setApplicationID:beaconUUIDs: method before you can start monitoring.
  */
@@ -76,9 +84,17 @@
  */
 - (id)configValueForKey:(NSString *)key;
 
-/** Present the modal view controller.
+/** Convenience method to present a UILocalNotification.
+ 
+ @param message The body of the UILocalNotification.
  */
-- (void)presentModal;
+- (void)presentLocalNotification:(NSString *)message;
+ 
+/** Present the modal view controller.
+ 
+ @param touchpoints An array of RVTouchpoint objects to display in the modal.
+ */
+- (void)presentModalWithTouchpoints:(NSArray *)touchpoints;
 
 /** You can use this method to simulate your app coming in range of a particular beacon.
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
@@ -88,60 +104,6 @@
 /** Convenience method to find the current view controller
  */
 + (UIViewController *)findCurrentViewController:(UIViewController *)vc;
-
-@end
-
-
-@protocol RoverDelegate <NSObject>
-
-@optional
-/** Called when the user enters a location.
- */
-- (void)roverVisit:(RVVisit *)visit didEnterLocation:(RVLocation *)location;
-
-/** Called when the user enters a touchpoint.
- */
-- (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints;
-
-/** Called when the user exits a touchpoint.
- */
-- (void)roverVisit:(RVVisit *)visit didExitTouchpoints:(NSArray *)touchpoints;
-
-/** Called when the user is no longer in range of any beacons.
- */
-- (void)roverVisit:(RVVisit *)visit didPotentiallyExitLocation:(RVLocation *)location aliveForAnother:(NSTimeInterval)keepAlive;
-
-/** Called when the user has not been in range of any beacons for `keepAlive` minutes.
- */
-- (void)roverVisitDidExpire:(RVVisit *)visit;
-
-/** Called before the `roverVisit:didEnterLocation:` delegate. At this point you have a chance to prevent the visit from registering. You can also alter the visit object if need be.
- */
-- (BOOL)roverShouldCreateVisit:(RVVisit *)visit;
-
-/** Called after `roverShouldCreateVisit:` and if the visit is registered successfully with the Rover platform. This method isn't called if `roverShouldCreateVisit:` returns NO.
- */
-- (void)roverDidCreateVisit:(RVVisit *)visit;
-
-/** Called once a card is displayed for the first time.
- */
-- (void)roverVisit:(RVVisit *)visit didDisplayCard:(RVCard *)card;
-
-/** Called when card is discarded.
- */
-- (void)roverVisit:(RVVisit *)visit didDiscardCard:(RVCard *)card;
-
-/** Called when a card is clicked.
- */
-- (void)roverVisit:(RVVisit *)visit didClickCard:(RVCard *)card withURL:(NSURL *)url;
-
-/** Called before the modal view controller is presented.
- */
-- (void)roverWillDisplayModalViewController;
-
-/** Called after the modal view controller is presented.
- */
-- (void)roverDidDisplayModalViewController;
 
 @end
 
