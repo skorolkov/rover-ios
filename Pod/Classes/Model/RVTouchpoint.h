@@ -25,6 +25,7 @@ typedef NS_ENUM(NSInteger, RVTouchpointTrigger) {
 @property (nonatomic, strong) NSArray *cards;
 @property (nonatomic, assign) BOOL isVisited;
 @property (nonatomic, assign) BOOL notificationDelivered;
+@property (nonatomic, readonly) BOOL isMasterTouchpoint;
 
 - (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
 

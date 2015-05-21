@@ -33,7 +33,7 @@ extern inline UIViewContentMode UIViewContentModeFromRVBackgroundContentMode(RVB
             return UIViewContentModeScaleToFill;
             break;
         default:
-            return UIViewContentModeTop;
+            return UIViewContentModeCenter;
             break;
     }
 }

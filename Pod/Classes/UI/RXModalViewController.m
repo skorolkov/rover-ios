@@ -24,6 +24,7 @@
 }
 
 @property (strong, nonatomic) UIButton *pillView;
+@property (nonatomic, strong) UIImageView *backgroundImageView;
 
 @end
 
@@ -33,21 +34,33 @@
 {
     self = [super init];
     if (self) {
+        self.modalPresentationStyle = UIModalPresentationCustom;
         self.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-        //self.modalPresentationStyle = UIModalPresentationCustom;
         
-
+        
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setNeedsStatusBarAppearanceUpdate];
+    
+    //[self setNeedsStatusBarAppearanceUpdate];
+    
+//    self.backgroundImageView = [[UIImageView alloc] init];
+//    _backgroundImageView.translatesAutoresizingMaskIntoConstraints  = NO;
+//    _backgroundImageView.backgroundColor = [UIColor clearColor];
+//    [self.view addSubview:_backgroundImageView];
+//    
+//    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"|[_backgroundImageView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_backgroundImageView)]];
+//    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_backgroundImageView]|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_backgroundImageView)]];
+//    
+    //[self.view sendSubviewToBack:_backgroundImageView];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
-        [self createBlur];
+    
+    [self createBlur];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -205,10 +218,16 @@
     UIGraphicsEndImageContext();
     
     image = [RXImageEffects applyBlurWithRadius:self.backdropBlurRadius tintColor:self.backdropTintColor saturationDeltaFactor:1 maskImage:nil toImage:image];
-    
+
     UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:image];
+    backgroundImageView.alpha = 0;
+    
     [self.view addSubview:backgroundImageView];
     [self.view sendSubviewToBack:backgroundImageView];
+
+    [UIView animateWithDuration:.3 animations:^{
+        backgroundImageView.alpha = 1;
+    }];
 }
 
 - (void)checkVisibilityOfCell:(UITableViewCell *)cell inScrollView:(UIScrollView *)scrollView
@@ -300,20 +319,15 @@
 
 #pragma mark - RXVisitViewController Event Hooks
 
-- (void)willAddTouchpoint:(RVTouchpoint *)touchpoint {
-
-}
-
-
-- (void)didAddTouchpoint:(RVTouchpoint *)touchpoint {
-    [super didAddTouchpoint:touchpoint];
+- (void)didAddTouchpoints:(NSArray *)touchpoints {
+    [super didAddTouchpoints:touchpoints];
     
     // get smarter
     _maxIndexPathSection++;
-    _minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:0];
-    _minIndexPathSection = 1;
+    _minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:touchpoints.count - 1];
+    _minIndexPathSection = touchpoints.count - 1;
     
-    if (self.isViewLoaded && self.view.window && touchpoint.cards.count > 0) {
+    if (self.isViewLoaded && self.view.window) {
         [self dropPill];
     }
 }

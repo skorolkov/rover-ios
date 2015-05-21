@@ -10,6 +10,8 @@
 #import <SDWebImage/UIImage+MultiFormat.h>
 #import <SDWebImage/SDWebImageManager.h>
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
 @interface RVImagePrefetcher () <NSURLSessionDownloadDelegate>
 
 @property (nonatomic, strong) NSURLSession *urlSession;

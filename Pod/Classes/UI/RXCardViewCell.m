@@ -10,6 +10,7 @@
 #import "RXBlockView.h"
 #import "RVViewDefinition.h"
 #import <SDWebImage/UIImageView+WebCache.h>
+#import "RVBlock.h"
 
 // Shadow constants
 #define kCardShadowColor [[UIColor blackColor] CGColor]
@@ -110,7 +111,7 @@
 {
     // TODO: this is not always accurate
     
-    _lastBlockLayoutConstraint = [NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+    _lastBlockLayoutConstraint = [NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:_containerView attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
     
     [_containerView addConstraint:_lastBlockLayoutConstraint];
 }
@@ -144,9 +145,9 @@
         [self addBlockView:blockView];
     }];
     
-    if (_containerView.subviews.count > 0) {
-        [self configureLayoutForLastBlockView:_containerView.subviews[_containerView.subviews.count - 1]];
-    }
+//    if (_containerView.subviews.count > 0) {
+//        [self configureLayoutForLastBlockView:_containerView.subviews[_containerView.subviews.count - 1]];
+//    }
     
     // Background Image
     if (viewDefinition.backgroundImageURL) {
@@ -176,6 +177,9 @@
         [self.containerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[backgroundImageView]|" options:0 metrics:nil views:views]];
         
         [self.containerView sendSubviewToBack:backgroundImageView];
+        
+        [backgroundImageView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisVertical];
+        [backgroundImageView setContentCompressionResistancePriority:UILayoutPriorityDefaultLow forAxis:UILayoutConstraintAxisHorizontal];
     }
 }
 

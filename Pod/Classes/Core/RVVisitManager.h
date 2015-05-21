@@ -72,17 +72,17 @@
 /** Called when the user enters a touchpoint.
  
  @param manager The visit manager instance thats calling the delegate method.
- @param touchpoint The touchpoint the was just entered.
+ @param touchpoints An NSArray of RVTouchpoints the user entered.
  @param visit The visit instance assocciated with the user's enter touchpoint event.
  */
-- (void)visitManager:(RVVisitManager *)manager didEnterTouchpoint:(RVTouchpoint *)touchpoint visit:(RVVisit *)visit;
+- (void)visitManager:(RVVisitManager *)manager didEnterTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit;
 
 /** Called when the user exits a touchpoint.
  
  @param manager The visit manager instance thats calling the delegate method.
- @param touchpoint The touchpoint that was just exited.
+ @param touchpoints An NSArray of RVTouchpoints the user exited.
  @param visit The visit instance assocciated with the user's exit touchpoint event.
  */
-- (void)visitManager:(RVVisitManager *)manager didExitTouchpoint:(RVTouchpoint *)touchpoint visit:(RVVisit *)visit;
+- (void)visitManager:(RVVisitManager *)manager didExitTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit;
 
 @end
