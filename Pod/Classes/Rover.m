@@ -13,13 +13,14 @@
 @property (readonly, strong, nonatomic) RVConfig *config;
 @property (nonatomic, strong) RVVisitManager *visitManager;
 @property (nonatomic, strong) RVVisit *currentVisit;
-
+@property (nonatomic, strong) id<RoverDelegate> defaultDelegate;
 @property (nonatomic, strong) UIViewController *modalViewController;
 
 @end
 
 @implementation Rover {
     RVCustomer *_customer;
+    id<RoverDelegate> _delegate;
 }
 
 #pragma mark - Class methods
@@ -104,6 +105,27 @@ static Rover *sharedInstance = nil;
     }
     
     return nil;
+}
+
+- (id<RoverDelegate>)delegate {
+    if (_delegate) {
+        return _delegate;
+    }
+    
+    if (self.config.experience == RVExperienceSimple) {
+        _defaultDelegate = [RVSimpleExperience new];
+    } else if (self.config.experience == RVExperienceRetail) {
+        _defaultDelegate = [RVRetailExperience new];
+    }
+    
+    _delegate = _defaultDelegate;
+    
+    return _delegate;
+}
+
+- (void)setDelegate:(id<RoverDelegate>)delegate {
+    _defaultDelegate = nil;
+    _delegate = delegate;
 }
 
 #pragma mark - Initialization

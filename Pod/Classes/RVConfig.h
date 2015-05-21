@@ -8,6 +8,11 @@
 
 @import UIKit;
 
+typedef NS_ENUM(NSInteger, RVExperience) {
+    RVExperienceSimple,
+    RVExperienceRetail
+};
+
 /** Contains all the configuration options used to initialize the Rover framework.
  */
 @interface RVConfig : NSObject
@@ -47,6 +52,10 @@
 /** Register a UIViewController subclass to launch on RoverDidEnterLocationNotification.
  */
 @property (nonatomic, strong, setter=registerModalViewControllerClass:) Class modalViewControllerClass;
+
+/** The experience to use when in proximity.
+ */
+@property (nonatomic, assign) RVExperience experience;
 
 /** Create an RVConfig instance with the default values and override as necessary.
  */
