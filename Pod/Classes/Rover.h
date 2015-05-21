@@ -35,8 +35,11 @@
 #import "RVNetworkingManager.h"
 #import "RVImagePrefetcher.h"
 
+// Experience
+//#import "RVRetailExperience.h"
+//#import "RVSimpleExperience.h"
 
-@protocol RoverDelegate;
+@protocol RVExperienceManager;
 
 @class RVConfig;
 
@@ -52,9 +55,9 @@
  */
 + (Rover *)shared;
 
-/** The Rover delegate.
+/** The Rover experience manager. An NSObject conforming to the RVExperienceManager protocol.
  */
-@property (nonatomic, weak) id <RoverDelegate> delegate;
+@property (nonatomic, weak) id <RVExperienceManager> experienceManager;
 
 /** After a customer enters a location a new RVVisit object will be retrieved from the Rover platform and can be accessed through this property.
  */
@@ -63,6 +66,10 @@
 /** The customer object. You can set the name, email and external customer ID for your customer and it will be persisted to the server on the next visit.
  */
 @property (readonly, strong, nonatomic) RVCustomer *customer;
+
+/** A reference to the modal view controller if present. Returns nil if the modal is not currently presented.
+ */
+@property (nonatomic, readonly) UIViewController *modalViewController;
 
 /** After the framework has been initialized call startMonitoring to begin monitoring for your beacons. You must call the setApplicationID:beaconUUIDs: method before you can start monitoring.
  */
@@ -76,9 +83,17 @@
  */
 - (id)configValueForKey:(NSString *)key;
 
-/** Present the modal view controller.
+/** Convenience method to present a UILocalNotification.
+ 
+ @param message The body of the UILocalNotification.
  */
-- (void)presentModal;
+- (void)presentLocalNotification:(NSString *)message;
+ 
+/** Present the modal view controller.
+ 
+ @param touchpoints An array of RVTouchpoint objects to display in the modal.
+ */
+- (void)presentModalWithTouchpoints:(NSArray *)touchpoints;
 
 /** You can use this method to simulate your app coming in range of a particular beacon.
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
@@ -92,7 +107,7 @@
 @end
 
 
-@protocol RoverDelegate <NSObject>
+@protocol RVExperienceManager <NSObject>
 
 @optional
 /** Called when the user enters a location.
@@ -135,13 +150,17 @@
  */
 - (void)roverVisit:(RVVisit *)visit didClickCard:(RVCard *)card withURL:(NSURL *)url;
 
+/** Called when the application becomes active during a visit.
+ */
+- (void)applicationDidBecomeActiveDuringVisit:(RVVisit *)visit;
+
 /** Called before the modal view controller is presented.
  */
-- (void)roverWillDisplayModalViewController;
+- (void)roverWillDisplayModalViewController:(UIViewController *)modalViewController;
 
 /** Called after the modal view controller is presented.
  */
-- (void)roverDidDisplayModalViewController;
+- (void)roverDidDisplayModalViewController:(UIViewController *)modalViewController;
 
 @end
 

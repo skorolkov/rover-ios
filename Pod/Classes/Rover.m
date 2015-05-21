@@ -160,26 +160,26 @@ static Rover *sharedInstance = nil;
     [_visitManager.regionManager simulateBeaconWithUUID:UUID major:major minor:minor];
 }
 
-- (void)presentModal {
+#pragma mark - Utility
+
+- (void)presentModalWithTouchpoints:(NSArray *)touchpoints {
     
-    if ([self.currentVisit.visitedTouchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
+    if ([touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
         return touchpoint.cards.count > 0;
     }]].count == 0) {
         NSLog(@"%@ warning showModal called but there are no cards to display", self);
         return;
     }
-    
-    // Delegate
-    if ([self.delegate respondsToSelector:@selector(roverWillDisplayModalViewController)]) {
-        [self.delegate roverWillDisplayModalViewController];
-    }
 
     _modalViewController = [[self.config.modalViewControllerClass alloc] init];
     
+    // Delegate
+    if ([self.experienceManager respondsToSelector:@selector(roverWillDisplayModalViewController:)]) {
+        [self.experienceManager roverWillDisplayModalViewController:_modalViewController];
+    }
+    
     if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
         ((RXVisitViewController *)_modalViewController).delegate = self;
-        
-        NSArray *touchpoints = _config.accumulatingTouchpoints ? [[self.currentVisit.visitedTouchpoints reverseObjectEnumerator] allObjects] : [self.currentVisit.currentTouchpoints allObjects];
         
         [((RXVisitViewController *)_modalViewController) setTouchpoints:[[touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
             return touchpoint.cards.count > 0;
@@ -196,14 +196,12 @@ static Rover *sharedInstance = nil;
     [currentViewController presentViewController:_modalViewController animated:YES completion:nil];
     
     // Delegate
-    if ([self.delegate respondsToSelector:@selector(roverDidDisplayModalViewController)]) {
-        [self.delegate roverDidDisplayModalViewController];
+    if ([self.experienceManager respondsToSelector:@selector(roverDidDisplayModalViewController:)]) {
+        [self.experienceManager roverDidDisplayModalViewController:_modalViewController];
     }
 }
 
-#pragma mark - Utility
-
-- (void)sendNotification:(NSString *)message {
+- (void)presentLocalNotification:(NSString *)message {
     // TODO: consider the case where the first noti has already been delivered (want to be silent)
     
     UILocalNotification *note = [[UILocalNotification alloc] init];
@@ -232,8 +230,8 @@ static Rover *sharedInstance = nil;
     [self trackEvent:@"location.enter" params:nil];
     
     // Delegate
-    if ([self.delegate respondsToSelector:@selector(roverVisit:didEnterLocation:)]) {
-        [self.delegate roverVisit:_currentVisit didEnterLocation:_currentVisit.location];
+    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didEnterLocation:)]) {
+        [self.experienceManager roverVisit:_currentVisit didEnterLocation:_currentVisit.location];
     }
 }
 
@@ -241,40 +239,19 @@ static Rover *sharedInstance = nil;
     [self trackEvent:@"location.exit" params:nil];
     
     // Delegate
-    if ([self.delegate respondsToSelector:@selector(roverVisit:didPotentiallyExitLocation:aliveForAnother:)]) {
-        [self.delegate roverVisit:visit didPotentiallyExitLocation:visit.location aliveForAnother:visit.keepAlive];
+    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didPotentiallyExitLocation:aliveForAnother:)]) {
+        [self.experienceManager roverVisit:visit didPotentiallyExitLocation:visit.location aliveForAnother:visit.keepAlive];
     }
 }
 
 - (void)visitManager:(RVVisitManager *)manager didExpireVisit:(RVVisit *)visit {
     // Delegate
-    if ([self.delegate respondsToSelector:@selector(roverVisitDidExpire:)]) {
-        [self.delegate roverVisitDidExpire:visit];
+    if ([self.experienceManager respondsToSelector:@selector(roverVisitDidExpire:)]) {
+        [self.experienceManager roverVisitDidExpire:visit];
     }
 }
 
 - (void)visitManager:(RVVisitManager *)manager didEnterTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit {
-
-    // Current Modal Update
-    if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
-        RXVisitViewController *visitViewController = (RXVisitViewController *)_modalViewController;
-        
-        NSMutableArray *touchpointsDifference = [NSMutableArray arrayWithArray:touchpoints];
-        [touchpointsDifference removeObjectsInArray:visitViewController.touchpoints];
-        
-        NSMutableArray *touchpointsWithCards = [[touchpointsDifference filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-            return touchpoint.cards.count > 0;
-        }]] mutableCopy];
-        
-        if (touchpointsWithCards.count > 0) {
-            if (self.config.accumulatingTouchpoints) {
-                [visitViewController addTouchpoints:touchpointsWithCards];
-            } else {
-                [visitViewController setTouchpoints:touchpointsWithCards];
-                [visitViewController.tableView reloadData];
-            }
-        }
-    }
     
     [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
         
@@ -291,30 +268,13 @@ static Rover *sharedInstance = nil;
 
             // Touchpoint Tracking
             [self trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID}];
-            
-            if (!touchpoint.notificationDelivered || !self.config.accumulatingTouchpoints) {
-                UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-                UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-                
-                if (self.config.autoPresentModal && ![currentViewController isKindOfClass:_config.modalViewControllerClass] && ![currentViewController isKindOfClass:[RXDetailViewController class]]) {
-                    [self presentModal];
-                }
-            }
-            
-        } else if (!touchpoint.notificationDelivered) {
-            
-            if (touchpoint.notification) {
-                [self sendNotification:touchpoint.notification];
-            }
-            
         }
         
-        touchpoint.notificationDelivered = YES;
     }];
     
     // Delegate
-    if ([self.delegate respondsToSelector:@selector(roverVisit:didEnterTouchpoints:)]) {
-        [self.delegate roverVisit:visit didEnterTouchpoints:touchpoints];
+    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didEnterTouchpoints:)]) {
+        [self.experienceManager roverVisit:visit didEnterTouchpoints:touchpoints];
     }
     
 }
@@ -326,25 +286,9 @@ static Rover *sharedInstance = nil;
         [self trackEvent:@"touchpoint.exit" params:@{@"touchpoint": touchpoint.ID}];
     }];
     
-    // Modal
-    if (!self.config.accumulatingTouchpoints && _modalViewController) {
-        if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                RXVisitViewController *visitModalViewController = (RXVisitViewController *)_modalViewController;
-                
-                [visitModalViewController setTouchpoints:[[visit.currentTouchpoints allObjects] mutableCopy]];
-                [visitModalViewController.tableView reloadData];
-                
-                if (visitModalViewController.touchpoints.count == 0) {
-                    [visitModalViewController dismissViewControllerAnimated:YES completion:nil];
-                }
-            });
-        }
-    }
-    
     // Delegate
-    if ([self.delegate respondsToSelector:@selector(roverVisit:didExitTouchpoints:)]) {
-        [self.delegate roverVisit:visit didExitTouchpoints:touchpoints];
+    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didExitTouchpoints:)]) {
+        [self.experienceManager roverVisit:visit didExitTouchpoints:touchpoints];
     }
 }
 
@@ -352,8 +296,8 @@ static Rover *sharedInstance = nil;
     visit.simulate = self.config.sandboxMode;
     
     // Delegate
-    if ([self.delegate respondsToSelector:@selector(roverShouldCreateVisit:)]) {
-        if (![self.delegate roverShouldCreateVisit:visit]) {
+    if ([self.experienceManager respondsToSelector:@selector(roverShouldCreateVisit:)]) {
+        if (![self.experienceManager roverShouldCreateVisit:visit]) {
             return NO;
         }
     }
@@ -361,8 +305,8 @@ static Rover *sharedInstance = nil;
     [[RVNetworkingManager sharedManager] postVisit:visit];
     
     // Delegate
-    if ([self.delegate respondsToSelector:@selector(roverDidCreateVisit:)]) {
-        [self.delegate roverDidCreateVisit:visit];
+    if ([self.experienceManager respondsToSelector:@selector(roverDidCreateVisit:)]) {
+        [self.experienceManager roverDidCreateVisit:visit];
     }
     
     return YES;
@@ -379,18 +323,9 @@ static Rover *sharedInstance = nil;
             [self trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID}];
         }];
         
-        // Auto Modal
-        if (self.config.autoPresentModal && self.currentVisit.visitedTouchpoints.count > 0) {
-
-            UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-            UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-            
-            if ([currentViewController isKindOfClass:[RXDetailViewController class]]) {
-                [currentViewController dismissViewControllerAnimated:YES completion:nil];
-            } else if (![currentViewController isKindOfClass:_config.modalViewControllerClass]) {
-                
-                [self presentModal];
-            }
+        // Delegate
+        if ([self.experienceManager respondsToSelector:@selector(applicationDidBecomeActiveDuringVisit:)]) {
+            [self.experienceManager applicationDidBecomeActiveDuringVisit:self.currentVisit];
         }
     }
 
@@ -401,24 +336,24 @@ static Rover *sharedInstance = nil;
 - (void)visitViewController:(RXVisitViewController *)viewController didDisplayCard:(RVCard *)card {
     [self trackEvent:@"card.view" params:@{@"card": card.ID}];
     
-    if ([self.delegate respondsToSelector:@selector(roverVisit:didDisplayCard:)]) {
-        [self.delegate roverVisit:self.currentVisit didDisplayCard:card];
+    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didDisplayCard:)]) {
+        [self.experienceManager roverVisit:self.currentVisit didDisplayCard:card];
     }
 }
 
 - (void)visitViewController:(RXVisitViewController *)viewController didDiscardCard:(RVCard *)card {
     [self trackEvent:@"card.discard" params:@{@"card": card.ID}];
     
-    if ([self.delegate respondsToSelector:@selector(roverVisit:didDiscardCard:)]) {
-        [self.delegate roverVisit:self.currentVisit didDiscardCard:card];
+    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didDiscardCard:)]) {
+        [self.experienceManager roverVisit:self.currentVisit didDiscardCard:card];
     }
 }
 
 - (void)visitViewController:(RXVisitViewController *)viewController didClickCard:(RVCard *)card URL:(NSURL *)url {
     [self trackEvent:@"card.click" params:@{@"card": card.ID, @"url": url.absoluteString}];
     
-    if ([self.delegate respondsToSelector:@selector(roverVisit:didClickCard:withURL:)]) {
-        [self.delegate roverVisit:self.currentVisit didClickCard:card withURL:url];
+    if ([self.experienceManager respondsToSelector:@selector(roverVisit:didClickCard:withURL:)]) {
+        [self.experienceManager roverVisit:self.currentVisit didClickCard:card withURL:url];
     }
 }
 

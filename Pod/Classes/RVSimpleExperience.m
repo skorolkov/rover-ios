@@ -12,6 +12,7 @@
 
 #pragma mark - RVExperienceManager
 
+
 - (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints {
     
     // Current Modal Update
