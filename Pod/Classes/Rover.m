@@ -381,6 +381,10 @@ static Rover *sharedInstance = nil;
 
 - (void)visitViewControllerDidGetDismissed:(RXVisitViewController *)viewController {
     _modalViewController = nil;
+    
+    if ([self.delegate respondsToSelector:@selector(roverDidDismissModalViewController)]) {
+        [self.delegate roverDidDismissModalViewController];
+    }
 }
 
 @end

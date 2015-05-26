@@ -9,6 +9,17 @@
 #import "RVRetailExperience.h"
 #import "Rover.h"
 
+#import "RXDraggableView.h"
+#import "RXCardsIcon.h"
+
+@interface RVRetailExperience () {
+    CGPoint _lastPosition;
+}
+
+@property (nonatomic, strong) RXDraggableView *draggableView;
+
+@end
+
 @implementation RVRetailExperience
 
 #pragma mark - RoverDelegate
@@ -88,6 +99,84 @@
 - (void)presentModalForVisit:(RVVisit *)visit {
     
     [[Rover shared] presentModalWithTouchpoints:[[visit.visitedTouchpoints reverseObjectEnumerator] allObjects]];
+}
+
+
+/// CHATHEAD STUFF
+
+- (RXDraggableView *)draggableView {
+    if (_draggableView) {
+        return _draggableView;
+    }
+    
+    UIWindow *currentWindow = [[UIApplication sharedApplication] keyWindow];
+    
+    CGPoint initialPosition = CGPointMake(currentWindow.frame.size.width - (64/2) - 30, currentWindow.frame.size.height - (64/2) - 30);
+    
+    _draggableView = [[RXDraggableView alloc] initWithFrame:CGRectMake(0, 0, 64, 64)];
+    _draggableView.center = CGPointMake(currentWindow.frame.size.width + 62, initialPosition.y);
+    _draggableView.backgroundColor = [UIColor whiteColor];
+    _draggableView.layer.cornerRadius = 32;
+    _draggableView.layer.shadowColor = [UIColor blackColor].CGColor;
+    _draggableView.layer.shadowOffset = CGSizeMake(0, 2);
+    _draggableView.layer.shadowOpacity = .5;
+    _draggableView.layer.shadowRadius = 4;
+    _draggableView.delegate = self;
+    
+    RXCardsIcon *cardsIcon = [[RXCardsIcon alloc] initWithFrame:CGRectMake(12, 12, 38, 38)];
+    [_draggableView addSubview:cardsIcon];
+    
+    
+    _lastPosition = initialPosition;
+    
+    
+    return _draggableView;
+}
+
+- (void)roverDidDismissModalViewController {
+    UIWindow *currentWindow = [[UIApplication sharedApplication] keyWindow];
+    
+    if (!self.draggableView.superview) {
+        [currentWindow addSubview:self.draggableView];
+    }
+    
+    [UIView animateWithDuration:.3
+                     animations:^{
+                         self.draggableView.center = _lastPosition;
+                     }
+                     completion:^(BOOL finished) {
+                         
+                     }];
+}
+
+- (void)roverVisitDidExpire:(RVVisit *)visit {
+    UIWindow *currentWindow = [[UIApplication sharedApplication] keyWindow];
+    
+    if (!self.draggableView.superview) {
+        [currentWindow addSubview:self.draggableView];
+    }
+    
+    [UIView animateWithDuration:.3
+                     animations:^{
+                         self.draggableView.center = _lastPosition;
+                     }
+                     completion:^(BOOL finished) {
+                         [self.draggableView removeFromSuperview];
+                     }];
+}
+
+- (void)draggableViewClicked:(RXDraggableView *)draggableView {
+    _lastPosition = self.draggableView.center;
+    
+    [UIView animateWithDuration:.3
+                     animations:^{
+                         self.draggableView.center = CGPointMake(self.draggableView.anchoredEdge == RXDraggableEdgeRight ? self.draggableView.superview.frame.size.width + 62 : - 62,self.draggableView.center.y);
+                     }
+                     completion:^(BOOL finished) {
+                         
+                         [self presentModalForVisit:[Rover shared].currentVisit];
+                     }];
+    
 }
 
 @end
