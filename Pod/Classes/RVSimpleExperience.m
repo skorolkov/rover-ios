@@ -21,10 +21,7 @@
     if ([[Rover shared].modalViewController isKindOfClass:[RXVisitViewController class]]) {
         RXVisitViewController *visitViewController = (RXVisitViewController *)[Rover shared].modalViewController;
         
-        NSMutableArray *touchpointsDifference = [NSMutableArray arrayWithArray:touchpoints];
-        [touchpointsDifference removeObjectsInArray:visitViewController.touchpoints];
-        
-        NSMutableArray *touchpointsWithCards = [[touchpointsDifference filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
+        NSMutableArray *touchpointsWithCards = [[visit.currentTouchpoints.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
             return touchpoint.cards.count > 0;
         }]] mutableCopy];
         
