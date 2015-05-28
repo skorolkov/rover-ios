@@ -1,23 +1,23 @@
 PODS:
-  - Rover (0.30.7):
-    - Rover/Core (= 0.30.7)
-    - Rover/Model (= 0.30.7)
-    - Rover/Networking (= 0.30.7)
-    - Rover/UI (= 0.30.7)
+  - Rover (0.30.10):
+    - Rover/Core (= 0.30.10)
+    - Rover/Model (= 0.30.10)
+    - Rover/Networking (= 0.30.10)
+    - Rover/UI (= 0.30.10)
     - RSBarcodes (~> 0.1)
     - UIActivityIndicator-for-SDWebImage (~> 1.2)
-  - Rover/Core (0.30.7):
+  - Rover/Core (0.30.10):
     - Rover/Model
     - RSBarcodes (~> 0.1)
     - UIActivityIndicator-for-SDWebImage (~> 1.2)
-  - Rover/Model (0.30.7):
+  - Rover/Model (0.30.10):
     - RSBarcodes (~> 0.1)
     - UIActivityIndicator-for-SDWebImage (~> 1.2)
-  - Rover/Networking (0.30.7):
+  - Rover/Networking (0.30.10):
     - Rover/Model
     - RSBarcodes (~> 0.1)
     - UIActivityIndicator-for-SDWebImage (~> 1.2)
-  - Rover/UI (0.30.7):
+  - Rover/UI (0.30.10):
     - Rover/Model
     - RSBarcodes (~> 0.1)
     - UIActivityIndicator-for-SDWebImage (~> 1.2)
@@ -36,9 +36,9 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  Rover: 20eabecac72f0b234d154bac8ab75d975517d6dd
+  Rover: 123235ac10ada1fcb0b0f4ba4e21a52b60405ae9
   RSBarcodes: 96ad32377a0142aa9dcc547cbc60b8e9bb20b2fb
   SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
   UIActivityIndicator-for-SDWebImage: 7bf7ebbf0ed1747dedc0d6e949c4603a6d0f9e0c
 
-COCOAPODS: 0.36.3
+COCOAPODS: 0.37.1

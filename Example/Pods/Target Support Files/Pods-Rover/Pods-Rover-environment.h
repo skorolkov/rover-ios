@@ -16,31 +16,31 @@
 #define COCOAPODS_POD_AVAILABLE_Rover
 #define COCOAPODS_VERSION_MAJOR_Rover 0
 #define COCOAPODS_VERSION_MINOR_Rover 30
-#define COCOAPODS_VERSION_PATCH_Rover 7
+#define COCOAPODS_VERSION_PATCH_Rover 10
 
 // Rover/Core
 #define COCOAPODS_POD_AVAILABLE_Rover_Core
 #define COCOAPODS_VERSION_MAJOR_Rover_Core 0
 #define COCOAPODS_VERSION_MINOR_Rover_Core 30
-#define COCOAPODS_VERSION_PATCH_Rover_Core 7
+#define COCOAPODS_VERSION_PATCH_Rover_Core 10
 
 // Rover/Model
 #define COCOAPODS_POD_AVAILABLE_Rover_Model
 #define COCOAPODS_VERSION_MAJOR_Rover_Model 0
 #define COCOAPODS_VERSION_MINOR_Rover_Model 30
-#define COCOAPODS_VERSION_PATCH_Rover_Model 7
+#define COCOAPODS_VERSION_PATCH_Rover_Model 10
 
 // Rover/Networking
 #define COCOAPODS_POD_AVAILABLE_Rover_Networking
 #define COCOAPODS_VERSION_MAJOR_Rover_Networking 0
 #define COCOAPODS_VERSION_MINOR_Rover_Networking 30
-#define COCOAPODS_VERSION_PATCH_Rover_Networking 7
+#define COCOAPODS_VERSION_PATCH_Rover_Networking 10
 
 // Rover/UI
 #define COCOAPODS_POD_AVAILABLE_Rover_UI
 #define COCOAPODS_VERSION_MAJOR_Rover_UI 0
 #define COCOAPODS_VERSION_MINOR_Rover_UI 30
-#define COCOAPODS_VERSION_PATCH_Rover_UI 7
+#define COCOAPODS_VERSION_PATCH_Rover_UI 10
 
 // SDWebImage
 #define COCOAPODS_POD_AVAILABLE_SDWebImage
