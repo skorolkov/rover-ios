@@ -82,5 +82,26 @@
     }
 }
 
+- (void)applicationDidBecomeActiveDuringVisit:(RVVisit *)visit {
+    // Auto Modal
+    if (visit.visitedTouchpoints.count > 0) {
+        
+        UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+        UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
+        
+        if ([currentViewController isKindOfClass:[RXDetailViewController class]]) {
+            
+            // If already in a Detail view, dismiss the view and go back to the card view
+            
+            [currentViewController dismissViewControllerAnimated:YES completion:nil];
+        } else if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]]) {
+            
+            // Present the card modal
+            
+            [[Rover shared] presentModalWithTouchpoints:visit.currentTouchpoints.allObjects];
+        }
+    }
+}
+
 
 @end
