@@ -387,4 +387,10 @@ static Rover *sharedInstance = nil;
     }
 }
 
+- (void)visitViewControllerWillGetDismissed:(RXVisitViewController *)viewController {
+    if ([self.delegate respondsToSelector:@selector(roverWillDismissModalViewController:)]) {
+        [self.delegate roverWillDismissModalViewController:viewController];
+    }
+}
+
 @end

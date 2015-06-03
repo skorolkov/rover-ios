@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSInteger, RXDraggableEdge) {
-    RXDraggableEdgeTop,
     RXDraggableEdgeBottom,
+    RXDraggableEdgeTop,
     RXDraggableEdgeRight,
     RXDraggableEdgeLeft
 };
@@ -20,8 +20,9 @@ typedef NS_ENUM(NSInteger, RXDraggableEdge) {
 @interface RXDraggableView : UIView
 
 @property (nonatomic, weak) id<RXDraggableViewDelegate> delegate;
-
 @property (nonatomic, assign, readonly) RXDraggableEdge anchoredEdge;
+
+- (CGPoint)snapPointToClosestEdgeFromPoint:(CGPoint)point offset:(UIOffset)offset;
 
 @end
 

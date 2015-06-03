@@ -24,13 +24,13 @@
 
 - (IBAction)simulateButtonPressed:(id)sender {
     NSUUID *UUID = [[NSUUID alloc] initWithUUIDString:@"7931D3AA-299B-4A12-9FCC-D66F2C5D2462"];
-    [[Rover shared] simulateBeaconWithUUID:UUID major:18347 minor:23905];
+    [[Rover shared] simulateBeaconWithUUID:UUID major:18347 minor:48847];
     
     //37381
 }
 
 - (IBAction)showModalPressed:(id)sender {
-    [[Rover shared] presentModal];
+    [[Rover shared] presentModalWithTouchpoints:[Rover shared].currentVisit.visitedTouchpoints];
 }
 
 @end

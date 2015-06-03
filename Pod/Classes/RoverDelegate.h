@@ -67,6 +67,10 @@
  */
 - (void)roverDidDisplayModalViewController:(UIViewController *)modalViewController;
 
+/** Called before the modal view controller is dismissed.
+ */
+- (void)roverWillDismissModalViewController:(UIViewController *)modalViewController;
+
 /** Called after the modal view controller is dismissed.
  */
 - (void)roverDidDismissModalViewController;

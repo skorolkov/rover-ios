@@ -46,7 +46,7 @@
             }
 
             
-        } else if (!touchpoint.notificationDelivered) {
+        } else /*if (!touchpoint.notificationDelivered)*/ {
             
             // Send local notification
             

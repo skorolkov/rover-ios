@@ -24,7 +24,6 @@
     _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
 }
 
-
 #pragma mark - Override Touches
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -58,13 +57,16 @@
 {
     UITouch *touch = [touches anyObject];
     CGPoint currentPositionInView = [touch locationInView:self];
-    
-    [self endUpTouchWithOffset:[self offsetFromAnchorPoint:currentPositionInView]];
+     
 
     if (!_moved) {
+        [_animator removeAllBehaviors];
+        
         if ([self.delegate respondsToSelector:@selector(draggableViewClicked:)]) {
             [self.delegate draggableViewClicked:self];
         }
+    } else {
+        [self endUpTouchWithOffset:[self offsetFromAnchorPoint:currentPositionInView]];
     }
 }
 
@@ -79,18 +81,56 @@
     return UIOffsetMake((self.frame.size.width / 2) - anchorPoint.x, (self.frame.size.height / 2) - anchorPoint.y);
 }
 
-- (void)endUpTouchWithOffset:(UIOffset)offset
-{
-    CGPoint currentLocation = _attachmentBehavior.anchorPoint;
+- (void)endUpTouchWithOffset:(UIOffset)offset {
+    [self endUpTouchWithOffset:offset anchor:[_attachmentBehavior anchorPoint]];
+}
+
+- (void)endUpTouchWithOffset:(UIOffset)offset anchor:(CGPoint)anchor {
+    CGPoint currentLocation = anchor;
     
     [_animator removeAllBehaviors];
     
     RXDraggableEdge anchorToEdge;
+    CGFloat horizontalDistance = NSNotFound;
     if (currentLocation.x > (self.superview.frame.size.width / 2)) {
         anchorToEdge = RXDraggableEdgeRight;
+        horizontalDistance = self.superview.frame.size.width - currentLocation.x;
     } else {
         anchorToEdge = RXDraggableEdgeLeft;
+        horizontalDistance = currentLocation.x;
     }
+    
+    CGFloat verticalDistance = NSNotFound;
+    if (currentLocation.y > (self.superview.frame.size.height / 2)) {
+        verticalDistance = self.superview.frame.size.height - currentLocation.y;
+        if (verticalDistance < horizontalDistance) {
+            anchorToEdge = RXDraggableEdgeBottom;
+        }
+    } else {
+        verticalDistance = currentLocation.y;
+        if (verticalDistance < horizontalDistance) {
+            anchorToEdge = RXDraggableEdgeTop;
+        }
+    }
+    
+    _anchoredEdge = anchorToEdge;
+    
+//    CGPoint center;
+//    switch (anchorToEdge) {
+//        case RXDraggableEdgeTop:
+//            center = CGPointMake(currentLocation.x + offset.horizontal, 60);
+//            break;
+//        case RXDraggableEdgeBottom:
+//            center = CGPointMake(currentLocation.x + offset.horizontal, self.superview.frame.size.height - 60);
+//            break;
+//        case RXDraggableEdgeLeft:
+//            center = CGPointMake(60, currentLocation.y + offset.vertical);
+//            break;
+//        case RXDraggableEdgeRight:
+//            center = CGPointMake(self.superview.frame.size.width - 60, currentLocation.y + offset.vertical);
+//        default:
+//            break;
+//    }
     
     [UIView animateWithDuration:.5
                           delay:0
@@ -98,7 +138,7 @@
           initialSpringVelocity:.3
                         options:UIViewAnimationOptionCurveEaseInOut
                      animations:^{
-                         self.center = CGPointMake(anchorToEdge == RXDraggableEdgeRight ? (self.superview.frame.size.width - 60 ) : 60, currentLocation.y + offset.vertical);
+                         self.center = [self snapPointToClosestEdgeFromPoint:currentLocation offset:offset];
                      }
                      completion:^(BOOL finished) {
                          _anchoredEdge = anchorToEdge;
@@ -106,5 +146,28 @@
     
 }
 
+- (void)snapToClosestEdge {
+    [self endUpTouchWithOffset:UIOffsetZero anchor:self.center];
+}
+
+- (CGPoint)snapPointToClosestEdgeFromPoint:(CGPoint)point offset:(UIOffset)offset {
+    CGPoint center;
+    switch (_anchoredEdge) {
+        case RXDraggableEdgeTop:
+            center = CGPointMake(point.x + offset.horizontal, 60);
+            break;
+        case RXDraggableEdgeBottom:
+            center = CGPointMake(point.x + offset.horizontal, self.superview.frame.size.height - 60);
+            break;
+        case RXDraggableEdgeLeft:
+            center = CGPointMake(60, point.y + offset.vertical);
+            break;
+        case RXDraggableEdgeRight:
+            center = CGPointMake(self.superview.frame.size.width - 60, point.y + offset.vertical);
+        default:
+            break;
+    }
+    return center;
+}
 
 @end

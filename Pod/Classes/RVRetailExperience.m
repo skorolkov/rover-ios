@@ -11,16 +11,26 @@
 
 #import "RXDraggableView.h"
 #import "RXCardsIcon.h"
+#import "RXRecallButton.h"
 
-@interface RVRetailExperience () {
+@interface RVRetailExperience () <UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning, RXDraggableViewDelegate> {
     CGPoint _lastPosition;
 }
 
-@property (nonatomic, strong) RXDraggableView *draggableView;
+@property (nonatomic, strong) RXRecallButton *recallButton;
 
 @end
 
 @implementation RVRetailExperience
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.recallButton = [RXRecallButton new];
+        self.recallButton.delegate = self;
+    }
+    return self;
+}
 
 #pragma mark - RoverDelegate
 
@@ -94,89 +104,79 @@
     }
 }
 
-#pragma mark - Helper
-
-- (void)presentModalForVisit:(RVVisit *)visit {
-    
-    [[Rover shared] presentModalWithTouchpoints:[[visit.visitedTouchpoints reverseObjectEnumerator] allObjects]];
-}
-
-
-/// CHATHEAD STUFF
-
-- (RXDraggableView *)draggableView {
-    if (_draggableView) {
-        return _draggableView;
-    }
-    
-    UIWindow *currentWindow = [[UIApplication sharedApplication] keyWindow];
-    
-    CGPoint initialPosition = CGPointMake(currentWindow.frame.size.width - (64/2) - 30, currentWindow.frame.size.height - (64/2) - 30);
-    
-    _draggableView = [[RXDraggableView alloc] initWithFrame:CGRectMake(0, 0, 64, 64)];
-    _draggableView.center = CGPointMake(currentWindow.frame.size.width + 62, initialPosition.y);
-    _draggableView.backgroundColor = [UIColor whiteColor];
-    _draggableView.layer.cornerRadius = 32;
-    _draggableView.layer.shadowColor = [UIColor blackColor].CGColor;
-    _draggableView.layer.shadowOffset = CGSizeMake(0, 2);
-    _draggableView.layer.shadowOpacity = .5;
-    _draggableView.layer.shadowRadius = 4;
-    _draggableView.delegate = self;
-    
-    RXCardsIcon *cardsIcon = [[RXCardsIcon alloc] initWithFrame:CGRectMake(12, 12, 38, 38)];
-    [_draggableView addSubview:cardsIcon];
-    
-    
-    _lastPosition = initialPosition;
-    
-    
-    return _draggableView;
-}
-
 - (void)roverDidDismissModalViewController {
-    UIWindow *currentWindow = [[UIApplication sharedApplication] keyWindow];
-    
-    if (!self.draggableView.superview) {
-        [currentWindow addSubview:self.draggableView];
-    }
-    
-    [UIView animateWithDuration:.3
-                     animations:^{
-                         self.draggableView.center = _lastPosition;
-                     }
-                     completion:^(BOOL finished) {
-                         
-                     }];
+    [self.recallButton show:YES completion:nil];
 }
 
 - (void)roverVisitDidExpire:(RVVisit *)visit {
-    UIWindow *currentWindow = [[UIApplication sharedApplication] keyWindow];
-    
-    if (!self.draggableView.superview) {
-        [currentWindow addSubview:self.draggableView];
-    }
-    
-    [UIView animateWithDuration:.3
-                     animations:^{
-                         self.draggableView.center = _lastPosition;
-                     }
-                     completion:^(BOOL finished) {
-                         [self.draggableView removeFromSuperview];
-                     }];
+    [self.recallButton hide:YES completion:nil];
 }
 
-- (void)draggableViewClicked:(RXDraggableView *)draggableView {
-    _lastPosition = self.draggableView.center;
-    
-    [UIView animateWithDuration:.3
-                     animations:^{
-                         self.draggableView.center = CGPointMake(self.draggableView.anchoredEdge == RXDraggableEdgeRight ? self.draggableView.superview.frame.size.width + 62 : - 62,self.draggableView.center.y);
-                     }
-                     completion:^(BOOL finished) {
-                         
-                         [self presentModalForVisit:[Rover shared].currentVisit];
-                     }];
-    
+- (void)roverWillDisplayModalViewController:(UIViewController *)modalViewController {
+    modalViewController.transitioningDelegate = self;
 }
+
+#pragma mark - RXDraggableViewDelegate
+
+- (void)draggableViewClicked:(RXDraggableView *)draggableView {
+    [self.recallButton hide:YES completion:^{
+        [self presentModalForVisit:[Rover shared].currentVisit];
+    }];
+}
+
+#pragma mark - Helper
+
+- (void)presentModalForVisit:(RVVisit *)visit {
+    [[Rover shared] presentModalWithTouchpoints:[[visit.visitedTouchpoints reverseObjectEnumerator] allObjects]];
+}
+
+#pragma mark - UIViewControllerTransioningDelegate
+
+- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
+    return self;
+}
+
+#pragma mark - UIViewControllerAnimatedTransitioning
+
+- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
+    RXModalViewController *modalViewController = (RXModalViewController *)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    return modalViewController.tableView.visibleCells.count * 1;
+}
+
+- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
+    RXModalViewController *modalViewController = (RXModalViewController *)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
+    NSInteger count = modalViewController.tableView.visibleCells.count;
+
+    [modalViewController.tableView.visibleCells enumerateObjectsUsingBlock:^(UITableViewCell *cell, NSUInteger idx, BOOL *stop) {
+        [UIView animateWithDuration:.5
+                              delay:((count - 1 - idx) * .1)
+                            options:UIViewAnimationOptionCurveEaseIn
+                         animations:^{
+                             cell.transform = CGAffineTransformMakeTranslation(0, modalViewController.view.frame.size.height + 50);
+                         }
+                         completion:^(BOOL finished) {
+                             if (idx == 0) {
+                                 [transitionContext completeTransition:YES];
+                             }
+                         }];
+    }];
+
+    [UIView animateWithDuration:((count - 1) * .1) + .5
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         modalViewController.backgroundImageView.alpha = 0;
+                     }
+                     completion:nil];
+    
+    [UIView animateWithDuration:.2
+                          delay:0
+                        options:UIViewAnimationOptionCurveEaseIn
+                     animations:^{
+                         
+                         modalViewController.tableView.tableFooterView.alpha = 0;
+                     } completion:nil];
+}
+
 
 @end

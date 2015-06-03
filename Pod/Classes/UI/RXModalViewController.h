@@ -22,4 +22,8 @@
  */
 @property (nonatomic, assign) NSUInteger backdropBlurRadius;
 
+/** A UIImageView that covers the entire background. This UIImageView is used to hold the blurred screencap.
+ */
+@property (nonatomic, strong) UIImageView *backgroundImageView;
+
 @end
