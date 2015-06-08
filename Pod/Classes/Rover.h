@@ -31,6 +31,9 @@
 #import "RXModalViewController.h"
 #import "RXCardViewCell.h"
 #import "RXBlockView.h"
+#import "RXRecallButton.h"
+#import "RXCardsIcon.h"
+#import "RXModalTransition.h"
 
 // Networking
 #import "RVNetworkingManager.h"

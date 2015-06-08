@@ -9,21 +9,32 @@
 #import "RXRecallButton.h"
 #import "RXCardsIcon.h"
 
+@interface RXRecallButton ()
+
+@property (nonatomic, assign) RXRecallButtonPosition initialPosition;
+
+@end
+
 @implementation RXRecallButton
+
+#pragma mark - Initialization
 
 - (instancetype)init {
     return [self initWithInitialPosition:RXRecallButtonPositionBottomRight];
 }
 
 - (instancetype)initWithInitialPosition:(RXRecallButtonPosition)position {
-    RXCardsIcon *view = [[RXCardsIcon alloc] initWithFrame:CGRectMake(12, 12, 38, 38)];
+    UIView *view = [[RXCardsIcon alloc] initWithFrame:CGRectMake(12, 12, 38, 38)];
     return [self initWithCustomView:view initialPosition:position];
 }
 
 - (instancetype)initWithCustomView:(UIView *)view initialPosition:(RXRecallButtonPosition)position {
-    self = [self initWithFrame:CGRectMake(0, 0, 64, 64)];
+    return [self initWithFrame:CGRectMake(0, 0, 64, 64) customView:view initialPosition:position];
+}
+
+- (instancetype)initWithFrame:(CGRect)frame customView:(UIView *)view initialPosition:(RXRecallButtonPosition)position {
+    self = [self initWithFrame:frame];
     if (self) {
-        self.center = [self tuckedPositionForCorner:position];
         self.backgroundColor = [UIColor whiteColor];
         self.layer.cornerRadius = self.frame.size.height / 2;
         self.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -31,7 +42,15 @@
         self.layer.shadowOpacity = .5;
         self.layer.shadowRadius = 4;
         
-        [self addSubview:view];
+        UIView *viewContainer = [[UIView alloc] initWithFrame:self.bounds];
+        viewContainer.backgroundColor = [UIColor clearColor];
+        viewContainer.layer.cornerRadius = self.layer.cornerRadius;
+        viewContainer.clipsToBounds = YES;
+        [viewContainer addSubview:view];
+        
+        [self addSubview:viewContainer];
+        _view = view;
+        _initialPosition = position;
     }
     return self;
 }
@@ -43,13 +62,13 @@
     
     switch (corner) {
         case RXRecallButtonPositionBottomRight:
-            return CGPointMake(currentWindow.frame.size.width - 64, currentWindow.frame.size.height + 32 + 5);
+            return CGPointMake(currentWindow.frame.size.width - self.frame.size.width, currentWindow.frame.size.height + (self.frame.size.height / 2) + 5);
         case RXRecallButtonPositionBottomLeft:
-            return CGPointMake(64, currentWindow.frame.size.height + 32 + 5);
+            return CGPointMake(self.frame.size.width, currentWindow.frame.size.height + (self.frame.size.height / 2) + 5);
         case RXRecallButtonPositionTopLeft:
-            return CGPointMake(64, - 32 - 5);
+            return CGPointMake(self.frame.size.width, - (self.frame.size.height / 2) - 5);
         case RXRecallButtonPositionTopRight:
-            return CGPointMake(currentWindow.frame.size.width - 64, - 32 - 5);
+            return CGPointMake(currentWindow.frame.size.width - self.frame.size.width, - (self.frame.size.height / 2) - 5);
     }
 }
 
@@ -82,6 +101,7 @@
                          self.center = center;
                      }
                      completion:^(BOOL finished) {
+                         _isVisible = NO;
                          if (completion) {
                              completion();
                          }
@@ -92,6 +112,7 @@
     UIWindow *currentWindow = [[UIApplication sharedApplication] keyWindow];
     
     if (!self.superview) {
+        self.center = [self tuckedPositionForCorner:_initialPosition];
         [currentWindow addSubview:self];
     }
     
@@ -105,6 +126,7 @@
     
     [CATransaction begin]; {
         [CATransaction setCompletionBlock:^{
+            _isVisible = YES;
             if (completion) {
                 completion();
             }

@@ -55,9 +55,9 @@
  */
 - (void)roverVisit:(RVVisit *)visit didClickCard:(RVCard *)card withURL:(NSURL *)url;
 
-/** Called when the application becomes active during a visit.
+/** Called when the application is openned during a visit. Weather it was force closed or brought back from the background.
  */
-- (void)applicationDidBecomeActiveDuringVisit:(RVVisit *)visit;
+- (void)didOpenApplicationDuringVisit:(RVVisit *)visit;
 
 /** Called before the modal view controller is presented.
  */

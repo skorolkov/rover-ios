@@ -9,15 +9,10 @@
 #import "RVRetailExperience.h"
 #import "Rover.h"
 
-#import "RXDraggableView.h"
-#import "RXCardsIcon.h"
-#import "RXRecallButton.h"
-
-@interface RVRetailExperience () <UIViewControllerTransitioningDelegate, UIViewControllerAnimatedTransitioning, RXDraggableViewDelegate> {
-    CGPoint _lastPosition;
-}
+@interface RVRetailExperience () <RXDraggableViewDelegate>
 
 @property (nonatomic, strong) RXRecallButton *recallButton;
+@property (nonatomic, strong) RXModalTransition *modalTransitionManager;
 
 @end
 
@@ -28,6 +23,8 @@
     if (self) {
         self.recallButton = [RXRecallButton new];
         self.recallButton.delegate = self;
+        
+        self.modalTransitionManager = [RXModalTransition new];
     }
     return self;
 }
@@ -61,10 +58,11 @@
         if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
             
             if (!touchpoint.notificationDelivered ) {
-                UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-                UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-                
-                if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]] && ![currentViewController isKindOfClass:[RXDetailViewController class]]) {
+//                UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+//                UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
+//                
+//                if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]] && ![currentViewController isKindOfClass:[RXDetailViewController class]]) {
+                if (![Rover shared].modalViewController) {
                     [self presentModalForVisit:visit];
                 }
             }
@@ -83,7 +81,7 @@
     }];
 }
 
-- (void)applicationDidBecomeActiveDuringVisit:(RVVisit *)visit {
+- (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
     // Auto Modal
     if (visit.visitedTouchpoints.count > 0) {
         
@@ -98,7 +96,6 @@
         } else if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]]) {
             
             // Present the card modal
-            
             [self presentModalForVisit:visit];
         }
     }
@@ -113,7 +110,7 @@
 }
 
 - (void)roverWillDisplayModalViewController:(UIViewController *)modalViewController {
-    modalViewController.transitioningDelegate = self;
+    modalViewController.transitioningDelegate = self.modalTransitionManager;
 }
 
 #pragma mark - RXDraggableViewDelegate
@@ -127,56 +124,13 @@
 #pragma mark - Helper
 
 - (void)presentModalForVisit:(RVVisit *)visit {
+    if (self.recallButton.isVisible) {
+        return;
+    }
+    
     [[Rover shared] presentModalWithTouchpoints:[[visit.visitedTouchpoints reverseObjectEnumerator] allObjects]];
 }
 
-#pragma mark - UIViewControllerTransioningDelegate
-
-- (id<UIViewControllerAnimatedTransitioning>)animationControllerForDismissedController:(UIViewController *)dismissed {
-    return self;
-}
-
-#pragma mark - UIViewControllerAnimatedTransitioning
-
-- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
-    RXModalViewController *modalViewController = (RXModalViewController *)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    return modalViewController.tableView.visibleCells.count * 1;
-}
-
-- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
-    RXModalViewController *modalViewController = (RXModalViewController *)[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
-    NSInteger count = modalViewController.tableView.visibleCells.count;
-
-    [modalViewController.tableView.visibleCells enumerateObjectsUsingBlock:^(UITableViewCell *cell, NSUInteger idx, BOOL *stop) {
-        [UIView animateWithDuration:.5
-                              delay:((count - 1 - idx) * .1)
-                            options:UIViewAnimationOptionCurveEaseIn
-                         animations:^{
-                             cell.transform = CGAffineTransformMakeTranslation(0, modalViewController.view.frame.size.height + 50);
-                         }
-                         completion:^(BOOL finished) {
-                             if (idx == 0) {
-                                 [transitionContext completeTransition:YES];
-                             }
-                         }];
-    }];
-
-    [UIView animateWithDuration:((count - 1) * .1) + .5
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         modalViewController.backgroundImageView.alpha = 0;
-                     }
-                     completion:nil];
-    
-    [UIView animateWithDuration:.2
-                          delay:0
-                        options:UIViewAnimationOptionCurveEaseIn
-                     animations:^{
-                         
-                         modalViewController.tableView.tableFooterView.alpha = 0;
-                     } completion:nil];
-}
 
 
 @end

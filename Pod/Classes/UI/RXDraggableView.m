@@ -8,6 +8,8 @@
 
 #import "RXDraggableView.h"
 
+#define VALUE_BETWEEN(V, A, B) MAX(MIN(V, B), A)
+
 @interface RXDraggableView () {
     BOOL _moved;
 }
@@ -19,6 +21,26 @@
 @end
 
 @implementation RXDraggableView
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void)commonInit {
+    _margins = UIEdgeInsetsMake(30, 30, 30, 30);
+}
 
 - (void)didMoveToSuperview {
     _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
@@ -115,23 +137,6 @@
     
     _anchoredEdge = anchorToEdge;
     
-//    CGPoint center;
-//    switch (anchorToEdge) {
-//        case RXDraggableEdgeTop:
-//            center = CGPointMake(currentLocation.x + offset.horizontal, 60);
-//            break;
-//        case RXDraggableEdgeBottom:
-//            center = CGPointMake(currentLocation.x + offset.horizontal, self.superview.frame.size.height - 60);
-//            break;
-//        case RXDraggableEdgeLeft:
-//            center = CGPointMake(60, currentLocation.y + offset.vertical);
-//            break;
-//        case RXDraggableEdgeRight:
-//            center = CGPointMake(self.superview.frame.size.width - 60, currentLocation.y + offset.vertical);
-//        default:
-//            break;
-//    }
-    
     [UIView animateWithDuration:.5
                           delay:0
          usingSpringWithDamping:.7
@@ -140,34 +145,26 @@
                      animations:^{
                          self.center = [self snapPointToClosestEdgeFromPoint:currentLocation offset:offset];
                      }
-                     completion:^(BOOL finished) {
-                         _anchoredEdge = anchorToEdge;
-                     }];
+                     completion:nil];
     
 }
 
-- (void)snapToClosestEdge {
-    [self endUpTouchWithOffset:UIOffsetZero anchor:self.center];
-}
-
 - (CGPoint)snapPointToClosestEdgeFromPoint:(CGPoint)point offset:(UIOffset)offset {
-    CGPoint center;
+    CGFloat leftMinimum = (self.frame.size.width / 2) + _margins.left;
+    CGFloat leftMaximum = self.superview.frame.size.width - ((self.frame.size.width / 2) + _margins.right);
+    CGFloat topMinimum = (self.frame.size.height / 2) + _margins.top;
+    CGFloat topMaximum = self.superview.frame.size.height - ((self.frame.size.height / 2) + _margins.bottom);
+    
     switch (_anchoredEdge) {
         case RXDraggableEdgeTop:
-            center = CGPointMake(point.x + offset.horizontal, 60);
-            break;
+            return CGPointMake(VALUE_BETWEEN(point.x + offset.horizontal, leftMinimum, leftMaximum), topMinimum);
         case RXDraggableEdgeBottom:
-            center = CGPointMake(point.x + offset.horizontal, self.superview.frame.size.height - 60);
-            break;
+            return CGPointMake(VALUE_BETWEEN(point.x + offset.horizontal, leftMinimum, leftMaximum), topMaximum);
         case RXDraggableEdgeLeft:
-            center = CGPointMake(60, point.y + offset.vertical);
-            break;
+            return CGPointMake(leftMinimum, VALUE_BETWEEN(point.y + offset.vertical, topMinimum, topMaximum));
         case RXDraggableEdgeRight:
-            center = CGPointMake(self.superview.frame.size.width - 60, point.y + offset.vertical);
-        default:
-            break;
+            return CGPointMake(leftMaximum, VALUE_BETWEEN(point.y + offset.vertical, topMinimum, topMaximum));
     }
-    return center;
 }
 
 @end

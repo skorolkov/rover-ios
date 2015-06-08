@@ -157,8 +157,8 @@ static Rover *sharedInstance = nil;
             NSLog(@"%@ warning empty beacon uuids", self);
         }
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidFinishLaunching:) name:UIApplicationDidFinishLaunchingNotification object:nil];
     }
     return self;
 }
@@ -337,8 +337,15 @@ static Rover *sharedInstance = nil;
 
 #pragma mark - Application Notifications
 
-- (void)applicationDidBecomeActive:(NSNotification *)note {
-    
+- (void)applicationDidFinishLaunching:(NSNotification *)note {
+    [self didOpenApplication];
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)note {
+    [self didOpenApplication];
+}
+
+- (void)didOpenApplication {
     if (self.currentVisit) {
         // Touchpoint Tracking
         [self.currentVisit.currentTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
@@ -346,11 +353,10 @@ static Rover *sharedInstance = nil;
         }];
         
         // Delegate
-        if ([self.delegate respondsToSelector:@selector(applicationDidBecomeActiveDuringVisit:)]) {
-            [self.delegate applicationDidBecomeActiveDuringVisit:self.currentVisit];
+        if ([self.delegate respondsToSelector:@selector(didOpenApplicationDuringVisit:)]) {
+            [self.delegate didOpenApplicationDuringVisit:self.currentVisit];
         }
     }
-
 }
 
 #pragma mark - RXVisitViewControllerDelegate
