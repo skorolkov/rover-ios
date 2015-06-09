@@ -89,9 +89,12 @@
                 return;
             }
             
-//            if (_expirationTimer) {
-//                [self expireVisit];
-//            }
+            if (_expirationTimer) {
+                [_expirationTimer invalidate];
+                [self expireVisit];
+            }
+            
+            _expirationTimer = nil;
             
             [self createVisitWithBeaconRegions:regions];
         }];
