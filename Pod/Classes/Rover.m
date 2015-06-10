@@ -177,9 +177,12 @@ static Rover *sharedInstance = nil;
     [_visitManager.regionManager stopMonitoring];
 }
 
-- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor
+- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor duration:(NSTimeInterval)duration
 {
-    [_visitManager.regionManager simulateBeaconWithUUID:UUID major:major minor:minor];
+    [_visitManager.regionManager simulateRegionEnterWithBeaconUUID:UUID major:major minor:minor];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [_visitManager.regionManager simulateRegionExitWithBeaconUUID:UUID major:major minor:minor];
+    });
 }
 
 #pragma mark - Utility
