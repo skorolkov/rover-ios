@@ -12,6 +12,8 @@
 
 @interface AppDelegate () <RoverDelegate>
 
+@property (nonatomic, strong) RVRetailExperience *roverExperience;
+
 @end
 
 @implementation AppDelegate
@@ -22,8 +24,12 @@
     // In sandbox mode visit analytics arent tracked
     config.sandboxMode = YES;
     
+    //config.experience = RVExperienceRetail;
+    
     Rover *rover = [Rover setup:config];
     
+    _roverExperience = [[RVSimpleExperience alloc] init];
+    rover.delegate = _roverExperience;
     
     [rover startMonitoring];
     

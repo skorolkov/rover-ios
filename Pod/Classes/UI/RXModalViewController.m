@@ -24,7 +24,6 @@
 }
 
 @property (strong, nonatomic) UIButton *pillView;
-@property (nonatomic, strong) UIImageView *backgroundImageView;
 
 @end
 
@@ -219,14 +218,14 @@
     
     image = [RXImageEffects applyBlurWithRadius:self.backdropBlurRadius tintColor:self.backdropTintColor saturationDeltaFactor:1 maskImage:nil toImage:image];
 
-    UIImageView *backgroundImageView = [[UIImageView alloc] initWithImage:image];
-    backgroundImageView.alpha = 0;
+    _backgroundImageView = [[UIImageView alloc] initWithImage:image];
+    _backgroundImageView.alpha = 0;
     
-    [self.view addSubview:backgroundImageView];
-    [self.view sendSubviewToBack:backgroundImageView];
+    [self.view addSubview:_backgroundImageView];
+    [self.view sendSubviewToBack:_backgroundImageView];
 
     [UIView animateWithDuration:.3 animations:^{
-        backgroundImageView.alpha = 1;
+        _backgroundImageView.alpha = 1;
     }];
 }
 

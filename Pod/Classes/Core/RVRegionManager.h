@@ -54,7 +54,11 @@
 
 /** Convenience method to simulate going in and then out of a CLBeaconRegion.
  */
-- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor;
+- (void)simulateRegionEnterWithBeaconUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor;
+
+/** Convenience method to simulate going out of a CLBeaconRegion.
+ */
+- (void)simulateRegionExitWithBeaconUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor;
 
 @end
 

@@ -20,7 +20,9 @@
 - (NSAttributedString *)htmlText {
     if (!_htmlText) {
         
-        _htmlText = [[NSMutableAttributedString alloc] initWithData:[self.htmlString dataUsingEncoding:NSUnicodeStringEncoding] options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} documentAttributes:nil error:nil];
+        NSData *data = [self.htmlString dataUsingEncoding:NSUnicodeStringEncoding];
+        
+        _htmlText = [[NSMutableAttributedString alloc] initWithData:data options:@{ NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType} documentAttributes:nil error:nil];
      
         // TOOD: dry this out, its used in every block that can contain text 
         

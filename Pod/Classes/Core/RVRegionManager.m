@@ -23,9 +23,13 @@
 
 #pragma mark - Instance Methods
 
-- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor {
+- (void)simulateRegionEnterWithBeaconUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor {
     CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID major:major minor:minor identifier:[self identifierForUUID:UUID major:major minor:minor]];
     [self.delegate regionManager:self didEnterRegions:[NSSet setWithObject:beaconRegion]];
+}
+
+- (void)simulateRegionExitWithBeaconUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor {
+    CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID major:major minor:minor identifier:[self identifierForUUID:UUID major:major minor:minor]];
     [self.delegate regionManager:self didExitRegions:[NSSet setWithObject:beaconRegion]];
 }
 
