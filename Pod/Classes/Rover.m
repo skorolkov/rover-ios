@@ -157,8 +157,8 @@ static Rover *sharedInstance = nil;
             NSLog(@"%@ warning empty beacon uuids", self);
         }
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidBecomeActive:) name:UIApplicationDidBecomeActiveNotification object:nil];
-        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidFinishLaunching:) name:UIApplicationDidFinishLaunchingNotification object:nil];
     }
     return self;
 }
@@ -177,9 +177,12 @@ static Rover *sharedInstance = nil;
     [_visitManager.regionManager stopMonitoring];
 }
 
-- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor
+- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor duration:(NSTimeInterval)duration
 {
-    [_visitManager.regionManager simulateBeaconWithUUID:UUID major:major minor:minor];
+    [_visitManager.regionManager simulateRegionEnterWithBeaconUUID:UUID major:major minor:minor];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [_visitManager.regionManager simulateRegionExitWithBeaconUUID:UUID major:major minor:minor];
+    });
 }
 
 #pragma mark - Utility
@@ -337,8 +340,15 @@ static Rover *sharedInstance = nil;
 
 #pragma mark - Application Notifications
 
-- (void)applicationDidBecomeActive:(NSNotification *)note {
-    
+- (void)applicationDidFinishLaunching:(NSNotification *)note {
+    [self didOpenApplication];
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)note {
+    [self didOpenApplication];
+}
+
+- (void)didOpenApplication {
     if (self.currentVisit) {
         // Touchpoint Tracking
         [self.currentVisit.currentTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
@@ -346,11 +356,10 @@ static Rover *sharedInstance = nil;
         }];
         
         // Delegate
-        if ([self.delegate respondsToSelector:@selector(applicationDidBecomeActiveDuringVisit:)]) {
-            [self.delegate applicationDidBecomeActiveDuringVisit:self.currentVisit];
+        if ([self.delegate respondsToSelector:@selector(didOpenApplicationDuringVisit:)]) {
+            [self.delegate didOpenApplicationDuringVisit:self.currentVisit];
         }
     }
-
 }
 
 #pragma mark - RXVisitViewControllerDelegate
@@ -381,6 +390,16 @@ static Rover *sharedInstance = nil;
 
 - (void)visitViewControllerDidGetDismissed:(RXVisitViewController *)viewController {
     _modalViewController = nil;
+    
+    if ([self.delegate respondsToSelector:@selector(roverDidDismissModalViewController)]) {
+        [self.delegate roverDidDismissModalViewController];
+    }
+}
+
+- (void)visitViewControllerWillGetDismissed:(RXVisitViewController *)viewController {
+    if ([self.delegate respondsToSelector:@selector(roverWillDismissModalViewController:)]) {
+        [self.delegate roverWillDismissModalViewController:viewController];
+    }
 }
 
 @end

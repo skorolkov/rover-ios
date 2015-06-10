@@ -89,6 +89,11 @@
                 return;
             }
             
+            if (_expirationTimer) {
+                [_expirationTimer invalidate];
+                [self expireVisit];
+            }
+            
             _expirationTimer = nil;
             
             [self createVisitWithBeaconRegions:regions];
@@ -237,6 +242,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.delegate visitManager:self didExpireVisit:self.latestVisit];
         });
+        _expirationTimer = nil;
     }
 }
 

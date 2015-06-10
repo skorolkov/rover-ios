@@ -31,6 +31,9 @@
 #import "RXModalViewController.h"
 #import "RXCardViewCell.h"
 #import "RXBlockView.h"
+#import "RXRecallButton.h"
+#import "RXCardsIcon.h"
+#import "RXModalTransition.h"
 
 // Networking
 #import "RVNetworkingManager.h"
@@ -99,7 +102,7 @@
 /** You can use this method to simulate your app coming in range of a particular beacon.
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
  */
-- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor;
+- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor duration:(NSTimeInterval)duration;
 
 /** Convenience method to find the current view controller
  */

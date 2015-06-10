@@ -9,7 +9,25 @@
 #import "RVRetailExperience.h"
 #import "Rover.h"
 
+@interface RVRetailExperience () <RXDraggableViewDelegate>
+
+@property (nonatomic, strong) RXRecallButton *recallButton;
+@property (nonatomic, strong) RXModalTransition *modalTransitionManager;
+
+@end
+
 @implementation RVRetailExperience
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.recallButton = [RXRecallButton new];
+        self.recallButton.delegate = self;
+        
+        self.modalTransitionManager = [RXModalTransition new];
+    }
+    return self;
+}
 
 #pragma mark - RoverDelegate
 
@@ -40,10 +58,11 @@
         if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
             
             if (!touchpoint.notificationDelivered ) {
-                UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-                UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-                
-                if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]] && ![currentViewController isKindOfClass:[RXDetailViewController class]]) {
+//                UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+//                UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
+//                
+//                if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]] && ![currentViewController isKindOfClass:[RXDetailViewController class]]) {
+                if (![Rover shared].modalViewController) {
                     [self presentModalForVisit:visit];
                 }
             }
@@ -62,7 +81,7 @@
     }];
 }
 
-- (void)applicationDidBecomeActiveDuringVisit:(RVVisit *)visit {
+- (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
     // Auto Modal
     if (visit.visitedTouchpoints.count > 0) {
         
@@ -77,17 +96,41 @@
         } else if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]]) {
             
             // Present the card modal
-            
             [self presentModalForVisit:visit];
         }
     }
 }
 
+- (void)roverDidDismissModalViewController {
+    [self.recallButton show:YES completion:nil];
+}
+
+- (void)roverVisitDidExpire:(RVVisit *)visit {
+    [self.recallButton hide:YES completion:nil];
+}
+
+- (void)roverWillDisplayModalViewController:(UIViewController *)modalViewController {
+    modalViewController.transitioningDelegate = self.modalTransitionManager;
+}
+
+#pragma mark - RXDraggableViewDelegate
+
+- (void)draggableViewClicked:(RXDraggableView *)draggableView {
+    [self.recallButton hide:YES completion:^{
+        [self presentModalForVisit:[Rover shared].currentVisit];
+    }];
+}
+
 #pragma mark - Helper
 
 - (void)presentModalForVisit:(RVVisit *)visit {
+    if (self.recallButton.isVisible) {
+        return;
+    }
     
     [[Rover shared] presentModalWithTouchpoints:[[visit.visitedTouchpoints reverseObjectEnumerator] allObjects]];
 }
+
+
 
 @end

@@ -9,99 +9,127 @@
 #import "RVSimpleExperience.h"
 #import "Rover.h"
 
+@interface RVSimpleExperience () <RXDraggableViewDelegate, UIActionSheetDelegate>
+
+@property (nonatomic, strong) RXRecallButton *recallButton;
+@property (nonatomic, strong) UIActionSheet *touchpointsActionSheet;
+
+@end
+
 @implementation RVSimpleExperience
+
+#pragma mark - Initialization
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.recallButton = [RXRecallButton new];
+        self.recallButton.delegate = self;
+    }
+    return self;
+}
 
 #pragma mark - RoverDelegate
 
-
 - (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints {
     
-    // If the modal view controller is currently present, set and reload its content
+    // If app is in the foreground present the recall button
     
-    if ([[Rover shared].modalViewController isKindOfClass:[RXVisitViewController class]]) {
-        RXVisitViewController *visitViewController = (RXVisitViewController *)[Rover shared].modalViewController;
-        
-        NSMutableArray *touchpointsWithCards = [[visit.currentTouchpoints.allObjects filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-            return touchpoint.cards.count > 0;
-        }]] mutableCopy];
-        
-        if (touchpointsWithCards.count > 0) {
-            [visitViewController setTouchpoints:touchpointsWithCards];
-            [visitViewController.tableView reloadData];
+    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+        if (!self.recallButton.isVisible && !_touchpointsActionSheet) {
+            [self.recallButton show:YES completion:nil];
         }
-    }
-    
-    
-    [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
+        if (_touchpointsActionSheet) {
+            [_touchpointsActionSheet dismissWithClickedButtonIndex:-1 animated:YES];
+            [self presentActionSheetForTouchpoints:[visit.currentTouchpoints allObjects]];
+        }
+    } else /*if (!touchpoint.notificationDelivered)*/ {
         
-        // If app is in the foreground present the modal
+        // Send local notification
         
-        if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-            
-            UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-            UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-            
-            if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]] && ![currentViewController isKindOfClass:[RXDetailViewController class]]) {
-                [[Rover shared] presentModalWithTouchpoints:[visit.currentTouchpoints allObjects]];
-            }
-
-            
-        } else if (!touchpoint.notificationDelivered) {
-            
-            // Send local notification
-            
+        for (RVTouchpoint *touchpoint in touchpoints) {
             if (touchpoint.notification) {
                 [[Rover shared] presentLocalNotification:touchpoint.notification];
+                touchpoint.notificationDelivered = YES;
             }
-            
         }
-        
-        // Mark the touchpoint as visited, so we only send notifications once per touchpoint
-        
-        touchpoint.notificationDelivered = YES;
+    }
+}
+
+- (void)roverDidDismissModalViewController {
+    [self.recallButton show:YES completion:nil];
+}
+
+- (void)roverVisitDidExpire:(RVVisit *)visit {
+    [self.recallButton hide:YES completion:nil];
+}
+
+- (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
+    if (!self.recallButton.isVisible && !_touchpointsActionSheet && ![Rover shared].modalViewController) {
+        [self.recallButton show:YES completion:nil];
+    }
+}
+
+#pragma mark - RXDraggableViewDelegate
+
+- (void)draggableViewClicked:(RXDraggableView *)draggableView {
+    RVVisit *visit = [Rover shared].currentVisit;
+    if (visit.currentTouchpoints.count == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Rover" message:@"Not currently in any touchpoints" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    [self.recallButton hide:YES completion:^{
+        [self presentActionSheetForTouchpoints:[visit.currentTouchpoints allObjects]];
     }];
 }
 
-- (void)roverVisit:(RVVisit *)visit didExitTouchpoints:(NSArray *)touchpoints {
-    // Modal
-    UIViewController *modalViewController = [Rover shared].modalViewController;
+#pragma mark - UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    switch (buttonIndex) {
+        case -1:
+            break;
+        case 0:
+            [self.recallButton show:YES completion:nil];
+            break;
+            
+        default: {
+            NSString *title = [actionSheet buttonTitleAtIndex:buttonIndex];
+            RVTouchpoint *touchpoint = [self touchpointWithTitle:title];
+            [[Rover shared] presentModalWithTouchpoints:@[touchpoint]];
+        }
+            break;
+    }
+    _touchpointsActionSheet = nil;
+}
+
+#pragma mark - Helper
+
+- (void)presentActionSheetForTouchpoints:(NSArray *)touchpoints {
+    _touchpointsActionSheet = [[UIActionSheet alloc] initWithTitle:@"Select a current touchpoint to open:"
+                                                          delegate:self
+                                                 cancelButtonTitle:@"Cancel"
+                                            destructiveButtonTitle:nil
+                                                 otherButtonTitles:nil];
+    for (RVTouchpoint *touchpoint in touchpoints) {
+        [_touchpointsActionSheet addButtonWithTitle:touchpoint.title];
+    }
     
-    if (modalViewController) {
-        if ([modalViewController isKindOfClass:[RXVisitViewController class]]) {
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                RXVisitViewController *visitModalViewController = (RXVisitViewController *)modalViewController;
-                
-                [visitModalViewController setTouchpoints:[[visit.currentTouchpoints allObjects] mutableCopy]];
-                [visitModalViewController.tableView reloadData];
-                
-                if (visitModalViewController.touchpoints.count == 0) {
-                    [visitModalViewController dismissViewControllerAnimated:YES completion:nil];
-                }
-            });
-        }
-    }
+    UIWindow *currentWindow = [UIApplication sharedApplication].keyWindow;
+    [_touchpointsActionSheet showInView:currentWindow];
 }
 
-- (void)applicationDidBecomeActiveDuringVisit:(RVVisit *)visit {
-    // Auto Modal
-    if (visit.visitedTouchpoints.count > 0) {
-        
-        UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-        UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-        
-        if ([currentViewController isKindOfClass:[RXDetailViewController class]]) {
-            
-            // If already in a Detail view, dismiss the view and go back to the card view
-            
-            [currentViewController dismissViewControllerAnimated:YES completion:nil];
-        } else if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]]) {
-            
-            // Present the card modal
-            
-            [[Rover shared] presentModalWithTouchpoints:visit.currentTouchpoints.allObjects];
+- (RVTouchpoint *)touchpointWithTitle:(NSString *)title {
+    __block RVTouchpoint *touchpoint;
+    [[Rover shared].currentVisit.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *tp, NSUInteger idx, BOOL *stop) {
+        if ([tp.title isEqualToString:title]) {
+            touchpoint = tp;
+            *stop = YES;
         }
-    }
+    }];
+    return touchpoint;
 }
-
 
 @end
