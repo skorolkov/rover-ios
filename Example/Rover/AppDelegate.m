@@ -12,7 +12,7 @@
 
 @interface AppDelegate () <RoverDelegate>
 
-@property (nonatomic, strong) RVRetailExperience *roverExperience;
+@property (nonatomic, strong) RVSimpleExperience *roverExperience;
 
 @end
 

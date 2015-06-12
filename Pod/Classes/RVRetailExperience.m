@@ -58,10 +58,6 @@
         if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
             
             if (!touchpoint.notificationDelivered ) {
-//                UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-//                UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-//                
-//                if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]] && ![currentViewController isKindOfClass:[RXDetailViewController class]]) {
                 if (![Rover shared].modalViewController) {
                     [self presentModalForVisit:visit];
                 }
