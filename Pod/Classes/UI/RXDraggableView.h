@@ -8,24 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
-typedef NS_ENUM(NSInteger, RXDraggableEdge) {
-    RXDraggableEdgeBottom,
-    RXDraggableEdgeTop,
-    RXDraggableEdgeRight,
-    RXDraggableEdgeLeft
+typedef NS_OPTIONS(NSInteger, RXDraggableSnappedEdge) {
+    RXDraggableSnappedEdgeBottom = 1 << 0,
+    RXDraggableSnappedEdgeTop = 1 << 1,
+    RXDraggableSnappedEdgeRight = 1 << 2,
+    RXDraggableSnappedEdgeLeft = 1 << 3
 };
 
-@protocol RXDraggableViewDelegate;
+@interface RXDraggableView : UIControl
 
-@interface RXDraggableView : UIView
-
-/** Delegate that gets notified of click events.
- */
-@property (nonatomic, weak) id<RXDraggableViewDelegate> delegate;
+@property (nonatomic, assign) BOOL snapToCorners;
 
 /** The edge of the screen currently anchored to. (Bottom, Top, Right, Left)
  */
-@property (nonatomic, assign, readonly) RXDraggableEdge anchoredEdge;
+@property (nonatomic, assign, readonly) RXDraggableSnappedEdge anchoredEdge;
 
 /** Margins to use as distance when anchoring to an edge.
  */
@@ -34,16 +30,5 @@ typedef NS_ENUM(NSInteger, RXDraggableEdge) {
 /** Returns a CGPoint on the screen that the view would snap to when let go.
  */
 - (CGPoint)snapPointToClosestEdgeFromPoint:(CGPoint)point offset:(UIOffset)offset;
-
-@end
-
-
-@protocol RXDraggableViewDelegate <NSObject>
-
-@optional
-
-/** Called when the view is clicked, but not moved.
- */
-- (void)draggableViewClicked:(RXDraggableView *)draggableView;
 
 @end

@@ -9,10 +9,10 @@
 #import "RVSimpleExperience.h"
 #import "Rover.h"
 
-@interface RVSimpleExperience () <RXDraggableViewDelegate, UIActionSheetDelegate>
+@interface RVSimpleExperience () <UIActionSheetDelegate>
 
-@property (nonatomic, strong) RXRecallButton *recallButton;
-@property (nonatomic, strong) UIActionSheet *touchpointsActionSheet;
+@property (nonatomic, strong) RXRecallMenu *recallMenu;
+@property (nonatomic, strong) NSMutableDictionary *menuItemsDictionary;
 
 @end
 
@@ -23,8 +23,8 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.recallButton = [RXRecallButton new];
-        self.recallButton.delegate = self;
+        self.recallMenu = [[RXRecallMenu alloc] init];
+        self.menuItemsDictionary = [NSMutableDictionary dictionary];
     }
     return self;
 }
@@ -36,13 +36,18 @@
     // If app is in the foreground present the recall button
     
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-        if (!self.recallButton.isVisible && !_touchpointsActionSheet) {
-            [self.recallButton show:YES completion:nil];
+        //if (!self.recallMenu.isVisible) {
+        //}
+        
+        
+        [self.recallMenu show:YES completion:nil];
+        
+        for (RVTouchpoint *touchpoint in touchpoints) {
+            RXMenuItem *menuItem = [self menuItemWithIdentifier:touchpoint.ID];
+            [menuItem setTitle:touchpoint.title forState:UIControlStateNormal];
+            [self.recallMenu addItem:menuItem animated:YES];
         }
-        if (_touchpointsActionSheet) {
-            [_touchpointsActionSheet dismissWithClickedButtonIndex:-1 animated:YES];
-            [self presentActionSheetForTouchpoints:[visit.currentTouchpoints allObjects]];
-        }
+        
     } else /*if (!touchpoint.notificationDelivered)*/ {
         
         // Send local notification
@@ -56,80 +61,36 @@
     }
 }
 
+- (void)roverVisit:(RVVisit *)visit didExitTouchpoints:(NSArray *)touchpoints {
+    for (RVTouchpoint *touchpoint in touchpoints) {
+        RXMenuItem *menuItem = [self menuItemWithIdentifier:touchpoint.ID];
+        [self.recallMenu removeItem:menuItem animated:YES];
+    }
+}
+
 - (void)roverDidDismissModalViewController {
-    [self.recallButton show:YES completion:nil];
+    [self.recallMenu show:YES completion:nil];
 }
 
 - (void)roverVisitDidExpire:(RVVisit *)visit {
-    [self.recallButton hide:YES completion:nil];
+    [self.recallMenu hide:YES completion:nil];
 }
 
 - (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
-    if (!self.recallButton.isVisible && !_touchpointsActionSheet && ![Rover shared].modalViewController) {
-        [self.recallButton show:YES completion:nil];
-    }
-}
-
-#pragma mark - RXDraggableViewDelegate
-
-- (void)draggableViewClicked:(RXDraggableView *)draggableView {
-    RVVisit *visit = [Rover shared].currentVisit;
-    if (visit.currentTouchpoints.count == 0) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Rover" message:@"Not currently in any touchpoints" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
-        [alert show];
-        return;
-    }
-    
-    [self.recallButton hide:YES completion:^{
-        [self presentActionSheetForTouchpoints:[visit.currentTouchpoints allObjects]];
-    }];
-}
-
-#pragma mark - UIActionSheetDelegate
-
-- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    switch (buttonIndex) {
-        case -1:
-            break;
-        case 0:
-            [self.recallButton show:YES completion:nil];
-            break;
-            
-        default: {
-            NSString *title = [actionSheet buttonTitleAtIndex:buttonIndex];
-            RVTouchpoint *touchpoint = [self touchpointWithTitle:title];
-            [[Rover shared] presentModalWithTouchpoints:@[touchpoint]];
-        }
-            break;
-    }
-    _touchpointsActionSheet = nil;
+    //if (!self.recallButton.isVisible && ![Rover shared].modalViewController) {
+    //    [self.recallButton show:YES completion:nil];
+    //}
 }
 
 #pragma mark - Helper
 
-- (void)presentActionSheetForTouchpoints:(NSArray *)touchpoints {
-    _touchpointsActionSheet = [[UIActionSheet alloc] initWithTitle:@"Select a current touchpoint to open:"
-                                                          delegate:self
-                                                 cancelButtonTitle:@"Cancel"
-                                            destructiveButtonTitle:nil
-                                                 otherButtonTitles:nil];
-    for (RVTouchpoint *touchpoint in touchpoints) {
-        [_touchpointsActionSheet addButtonWithTitle:touchpoint.title];
+- (RXMenuItem *)menuItemWithIdentifier:(NSString *)identifier {
+    RXMenuItem *menuItem = [self.menuItemsDictionary objectForKey:identifier];
+    if (!menuItem) {
+        menuItem = [RXMenuItem new];
+        [self.menuItemsDictionary setObject:menuItem forKey:identifier];
     }
-    
-    UIWindow *currentWindow = [UIApplication sharedApplication].keyWindow;
-    [_touchpointsActionSheet showInView:currentWindow];
-}
-
-- (RVTouchpoint *)touchpointWithTitle:(NSString *)title {
-    __block RVTouchpoint *touchpoint;
-    [[Rover shared].currentVisit.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *tp, NSUInteger idx, BOOL *stop) {
-        if ([tp.title isEqualToString:title]) {
-            touchpoint = tp;
-            *stop = YES;
-        }
-    }];
-    return touchpoint;
+    return menuItem;
 }
 
 @end

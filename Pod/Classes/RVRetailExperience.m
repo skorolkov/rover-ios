@@ -9,7 +9,7 @@
 #import "RVRetailExperience.h"
 #import "Rover.h"
 
-@interface RVRetailExperience () <RXDraggableViewDelegate>
+@interface RVRetailExperience ()
 
 @property (nonatomic, strong) RXRecallButton *recallButton;
 @property (nonatomic, strong) RXModalTransition *modalTransitionManager;
@@ -22,7 +22,7 @@
     self = [super init];
     if (self) {
         self.recallButton = [RXRecallButton new];
-        self.recallButton.delegate = self;
+        [self.recallButton addTarget:self action:@selector(draggableViewClicked:) forControlEvents:UIControlEventTouchUpInside];
         
         self.modalTransitionManager = [RXModalTransition new];
     }

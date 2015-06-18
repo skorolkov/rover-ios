@@ -34,6 +34,8 @@
 #import "RXRecallButton.h"
 #import "RXCardsIcon.h"
 #import "RXModalTransition.h"
+#import "RXRecallMenu.h"
+#import "RXMenuItem.h"
 
 // Networking
 #import "RVNetworkingManager.h"
