@@ -17,7 +17,7 @@
 
 #define kCardViewAreaThreshold .5
 
-@interface RXVisitViewController () <RXCardViewCellDelegate>
+@interface RXVisitViewController () <RXCardViewCellDelegate, RXDetailViewControllerDelegate>
 
 @end
 
@@ -190,6 +190,7 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
             [card.viewDefinitions enumerateObjectsUsingBlock:^(RVViewDefinition *viewDef, NSUInteger idx, BOOL *stop) {
                 if ([viewDef.ID isEqualToString:viewID]) {
                     RXDetailViewController *detailViewController = [[RXDetailViewController alloc] initWithViewDefinition:viewDef];
+                    detailViewController.delegate = self;
                     [self presentViewController:detailViewController animated:YES completion:nil];
                     *stop = YES;
                 }
@@ -201,6 +202,20 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     }
 }
 
+#pragma mark - RXDetailViewControllerDelegate
+
+- (BOOL)detailViewController:(RXDetailViewController *)detailViewController shouldOpenURL:(NSURL *)url {
+    NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+    RVCard *card = [self cardAtIndexPath:indexPath];
+    
+    if ([self.delegate respondsToSelector:@selector(visitViewController:didClickCard:URL:)]) {
+        [self.delegate visitViewController:self didClickCard:card URL:url];
+    }
+    
+    // NOTE: currently rover:// links are not supported in the detail view
+    
+    return YES;
+}
 
 - (void)addTouchpoints:(NSArray *)touchpoints {
     [self willAddTouchpoints:touchpoints];

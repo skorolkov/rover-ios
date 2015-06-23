@@ -10,10 +10,15 @@
 
 @class RVViewDefinition;
 @class RXBlockView;
+@protocol RXDetailViewControllerDelegate;
 
 /** This is the detail view controller to display the expanded view (detail view) of a card.
  */
 @interface RXDetailViewController : UIViewController
+
+/** Delegate to get notified of click events.
+ */
+@property (nonatomic, weak) id<RXDetailViewControllerDelegate> delegate;
 
 /** RVViewDefinition used to build the views.
  */
@@ -47,5 +52,12 @@
  */
 - (void)addBottomStickyBlockView:(RXBlockView *)blockView;
 
+@end
+
+
+@protocol RXDetailViewControllerDelegate <NSObject>
+
+@optional
+- (BOOL)detailViewController:(RXDetailViewController *)detailViewController shouldOpenURL:(NSURL *)url;
 
 @end
