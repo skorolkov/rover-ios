@@ -15,7 +15,7 @@
 
 #import <SDWebImage/UIImageView+WebCache.h>
 
-@interface RXDetailViewController ()
+@interface RXDetailViewController () <RXBlockViewDelegate>
 
 @property (nonatomic, strong) UIScrollView *scrollView;
 @property (nonatomic, strong) UIView *containerView;
@@ -126,6 +126,7 @@
             _scrollViewHeightConstraint.constant = -[block heightForWidth:self.view.frame.size.width];
             
         } else if ([block class] == [RVButtonBlock class] && idx == _viewDefinition.blocks.count - 1) {
+            blockView.delegate = self;
             [self addBottomStickyBlockView:blockView];
         } else {
             [self addBlockView:blockView];
@@ -227,6 +228,16 @@
 - (void)addBottomStickyBlockView:(RXBlockView *)blockView {
     [_footerView addSubview:blockView];
     [self configureFooterLayoutForBlockView:blockView];
+}
+
+#pragma mark - RXBlockViewDelegate
+
+- (BOOL)blockview:(RXBlockView *)blockview shouldOpenURL:(NSURL *)url {
+    if ([self.delegate respondsToSelector:@selector(detailViewController:shouldOpenURL:)]) {
+        return [self.delegate detailViewController:self shouldOpenURL:url];
+    } else {
+        return YES;
+    }
 }
 
 @end
