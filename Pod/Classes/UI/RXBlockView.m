@@ -291,6 +291,8 @@
                 if ([self.delegate blockview:self shouldOpenURL:self.url]) {
                     [[UIApplication sharedApplication] openURL:self.url];
                 }
+            } else {
+                [[UIApplication sharedApplication] openURL:self.url];
             }
             break;
         default:
