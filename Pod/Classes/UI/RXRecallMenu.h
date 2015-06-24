@@ -13,9 +13,15 @@
 
 @interface RXRecallMenu : RXRecallButton
 
+@property (nonatomic, assign, readonly) NSUInteger itemCount;
+@property (nonatomic, readonly) NSArray *items;
 @property (nonatomic, assign, readonly) BOOL isExpanded;
+@property (nonatomic, strong) UIView *backdropView;
 
 - (void)addItem:(RXMenuItem *)item animated:(BOOL)animated;
 - (void)removeItem:(RXMenuItem *)item animated:(BOOL)animated;
+
+- (void)collapse:(BOOL)animated completion:(void (^)())completion;
+- (void)expand:(BOOL)animated completion:(void (^)())completion;
 
 @end

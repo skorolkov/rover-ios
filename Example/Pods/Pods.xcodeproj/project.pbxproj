@@ -38,6 +38,7 @@
 		37641DC7C0FC3FD95B5FE239 /* RVVisitManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7903F28BEE8F4C8C6D0FC37A /* RVVisitManager.m */; };
 		387ABBA78E8A69713829372B /* RVVisit.h in Headers */ = {isa = PBXBuildFile; fileRef = DE131BC3F64311C35CC6FB6B /* RVVisit.h */; };
 		3A90F8632F6ACDD6F5EAAC13 /* RSEAN13Generator.h in Headers */ = {isa = PBXBuildFile; fileRef = FCF6C8B193816D658535AB92 /* RSEAN13Generator.h */; };
+		3DB551BF1B3B0CC500694C22 /* RXCloseMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 3DB551BE1B3B0CC500694C22 /* RXCloseMenuItem.m */; };
 		41032076EB2C2504D52C6D3A /* UIImage+MultiFormat.m in Sources */ = {isa = PBXBuildFile; fileRef = 279EA6AFDAD3C5E3CDD616AD /* UIImage+MultiFormat.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		4107905A91BCE18E4A134736 /* RVBlockValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 918506D6A57B2BB1BCA7296D /* RVBlockValueTransformer.m */; };
 		4351ADB1120C208AF6404699 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3413D80900959E351470589 /* Foundation.framework */; };
@@ -285,6 +286,8 @@
 		347B3819FA33651290445049 /* Rover.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = Rover.m; sourceTree = "<group>"; };
 		36D7F76AFFF2BFA096B569D2 /* RSISBN13Generator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RSISBN13Generator.h; path = RSBarcodes/RSISBN13Generator.h; sourceTree = "<group>"; };
 		3AEDC5EF14977065CAF9539D /* RVSimpleExperience.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RVSimpleExperience.m; sourceTree = "<group>"; };
+		3DB551BD1B3B0CC500694C22 /* RXCloseMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXCloseMenuItem.h; sourceTree = "<group>"; };
+		3DB551BE1B3B0CC500694C22 /* RXCloseMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXCloseMenuItem.m; sourceTree = "<group>"; };
 		3E145C896C98CD809DF60BE0 /* RSCode93Generator.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RSCode93Generator.m; path = RSBarcodes/RSCode93Generator.m; sourceTree = "<group>"; };
 		3ECBD4822268DE6DB4390FE5 /* RXModalTransition.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RXModalTransition.h; sourceTree = "<group>"; };
 		4236D4AE6F76EC23B7FA031E /* RSUnifiedCodeGenerator.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RSUnifiedCodeGenerator.h; path = RSBarcodes/RSUnifiedCodeGenerator.h; sourceTree = "<group>"; };
@@ -546,6 +549,8 @@
 				05DA8307DCA2A64B82AD45F9 /* RXUpArrow.m */,
 				538CB3F18198C53C55EB9E46 /* RXVisitViewController.h */,
 				1CB9A523BC49252745E970F5 /* RXVisitViewController.m */,
+				3DB551BD1B3B0CC500694C22 /* RXCloseMenuItem.h */,
+				3DB551BE1B3B0CC500694C22 /* RXCloseMenuItem.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1275,6 +1280,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3DB551BF1B3B0CC500694C22 /* RXCloseMenuItem.m in Sources */,
 				CE2551AE700C3799BEFC3A98 /* Pods-Rover-dummy.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

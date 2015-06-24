@@ -72,15 +72,17 @@
     }
 }
 
-#pragma mark - Instance Methods
-
-- (void)hide:(BOOL)animated completion:(void (^)())completion {
+- (CGPoint)offscreenPosition {
     CGPoint center;
     
-    switch (self.anchoredEdge) {
+    switch ((int)self.anchoredEdge) {
+        case RXDraggableSnappedEdgeTop | RXDraggableSnappedEdgeLeft:
+        case RXDraggableSnappedEdgeTop | RXDraggableSnappedEdgeRight:
         case RXDraggableSnappedEdgeTop:
             center = CGPointMake(self.center.x, - (self.frame.size.height / 2) - self.layer.shadowRadius - 1);
             break;
+        case RXDraggableSnappedEdgeBottom | RXDraggableSnappedEdgeLeft:
+        case RXDraggableSnappedEdgeBottom | RXDraggableSnappedEdgeRight:
         case RXDraggableSnappedEdgeBottom:
             center = CGPointMake(self.center.x, self.superview.frame.size.height + (self.frame.size.height / 2) +  self.layer.shadowRadius + 1);
             break;
@@ -91,6 +93,14 @@
             center = CGPointMake(- (self.frame.size.width / 2) - self.layer.shadowRadius - 1, self.center.y);
             break;
     }
+    
+    return center;
+}
+
+#pragma mark - Instance Methods
+
+- (void)hide:(BOOL)animated completion:(void (^)())completion {
+    CGPoint center = [self offscreenPosition];
     
     NSTimeInterval duration = animated ? .3 : 0;
     

@@ -25,6 +25,10 @@ typedef NS_ENUM(NSInteger, RXRecallButtonPosition) {
  */
 @property (nonatomic, readonly) BOOL isVisible;
 
+/** The offscreen position for when the button is hidden.
+ */
+@property (nonatomic, readonly) CGPoint offscreenPosition;
+
 /** Designated initializer.
  
  @param position The position to start off with.
