@@ -35,11 +35,7 @@
                          animations:^{
                              cell.transform = CGAffineTransformMakeTranslation(0, modalViewController.view.frame.size.height + 50);
                          }
-                         completion:^(BOOL finished) {
-                             if (idx == 0) {
-                                 [transitionContext completeTransition:YES];
-                             }
-                         }];
+                         completion:nil];
     }];
     
     [UIView animateWithDuration:((count - 1) * .1) + .5
@@ -48,7 +44,9 @@
                      animations:^{
                          modalViewController.backgroundImageView.alpha = 0;
                      }
-                     completion:nil];
+                     completion:^(BOOL finished) {
+                         [transitionContext completeTransition:YES];
+                     }];
     
     [UIView animateWithDuration:.2
                           delay:0
