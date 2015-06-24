@@ -56,8 +56,8 @@
     self.contentView.translatesAutoresizingMaskIntoConstraints = YES;
     self.selectionStyle = UITableViewCellSelectionStyleNone;
     self.backgroundColor = [UIColor clearColor];
-    _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panCell:)];
-    _panGestureRecognizer.delegate = self;
+    //_panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panCell:)];
+    //_panGestureRecognizer.delegate = self;
     [self addSubviews];
     [self configureLayout];
 }
@@ -72,7 +72,7 @@
     _containerView.layer.shadowOffset = kCardShadowOffset;
     _containerView.layer.shadowOpacity = kCardShadowOpacity;
     _containerView.layer.shadowRadius = kCardShadowRadius;
-    [_containerView addGestureRecognizer:_panGestureRecognizer];
+    //[_containerView addGestureRecognizer:_panGestureRecognizer];
     [self.contentView addSubview:_containerView];
 }
 
