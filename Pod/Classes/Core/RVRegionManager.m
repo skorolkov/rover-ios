@@ -27,11 +27,21 @@
 
 - (void)simulateRegionEnterWithBeaconUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor {
     CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID major:major minor:minor identifier:[self identifierForUUID:UUID major:major minor:minor]];
+    
+    NSMutableSet *tempCurrentRegions = [NSMutableSet setWithSet:self.currentRegions];
+    [tempCurrentRegions addObject:beaconRegion];
+    self.currentRegions = [NSSet setWithSet:tempCurrentRegions];
+    
     [self.delegate regionManager:self didEnterRegions:[NSSet setWithObject:beaconRegion]];
 }
 
 - (void)simulateRegionExitWithBeaconUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor {
     CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:UUID major:major minor:minor identifier:[self identifierForUUID:UUID major:major minor:minor]];
+    
+    NSMutableSet *tempCurrentRegions = [NSMutableSet setWithSet:self.currentRegions];
+    [tempCurrentRegions removeObject:beaconRegion];
+    self.currentRegions = [NSSet setWithSet:tempCurrentRegions];
+    
     [self.delegate regionManager:self didExitRegions:[NSSet setWithObject:beaconRegion]];
 }
 
@@ -129,18 +139,14 @@
 
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLRegion *)region {
     // TODO: remove this to make more efficient
-    RVLog(kRoverDidRangeBeaconsNotification, @{ @"count": [NSNumber numberWithUnsignedInteger:[beacons count]] });
+    //RVLog(kRoverDidRangeBeaconsNotification, @{ @"count": [NSNumber numberWithUnsignedInteger:[beacons count]] });
     
-    // TODO: use a mutable set (more efficient)
-    
-    NSMutableArray *wrappedBeacons = [NSMutableArray arrayWithCapacity:beacons.count];
+    NSMutableSet *regions = [NSMutableSet set];
     [beacons enumerateObjectsUsingBlock:^(CLBeacon *beacon, NSUInteger idx, BOOL *stop) {
-        [wrappedBeacons insertObject:[[CLBeaconRegion alloc] initWithProximityUUID:beacon.proximityUUID major:beacon.major.integerValue minor:beacon.minor.integerValue identifier:[self identifierForUUID:beacon.proximityUUID major:beacon.major.integerValue minor:beacon.minor.integerValue]] atIndex:idx];
+        CLBeaconRegion *beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beacon.proximityUUID major:beacon.major.integerValue minor:beacon.minor.integerValue identifier:[self identifierForUUID:beacon.proximityUUID major:beacon.major.integerValue minor:beacon.minor.integerValue]];
+        [regions addObject:beaconRegion];
     }];
     
-    NSSet *regions = [NSSet setWithArray:wrappedBeacons];
-    
-    // TODO: investigate if we still need that self.timeSinceLastBeaconDetected < TWO_HOURS condition.
     if ([regions isEqualToSet:self.currentRegions]) {
         return;
     } else {

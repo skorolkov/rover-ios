@@ -36,7 +36,7 @@
 #pragma mark - RoverDelegate
 
 - (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints {
-    
+    //TODO: should not show the buttons if the modal is already displayed
     for (RVTouchpoint *touchpoint in touchpoints) {
         RXMenuItem *menuItem = [self menuItemWithIdentifier:touchpoint.ID];
         [menuItem setTag:[visit.touchpoints indexOfObject:touchpoint]];

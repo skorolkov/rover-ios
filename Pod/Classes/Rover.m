@@ -274,6 +274,8 @@ static Rover *sharedInstance = nil;
     if ([self.delegate respondsToSelector:@selector(roverVisitDidExpire:)]) {
         [self.delegate roverVisitDidExpire:visit];
     }
+    
+    _currentVisit = nil;
 }
 
 - (void)visitManager:(RVVisitManager *)manager didEnterTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit {
