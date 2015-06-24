@@ -6,18 +6,19 @@
 //
 //
 
-#import "RVSimpleExperience.h"
+#import "RVNearbyExperience.h"
 #import "Rover.h"
 
-@interface RVSimpleExperience () <UIActionSheetDelegate>
+@interface RVNearbyExperience () <UIActionSheetDelegate>
 
 @property (nonatomic, strong) RXRecallMenu *recallMenu;
 @property (nonatomic, strong) NSMutableDictionary *menuItemsDictionary;
 @property (nonatomic, strong) RXModalTransition *modalTransition;
+@property (nonatomic, strong) RVTouchpoint *openedTouchpoint;
 
 @end
 
-@implementation RVSimpleExperience
+@implementation RVNearbyExperience
 
 #pragma mark - Initialization
 
@@ -93,13 +94,16 @@
 }
 
 - (void)roverWillDismissModalViewController:(UIViewController *)modalViewController {
-    modalViewController.transitioningDelegate = self.modalTransition;
+    if ([[Rover shared].currentVisit.currentTouchpoints containsObject:_openedTouchpoint]) {
+        modalViewController.transitioningDelegate = self.modalTransition;
+    }
 }
 
 #pragma mark - Actions
 
 - (void)menuItemClicked:(RXMenuItem *)menuItem {
     RVTouchpoint *touchpoint = [[Rover shared].currentVisit.touchpoints objectAtIndex:menuItem.tag];
+    _openedTouchpoint = touchpoint;
     [self.recallMenu collapse:YES completion:^{
         [self.recallMenu hide:YES completion:^{
             [[Rover shared] presentModalWithTouchpoints:@[touchpoint]];

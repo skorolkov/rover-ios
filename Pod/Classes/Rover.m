@@ -112,8 +112,8 @@ static Rover *sharedInstance = nil;
         return _delegate;
     }
     
-    if (self.config.experience == RVExperienceSimple) {
-        _defaultDelegate = [RVSimpleExperience new];
+    if (self.config.experience == RVExperienceNearby) {
+        _defaultDelegate = [RVNearbyExperience new];
     } else if (self.config.experience == RVExperienceRetail) {
         _defaultDelegate = [RVRetailExperience new];
     }

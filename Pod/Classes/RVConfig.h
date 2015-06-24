@@ -9,7 +9,7 @@
 @import UIKit;
 
 typedef NS_ENUM(NSInteger, RVExperience) {
-    RVExperienceSimple,
+    RVExperienceNearby,
     RVExperienceRetail
 };
 

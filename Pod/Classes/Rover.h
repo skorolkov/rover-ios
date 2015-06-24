@@ -43,7 +43,7 @@
 
 // Experience
 #import "RVRetailExperience.h" // for convenience
-#import "RVSimpleExperience.h" // for convenience
+#import "RVNearbyExperience.h" // for convenience
 
 @protocol RoverDelegate;
 
