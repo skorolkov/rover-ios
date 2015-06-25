@@ -8,6 +8,7 @@
 
 #import "RVMessageCenterExperience.h"
 #import "Rover.h"
+#import <SDWebImage/UIImageView+WebCache.h>
 
 @interface RVMessageCenterExperience ()
 
@@ -21,7 +22,8 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.recallButton = [RXRecallButton new];
+        UIImageView *avatarImageView = [UIImageView new];
+        self.recallButton = [[RXRecallButton alloc] initWithCustomView:avatarImageView initialPosition:RXRecallButtonPositionBottomRight];
         [self.recallButton addTarget:self action:@selector(draggableViewClicked:) forControlEvents:UIControlEventTouchUpInside];
         
         self.modalTransitionManager = [RXModalTransition new];
@@ -30,6 +32,11 @@
 }
 
 #pragma mark - RoverDelegate
+
+- (void)roverDidCreateVisit:(RVVisit *)visit {
+    UIImageView *avatarImageView = self.recallButton.view;
+    [avatarImageView sd_setImageWithURL:visit.organization.avatarURL];
+}
 
 - (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints {
     

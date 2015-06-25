@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSNumber *latitude;
 @property (nonatomic, strong) NSNumber *longitude;
 @property (nonatomic, strong) NSNumber *radius;
+@property (nonatomic, strong) NSURL *avatarURL;
 
 - (CLLocation *)CLLocation;
 

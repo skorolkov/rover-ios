@@ -49,6 +49,7 @@
     [encoder encodeObject:self.cards forKey:@"cards"];
     [encoder encodeObject:[NSNumber numberWithBool:self.isVisited] forKey:@"isVisited"];
     [encoder encodeObject:[NSNumber numberWithBool:self.notificationDelivered] forKey:@"notificationDelivered"];
+    [encoder encodeObject:self.avatarURL forKey:@"avatarURL"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
@@ -60,6 +61,7 @@
         self.cards = [decoder decodeObjectForKey:@"cards"];
         self.isVisited = [[decoder decodeObjectForKey:@"isVisited"] boolValue];
         self.notificationDelivered = [[decoder decodeObjectForKey:@"notificationDelivered"] boolValue];
+        self.avatarURL = [decoder decodeObjectForKey:@"avatarURL"];
     }
     return self;
 }

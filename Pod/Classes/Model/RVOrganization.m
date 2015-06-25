@@ -24,12 +24,14 @@
     [super encodeWithCoder:encoder];
     
     [encoder encodeObject:self.title forKey:@"title"];
+    [encoder encodeObject:self.avatarURL forKey:@"avatarURL"];
 }
 
 
 - (id)initWithCoder:(NSCoder *)decoder {
     if((self = [self init])) {
         self.title = [decoder decodeObjectForKey:@"title"];
+        self.avatarURL = [decoder decodeObjectForKey:@"avatarURL"];
     }
     return self;
 }

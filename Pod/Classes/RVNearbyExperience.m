@@ -8,6 +8,7 @@
 
 #import "RVNearbyExperience.h"
 #import "Rover.h"
+#import <SDWebImage/UIButton+WebCache.h>
 
 @interface RVNearbyExperience ()
 
@@ -38,10 +39,7 @@
 - (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints {
     
     for (RVTouchpoint *touchpoint in touchpoints) {
-        RXMenuItem *menuItem = [self menuItemWithIdentifier:touchpoint.ID];
-        [menuItem setTag:[visit.touchpoints indexOfObject:touchpoint]];
-        [menuItem setTitle:touchpoint.title forState:UIControlStateNormal];
-        
+        RXMenuItem *menuItem = [self menuItemForTouchpoint:touchpoint];
         [self.recallMenu addItem:menuItem animated:self.recallMenu.isVisible];
     }
     
@@ -74,7 +72,7 @@
 
 - (void)roverVisit:(RVVisit *)visit didExitTouchpoints:(NSArray *)touchpoints {
     for (RVTouchpoint *touchpoint in touchpoints) {
-        RXMenuItem *menuItem = [self menuItemWithIdentifier:touchpoint.ID];
+        RXMenuItem *menuItem = [self menuItemForTouchpoint:touchpoint];
         [self.recallMenu removeItem:menuItem animated:YES];
     }
     
@@ -116,19 +114,24 @@
 
 #pragma mark - Helper
 
-- (RXMenuItem *)menuItemWithIdentifier:(NSString *)identifier {
-    RXMenuItem *menuItem = [self.menuItemsDictionary objectForKey:identifier];
+- (RXMenuItem *)menuItemForTouchpoint:(RVTouchpoint *)touchpoint {
+    RXMenuItem *menuItem = [self.menuItemsDictionary objectForKey:touchpoint.ID];
     if (!menuItem) {
         menuItem = [RXMenuItem new];
         
-        CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
-        CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
-        CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
-        UIColor *color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
-        [menuItem setBackgroundColor:color];
+        RVVisit *visit = [Rover shared].currentVisit;
         
+        //        CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
+        //        CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
+        //        CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
+        //        UIColor *color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
+        //        [menuItem setBackgroundColor:color];
+        
+        [menuItem setTag:[visit.touchpoints indexOfObject:touchpoint]];
+        [menuItem setTitle:touchpoint.title forState:UIControlStateNormal];
+        [menuItem sd_setBackgroundImageWithURL:touchpoint.avatarURL forState:UIControlStateNormal];
         [menuItem addTarget:self action:@selector(menuItemClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self.menuItemsDictionary setObject:menuItem forKey:identifier];
+        [self.menuItemsDictionary setObject:menuItem forKey:touchpoint.ID];
     }
     return menuItem;
 }
