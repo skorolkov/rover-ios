@@ -9,7 +9,7 @@
 #import "RVNearbyExperience.h"
 #import "Rover.h"
 
-@interface RVNearbyExperience () <UIActionSheetDelegate>
+@interface RVNearbyExperience ()
 
 @property (nonatomic, strong) RXRecallMenu *recallMenu;
 @property (nonatomic, strong) NSMutableDictionary *menuItemsDictionary;
@@ -36,7 +36,7 @@
 #pragma mark - RoverDelegate
 
 - (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints {
-    //TODO: should not show the buttons if the modal is already displayed
+    
     for (RVTouchpoint *touchpoint in touchpoints) {
         RXMenuItem *menuItem = [self menuItemWithIdentifier:touchpoint.ID];
         [menuItem setTag:[visit.touchpoints indexOfObject:touchpoint]];
@@ -46,7 +46,7 @@
         [self.recallMenu addItem:menuItem animated:self.recallMenu.isVisible];
     }
     
-    if (!self.recallMenu.isVisible) {
+    if (!self.recallMenu.isVisible && ![Rover shared].modalViewController) {
         [self.recallMenu show:YES completion:nil];
     }
     

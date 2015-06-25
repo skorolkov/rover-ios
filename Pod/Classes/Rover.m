@@ -185,6 +185,10 @@ static Rover *sharedInstance = nil;
     });
 }
 
+- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor {
+    [self simulateBeaconWithUUID:UUID major:major minor:minor duration:30];
+}
+
 #pragma mark - Utility
 
 - (void)presentModalWithTouchpoints:(NSArray *)touchpoints {

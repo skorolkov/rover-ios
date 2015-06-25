@@ -106,6 +106,11 @@
  */
 - (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor duration:(NSTimeInterval)duration;
 
+/** You can use this method to simulate your app coming in range of a particular beacon and staying in range for 30 seconds.
+ @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
+ */
+- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor;
+
 /** Convenience method to find the current view controller
  */
 + (UIViewController *)findCurrentViewController:(UIViewController *)vc;
