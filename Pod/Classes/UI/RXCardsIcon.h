@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+/** This is just an icon.
+ */
 @interface RXCardsIcon : UIView
 
 @end

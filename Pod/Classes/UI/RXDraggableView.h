@@ -15,6 +15,9 @@ typedef NS_OPTIONS(NSInteger, RXDraggableSnappedEdge) {
     RXDraggableSnappedEdgeLeft = 1 << 3
 };
 
+/** This UIControl is draggable around the screen. It attaches itself to the current UIWindow and has the ability
+    to snap to the edges/corners of the screen.
+ */
 @interface RXDraggableView : UIControl
 
 @property (nonatomic, assign) BOOL snapToCorners;

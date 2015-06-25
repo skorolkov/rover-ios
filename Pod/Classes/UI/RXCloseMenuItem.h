@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+/** This is just a circular UIButton with an `X` inside.
+ */
 @interface RXCloseMenuItem : UIButton
 
 @end

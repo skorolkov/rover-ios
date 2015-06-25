@@ -15,6 +15,8 @@ typedef NS_ENUM(NSInteger, RXRecallButtonPosition) {
     RXRecallButtonPositionTopLeft
 };
 
+/** This is the recall button to bring the cards back up if the user dismisses them.
+ */
 @interface RXRecallButton : RXDraggableView
 
 /** A read-only reference to the custom view inside the container.

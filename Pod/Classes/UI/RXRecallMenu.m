@@ -7,7 +7,6 @@
 //
 
 #import "RXRecallMenu.h"
-#import "RXMenuItem.h"
 #import "RXCloseMenuItem.h"
 
 @interface RXDraggableView ()
@@ -73,7 +72,7 @@
     return [self.subviews subarrayWithRange:NSMakeRange(1, self.itemCount)];
 }
 
-- (void)addItem:(RXMenuItem *)item animated:(BOOL)animated {
+- (void)addItem:(UIButton *)item animated:(BOOL)animated {
     item.enabled = NO;
     item.titleLabel.alpha = 0;
     
@@ -85,7 +84,7 @@
     [self layoutItems:animated completion:nil];
 }
 
-- (void)removeItem:(RXMenuItem *)item animated:(BOOL)animated {
+- (void)removeItem:(UIButton *)item animated:(BOOL)animated {
     //NSAssert(item.superview == self, @"This RXMenuItem was never added");
     
     if (item.superview != self) {
