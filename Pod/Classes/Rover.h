@@ -42,7 +42,7 @@
 #import "RVImagePrefetcher.h"
 
 // Experience
-#import "RVRetailExperience.h" // for convenience
+#import "RVMessageCenterExperience.h" // for convenience
 #import "RVNearbyExperience.h" // for convenience
 
 @protocol RoverDelegate;

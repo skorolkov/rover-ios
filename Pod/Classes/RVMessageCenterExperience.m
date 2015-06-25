@@ -6,17 +6,17 @@
 //
 //
 
-#import "RVRetailExperience.h"
+#import "RVMessageCenterExperience.h"
 #import "Rover.h"
 
-@interface RVRetailExperience ()
+@interface RVMessageCenterExperience ()
 
 @property (nonatomic, strong) RXRecallButton *recallButton;
 @property (nonatomic, strong) RXModalTransition *modalTransitionManager;
 
 @end
 
-@implementation RVRetailExperience
+@implementation RVMessageCenterExperience
 
 - (instancetype)init {
     self = [super init];
@@ -48,21 +48,20 @@
         if (touchpointsWithCards.count > 0) {
             [visitViewController addTouchpoints:touchpointsWithCards];
         }
+    } else {
+        // Otherwise if the modal is not open show the recall button
+        if (!self.recallButton.isVisible) {
+            [self.recallButton show:YES completion:nil];
+        }
     }
     
     
     [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
 
-        // If the app is in the foreground present modal, otherwise send a local notification
+        // If the app is in not in the foreground present local notification
         
         if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-            
-            if (!touchpoint.notificationDelivered ) {
-                if (![Rover shared].modalViewController) {
-                    [self presentModalForVisit:visit];
-                }
-            }
-            
+            // Do Nothing
         } else if (!touchpoint.notificationDelivered) {
             
             if (touchpoint.notification) {
@@ -72,30 +71,29 @@
         }
         
         // Mark the touchpoint as visited, so we only send notifications once per touchpoint
-        
         touchpoint.notificationDelivered = YES;
     }];
 }
 
-- (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
-    // Auto Modal
-    if (visit.visitedTouchpoints.count > 0) {
-        
-        UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-        UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-        
-        if ([currentViewController isKindOfClass:[RXDetailViewController class]]) {
-            
-            // If already in a Detail view, dismiss the view and go back to the card view
-            
-            [currentViewController dismissViewControllerAnimated:YES completion:nil];
-        } else if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]]) {
-            
-            // Present the card modal
-            [self presentModalForVisit:visit];
-        }
-    }
-}
+//- (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
+//    // Auto Modal
+//    if (visit.visitedTouchpoints.count > 0) {
+//        
+//        UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+//        UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
+//        
+//        if ([currentViewController isKindOfClass:[RXDetailViewController class]]) {
+//            
+//            // If already in a Detail view, dismiss the view and go back to the card view
+//            
+//            [currentViewController dismissViewControllerAnimated:YES completion:nil];
+//        } else if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]]) {
+//            
+//            // Present the card modal
+//            [self presentModalForVisit:visit];
+//        }
+//    }
+//}
 
 - (void)roverDidDismissModalViewController {
     [self.recallButton show:YES completion:nil];
@@ -120,11 +118,12 @@
 #pragma mark - Helper
 
 - (void)presentModalForVisit:(RVVisit *)visit {
+    // NOTE: The recall button must be hidden before a call to present modal is made.
     if (self.recallButton.isVisible) {
         return;
     }
     
-    [[Rover shared] presentModalWithTouchpoints:[[visit.visitedTouchpoints reverseObjectEnumerator] allObjects]];
+    [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
 }
 
 

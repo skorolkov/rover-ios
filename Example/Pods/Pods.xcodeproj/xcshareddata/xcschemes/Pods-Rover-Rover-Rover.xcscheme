@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DFBFAEF9FD87237D16ABA2C2"
+               BlueprintIdentifier = "EFEAE1371A6D2C3C8995DF5D"
                BuildableName = "Rover.bundle"
                BlueprintName = "Pods-Rover-Rover-Rover"
                ReferencedContainer = "container:Pods.xcodeproj">

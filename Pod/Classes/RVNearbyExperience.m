@@ -64,6 +64,8 @@
         }
     }
     
+    // touchpoints with cards
+    
     // Mark touchpoints as visited
     
     for (RVTouchpoint *touchpoint in touchpoints) {

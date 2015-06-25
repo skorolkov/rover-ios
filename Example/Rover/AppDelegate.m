@@ -28,7 +28,7 @@
     
     Rover *rover = [Rover setup:config];
     
-    _roverExperience = [[RVNearbyExperience alloc] init];
+    _roverExperience = [[RVMessageCenterExperience alloc] init];
     rover.delegate = _roverExperience;
     
     [rover startMonitoring];
