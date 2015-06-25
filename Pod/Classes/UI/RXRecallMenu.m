@@ -82,7 +82,7 @@
     item.center = CGPointMake(center.x, center.y + (offsetDirection * (item.bounds.size.height + item.layer.shadowRadius + (offsetDirection < 1 ? self.margins.bottom : self.margins.top) + 2)));
 
     [self addSubview:item];
-    [self layoutItems:animated enable:(_isExpanded || self.subviews.count < 2) completion:nil];
+    [self layoutItems:animated completion:nil];
 }
 
 - (void)removeItem:(RXMenuItem *)item animated:(BOOL)animated {
@@ -105,7 +105,7 @@
                          [item removeFromSuperview];
                          item.alpha = oldAlphaValue;
                          
-                         [self layoutItems:animated enable:(_isExpanded || self.subviews.count < 2) completion:nil];
+                         [self layoutItems:animated completion:nil];
                      }];
 }
 
@@ -198,7 +198,7 @@
 
 #pragma mark - Layout
 
-- (void)layoutItems:(BOOL)animated enable:(BOOL)enable completion:(void (^)())completion {
+- (void)layoutItems:(BOOL)animated completion:(void (^)())completion {
     CGPoint center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
     center.y += _isExpanded ?  : 0;
     
@@ -240,7 +240,7 @@
     _offsetConstant = 0;
     _closeMenuItem.enabled = NO;
     _isExpanded = NO;
-    [self layoutItems:animated enable:NO completion:completion];
+    [self layoutItems:animated completion:completion];
 }
 
 - (void)expand:(BOOL)animated completion:(void (^)())completion {
@@ -255,7 +255,7 @@
     _closeMenuItem.enabled = YES;
     _closeMenuItem.hidden = NO;
     _isExpanded = YES;
-    [self layoutItems:animated enable:YES completion:completion];
+    [self layoutItems:animated completion:completion];
 }
 
 #pragma mark - Helpers
@@ -308,7 +308,12 @@
 }
 
 - (void)menuClicked {
-    [self expand:YES completion:nil];
+    if (self.itemCount == 1) {
+        UIButton *item = self.items[0];
+        [item sendActionsForControlEvents:UIControlEventTouchUpInside];
+    } else {
+        [self expand:YES completion:nil];
+    }
 }
 
 

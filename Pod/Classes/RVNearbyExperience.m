@@ -41,7 +41,6 @@
         RXMenuItem *menuItem = [self menuItemWithIdentifier:touchpoint.ID];
         [menuItem setTag:[visit.touchpoints indexOfObject:touchpoint]];
         [menuItem setTitle:touchpoint.title forState:UIControlStateNormal];
-        [menuItem addTarget:self action:@selector(menuItemClicked:) forControlEvents:UIControlEventTouchUpInside];
         
         [self.recallMenu addItem:menuItem animated:self.recallMenu.isVisible];
     }
@@ -106,11 +105,13 @@
 - (void)menuItemClicked:(RXMenuItem *)menuItem {
     RVTouchpoint *touchpoint = [[Rover shared].currentVisit.touchpoints objectAtIndex:menuItem.tag];
     _openedTouchpoint = touchpoint;
-    [self.recallMenu collapse:YES completion:^{
-        [self.recallMenu hide:YES completion:^{
-            [[Rover shared] presentModalWithTouchpoints:@[touchpoint]];
+    if (self.recallMenu.itemCount > 1) {
+        [self.recallMenu collapse:YES completion:^{
+            [self presentModalForTouchpoint:touchpoint];
         }];
-    }];
+    } else {
+        [self presentModalForTouchpoint:touchpoint];
+    }
 }
 
 #pragma mark - Helper
@@ -126,9 +127,16 @@
         UIColor *color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
         [menuItem setBackgroundColor:color];
         
+        [menuItem addTarget:self action:@selector(menuItemClicked:) forControlEvents:UIControlEventTouchUpInside];
         [self.menuItemsDictionary setObject:menuItem forKey:identifier];
     }
     return menuItem;
+}
+
+- (void)presentModalForTouchpoint:(RVTouchpoint *)touchpoint {
+    [self.recallMenu hide:YES completion:^{
+        [[Rover shared] presentModalWithTouchpoints:@[touchpoint]];
+    }];
 }
 
 @end
