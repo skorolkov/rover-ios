@@ -26,6 +26,7 @@ typedef NS_ENUM(NSInteger, RVTouchpointTrigger) {
 @property (nonatomic, assign) BOOL isVisited;
 @property (nonatomic, assign) BOOL notificationDelivered;
 @property (nonatomic, readonly) BOOL isMasterTouchpoint;
+@property (nonatomic, strong) NSURL *avatarURL;
 
 - (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
 

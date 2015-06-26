@@ -204,7 +204,7 @@
     id lastHeaderBlockView = _titleBar.subviews.count > 1 ? _titleBar.subviews[_titleBar.subviews.count - 2] : nil;
     [_titleBar addConstraints:[RXBlockView constraintsForBlockView:blockView withPreviousBlockView:lastHeaderBlockView inside:_titleBar]];
  
-//    // Height constraint
+    // Height constraint
     [_titleBar addConstraint:[NSLayoutConstraint constraintWithItem:blockView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:0 multiplier:1 constant:[blockView.block heightForWidth:self.view.frame.size.width]]];
 }
 

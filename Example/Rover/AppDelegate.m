@@ -12,7 +12,7 @@
 
 @interface AppDelegate () <RoverDelegate>
 
-@property (nonatomic, strong) RVRetailExperience *roverExperience;
+@property (nonatomic, strong) RVNearbyExperience *roverExperience;
 
 @end
 
@@ -28,7 +28,7 @@
     
     Rover *rover = [Rover setup:config];
     
-    _roverExperience = [[RVSimpleExperience alloc] init];
+    _roverExperience = [[RVNearbyExperience alloc] init];
     rover.delegate = _roverExperience;
     
     [rover startMonitoring];

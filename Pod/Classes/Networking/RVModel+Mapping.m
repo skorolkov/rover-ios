@@ -116,7 +116,12 @@
              @"postalCode": @"postalCode",
              @"latitude": @"latitude",
              @"longitude": @"longitude",
-             @"radius": @"radius"};
+             @"radius": @"radius",
+             @"avatarURL": @"avatarUrl"};
+}
+
+- (NSDictionary *)valueTransformers {
+    return @{@"avatarUrl": [RVBlockValueTransformer NSURLValueTransformer]};
 }
 
 @end
@@ -128,7 +133,12 @@
 - (NSDictionary *)inboundMapping {
     return @{@"ID": @"id",
              @"meta": @"meta",
-             @"title": @"title"};
+             @"title": @"title",
+             @"avatarURL": @"avatarUrl"};
+}
+
+- (NSDictionary *)valueTransformers {
+    return @{@"avatarUrl": [RVBlockValueTransformer NSURLValueTransformer]};
 }
 
 @end
@@ -144,7 +154,8 @@
              @"minorNumber": @"minorNumber",
              @"title": @"title",
              @"notification": @"notification",
-             @"cards": @"cards"};
+             @"cards": @"cards",
+             @"avatarURL": @"avatarUrl"};
 }
 
 - (NSDictionary *)valueTransformers {
@@ -154,7 +165,8 @@
                                 } else {
                                     return [NSNumber numberWithInteger:RVTouchpointTriggerVisit];
                                 }
-                            }]};
+                            }],
+             @"avatarUrl": [RVBlockValueTransformer NSURLValueTransformer]};
 }
 
 - (NSDictionary *)classMapping {

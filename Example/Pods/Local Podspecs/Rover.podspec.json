@@ -1,6 +1,6 @@
 {
   "name": "Rover",
-  "version": "0.30.10",
+  "version": "0.31.1",
   "summary": "Rover iOS SDK for developing apps using the Rover platform.",
   "description": "                       The Rover iOS SDK enables beacon (iBeacon) detection and communication with the Rover platform. \n                       Requires an account with [www.roverlabs.co](http://www.roverlabs.co/). \n                       To integrate after adding this pod, continue with \"Connect your app to Rover\" in the [documentation](http://docs.roverlabs.co/v1.0/docs/getting-started).\n",
   "homepage": "http://www.roverlabs.co/",
@@ -10,7 +10,7 @@
   },
   "source": {
     "git": "https://github.com/Rover-Labs/rover-ios.git",
-    "tag": "0.30.10"
+    "tag": "0.31.1"
   },
   "social_media_url": "https://twitter.com/roverlabsinc",
   "platforms": {

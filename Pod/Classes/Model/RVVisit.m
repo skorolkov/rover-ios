@@ -12,6 +12,7 @@
 #import "RVViewDefinition.h"
 #import "RVCustomer.h"
 #import "RVCard.h"
+#import "RVOrganization.h"
 
 #import "RVBlock.h"
 #import "RVImageBlock.h"
@@ -105,8 +106,24 @@ static RVVisit *_latestVisit;
                     [array addObject:viewDefintion.backgroundImageURL];
                 }
             }];
+            
+            // touchpoint avatar
+            if (touchpoint.avatarURL) {
+                [array addObject:touchpoint.avatarURL];
+            }
         }];
     }];
+    
+    // organization avatar
+    if (self.organization.avatarURL) {
+        [array addObject:self.organization.avatarURL];
+    }
+    
+    // location avatar
+    if (self.location.avatarURL) {
+        [array addObject:self.location.avatarURL];
+    }
+        
     return [NSArray arrayWithArray:array];
 }
 

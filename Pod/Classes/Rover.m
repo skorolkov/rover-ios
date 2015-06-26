@@ -112,10 +112,10 @@ static Rover *sharedInstance = nil;
         return _delegate;
     }
     
-    if (self.config.experience == RVExperienceSimple) {
-        _defaultDelegate = [RVSimpleExperience new];
-    } else if (self.config.experience == RVExperienceRetail) {
-        _defaultDelegate = [RVRetailExperience new];
+    if (self.config.experience == RVExperienceNearby) {
+        _defaultDelegate = [RVNearbyExperience new];
+    } else if (self.config.experience == RVExperienceMessageCenter) {
+        _defaultDelegate = [RVMessageCenterExperience new];
     }
     
     _delegate = _defaultDelegate;
@@ -183,6 +183,10 @@ static Rover *sharedInstance = nil;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [_visitManager.regionManager simulateRegionExitWithBeaconUUID:UUID major:major minor:minor];
     });
+}
+
+- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor {
+    [self simulateBeaconWithUUID:UUID major:major minor:minor duration:30];
 }
 
 #pragma mark - Utility
@@ -274,6 +278,8 @@ static Rover *sharedInstance = nil;
     if ([self.delegate respondsToSelector:@selector(roverVisitDidExpire:)]) {
         [self.delegate roverVisitDidExpire:visit];
     }
+    
+    _currentVisit = nil;
 }
 
 - (void)visitManager:(RVVisitManager *)manager didEnterTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit {
