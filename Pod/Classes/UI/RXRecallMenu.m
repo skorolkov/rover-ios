@@ -73,7 +73,7 @@
 }
 
 - (void)addItem:(UIButton *)item animated:(BOOL)animated {
-    item.enabled = NO;
+    item.userInteractionEnabled = NO;
     item.titleLabel.alpha = 0;
     
     CGPoint center = CGPointMake(self.bounds.size.width / 2, self.bounds.size.height / 2);
@@ -204,7 +204,7 @@
     BOOL rightAligned = self.anchoredEdge & RXDraggableSnappedEdgeRight;
     
     [self.items enumerateObjectsUsingBlock:^(UIButton *item, NSUInteger idx, BOOL *stop) {
-        item.enabled = _isExpanded;
+        item.userInteractionEnabled = _isExpanded;
         item.contentHorizontalAlignment = rightAligned ? UIControlContentHorizontalAlignmentRight : UIControlContentHorizontalAlignmentLeft;
         // TODO: change this 300 to screen width minus a 30 pixel margin from the side
         [item setContentEdgeInsets:UIEdgeInsetsMake(0, rightAligned ? -300 : item.bounds.size.width + kTitleLabelMargin, 0, rightAligned ? item.bounds.size.width + kTitleLabelMargin : -300)];
@@ -233,13 +233,21 @@
         return;
     }
     
+    self.userInteractionEnabled = NO;
+    
     [self hideBackdrop];
     
     _offsetFactor = kCollapsedOffsetFactor;
     _offsetConstant = 0;
     _closeMenuItem.enabled = NO;
     _isExpanded = NO;
-    [self layoutItems:animated completion:completion];
+    [self layoutItems:animated completion:^{
+        self.userInteractionEnabled = YES;
+        
+        if (completion) {
+            completion();
+        }
+    }];
 }
 
 - (void)expand:(BOOL)animated completion:(void (^)())completion {

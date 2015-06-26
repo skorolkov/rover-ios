@@ -34,7 +34,7 @@
 #pragma mark - RoverDelegate
 
 - (void)roverDidCreateVisit:(RVVisit *)visit {
-    UIImageView *avatarImageView = self.recallButton.view;
+    UIImageView *avatarImageView = (UIImageView *)self.recallButton.view;
     [avatarImageView sd_setImageWithURL:visit.organization.avatarURL];
 }
 

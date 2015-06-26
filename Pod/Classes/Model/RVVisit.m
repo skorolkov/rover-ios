@@ -108,16 +108,22 @@ static RVVisit *_latestVisit;
             }];
             
             // touchpoint avatar
-            [array addObject:touchpoint.avatarURL];
+            if (touchpoint.avatarURL) {
+                [array addObject:touchpoint.avatarURL];
+            }
         }];
     }];
     
     // organization avatar
-    [array addObject:self.organization.avatarURL];
+    if (self.organization.avatarURL) {
+        [array addObject:self.organization.avatarURL];
+    }
     
     // location avatar
-    [array addObject:self.location.avatarURL];
-    
+    if (self.location.avatarURL) {
+        [array addObject:self.location.avatarURL];
+    }
+        
     return [NSArray arrayWithArray:array];
 }
 
