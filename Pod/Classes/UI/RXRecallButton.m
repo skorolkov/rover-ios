@@ -35,6 +35,8 @@
 - (instancetype)initWithFrame:(CGRect)frame customView:(UIView *)view initialPosition:(RXRecallButtonPosition)position {
     self = [self initWithFrame:frame];
     if (self) {
+        self.snapToCorners = YES;
+        
         self.backgroundColor = [UIColor whiteColor];
         self.layer.cornerRadius = self.frame.size.height / 2;
         self.layer.shadowColor = [UIColor blackColor].CGColor;
