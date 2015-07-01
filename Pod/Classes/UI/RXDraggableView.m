@@ -16,6 +16,7 @@
 
 @property (nonatomic, strong) UIDynamicAnimator *animator;
 @property (nonatomic, strong) UIAttachmentBehavior *attachmentBehavior;
+@property (nonatomic, strong) UIDynamicItemBehavior *dynamicItemBehavior;
 @property (nonatomic, assign) CGPoint currentLocation;
 
 @end
@@ -40,10 +41,19 @@
 
 - (void)commonInit {
     _margins = UIEdgeInsetsMake(30, 30, 30, 30);
+    _anchoredEdge = RXDraggableSnappedEdgeBottom;
 }
+
 
 - (void)didMoveToSuperview {
     _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
+    
+
+}
+
+- (void)setSnapToCorners:(BOOL)snapToCorners {
+    _snapToCorners = snapToCorners;
+    _anchoredEdge = [self anchoredEdgeFromPoint:self.center];
 }
 
 #pragma mark - Override Touches
@@ -58,10 +68,10 @@
     _attachmentBehavior = [[UIAttachmentBehavior alloc] initWithItem:self attachedToAnchor:_currentLocation];
     [_animator addBehavior:_attachmentBehavior];
     
-    UIDynamicItemBehavior *dynamicItemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self]];
-    dynamicItemBehavior.allowsRotation = NO;
-    [_animator addBehavior:dynamicItemBehavior];
-    
+    _dynamicItemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self]];
+    _dynamicItemBehavior.allowsRotation = NO;
+    [_animator addBehavior:_dynamicItemBehavior];
+
     _moved = NO;
 }
 
@@ -84,9 +94,7 @@
     if (!_moved) {
         [_animator removeAllBehaviors];
         
-        if ([self.delegate respondsToSelector:@selector(draggableViewClicked:)]) {
-            [self.delegate draggableViewClicked:self];
-        }
+        [self sendActionsForControlEvents:UIControlEventTouchUpInside];
     } else {
         [self endUpTouchWithOffset:[self offsetFromAnchorPoint:currentPositionInView]];
     }
@@ -108,44 +116,16 @@
 }
 
 - (void)endUpTouchWithOffset:(UIOffset)offset anchor:(CGPoint)anchor {
-    CGPoint currentLocation = anchor;
-    
     [_animator removeAllBehaviors];
+
+    _anchoredEdge = [self anchoredEdgeFromPoint:anchor];
+
+    UISnapBehavior *snapBehavior = [[UISnapBehavior alloc] initWithItem:self snapToPoint:[self snapPointToClosestEdgeFromPoint:anchor offset:offset]];
+    [self.animator addBehavior:snapBehavior];
     
-    RXDraggableEdge anchorToEdge;
-    CGFloat horizontalDistance = NSNotFound;
-    if (currentLocation.x > (self.superview.frame.size.width / 2)) {
-        anchorToEdge = RXDraggableEdgeRight;
-        horizontalDistance = self.superview.frame.size.width - currentLocation.x;
-    } else {
-        anchorToEdge = RXDraggableEdgeLeft;
-        horizontalDistance = currentLocation.x;
-    }
-    
-    CGFloat verticalDistance = NSNotFound;
-    if (currentLocation.y > (self.superview.frame.size.height / 2)) {
-        verticalDistance = self.superview.frame.size.height - currentLocation.y;
-        if (verticalDistance < horizontalDistance) {
-            anchorToEdge = RXDraggableEdgeBottom;
-        }
-    } else {
-        verticalDistance = currentLocation.y;
-        if (verticalDistance < horizontalDistance) {
-            anchorToEdge = RXDraggableEdgeTop;
-        }
-    }
-    
-    _anchoredEdge = anchorToEdge;
-    
-    [UIView animateWithDuration:.5
-                          delay:0
-         usingSpringWithDamping:.7
-          initialSpringVelocity:.3
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         self.center = [self snapPointToClosestEdgeFromPoint:currentLocation offset:offset];
-                     }
-                     completion:nil];
+    UIDynamicItemBehavior *dynamicItemBehavior = [[UIDynamicItemBehavior alloc] initWithItems:@[self]];
+    dynamicItemBehavior.allowsRotation = NO;
+    [self.animator addBehavior:dynamicItemBehavior];
     
 }
 
@@ -155,16 +135,59 @@
     CGFloat topMinimum = (self.frame.size.height / 2) + _margins.top;
     CGFloat topMaximum = self.superview.frame.size.height - ((self.frame.size.height / 2) + _margins.bottom);
     
-    switch (_anchoredEdge) {
-        case RXDraggableEdgeTop:
+    switch ((int)_anchoredEdge) {
+        case (RXDraggableSnappedEdgeTop | RXDraggableSnappedEdgeLeft):
+            return CGPointMake(leftMinimum, topMinimum);
+        case RXDraggableSnappedEdgeTop | RXDraggableSnappedEdgeRight:
+            return CGPointMake(leftMaximum, topMinimum);
+        case RXDraggableSnappedEdgeBottom | RXDraggableSnappedEdgeLeft:
+            return CGPointMake(leftMinimum, topMaximum);
+        case RXDraggableSnappedEdgeBottom | RXDraggableSnappedEdgeRight:
+            return CGPointMake(leftMaximum, topMaximum);
+        case RXDraggableSnappedEdgeTop:
             return CGPointMake(VALUE_BETWEEN(point.x + offset.horizontal, leftMinimum, leftMaximum), topMinimum);
-        case RXDraggableEdgeBottom:
+        case RXDraggableSnappedEdgeBottom:
             return CGPointMake(VALUE_BETWEEN(point.x + offset.horizontal, leftMinimum, leftMaximum), topMaximum);
-        case RXDraggableEdgeLeft:
+        case RXDraggableSnappedEdgeLeft:
             return CGPointMake(leftMinimum, VALUE_BETWEEN(point.y + offset.vertical, topMinimum, topMaximum));
-        case RXDraggableEdgeRight:
+        case RXDraggableSnappedEdgeRight:
             return CGPointMake(leftMaximum, VALUE_BETWEEN(point.y + offset.vertical, topMinimum, topMaximum));
     }
+    
+    return CGPointMake(leftMaximum, topMaximum);
+}
+
+- (RXDraggableSnappedEdge)anchoredEdgeFromPoint:(CGPoint)point {
+    RXDraggableSnappedEdge horizontallyAnchoredEdge;
+    CGFloat horizontalDistance = NSNotFound;
+    if (point.x > (self.superview.frame.size.width / 2)) {
+        horizontallyAnchoredEdge = RXDraggableSnappedEdgeRight;
+        horizontalDistance = self.superview.frame.size.width - point.x;
+    } else {
+        horizontallyAnchoredEdge = RXDraggableSnappedEdgeLeft;
+        horizontalDistance = point.x;
+    }
+    
+    RXDraggableSnappedEdge verticallyAnchoredEdge;
+    CGFloat verticalDistance = NSNotFound;
+    if (point.y > (self.superview.frame.size.height / 2)) {
+        verticalDistance = self.superview.frame.size.height - point.y;
+        verticallyAnchoredEdge = RXDraggableSnappedEdgeBottom;
+    } else {
+        verticalDistance = point.y;
+        verticallyAnchoredEdge = RXDraggableSnappedEdgeTop;
+    }
+    
+    
+    if (_snapToCorners) {
+        return horizontallyAnchoredEdge | verticallyAnchoredEdge;
+    }
+    
+    if (verticalDistance < horizontalDistance) {
+        return verticallyAnchoredEdge;
+    }
+    
+    return horizontallyAnchoredEdge;
 }
 
 @end

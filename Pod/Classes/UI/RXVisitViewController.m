@@ -167,12 +167,13 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     RVCard *card = [self cardAtIndexPath:indexPath];
     card.isDeleted = YES;
     [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    if ([self hasNoCards]) {
-        [self dismissViewControllerAnimated:YES completion:nil];
-    }
     
     if ([self.delegate respondsToSelector:@selector(visitViewController:didDiscardCard:)]) {
         [self.delegate visitViewController:self didDiscardCard:card];
+    }
+    
+    if ([self hasNoCards]) {
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
 

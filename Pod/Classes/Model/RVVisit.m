@@ -12,6 +12,7 @@
 #import "RVViewDefinition.h"
 #import "RVCustomer.h"
 #import "RVCard.h"
+#import "RVOrganization.h"
 
 #import "RVBlock.h"
 #import "RVImageBlock.h"
@@ -105,8 +106,24 @@ static RVVisit *_latestVisit;
                     [array addObject:viewDefintion.backgroundImageURL];
                 }
             }];
+            
+            // touchpoint avatar
+            if (touchpoint.avatarURL) {
+                [array addObject:touchpoint.avatarURL];
+            }
         }];
     }];
+    
+    // organization avatar
+    if (self.organization.avatarURL) {
+        [array addObject:self.organization.avatarURL];
+    }
+    
+    // location avatar
+    if (self.location.avatarURL) {
+        [array addObject:self.location.avatarURL];
+    }
+        
     return [NSArray arrayWithArray:array];
 }
 
@@ -146,6 +163,15 @@ static RVVisit *_latestVisit;
         }
     }];
     return touchpoint;
+}
+
+- (RVTouchpoint *)touchpointWithID:(NSString *)identifier {
+    for (RVTouchpoint *touchpoint in self.touchpoints) {
+        if ([touchpoint.ID isEqualToString:identifier]) {
+            return touchpoint;
+        }
+    }
+    return nil;
 }
 
 - (NSSet *)wildcardTouchpoints {
@@ -219,15 +245,6 @@ static RVVisit *_latestVisit;
         [visitedTouchpoindIds insertObject:touchpoint.ID atIndex:idx];
     }];
     return visitedTouchpoindIds;
-}
-
-- (RVTouchpoint *)touchpointWithID:(NSString *)ID {
-    for (RVTouchpoint *touchpoint in self.touchpoints) {
-        if ([touchpoint.ID isEqualToString:ID]) {
-            return touchpoint;
-        }
-    }
-    return nil;
 }
 
 - (void)setVisitedTouchpointIDs:(NSArray *)ids {

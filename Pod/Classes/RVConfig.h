@@ -9,8 +9,8 @@
 @import UIKit;
 
 typedef NS_ENUM(NSInteger, RVExperience) {
-    RVExperienceSimple,
-    RVExperienceRetail
+    RVExperienceNearby,
+    RVExperienceMessageFeed
 };
 
 /** Contains all the configuration options used to initialize the Rover framework.

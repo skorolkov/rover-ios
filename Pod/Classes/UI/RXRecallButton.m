@@ -35,6 +35,8 @@
 - (instancetype)initWithFrame:(CGRect)frame customView:(UIView *)view initialPosition:(RXRecallButtonPosition)position {
     self = [self initWithFrame:frame];
     if (self) {
+        self.snapToCorners = YES;
+        
         self.backgroundColor = [UIColor whiteColor];
         self.layer.cornerRadius = self.frame.size.height / 2;
         self.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -51,6 +53,7 @@
         [self addSubview:viewContainer];
         _view = view;
         _initialPosition = position;
+        _isVisible = NO;
     }
     return self;
 }
@@ -72,25 +75,35 @@
     }
 }
 
-#pragma mark - Instance Methods
-
-- (void)hide:(BOOL)animated completion:(void (^)())completion {
+- (CGPoint)offscreenPosition {
     CGPoint center;
     
-    switch (self.anchoredEdge) {
-        case RXDraggableEdgeTop:
+    switch ((int)self.anchoredEdge) {
+        case RXDraggableSnappedEdgeTop | RXDraggableSnappedEdgeLeft:
+        case RXDraggableSnappedEdgeTop | RXDraggableSnappedEdgeRight:
+        case RXDraggableSnappedEdgeTop:
             center = CGPointMake(self.center.x, - (self.frame.size.height / 2) - self.layer.shadowRadius - 1);
             break;
-        case RXDraggableEdgeBottom:
+        case RXDraggableSnappedEdgeBottom | RXDraggableSnappedEdgeLeft:
+        case RXDraggableSnappedEdgeBottom | RXDraggableSnappedEdgeRight:
+        case RXDraggableSnappedEdgeBottom:
             center = CGPointMake(self.center.x, self.superview.frame.size.height + (self.frame.size.height / 2) +  self.layer.shadowRadius + 1);
             break;
-        case RXDraggableEdgeRight:
+        case RXDraggableSnappedEdgeRight:
             center = CGPointMake(self.superview.frame.size.width + self.frame.size.width + self.layer.shadowRadius + 1, self.center.y);
             break;
-        case RXDraggableEdgeLeft:
+        case RXDraggableSnappedEdgeLeft:
             center = CGPointMake(- (self.frame.size.width / 2) - self.layer.shadowRadius - 1, self.center.y);
             break;
     }
+    
+    return center;
+}
+
+#pragma mark - Instance Methods
+
+- (void)hide:(BOOL)animated completion:(void (^)())completion {
+    CGPoint center = [self offscreenPosition];
     
     NSTimeInterval duration = animated ? .3 : 0;
     

@@ -34,14 +34,16 @@
 #import "RXRecallButton.h"
 #import "RXCardsIcon.h"
 #import "RXModalTransition.h"
+#import "RXRecallMenu.h"
+#import "RXMenuItem.h"
 
 // Networking
 #import "RVNetworkingManager.h"
 #import "RVImagePrefetcher.h"
 
 // Experience
-#import "RVRetailExperience.h" // for convenience
-#import "RVSimpleExperience.h" // for convenience
+#import "RVMessageFeedExperience.h" // or convenience
+#import "RVNearbyExperience.h" // for convenience
 
 @protocol RoverDelegate;
 
@@ -91,7 +93,7 @@
  
  @param message The body of the UILocalNotification.
  */
-- (void)presentLocalNotification:(NSString *)message;
+- (void)presentLocalNotification:(NSString *)message userInfo:(NSDictionary *)userInfo;
  
 /** Present the modal view controller.
  
@@ -103,6 +105,16 @@
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
  */
 - (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor duration:(NSTimeInterval)duration;
+
+/** You can use this method to simulate your app coming in range of a particular beacon and staying in range for 30 seconds.
+ @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.
+ */
+- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor;
+
+/** Use this method in the `didReceiveLocalNotification` method of your application delegate to notify the Rover delegate when user
+    swipes a Rover delivered notification.
+ */
+- (BOOL)handleDidReceiveLocalNotification:(UILocalNotification *)notification;
 
 /** Convenience method to find the current view controller
  */

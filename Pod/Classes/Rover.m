@@ -112,10 +112,10 @@ static Rover *sharedInstance = nil;
         return _delegate;
     }
     
-    if (self.config.experience == RVExperienceSimple) {
-        _defaultDelegate = [RVSimpleExperience new];
-    } else if (self.config.experience == RVExperienceRetail) {
-        _defaultDelegate = [RVRetailExperience new];
+    if (self.config.experience == RVExperienceNearby) {
+        _defaultDelegate = [RVNearbyExperience new];
+    } else if (self.config.experience == RVExperienceMessageFeed) {
+        _defaultDelegate = [RVMessageFeedExperience new];
     }
     
     _delegate = _defaultDelegate;
@@ -163,6 +163,10 @@ static Rover *sharedInstance = nil;
     return self;
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark - Public methods
 
 - (id)configValueForKey:(NSString *)key {
@@ -183,6 +187,10 @@ static Rover *sharedInstance = nil;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(duration * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [_visitManager.regionManager simulateRegionExitWithBeaconUUID:UUID major:major minor:minor];
     });
+}
+
+- (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor {
+    [self simulateBeaconWithUUID:UUID major:major minor:minor duration:30];
 }
 
 #pragma mark - Utility
@@ -226,11 +234,13 @@ static Rover *sharedInstance = nil;
     }
 }
 
-- (void)presentLocalNotification:(NSString *)message {
-    // TODO: consider the case where the first noti has already been delivered (want to be silent)
-    
+- (void)presentLocalNotification:(NSString *)message userInfo:(NSDictionary *)userInfo {
     UILocalNotification *note = [[UILocalNotification alloc] init];
     note.alertBody = message;
+    
+    NSMutableDictionary *userInfoDict = [NSMutableDictionary dictionaryWithDictionary:userInfo];
+    [userInfoDict setValue:@YES forKey:@"_rover"];
+    note.userInfo = [NSDictionary dictionaryWithDictionary:userInfoDict];
     
     if (self.config.notificationSoundName) {
         note.soundName = self.config.notificationSoundName;
@@ -274,6 +284,8 @@ static Rover *sharedInstance = nil;
     if ([self.delegate respondsToSelector:@selector(roverVisitDidExpire:)]) {
         [self.delegate roverVisitDidExpire:visit];
     }
+    
+    _currentVisit = nil;
 }
 
 - (void)visitManager:(RVVisitManager *)manager didEnterTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit {
@@ -342,6 +354,11 @@ static Rover *sharedInstance = nil;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)note {
     [self didOpenApplication];
+    
+    UILocalNotification *localNotification = [note.userInfo objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    if (localNotification) {
+        [self handleDidReceiveLocalNotification:localNotification];
+    }
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)note {
@@ -360,6 +377,16 @@ static Rover *sharedInstance = nil;
             [self.delegate didOpenApplicationDuringVisit:self.currentVisit];
         }
     }
+}
+
+- (BOOL)handleDidReceiveLocalNotification:(UILocalNotification *)notification {
+    if ([notification.userInfo objectForKey:@"_rover"] && self.currentVisit) {
+        if ([self.delegate respondsToSelector:@selector(didReceiveRoverNotificationWithUserInfo:)]) {
+            [self.delegate didReceiveRoverNotificationWithUserInfo:notification.userInfo];
+        }
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark - RXVisitViewControllerDelegate

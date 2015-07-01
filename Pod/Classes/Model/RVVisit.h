@@ -55,6 +55,7 @@
 
 - (RVTouchpoint *)touchpointForRegion:(CLBeaconRegion *)beaconRegion;
 - (RVTouchpoint *)touchpointForMinor:(NSNumber *)minor;
+- (RVTouchpoint *)touchpointWithID:(NSString *)identifier;
 
 - (void)addToCurrentTouchpoints:(RVTouchpoint *)touchpoint;
 - (void)removeFromCurrentTouchpoints:(RVTouchpoint *)touchpoint;
