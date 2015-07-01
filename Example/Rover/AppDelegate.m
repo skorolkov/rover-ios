@@ -36,4 +36,10 @@
     return YES;
 }
 
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+    if ([[Rover shared] handleDidReceiveLocalNotification:notification]) {
+        return;
+    }
+}
+
 @end

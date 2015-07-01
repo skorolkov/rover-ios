@@ -10,7 +10,7 @@
 
 typedef NS_ENUM(NSInteger, RVExperience) {
     RVExperienceNearby,
-    RVExperienceMessageCenter
+    RVExperienceMessageFeed
 };
 
 /** Contains all the configuration options used to initialize the Rover framework.

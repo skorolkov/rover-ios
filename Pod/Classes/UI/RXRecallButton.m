@@ -51,6 +51,7 @@
         [self addSubview:viewContainer];
         _view = view;
         _initialPosition = position;
+        _isVisible = NO;
     }
     return self;
 }

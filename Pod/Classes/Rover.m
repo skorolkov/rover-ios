@@ -114,8 +114,8 @@ static Rover *sharedInstance = nil;
     
     if (self.config.experience == RVExperienceNearby) {
         _defaultDelegate = [RVNearbyExperience new];
-    } else if (self.config.experience == RVExperienceMessageCenter) {
-        _defaultDelegate = [RVMessageCenterExperience new];
+    } else if (self.config.experience == RVExperienceMessageFeed) {
+        _defaultDelegate = [RVMessageFeedExperience new];
     }
     
     _delegate = _defaultDelegate;
@@ -161,6 +161,10 @@ static Rover *sharedInstance = nil;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidFinishLaunching:) name:UIApplicationDidFinishLaunchingNotification object:nil];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Public methods
@@ -230,11 +234,13 @@ static Rover *sharedInstance = nil;
     }
 }
 
-- (void)presentLocalNotification:(NSString *)message {
-    // TODO: consider the case where the first noti has already been delivered (want to be silent)
-    
+- (void)presentLocalNotification:(NSString *)message userInfo:(NSDictionary *)userInfo {
     UILocalNotification *note = [[UILocalNotification alloc] init];
     note.alertBody = message;
+    
+    NSMutableDictionary *userInfoDict = [NSMutableDictionary dictionaryWithDictionary:userInfo];
+    [userInfoDict setValue:@YES forKey:@"_rover"];
+    note.userInfo = [NSDictionary dictionaryWithDictionary:userInfoDict];
     
     if (self.config.notificationSoundName) {
         note.soundName = self.config.notificationSoundName;
@@ -348,6 +354,11 @@ static Rover *sharedInstance = nil;
 
 - (void)applicationDidFinishLaunching:(NSNotification *)note {
     [self didOpenApplication];
+    
+    UILocalNotification *localNotification = [note.userInfo objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    if (localNotification) {
+        [self handleDidReceiveLocalNotification:localNotification];
+    }
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)note {
@@ -366,6 +377,16 @@ static Rover *sharedInstance = nil;
             [self.delegate didOpenApplicationDuringVisit:self.currentVisit];
         }
     }
+}
+
+- (BOOL)handleDidReceiveLocalNotification:(UILocalNotification *)notification {
+    if ([notification.userInfo objectForKey:@"_rover"] && self.currentVisit) {
+        if ([self.delegate respondsToSelector:@selector(didReceiveRoverNotificationWithUserInfo:)]) {
+            [self.delegate didReceiveRoverNotificationWithUserInfo:notification.userInfo];
+        }
+        return YES;
+    }
+    return NO;
 }
 
 #pragma mark - RXVisitViewControllerDelegate

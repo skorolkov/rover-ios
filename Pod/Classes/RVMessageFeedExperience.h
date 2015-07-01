@@ -9,6 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "RoverDelegate.h"
 
-@interface RVMessageCenterExperience : NSObject <RoverDelegate>
+@interface RVMessageFeedExperience : NSObject <RoverDelegate>
 
 @end

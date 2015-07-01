@@ -229,9 +229,9 @@
 }
 
 - (void)collapse:(BOOL)animated completion:(void (^)())completion {
-    if (!_isExpanded) {
-        return;
-    }
+//    if (!_isExpanded) {
+//        return;
+//    }
     
     self.userInteractionEnabled = NO;
     
@@ -251,9 +251,9 @@
 }
 
 - (void)expand:(BOOL)animated completion:(void (^)())completion {
-    if (_isExpanded) {
-        return;
-    }
+//    if (_isExpanded) {
+//        return;
+//    }
     
     [self showBackdrop];
     

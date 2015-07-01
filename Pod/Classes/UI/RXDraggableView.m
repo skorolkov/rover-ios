@@ -44,6 +44,7 @@
     _anchoredEdge = RXDraggableSnappedEdgeBottom;
 }
 
+
 - (void)didMoveToSuperview {
     _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
     

@@ -40,14 +40,17 @@
     
     for (RVTouchpoint *touchpoint in touchpoints) {
         RXMenuItem *menuItem = [self menuItemForTouchpoint:touchpoint];
-        [self.recallMenu addItem:menuItem animated:self.recallMenu.isVisible];
+        if (touchpoint.cards.count > 0) {
+            [self.recallMenu addItem:menuItem animated:self.recallMenu.isVisible];
+        }
     }
     
     if (!self.recallMenu.isVisible && ![Rover shared].modalViewController) {
         [self.recallMenu show:YES completion:nil];
     }
     
-    // If app is in the foreground present the recall button
+
+    // ONLY present local notifications when the app is in the background
     
     if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
         // Do nothing
@@ -56,12 +59,11 @@
         
         for (RVTouchpoint *touchpoint in touchpoints) {
             if (touchpoint.notification && !touchpoint.notificationDelivered) {
-                [[Rover shared] presentLocalNotification:touchpoint.notification];
+                [[Rover shared] presentLocalNotification:touchpoint.notification userInfo:@{@"visitID": visit.ID,
+                                                                                            @"touchpointID": touchpoint.ID}];
             }
         }
     }
-    
-    // touchpoints with cards
     
     // Mark touchpoints as visited
     
@@ -98,21 +100,40 @@
     }
 }
 
+- (void)didReceiveRoverNotificationWithUserInfo:(NSDictionary *)userInfo {
+    NSString *visitID = [userInfo objectForKey:@"visitID"];
+    RVVisit *currentVisit = [Rover shared].currentVisit;
+    if (![currentVisit.ID isEqualToString:visitID]) {
+        return;
+    }
+    
+    NSString *touchpointID = [userInfo objectForKey:@"touchpointID"];
+    RVTouchpoint *touchpoint = [currentVisit touchpointWithID:touchpointID];
+    if (touchpoint) {
+        if ([Rover shared].modalViewController) {
+            [[Rover shared].modalViewController dismissViewControllerAnimated:YES completion:^{
+                [self presentModalForTouchpoint:touchpoint];
+            }];
+        } else {
+            [self presentModalForTouchpoint:touchpoint];
+        }
+    }
+}
+
+- (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
+    if ([Rover shared].currentVisit && !self.recallMenu.isVisible && ![Rover shared].modalViewController) {
+        [self.recallMenu show:YES completion:nil];
+    }
+}
+
 #pragma mark - Actions
 
 - (void)menuItemClicked:(RXMenuItem *)menuItem {
     RVTouchpoint *touchpoint = [[Rover shared].currentVisit.touchpoints objectAtIndex:menuItem.tag];
-    _openedTouchpoint = touchpoint;
-    if (self.recallMenu.itemCount > 1) {
-        [self.recallMenu collapse:YES completion:^{
-            [self presentModalForTouchpoint:touchpoint];
-        }];
-    } else {
-        [self presentModalForTouchpoint:touchpoint];
-    }
+    [self presentModalForTouchpoint:touchpoint];
 }
 
-#pragma mark - Helper
+#pragma mark - Helpers
 
 - (RXMenuItem *)menuItemForTouchpoint:(RVTouchpoint *)touchpoint {
     RXMenuItem *menuItem = [self.menuItemsDictionary objectForKey:touchpoint.ID];
@@ -120,12 +141,6 @@
         menuItem = [RXMenuItem new];
         
         RVVisit *visit = [Rover shared].currentVisit;
-        
-        //        CGFloat hue = ( arc4random() % 256 / 256.0 );  //  0.0 to 1.0
-        //        CGFloat saturation = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from white
-        //        CGFloat brightness = ( arc4random() % 128 / 256.0 ) + 0.5;  //  0.5 to 1.0, away from black
-        //        UIColor *color = [UIColor colorWithHue:hue saturation:saturation brightness:brightness alpha:1];
-        //        [menuItem setBackgroundColor:color];
         
         [menuItem setTag:[visit.touchpoints indexOfObject:touchpoint]];
         [menuItem setTitle:touchpoint.title forState:UIControlStateNormal];
@@ -137,8 +152,13 @@
 }
 
 - (void)presentModalForTouchpoint:(RVTouchpoint *)touchpoint {
-    [self.recallMenu hide:YES completion:^{
-        [[Rover shared] presentModalWithTouchpoints:@[touchpoint]];
+    _openedTouchpoint = touchpoint;
+    [self.recallMenu collapse:self.recallMenu.isVisible completion:^{
+        [self.recallMenu hide:self.recallMenu.isVisible completion:^{
+            if (touchpoint) {
+                [[Rover shared] presentModalWithTouchpoints:@[touchpoint]];
+            }
+        }];
     }];
 }
 

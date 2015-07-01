@@ -59,6 +59,8 @@
  */
 - (void)didOpenApplicationDuringVisit:(RVVisit *)visit;
 
+- (void)didReceiveRoverNotificationWithUserInfo:(NSDictionary *)userInfo;
+
 /** Called before the modal view controller is presented.
  */
 - (void)roverWillDisplayModalViewController:(UIViewController *)modalViewController;

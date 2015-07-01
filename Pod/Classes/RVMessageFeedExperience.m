@@ -6,37 +6,44 @@
 //
 //
 
-#import "RVMessageCenterExperience.h"
+#import "RVMessageFeedExperience.h"
 #import "Rover.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
-@interface RVMessageCenterExperience ()
+@interface RVMessageFeedExperience ()
 
 @property (nonatomic, strong) RXRecallButton *recallButton;
 @property (nonatomic, strong) RXModalTransition *modalTransitionManager;
 
 @end
 
-@implementation RVMessageCenterExperience
+@implementation RVMessageFeedExperience
 
 - (instancetype)init {
     self = [super init];
     if (self) {
-        UIImageView *avatarImageView = [UIImageView new];
-        self.recallButton = [[RXRecallButton alloc] initWithCustomView:avatarImageView initialPosition:RXRecallButtonPositionBottomRight];
-        [self.recallButton addTarget:self action:@selector(draggableViewClicked:) forControlEvents:UIControlEventTouchUpInside];
+
         
         self.modalTransitionManager = [RXModalTransition new];
     }
     return self;
 }
 
-#pragma mark - RoverDelegate
-
-- (void)roverDidCreateVisit:(RVVisit *)visit {
-    UIImageView *avatarImageView = (UIImageView *)self.recallButton.view;
-    [avatarImageView sd_setImageWithURL:visit.organization.avatarURL];
+- (RXRecallButton *)recallButton {
+    if (_recallButton || ![Rover shared].currentVisit) {
+        return _recallButton;
+    }
+    
+    UIImageView *avatarImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 64, 64)];
+    _recallButton = [[RXRecallButton alloc] initWithCustomView:avatarImageView initialPosition:RXRecallButtonPositionBottomRight];
+    [_recallButton addTarget:self action:@selector(draggableViewClicked:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [avatarImageView sd_setImageWithURL:[Rover shared].currentVisit.organization.avatarURL];
+    
+    return _recallButton;
 }
+
+#pragma mark - RoverDelegate
 
 - (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints {
     
@@ -72,7 +79,7 @@
         } else if (!touchpoint.notificationDelivered) {
             
             if (touchpoint.notification) {
-                [[Rover shared] presentLocalNotification:touchpoint.notification];
+                [[Rover shared] presentLocalNotification:touchpoint.notification userInfo:@{@"visitID": visit.ID}];
             }
             
         }
@@ -82,25 +89,21 @@
     }];
 }
 
-//- (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
-//    // Auto Modal
-//    if (visit.visitedTouchpoints.count > 0) {
-//        
-//        UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-//        UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-//        
-//        if ([currentViewController isKindOfClass:[RXDetailViewController class]]) {
-//            
-//            // If already in a Detail view, dismiss the view and go back to the card view
-//            
-//            [currentViewController dismissViewControllerAnimated:YES completion:nil];
-//        } else if (![currentViewController isKindOfClass:[[Rover shared] configValueForKey:@"modalViewControllerClass"]]) {
-//            
-//            // Present the card modal
-//            [self presentModalForVisit:visit];
-//        }
-//    }
-//}
+- (void)didReceiveRoverNotificationWithUserInfo:(NSDictionary *)userInfo {
+    NSString *visitID = [userInfo objectForKey:@"visitID"];
+    RVVisit *currentVisit = [Rover shared].currentVisit;
+    if (![currentVisit.ID isEqualToString:visitID]) {
+        return;
+    }
+    
+    if (![Rover shared].modalViewController) {
+        [self presentModalForVisit:currentVisit];
+    } else {
+        // TODO: this doesnt set the animation stuff for RXMODALVIEWCONTROLLER
+        RXModalViewController *modalViewController = (RXModalViewController *)[[Rover shared] modalViewController];
+        [modalViewController.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
+}
 
 - (void)roverDidDismissModalViewController {
     [self.recallButton show:YES completion:nil];
@@ -108,10 +111,17 @@
 
 - (void)roverVisitDidExpire:(RVVisit *)visit {
     [self.recallButton hide:YES completion:nil];
+    _recallButton = nil;
 }
 
 - (void)roverWillDisplayModalViewController:(UIViewController *)modalViewController {
     modalViewController.transitioningDelegate = self.modalTransitionManager;
+}
+
+- (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
+    if ([Rover shared].currentVisit && !self.recallButton.isVisible && ![Rover shared].modalViewController) {
+        [self.recallButton show:YES completion:nil];
+    }
 }
 
 #pragma mark - RXDraggableViewDelegate
@@ -125,12 +135,9 @@
 #pragma mark - Helper
 
 - (void)presentModalForVisit:(RVVisit *)visit {
-    // NOTE: The recall button must be hidden before a call to present modal is made.
-    if (self.recallButton.isVisible) {
-        return;
-    }
-    
-    [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
+    [self.recallButton hide:self.recallButton.isVisible completion:^{
+        [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
+    }];
 }
 
 
