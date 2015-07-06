@@ -31,8 +31,9 @@
 @implementation RXRecallMenu
 
 - (instancetype)init {
-    self = [super initWithFrame:CGRectMake(0, 0, 64, 64)];
+    self = [super initWithFrame:CGRectMake(0, 0, 64, 64) ];
     if (self) {
+        self.snapToCorners = YES;
         self.clipsToBounds = NO;
         
         self.offsetFactor = 10;
