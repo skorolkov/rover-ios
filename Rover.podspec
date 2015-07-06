@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "Rover"
-  s.version          = "0.32.0"
+  s.version          = "0.32.1"
   s.summary          = "Rover iOS SDK for developing apps using the Rover platform."
   s.description      = <<-DESC
                        The Rover iOS SDK enables beacon (iBeacon) detection and communication with the Rover platform. 
@@ -18,13 +18,16 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.source_files = ['Pod/Classes/*.{h,m}']
-  s.resource_bundles = {
-    'Rover' => ['Pod/Assets/*.png']
-  }
+  #s.resource_bundles = {
+  #  'Rover' => ['Pod/Assets/*.png']
+  #}
 
   s.frameworks = 'Accelerate', 'CoreLocation'
+
   s.dependency 'RSBarcodes', '~> 0.1'
   s.dependency 'UIActivityIndicator-for-SDWebImage', '~> 1.2'
+  s.dependency 'SDWebImage'
+
 
   s.subspec 'UI' do |ss|
     ss.source_files = 'Pod/Classes/UI/**/*.{h,m}'
@@ -40,9 +43,9 @@ Pod::Spec.new do |s|
    ss.dependency 'Rover/Model'
   end
 
-	s.subspec 'Networking' do |ss|
-	 ss.source_files = ['Pod/Classes/Networking/**/*.{h,m}']
-	 ss.dependency 'Rover/Model'
+  s.subspec 'Networking' do |ss|
+   ss.source_files = ['Pod/Classes/Networking/**/*.{h,m}']
+   ss.dependency 'Rover/Model'
   end
 
 end
