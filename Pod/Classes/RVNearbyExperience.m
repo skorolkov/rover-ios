@@ -76,6 +76,7 @@
     }
     
     if (self.recallMenu.itemCount == 0) {
+        [self.recallMenu collapse:YES completion:nil];
         [self.recallMenu hide:YES completion:nil];
     }
 }

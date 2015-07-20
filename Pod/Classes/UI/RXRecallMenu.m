@@ -22,6 +22,8 @@
 @property (nonatomic, assign) CGFloat offsetConstant;
 @property (nonatomic, strong) RXCloseMenuItem *closeMenuItem;
 
+@property (nonatomic, strong) NSMutableArray *itemsArray;
+
 @end
 
 #define kExpandedOffsetFactor 80
@@ -51,6 +53,8 @@
         self.backdropView = [UIView new];
         self.backdropView.backgroundColor = [UIColor blackColor];
         self.backdropView.alpha = .3;
+        
+        self.itemsArray = [NSMutableArray array];
     }
     return self;
 }
@@ -64,14 +68,16 @@
 #pragma mark - Item Management
 
 - (NSUInteger)itemCount {
-    return self.subviews.count - 1;
+    return self.itemsArray.count;
 }
 
 - (NSArray *)items {
-    return [self.subviews subarrayWithRange:NSMakeRange(1, self.itemCount)];
+    return [NSArray arrayWithArray:self.itemsArray];
 }
 
 - (void)addItem:(UIButton *)item animated:(BOOL)animated {
+    [self.itemsArray addObject:item];
+    
     item.userInteractionEnabled = NO;
     item.titleLabel.alpha = 0;
     
@@ -89,6 +95,8 @@
     if (item.superview != self) {
         return;
     }
+    
+    [self.itemsArray removeObject:item];
     
     CGFloat oldAlphaValue = item.alpha;
     CGFloat direction = self.anchoredEdge & RXDraggableSnappedEdgeRight ? -1 : 1;
