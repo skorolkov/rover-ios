@@ -7,14 +7,11 @@
 //
 
 #import "RVNearbyExperience.h"
-#import "Rover.h"
 #import <SDWebImage/UIButton+WebCache.h>
 
 @interface RVNearbyExperience ()
 
-@property (nonatomic, strong) RXRecallMenu *recallMenu;
 @property (nonatomic, strong) NSMutableDictionary *menuItemsDictionary;
-@property (nonatomic, strong) RXModalTransition *modalTransition;
 @property (nonatomic, strong) RVTouchpoint *openedTouchpoint;
 
 @end

@@ -7,13 +7,11 @@
 //
 
 #import "RVMessageFeedExperience.h"
-#import "Rover.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
 @interface RVMessageFeedExperience ()
 
-@property (nonatomic, strong) RXRecallButton *recallButton;
-@property (nonatomic, strong) RXModalTransition *modalTransitionManager;
+
 
 @end
 
@@ -22,8 +20,6 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-
-        
         self.modalTransitionManager = [RXModalTransition new];
     }
     return self;
@@ -36,7 +32,7 @@
     
     UIImageView *avatarImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 64, 64)];
     _recallButton = [[RXRecallButton alloc] initWithCustomView:avatarImageView initialPosition:RXRecallButtonPositionBottomRight];
-    [_recallButton addTarget:self action:@selector(draggableViewClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [_recallButton addTarget:self action:@selector(recallButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     [avatarImageView sd_setImageWithURL:[Rover shared].currentVisit.organization.avatarURL];
     
@@ -124,9 +120,9 @@
     }
 }
 
-#pragma mark - RXDraggableViewDelegate
+#pragma mark - RXRecallButton Action
 
-- (void)draggableViewClicked:(RXDraggableView *)draggableView {
+- (void)recallButtonClicked:(RXDraggableView *)draggableView {
     [self.recallButton hide:YES completion:^{
         [self presentModalForVisit:[Rover shared].currentVisit];
     }];
