@@ -44,7 +44,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //[self setNeedsStatusBarAppearanceUpdate];
+    [self setNeedsStatusBarAppearanceUpdate];
     
 //    self.backgroundImageView = [[UIImageView alloc] init];
 //    _backgroundImageView.translatesAutoresizingMaskIntoConstraints  = NO;
@@ -57,12 +57,18 @@
     //[self.view sendSubviewToBack:_backgroundImageView];
 }
 
+- (BOOL)prefersStatusBarHidden {
+    return YES;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
-    
+    [super viewWillAppear:animated];
     [self createBlur];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
     if (!self.tableView.tableFooterView) {
         UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 77)];
         footerView.backgroundColor = [UIColor clearColor];
@@ -102,11 +108,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
-
-- (BOOL)prefersStatusBarHidden {
-    return YES;
-}
-
 
 #pragma mark - TableView Delegate
 
@@ -220,6 +221,18 @@
 
     _backgroundImageView = [[UIImageView alloc] initWithImage:image];
     _backgroundImageView.alpha = 0;
+    
+    if ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft) {
+        _backgroundImageView.transform = CGAffineTransformMakeRotation(M_PI_2);
+        CGRect frame = _backgroundImageView.frame;
+        frame.origin = CGPointMake(0, 0);
+        _backgroundImageView.frame = frame;
+    } else if ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight) {
+        _backgroundImageView.transform = CGAffineTransformMakeRotation(- M_PI_2);
+        CGRect frame = _backgroundImageView.frame;
+        frame.origin = CGPointMake(0, 0);
+        _backgroundImageView.frame = frame;
+    }
     
     [self.view addSubview:_backgroundImageView];
     [self.view sendSubviewToBack:_backgroundImageView];

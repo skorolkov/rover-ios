@@ -61,7 +61,7 @@
     } else {
         // Otherwise if the modal is not open show the recall button
         if (!self.recallButton.isVisible) {
-            [self.recallButton show:YES completion:nil];
+            [self.recallButton show];
         }
     }
     
@@ -102,7 +102,7 @@
 }
 
 - (void)roverDidDismissModalViewController {
-    [self.recallButton show:YES completion:nil];
+    [self.recallButton show];
 }
 
 - (void)roverVisitDidExpire:(RVVisit *)visit {
@@ -116,7 +116,7 @@
 
 - (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
     if ([Rover shared].currentVisit && !self.recallButton.isVisible && ![Rover shared].modalViewController) {
-        [self.recallButton show:YES completion:nil];
+        [self.recallButton show];
     }
 }
 
@@ -131,11 +131,7 @@
 #pragma mark - Helper
 
 - (void)presentModalForVisit:(RVVisit *)visit {
-    [self.recallButton hide:self.recallButton.isVisible completion:^{
-        [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
-    }];
+    [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
 }
-
-
 
 @end

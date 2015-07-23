@@ -49,4 +49,9 @@
  */
 - (BOOL)blockview:(RXBlockView *)blockview shouldOpenURL:(NSURL *)url;
 
+/** Called when the close button on a blockview is pressed. ie. the header blockview has a close button that calls 
+ this method
+ */
+- (void)closeButtonPressedFromBlockView:(RXBlockView *)blockview;
+
 @end

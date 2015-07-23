@@ -113,9 +113,5 @@
  */
 - (BOOL)handleDidReceiveLocalNotification:(UILocalNotification *)notification;
 
-/** Convenience method to find the current view controller
- */
-+ (UIViewController *)findCurrentViewController:(UIViewController *)vc;
-
 @end
 

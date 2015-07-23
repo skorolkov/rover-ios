@@ -42,6 +42,11 @@
 - (void)commonInit {
     _margins = UIEdgeInsetsMake(30, 30, 30, 30);
     _anchoredEdge = RXDraggableSnappedEdgeBottom;
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 
@@ -188,6 +193,17 @@
     }
     
     return horizontallyAnchoredEdge;
+}
+
+#pragma mark - Orientation Changes
+
+- (void)orientationChanged:(NSNotification *)note {
+
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        CGPoint position = self.center;
+        //self.center = CGPointMake(position.y, position.x);
+    });
 }
 
 @end

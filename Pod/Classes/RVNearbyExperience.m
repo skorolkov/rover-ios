@@ -43,7 +43,7 @@
     }
     
     if (!self.recallMenu.isVisible && ![Rover shared].modalViewController) {
-        [self.recallMenu show:YES completion:nil];
+        [self.recallMenu show];
     }
     
 
@@ -82,7 +82,7 @@
 }
 
 - (void)roverDidDismissModalViewController {
-    [self.recallMenu show:YES completion:nil];
+    [self.recallMenu show];
 }
 
 - (void)roverVisitDidExpire:(RVVisit *)visit {
@@ -119,8 +119,9 @@
 }
 
 - (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
+    // this needs to check for current touchpoints
     if ([Rover shared].currentVisit && !self.recallMenu.isVisible && ![Rover shared].modalViewController) {
-        [self.recallMenu show:YES completion:nil];
+        [self.recallMenu show];
     }
 }
 

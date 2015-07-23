@@ -59,11 +59,9 @@ typedef NS_ENUM(NSInteger, RXRecallButtonPosition) {
  */
 - (void)hide:(BOOL)animated completion:(void (^)())completion;
 
-/** Shows itself from under the edge it was hidden under.
- 
- @param animated Boolean value indicating weather the action should be animated.
- @param completion Block to execute once the animation is complete.
+/** Shows itself from under the edge it was hidden under or the initialPosition if
+    it hasn't been displayed yet.
  */
-- (void)show:(BOOL)animated completion:(void (^)())completion;
+- (void)show;
 
 @end

@@ -55,6 +55,7 @@
         self.backdropView.alpha = .3;
         
         self.itemsArray = [NSMutableArray array];
+        
     }
     return self;
 }
@@ -233,6 +234,11 @@
                              }
                          }];
     }];
+    
+    // If there are no items the completion should still be called
+    if (self.itemCount == 0 && completion) {
+        completion();
+    }
 }
 
 - (void)collapse:(BOOL)animated completion:(void (^)())completion {
