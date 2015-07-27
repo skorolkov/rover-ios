@@ -123,15 +123,19 @@
 #pragma mark - RXRecallButton Action
 
 - (void)recallButtonClicked:(RXDraggableView *)draggableView {
-    [self.recallButton hide:YES completion:^{
-        [self presentModalForVisit:[Rover shared].currentVisit];
-    }];
+    [self presentModalForVisit:[Rover shared].currentVisit];
 }
 
 #pragma mark - Helper
 
 - (void)presentModalForVisit:(RVVisit *)visit {
-    [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
+    if (!self.recallButton.isVisible) {
+        [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
+    } else {
+        [self.recallButton hide:YES completion:^{
+            [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
+        }];
+    }
 }
 
 @end
