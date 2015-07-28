@@ -71,7 +71,9 @@
         return;
     }
     
-    _window.hidden = NO;
+    if (!UIInterfaceOrientationIsLandscape([UIApplication sharedApplication].statusBarOrientation)) {
+        _window.hidden = NO;
+    }
     
     _button = button;
     

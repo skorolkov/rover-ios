@@ -208,7 +208,8 @@ static Rover *sharedInstance = nil;
     }
     
     _window = [[UIWindow alloc] initWithFrame:frame];
-    _window.hidden = NO;
+    //_window.hidden = NO;
+    [_window makeKeyAndVisible];
     [_window setRootViewController:[RXFixedViewController new]];
     [_window.rootViewController presentViewController:_modalViewController animated:YES completion:nil];
     

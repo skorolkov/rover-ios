@@ -291,7 +291,7 @@
 }
 
 - (void)showBackdrop {
-    UIWindow *currentWindow = [UIApplication sharedApplication].keyWindow;
+    UIWindow *currentWindow = (UIWindow *)self.superview; //[UIApplication sharedApplication].keyWindow;
     self.backdropView.frame = currentWindow.bounds;
     CGFloat originalAlpha = self.backdropView.alpha;
     self.backdropView.alpha = 0;

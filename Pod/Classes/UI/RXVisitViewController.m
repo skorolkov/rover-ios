@@ -277,4 +277,18 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     return YES;
 }
 
+#pragma mark - Orientation
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 @end

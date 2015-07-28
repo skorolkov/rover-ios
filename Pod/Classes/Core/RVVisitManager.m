@@ -93,17 +93,17 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
                     [self movedToRegions:newTouchpointRegions];
                 }
                 
-                [_expirationTimer invalidate];
+                [self invalidateExpirationTimer];
                 
                 return;
             }
             
             if (_expirationTimer) {
-                [_expirationTimer invalidate];
+                [self invalidateExpirationTimer];
                 [self expireVisit];
             }
             
-            _expirationTimer = nil;
+            //_expirationTimer = nil;
             
             [self createVisitWithBeaconRegions:regions];
         }];
@@ -246,6 +246,7 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
 - (void)startExpirationTimerWithInterval:(NSTimeInterval)timeInterval force:(BOOL)force {
     if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground && !force) {
         [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kApplicationInactiveWhileTimerValid];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
         [self executeOnMainQueue:^{
             _expirationTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(expireVisit) userInfo:nil repeats:NO];
@@ -256,6 +257,8 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
 - (void)invalidateExpirationTimer {
     [_expirationTimer invalidate];
     _expirationTimer = nil;
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kApplicationInactiveWhileTimerValid];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)expireVisit {
@@ -264,17 +267,20 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
             [self.delegate visitManager:self didExpireVisit:self.latestVisit];
         }];
     }
-    _expirationTimer = nil;
+    //_expirationTimer = nil;
+    [self invalidateExpirationTimer];
 }
 
 #pragma mark - UIApplicationStateNotifications
 
 - (void)applicationDidEnterBackground:(NSNotification *)note {
     if (_expirationTimer) {
-        // store the last beacon detection timestamp
-        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kApplicationInactiveWhileTimerValid];
         // cancel timer
         [self invalidateExpirationTimer];
+        // store the last beacon detection timestamp
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kApplicationInactiveWhileTimerValid];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
     } else {
         [[NSUserDefaults standardUserDefaults] removeObjectForKey:kApplicationInactiveWhileTimerValid];
     }
