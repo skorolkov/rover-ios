@@ -46,9 +46,11 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
         [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[_tableView]|" options:0 metrics:nil views:views]];
         
         // Account for status bar
-        [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
+        self.automaticallyAdjustsScrollViewInsets = NO;
         self.tableView.delaysContentTouches = NO;
         self.tableView.opaque = NO;
+        [self.tableView setContentInset:UIEdgeInsetsMake(20, 0, 0, 0)];
+        [self.tableView setContentOffset:CGPointMake(0, -20)];
     }
     return self;
 }
@@ -59,6 +61,8 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.tableView registerClass:[RXCardViewCell class] forCellReuseIdentifier:cellReuseIdentifier];
+    
+    
 }
 
 - (void)dismissViewControllerAnimated:(BOOL)flag completion:(void (^)(void))completion {
@@ -271,6 +275,20 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
         }
     }
     return YES;
+}
+
+#pragma mark - Orientation
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end

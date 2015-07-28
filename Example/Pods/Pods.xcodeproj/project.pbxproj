@@ -41,6 +41,7 @@
 		39763372E946A1DDCD545FE1 /* SDWebImageDownloaderOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 552784EF713D880F33C0540B /* SDWebImageDownloaderOperation.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		3BF986BC3B1B54CD5F3EFE12 /* RXImageEffects.h in Headers */ = {isa = PBXBuildFile; fileRef = F0168D1A2482EF5990BADA3F /* RXImageEffects.h */; };
 		3CC44D9D5DE4174FA5E67CD0 /* NSData+ImageContentType.m in Sources */ = {isa = PBXBuildFile; fileRef = 967B901319572733AB0DCEE3 /* NSData+ImageContentType.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
+		3D85352C1B5D89A100E31477 /* RXFixedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D85352B1B5D89A100E31477 /* RXFixedViewController.m */; };
 		3E5114C6AA38DC7C3E5D7961 /* UIView+WebCacheOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 37078A5D149E8AEFAEF8B4F6 /* UIView+WebCacheOperation.h */; };
 		40264E0F64BB85EE944DCD25 /* RVViewDefinition.m in Sources */ = {isa = PBXBuildFile; fileRef = 2B1902E990D56F407B37A98A /* RVViewDefinition.m */; };
 		40AD768ADE81A68424BF011F /* Pods-Rover-Rover-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A19A4622D6999E142A561EC4 /* Pods-Rover-Rover-dummy.m */; };
@@ -280,6 +281,8 @@
 		37078A5D149E8AEFAEF8B4F6 /* UIView+WebCacheOperation.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIView+WebCacheOperation.h"; path = "SDWebImage/UIView+WebCacheOperation.h"; sourceTree = "<group>"; };
 		38B81D67163CF5DD94530377 /* RXCloseButton.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = RXCloseButton.m; sourceTree = "<group>"; };
 		3D5EE06502EAB9E603841972 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		3D85352A1B5D89A100E31477 /* RXFixedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RXFixedViewController.h; sourceTree = "<group>"; };
+		3D85352B1B5D89A100E31477 /* RXFixedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RXFixedViewController.m; sourceTree = "<group>"; };
 		3EAF522CD62A5EA21C1C8328 /* SDWebImageCompat.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SDWebImageCompat.h; path = SDWebImage/SDWebImageCompat.h; sourceTree = "<group>"; };
 		475FD2341246DB571B04ACA7 /* RVImageBlock.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = RVImageBlock.h; sourceTree = "<group>"; };
 		4870ED01DA231DF61AEFFCF6 /* Pods-Rover-RSBarcodes-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Rover-RSBarcodes-dummy.m"; sourceTree = "<group>"; };
@@ -624,6 +627,8 @@
 				0866592053D54FE61AFC33B9 /* RXUpArrow.m */,
 				9E083C22B39F6FF058A7C67F /* RXVisitViewController.h */,
 				DE9EF9BD3FD6C64C3ED82632 /* RXVisitViewController.m */,
+				3D85352A1B5D89A100E31477 /* RXFixedViewController.h */,
+				3D85352B1B5D89A100E31477 /* RXFixedViewController.m */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1314,6 +1319,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B47F6B3B8F2CD6662CC56011 /* Pods-Rover-dummy.m in Sources */,
+				3D85352C1B5D89A100E31477 /* RXFixedViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

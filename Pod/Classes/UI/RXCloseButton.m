@@ -24,7 +24,7 @@ CGFloat const kHeight = 22.0;
 }
 
 - (CGSize)intrinsicContentSize {
-    return CGSizeMake(kWidth, kHeight);
+    return CGSizeMake(40, 40);
 }
 
 - (void)drawRect:(CGRect)rect

@@ -44,11 +44,8 @@
     _anchoredEdge = RXDraggableSnappedEdgeBottom;
 }
 
-
 - (void)didMoveToSuperview {
     _animator = [[UIDynamicAnimator alloc] initWithReferenceView:self.superview];
-    
-
 }
 
 - (void)setSnapToCorners:(BOOL)snapToCorners {
@@ -89,7 +86,6 @@
 {
     UITouch *touch = [touches anyObject];
     CGPoint currentPositionInView = [touch locationInView:self];
-     
 
     if (!_moved) {
         [_animator removeAllBehaviors];
