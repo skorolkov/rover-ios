@@ -137,7 +137,7 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
                 }];
                 
                 //[self performSelectorOnMainThread:@selector(startExpirationTimerWithInterval:) withObject:[NSNumber numberWithDouble:self.latestVisit.keepAlive] waitUntilDone:NO];
-                [self startExpirationTimerWithInterval:self.latestVisit.keepAlive];
+                [self startExpirationTimerWithInterval:self.latestVisit.keepAlive force:NO];
             }
             
             // Delegate
@@ -243,8 +243,8 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
     }
 }
 
-- (void)startExpirationTimerWithInterval:(NSTimeInterval)timeInterval {
-    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground) {
+- (void)startExpirationTimerWithInterval:(NSTimeInterval)timeInterval force:(BOOL)force {
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground && !force) {
         [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kApplicationInactiveWhileTimerValid];
     } else {
         [self executeOnMainQueue:^{
@@ -299,7 +299,7 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
         // TOOD: consider what can happen if the visit is long gone, app terminated/or not, and the user comes back
         //       with 0 time remaining and expireVisit is called immedietely 
 
-        [self startExpirationTimerWithInterval:remainingTime];
+        [self startExpirationTimerWithInterval:remainingTime force:YES];
     }
 }
 

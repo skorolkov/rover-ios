@@ -59,6 +59,8 @@
  */
 - (void)didOpenApplicationDuringVisit:(RVVisit *)visit;
 
+/** Called when a rover notitication is swiped.
+ */
 - (void)didReceiveRoverNotificationWithUserInfo:(NSDictionary *)userInfo;
 
 /** Called before the modal view controller is presented.

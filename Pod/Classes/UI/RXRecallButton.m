@@ -22,47 +22,12 @@
 @interface _RXWindow : UIWindow
 @end
 @implementation _RXWindow
-- (instancetype)initWithFrame:(CGRect)frame {
-    if (self = [super initWithFrame:frame]) {
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
-    }
-    return self;
-}
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *test = [super hitTest:point withEvent:event];
     if (test == self) {
         return nil;
     }
     return test;
-}
-- (void)orientationChanged:(NSNotification *)note {
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    
-    [self setTransform:[self transformForOrientation:orientation]];
-    self.frame = [UIApplication sharedApplication].keyWindow.frame;
-}
-#define DegreesToRadians(degrees) (degrees * M_PI / 180)
-
-- (CGAffineTransform)transformForOrientation:(UIInterfaceOrientation)orientation {
-    
-    switch (orientation) {
-            
-        case UIInterfaceOrientationLandscapeLeft:
-            return CGAffineTransformMakeRotation(-DegreesToRadians(90));
-            
-        case UIInterfaceOrientationLandscapeRight:
-            return CGAffineTransformMakeRotation(DegreesToRadians(90));
-            
-        case UIInterfaceOrientationPortraitUpsideDown:
-            return CGAffineTransformMakeRotation(DegreesToRadians(180));
-            
-        case UIInterfaceOrientationPortrait:
-        default:
-            return CGAffineTransformMakeRotation(DegreesToRadians(0));
-    }
 }
 @end
 
@@ -90,8 +55,14 @@
         _window = [[_RXWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
         _window.windowLevel = UIWindowLevelAlert;
         _window.opaque = NO;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(orientationChanged:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
     }
     return self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)showButton:(RXRecallButton *)button {
@@ -182,6 +153,15 @@
                              completion();
                          }
                      }];
+}
+
+- (void)orientationChanged:(NSNotification *)note {
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIInterfaceOrientationIsLandscape(orientation) && !_window.hidden) {
+        _window.hidden = YES;
+    } else if (_window.hidden && _button.isVisible) {
+        _window.hidden = NO;
+    }
 }
 
 @end
