@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import <UIKit/UIKit.h>
 
 #import "RVConfig.h"
 #import "RoverDelegate.h"

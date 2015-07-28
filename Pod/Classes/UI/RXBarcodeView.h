@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "RVBarcodeBlock.h"
-@import UIKit;
 
 /** A view that can display barcodes with extra attributed label underneath/
  */
