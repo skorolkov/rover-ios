@@ -210,12 +210,17 @@
 #pragma mark - Utility Methods
 
 - (void)createBlur {
-    UIViewController* rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
-    UIView *view = rootViewController.view;
-    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, 0);
-    [view drawViewHierarchyInRect:view.bounds afterScreenUpdates:YES];
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+//    UIViewController* rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+//    UIView *view = nil;//rootViewController.view;
+//    UIGraphicsBeginImageContextWithOptions(view.bounds.size, YES, 0);
+//    
+//    UIView *snapshotView = [[UIScreen mainScreen] snapshotViewAfterScreenUpdates:YES];
+//    [view drawViewHierarchyInRect:[UIScreen mainScreen].bounds afterScreenUpdates:YES];
+//    //[snapshotView drawViewHierarchyInRect:[UIScreen mainScreen].bounds afterScreenUpdates:YES];
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+
+    UIImage *image = [self screenshot];
     
     image = [RXImageEffects applyBlurWithRadius:self.backdropBlurRadius tintColor:self.backdropTintColor saturationDeltaFactor:1 maskImage:nil toImage:image];
 
@@ -240,6 +245,46 @@
     [UIView animateWithDuration:.3 animations:^{
         _backgroundImageView.alpha = 1;
     }];
+}
+
+- (UIImage *)screenshot {
+    CGSize imageSize = CGSizeZero;
+    
+    UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+    if (UIInterfaceOrientationIsPortrait(orientation)) {
+        imageSize = [UIScreen mainScreen].bounds.size;
+    } else {
+        imageSize = CGSizeMake([UIScreen mainScreen].bounds.size.height, [UIScreen mainScreen].bounds.size.width);
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    for (UIWindow *window in [[UIApplication sharedApplication] windows]) {
+        CGContextSaveGState(context);
+        CGContextTranslateCTM(context, window.center.x, window.center.y);
+        CGContextConcatCTM(context, window.transform);
+        CGContextTranslateCTM(context, -window.bounds.size.width * window.layer.anchorPoint.x, -window.bounds.size.height * window.layer.anchorPoint.y);
+        if (orientation == UIInterfaceOrientationLandscapeLeft) {
+            CGContextRotateCTM(context, M_PI_2);
+            CGContextTranslateCTM(context, 0, -imageSize.width);
+        } else if (orientation == UIInterfaceOrientationLandscapeRight) {
+            CGContextRotateCTM(context, -M_PI_2);
+            CGContextTranslateCTM(context, -imageSize.height, 0);
+        } else if (orientation == UIInterfaceOrientationPortraitUpsideDown) {
+            CGContextRotateCTM(context, M_PI);
+            CGContextTranslateCTM(context, -imageSize.width, -imageSize.height);
+        }
+        if ([window respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
+            [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
+        } else {
+            [window.layer renderInContext:context];
+        }
+        CGContextRestoreGState(context);
+    }
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
 }
 
 - (void)checkVisibilityOfCell:(UITableViewCell *)cell inScrollView:(UIScrollView *)scrollView
@@ -339,7 +384,11 @@
     _minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:touchpoints.count - 1];
     _minIndexPathSection = touchpoints.count - 1;
     
-    if (self.isViewLoaded && self.view.window) {
+    NSInteger numberOfTouchpointsWithCards = [touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
+        return [self nonDeletedCardsFromCardsArray:touchpoint.cards].count > 0;
+    }]].count;
+    
+    if (self.isViewLoaded && self.view.window && numberOfTouchpointsWithCards > 0) {
         [self dropPill];
     }
 }

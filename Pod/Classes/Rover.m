@@ -19,6 +19,8 @@
 @property (nonatomic, strong) UIViewController *modalViewController;
 @property (nonatomic, strong) UIWindow *window;
 
+@property (nonatomic, strong) UIWindow *applicationKeyWindow;
+
 @end
 
 @implementation Rover {
@@ -207,9 +209,11 @@ static Rover *sharedInstance = nil;
         frame = CGRectMake(0, 0, frame.size.height, frame.size.width);
     }
     
+    // safety net in case our window becomes key for whatever reason
+    _applicationKeyWindow = [UIApplication sharedApplication].keyWindow;
+    
     _window = [[UIWindow alloc] initWithFrame:frame];
-    //_window.hidden = NO;
-    [_window makeKeyAndVisible];
+    _window.hidden = NO;
     [_window setRootViewController:[RXFixedViewController new]];
     [_window.rootViewController presentViewController:_modalViewController animated:YES completion:nil];
     
@@ -419,6 +423,8 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)visitViewControllerWillGetDismissed:(RXVisitViewController *)viewController {
+    [_applicationKeyWindow makeKeyWindow];
+    _applicationKeyWindow = nil;
     if ([self.delegate respondsToSelector:@selector(roverWillDismissModalViewController:)]) {
         [self.delegate roverWillDismissModalViewController:viewController];
     }

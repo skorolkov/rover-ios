@@ -35,6 +35,12 @@
  */
 - (RVCard *)cardAtIndexPath:(NSIndexPath *)indexPath;
 
+/** Returns a filtered array of RVCard objects that have isDeleted set to NO.
+ 
+ @param cards An NSArray of RVCard objects to filter.
+ */
+- (NSArray *)nonDeletedCardsFromCardsArray:(NSArray *)cards;
+
 /** Adds an array of touchpoints to the touchpoints array.
  */
 - (void)addTouchpoints:(NSArray *)touchpoints;
