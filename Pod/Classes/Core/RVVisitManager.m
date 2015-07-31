@@ -16,6 +16,7 @@
 #import "RVTouchpoint.h"
 #import "RVCustomer.h"
 
+NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhileTimerValid";
 
 @interface RVVisitManager () <RVRegionManagerDelegate>
 
@@ -37,8 +38,16 @@
         
         _regionManager = [RVRegionManager new];
         _regionManager.delegate = self;
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidFinishLaunching:) name:UIApplicationDidFinishLaunchingNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidEnterBackground:) name:UIApplicationDidEnterBackgroundNotification object:nil];
     }
     return  self;
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - Instance methods
@@ -84,17 +93,17 @@
                     [self movedToRegions:newTouchpointRegions];
                 }
                 
-                [_expirationTimer invalidate];
+                [self invalidateExpirationTimer];
                 
                 return;
             }
             
             if (_expirationTimer) {
-                [_expirationTimer invalidate];
+                [self invalidateExpirationTimer];
                 [self expireVisit];
             }
             
-            _expirationTimer = nil;
+            //_expirationTimer = nil;
             
             [self createVisitWithBeaconRegions:regions];
         }];
@@ -127,7 +136,8 @@
                     [exitedTouchpoints addObject:touchpoint];
                 }];
                 
-                [self performSelectorOnMainThread:@selector(startExpirationTimer) withObject:nil waitUntilDone:NO];
+                //[self performSelectorOnMainThread:@selector(startExpirationTimerWithInterval:) withObject:[NSNumber numberWithDouble:self.latestVisit.keepAlive] waitUntilDone:NO];
+                [self startExpirationTimerWithInterval:self.latestVisit.keepAlive force:NO];
             }
             
             // Delegate
@@ -233,16 +243,69 @@
     }
 }
 
-- (void)startExpirationTimer {
-    _expirationTimer = [NSTimer scheduledTimerWithTimeInterval:self.latestVisit.keepAlive target:self selector:@selector(expireVisit) userInfo:nil repeats:NO];
+- (void)startExpirationTimerWithInterval:(NSTimeInterval)timeInterval force:(BOOL)force {
+    if ([UIApplication sharedApplication].applicationState == UIApplicationStateBackground && !force) {
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kApplicationInactiveWhileTimerValid];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
+        [self executeOnMainQueue:^{
+            _expirationTimer = [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(expireVisit) userInfo:nil repeats:NO];
+        }];
+    }
+}
+
+- (void)invalidateExpirationTimer {
+    [_expirationTimer invalidate];
+    _expirationTimer = nil;
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kApplicationInactiveWhileTimerValid];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (void)expireVisit {
     if ([self.delegate respondsToSelector:@selector(visitManager:didExpireVisit:)]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
+        [self executeOnMainQueue:^{
             [self.delegate visitManager:self didExpireVisit:self.latestVisit];
-        });
-        _expirationTimer = nil;
+        }];
+    }
+    //_expirationTimer = nil;
+    [self invalidateExpirationTimer];
+}
+
+#pragma mark - UIApplicationStateNotifications
+
+- (void)applicationDidEnterBackground:(NSNotification *)note {
+    if (_expirationTimer) {
+        // cancel timer
+        [self invalidateExpirationTimer];
+        // store the last beacon detection timestamp
+        [[NSUserDefaults standardUserDefaults] setObject:@YES forKey:kApplicationInactiveWhileTimerValid];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
+    } else {
+        [[NSUserDefaults standardUserDefaults] removeObjectForKey:kApplicationInactiveWhileTimerValid];
+    }
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)note {
+    [self applicationDidOpen];
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)note {
+    [self applicationDidOpen];
+}
+
+- (void)applicationDidOpen {
+    BOOL applicationExitedWhileTimerValid = [[[NSUserDefaults standardUserDefaults] objectForKey:kApplicationInactiveWhileTimerValid] boolValue];
+    
+    if (applicationExitedWhileTimerValid && self.latestVisit) {
+        // read the last beacon detection date
+        NSTimeInterval elapsedTime = [[NSDate date] timeIntervalSinceDate:self.latestVisit.beaconLastDetectedAt];
+        NSTimeInterval remainingTime = MAX(2, self.latestVisit.keepAlive - elapsedTime);
+        // start the timer back up
+        // TOOD: consider what can happen if the visit is long gone, app terminated/or not, and the user comes back
+        //       with 0 time remaining and expireVisit is called immedietely 
+
+        [self startExpirationTimerWithInterval:remainingTime force:YES];
     }
 }
 

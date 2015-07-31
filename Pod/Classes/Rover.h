@@ -7,9 +7,10 @@
 
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
+#import <UIKit/UIKit.h>
 
 #import "RVConfig.h"
-//#import "RoverDelegate.h"
+#import "RoverDelegate.h"
 
 // Core
 #import "RVLog.h"
@@ -45,9 +46,6 @@
 #import "RVMessageFeedExperience.h" // or convenience
 #import "RVNearbyExperience.h" // for convenience
 
-@protocol RoverDelegate;
-
-@class RVConfig;
 
 /** The Rover class it the primary interface to the SDK. All properties and methods are invoked on the class itself. There is no reason to instantiate a Rover instance.
  */
@@ -115,10 +113,6 @@
     swipes a Rover delivered notification.
  */
 - (BOOL)handleDidReceiveLocalNotification:(UILocalNotification *)notification;
-
-/** Convenience method to find the current view controller
- */
-+ (UIViewController *)findCurrentViewController:(UIViewController *)vc;
 
 @end
 

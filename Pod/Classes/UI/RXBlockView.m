@@ -305,47 +305,17 @@
 
 #pragma mark - CloseButton Action
 
-+ (void)closeMe:(id)sender {
-    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    UIViewController *currentViewController = [self findCurrentViewController:rootViewController];
-    [currentViewController dismissViewControllerAnimated:YES completion:nil];
++ (void)closeMe:(UIButton *)sender {
+    RXBlockView *blockview = (RXBlockView *)sender.superview.superview;
+    if ([blockview.delegate respondsToSelector:@selector(closeButtonPressedFromBlockView:)]) {
+        [blockview.delegate closeButtonPressedFromBlockView:blockview];
+    }
 }
 
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
     return YES;
-}
-
-#pragma mark - Class Helpers
-
-+ (UIViewController *)findCurrentViewController:(UIViewController *)vc {
-    if (vc.presentedViewController) {
-        return [self findCurrentViewController:vc.presentedViewController];
-    } else if ([vc isKindOfClass:[UISplitViewController class]]) {
-        UISplitViewController *svc = (UISplitViewController *)vc;
-        if (svc.viewControllers.count > 0) {
-            return [self findCurrentViewController:svc.viewControllers.lastObject];
-        } else {
-            return vc;
-        }
-    } else if ([vc isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *nvc = (UINavigationController *)vc;
-        if (nvc.viewControllers.count > 0) {
-            return [self findCurrentViewController:nvc.topViewController];
-        } else {
-            return vc;
-        }
-    } else if ([vc isKindOfClass:[UITabBarController class]]) {
-        UITabBarController *tbc = (UITabBarController *)vc;
-        if (tbc.viewControllers.count > 0) {
-            return [self findCurrentViewController:tbc.selectedViewController];
-        } else {
-            return vc;
-        }
-    } else {
-        return vc;
-    }
 }
 
 @end

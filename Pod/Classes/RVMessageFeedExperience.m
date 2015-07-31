@@ -7,13 +7,11 @@
 //
 
 #import "RVMessageFeedExperience.h"
-#import "Rover.h"
 #import <SDWebImage/UIImageView+WebCache.h>
 
 @interface RVMessageFeedExperience ()
 
-@property (nonatomic, strong) RXRecallButton *recallButton;
-@property (nonatomic, strong) RXModalTransition *modalTransitionManager;
+
 
 @end
 
@@ -22,8 +20,6 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-
-        
         self.modalTransitionManager = [RXModalTransition new];
     }
     return self;
@@ -36,7 +32,7 @@
     
     UIImageView *avatarImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 64, 64)];
     _recallButton = [[RXRecallButton alloc] initWithCustomView:avatarImageView initialPosition:RXRecallButtonPositionBottomRight];
-    [_recallButton addTarget:self action:@selector(draggableViewClicked:) forControlEvents:UIControlEventTouchUpInside];
+    [_recallButton addTarget:self action:@selector(recallButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
     [avatarImageView sd_setImageWithURL:[Rover shared].currentVisit.organization.avatarURL];
     
@@ -65,7 +61,7 @@
     } else {
         // Otherwise if the modal is not open show the recall button
         if (!self.recallButton.isVisible) {
-            [self.recallButton show:YES completion:nil];
+            [self.recallButton show];
         }
     }
     
@@ -106,7 +102,7 @@
 }
 
 - (void)roverDidDismissModalViewController {
-    [self.recallButton show:YES completion:nil];
+    [self.recallButton show];
 }
 
 - (void)roverVisitDidExpire:(RVVisit *)visit {
@@ -120,26 +116,26 @@
 
 - (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
     if ([Rover shared].currentVisit && !self.recallButton.isVisible && ![Rover shared].modalViewController) {
-        [self.recallButton show:YES completion:nil];
+        [self.recallButton show];
     }
 }
 
-#pragma mark - RXDraggableViewDelegate
+#pragma mark - RXRecallButton Action
 
-- (void)draggableViewClicked:(RXDraggableView *)draggableView {
-    [self.recallButton hide:YES completion:^{
-        [self presentModalForVisit:[Rover shared].currentVisit];
-    }];
+- (void)recallButtonClicked:(RXDraggableView *)draggableView {
+    [self presentModalForVisit:[Rover shared].currentVisit];
 }
 
 #pragma mark - Helper
 
 - (void)presentModalForVisit:(RVVisit *)visit {
-    [self.recallButton hide:self.recallButton.isVisible completion:^{
+    if (!self.recallButton.isVisible) {
         [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
-    }];
+    } else {
+        [self.recallButton hide:YES completion:^{
+            [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
+        }];
+    }
 }
-
-
 
 @end

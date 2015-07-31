@@ -8,6 +8,8 @@
 
 #import "Rover.h"
 
+#import "RXFixedViewController.h"
+
 @interface Rover () <RVVisitManagerDelegate, RXVisitViewControllerDelegate>
 
 @property (readonly, strong, nonatomic) RVConfig *config;
@@ -15,6 +17,9 @@
 @property (nonatomic, strong) RVVisit *currentVisit;
 @property (nonatomic, strong) id<RoverDelegate> defaultDelegate;
 @property (nonatomic, strong) UIViewController *modalViewController;
+@property (nonatomic, strong) UIWindow *window;
+
+@property (nonatomic, strong) UIWindow *applicationKeyWindow;
 
 @end
 
@@ -50,35 +55,6 @@ static Rover *sharedInstance = nil;
         NSLog(@"%@ warning shared called before setup:", self);
     }
     return sharedInstance;
-}
-
-+ (UIViewController *)findCurrentViewController:(UIViewController *)vc {
-    if (vc.presentedViewController) {
-        return [Rover findCurrentViewController:vc.presentedViewController];
-    } else if ([vc isKindOfClass:[UISplitViewController class]]) {
-        UISplitViewController *svc = (UISplitViewController *)vc;
-        if (svc.viewControllers.count > 0) {
-            return [Rover findCurrentViewController:svc.viewControllers.lastObject];
-        } else {
-            return vc;
-        }
-    } else if ([vc isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *nvc = (UINavigationController *)vc;
-        if (nvc.viewControllers.count > 0) {
-            return [Rover findCurrentViewController:nvc.topViewController];
-        } else {
-            return vc;
-        }
-    } else if ([vc isKindOfClass:[UITabBarController class]]) {
-        UITabBarController *tbc = (UITabBarController *)vc;
-        if (tbc.viewControllers.count > 0) {
-            return [Rover findCurrentViewController:tbc.selectedViewController];
-        } else {
-            return vc;
-        }
-    } else {
-        return vc;
-    }
 }
 
 #pragma mark - Properties
@@ -224,9 +200,22 @@ static Rover *sharedInstance = nil;
         [((RXModalViewController *)_modalViewController) setBackdropTintColor:self.config.modalBackdropTintColor];
     }
     
-    UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-    UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
-    [currentViewController presentViewController:_modalViewController animated:YES completion:nil];
+    //UIViewController *rootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+    //UIViewController *currentViewController = [Rover findCurrentViewController:rootViewController];
+    //[currentViewController presentViewController:_modalViewController animated:YES completion:nil];
+    
+    CGRect frame = [UIScreen mainScreen].bounds;
+    if (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation)) {
+        frame = CGRectMake(0, 0, frame.size.height, frame.size.width);
+    }
+    
+    // safety net in case our window becomes key for whatever reason
+    _applicationKeyWindow = [UIApplication sharedApplication].keyWindow;
+    
+    _window = [[UIWindow alloc] initWithFrame:frame];
+    _window.hidden = NO;
+    [_window setRootViewController:[RXFixedViewController new]];
+    [_window.rootViewController presentViewController:_modalViewController animated:YES completion:nil];
     
     // Delegate
     if ([self.delegate respondsToSelector:@selector(roverDidDisplayModalViewController:)]) {
@@ -353,16 +342,24 @@ static Rover *sharedInstance = nil;
 #pragma mark - Application Notifications
 
 - (void)applicationDidFinishLaunching:(NSNotification *)note {
-    [self didOpenApplication];
+    // This async is needed because a UIWindow without a rootViewController may be added
+    // at this point. There is no error, but this is just to silence the warning and also
+    // differ any experience logic till after the launch
     
-    UILocalNotification *localNotification = [note.userInfo objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-    if (localNotification) {
-        [self handleDidReceiveLocalNotification:localNotification];
-    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self didOpenApplication];
+        
+        UILocalNotification *localNotification = [note.userInfo objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+        if (localNotification) {
+            [self handleDidReceiveLocalNotification:localNotification];
+        }
+    });
 }
 
 - (void)applicationWillEnterForeground:(NSNotification *)note {
-    [self didOpenApplication];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self didOpenApplication];
+    });
 }
 
 - (void)didOpenApplication {
@@ -417,6 +414,8 @@ static Rover *sharedInstance = nil;
 
 - (void)visitViewControllerDidGetDismissed:(RXVisitViewController *)viewController {
     _modalViewController = nil;
+    _window.rootViewController = nil;
+    _window = nil;
     
     if ([self.delegate respondsToSelector:@selector(roverDidDismissModalViewController)]) {
         [self.delegate roverDidDismissModalViewController];
@@ -424,6 +423,8 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)visitViewControllerWillGetDismissed:(RXVisitViewController *)viewController {
+    [_applicationKeyWindow makeKeyWindow];
+    _applicationKeyWindow = nil;
     if ([self.delegate respondsToSelector:@selector(roverWillDismissModalViewController:)]) {
         [self.delegate roverWillDismissModalViewController:viewController];
     }

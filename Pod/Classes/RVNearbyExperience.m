@@ -7,14 +7,11 @@
 //
 
 #import "RVNearbyExperience.h"
-#import "Rover.h"
 #import <SDWebImage/UIButton+WebCache.h>
 
 @interface RVNearbyExperience ()
 
-@property (nonatomic, strong) RXRecallMenu *recallMenu;
 @property (nonatomic, strong) NSMutableDictionary *menuItemsDictionary;
-@property (nonatomic, strong) RXModalTransition *modalTransition;
 @property (nonatomic, strong) RVTouchpoint *openedTouchpoint;
 
 @end
@@ -46,7 +43,7 @@
     }
     
     if (!self.recallMenu.isVisible && ![Rover shared].modalViewController) {
-        [self.recallMenu show:YES completion:nil];
+        [self.recallMenu show];
     }
     
 
@@ -79,12 +76,13 @@
     }
     
     if (self.recallMenu.itemCount == 0) {
+        [self.recallMenu collapse:YES completion:nil];
         [self.recallMenu hide:YES completion:nil];
     }
 }
 
 - (void)roverDidDismissModalViewController {
-    [self.recallMenu show:YES completion:nil];
+    [self.recallMenu show];
 }
 
 - (void)roverVisitDidExpire:(RVVisit *)visit {
@@ -121,8 +119,8 @@
 }
 
 - (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
-    if ([Rover shared].currentVisit && !self.recallMenu.isVisible && ![Rover shared].modalViewController) {
-        [self.recallMenu show:YES completion:nil];
+    if ([Rover shared].currentVisit && !self.recallMenu.isVisible && ![Rover shared].modalViewController && [Rover shared].currentVisit.currentTouchpoints.count > 0) {
+        [self.recallMenu show];
     }
 }
 

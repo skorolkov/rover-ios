@@ -126,11 +126,12 @@
             _scrollViewHeightConstraint.constant = -[block heightForWidth:self.view.frame.size.width];
             
         } else if ([block class] == [RVButtonBlock class] && idx == _viewDefinition.blocks.count - 1) {
-            blockView.delegate = self;
             [self addBottomStickyBlockView:blockView];
         } else {
             [self addBlockView:blockView];
         }
+        
+        blockView.delegate = self;
     }];
     // TODO: move this stuff out
     
@@ -238,6 +239,24 @@
     } else {
         return YES;
     }
+}
+
+- (void)closeButtonPressedFromBlockView:(RXBlockView *)blockview {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Orientation
+
+- (BOOL)shouldAutorotate {
+    return NO;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
+}
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 @end
