@@ -119,8 +119,7 @@
 }
 
 - (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
-    // this needs to check for current touchpoints
-    if ([Rover shared].currentVisit && !self.recallMenu.isVisible && ![Rover shared].modalViewController) {
+    if ([Rover shared].currentVisit && !self.recallMenu.isVisible && ![Rover shared].modalViewController && [Rover shared].currentVisit.currentTouchpoints.count > 0) {
         [self.recallMenu show];
     }
 }
