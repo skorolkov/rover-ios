@@ -21,6 +21,10 @@
     return [[CLLocation alloc] initWithLatitude:self.latitude.doubleValue longitude:self.longitude.doubleValue];
 }
 
+- (CLCircularRegion *)circularRegion {
+    return [[CLCircularRegion alloc] initWithCenter:[self CLLocation].coordinate radius:self.radius.doubleValue identifier:self.ID];
+}
+
 - (NSURL *)avatarURL {
     if (!_avatarURL) {
         return nil;

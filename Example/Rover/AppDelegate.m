@@ -22,7 +22,7 @@
     RVConfig *config = [RVConfig defaultConfig];
     
     // In sandbox mode visit analytics arent tracked
-    config.sandboxMode = YES;
+    config.sandboxMode = NO;
     
     //config.experience = RVExperienceRetail;
     

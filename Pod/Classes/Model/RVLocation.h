@@ -20,7 +20,9 @@
 @property (nonatomic, strong) NSNumber *longitude;
 @property (nonatomic, strong) NSNumber *radius;
 @property (nonatomic, strong) NSURL *avatarURL;
+@property (nonatomic, strong) NSNumber *majorNumber;
 
 - (CLLocation *)CLLocation;
+- (CLCircularRegion *)circularRegion;
 
 @end

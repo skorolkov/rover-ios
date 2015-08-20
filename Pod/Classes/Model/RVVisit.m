@@ -80,6 +80,10 @@ static RVVisit *_latestVisit;
 #pragma mark - Properties
 
 - (BOOL)isAlive {
+    if (self.isGeofenceTriggered) {
+        return self.currentTouchpoints.count > 0 || !self.locationEntered;
+    }
+    
     NSDate *now = [NSDate date];
     NSTimeInterval elapsed = [now timeIntervalSinceDate:self.beaconLastDetectedAt];
     return elapsed < self.keepAlive;
@@ -137,6 +141,10 @@ static RVVisit *_latestVisit;
 {
     return [self.UUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString]
         && [self.majorNumber isEqualToNumber:beaconRegion.major];
+}
+
+- (BOOL)isInLocationWithIdentifier:(NSString *)identifier {
+    return [self.location.ID isEqualToString:identifier];
 }
 
 - (BOOL)isInTouchpointRegion:(CLBeaconRegion *)beaconRegion {

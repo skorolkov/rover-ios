@@ -120,6 +120,12 @@
     }
 }
 
+- (void)roverDidCreateVisit:(RVVisit *)visit {
+    if (visit.isGeofenceTriggered && [UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
+        [[Rover shared] presentLocalNotification:@"Attract Message" userInfo:nil];
+    }
+}
+
 #pragma mark - RXRecallButton Action
 
 - (void)recallButtonClicked:(RXDraggableView *)draggableView {

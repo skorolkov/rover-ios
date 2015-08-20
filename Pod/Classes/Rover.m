@@ -10,7 +10,7 @@
 
 #import "RXFixedViewController.h"
 
-@interface Rover () <RVVisitManagerDelegate, RXVisitViewControllerDelegate>
+@interface Rover () <RVVisitManagerDelegate, RXVisitViewControllerDelegate, RVCircularRegionManagerDataSource>
 
 @property (readonly, strong, nonatomic) RVConfig *config;
 @property (nonatomic, strong) RVVisitManager *visitManager;
@@ -20,6 +20,8 @@
 @property (nonatomic, strong) UIWindow *window;
 
 @property (nonatomic, strong) UIWindow *applicationKeyWindow;
+
+@property (nonatomic, strong) NSArray *geofences;
 
 @end
 
@@ -113,6 +115,7 @@ static Rover *sharedInstance = nil;
         
         _visitManager = [RVVisitManager new];
         _visitManager.delegate = self;
+        _visitManager.circularRegionManager.dataSource = self;
         
         if (config.serverURL) {
             RVNetworkingManager *networkingManager = [RVNetworkingManager sharedManager];
@@ -151,10 +154,12 @@ static Rover *sharedInstance = nil;
 
 - (void)startMonitoring {
     [_visitManager.regionManager startMonitoring];
+    [_visitManager.circularRegionManager startMonitoring];
 }
 
 - (void)stopMonitoring {
     [_visitManager.regionManager stopMonitoring];
+    [_visitManager.circularRegionManager stopMonitoring];
 }
 
 - (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor duration:(NSTimeInterval)duration
@@ -330,6 +335,12 @@ static Rover *sharedInstance = nil;
     
     [[RVNetworkingManager sharedManager] postVisit:visit];
     
+    if (!visit.ID) {
+        // TODO: add delegate fail method
+        
+        return NO;
+    }
+    
     // Delegate
     if ([self.delegate respondsToSelector:@selector(roverDidCreateVisit:)]) {
         [self.delegate roverDidCreateVisit:visit];
@@ -338,6 +349,25 @@ static Rover *sharedInstance = nil;
     return YES;
 }
 
+#pragma mark - RVCircularRegionManagerDataSource
+
+- (NSArray *)circularRegionManager:(RVCircularRegionManager *)manager regionsNearCoordinates:(CLLocationCoordinate2D)coordinates {
+    return _geofences;
+}
+
+- (void)circularRegionManager:(RVCircularRegionManager *)manager didUpdateLocation:(CLLocation *)location {
+    [[RVNetworkingManager sharedManager] getLocationsNearLatitude:location.coordinate.latitude
+                                                        longitude:location.coordinate.latitude
+                                                       completion:^(NSArray *locations) {
+                                                           NSMutableArray *array = [NSMutableArray array];
+                                                           for (RVLocation *location in locations) {
+                                                               [array addObject:location.circularRegion];
+                                                           }
+                                                           _geofences = [NSArray arrayWithArray:array];
+                                                           
+                                                           [_visitManager.circularRegionManager restartMonitoring];
+                                                       }];
+}
 
 #pragma mark - Application Notifications
 

@@ -34,7 +34,11 @@
 
 /** An NSArray of specific CLBeaconRegions the manager is currenly monitoring for.
  */
-@property (nonatomic, readonly, strong) NSArray *specificRegions;
+@property (nonatomic, readonly) NSArray *specificRegions;
+
+
+@property (nonatomic, readonly) NSSet *monitoredRegions;
+
 
 /** Begin monitoring for beacon regions with set UUID.
  */

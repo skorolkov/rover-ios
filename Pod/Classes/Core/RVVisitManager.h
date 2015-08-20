@@ -12,6 +12,7 @@
 @class RVLocation;
 @class RVTouchpoint;
 @class RVRegionManager;
+@class RVCircularRegionManager;
 @protocol RVVisitManagerDelegate;
 
 /** This class does the heavy lifting of managing a journey through beacon regions.
@@ -25,6 +26,10 @@
 /** The region manager that is responsible for monitoring and ranging for beacons.
  */
 @property (strong, nonatomic, readonly) RVRegionManager *regionManager;
+
+/** The region manager that is responsible for monitoring for geofences.
+ */
+@property (strong, nonatomic, readonly) RVCircularRegionManager *circularRegionManager;
 
 /** The latest visit object seen by the visit manager.
  */
@@ -45,6 +50,14 @@
  @param visit The visit instance that is to be created.
  */
 - (BOOL)visitManager:(RVVisitManager *)manager shouldCreateVisit:(RVVisit *)visit;
+
+/** Called when the user enters a geofence.
+ 
+ @param manager The visit manager instance thats calling the delegate method.
+ @param location The location that was potentially entered.
+ @param visit The visit instance associated with the user's visit this location.
+ */
+- (void)visitManager:(RVVisitManager *)manager didPotentiallyEnterLocation:(RVLocation *)location visit:(RVVisit *)visit;
 
 /** Called when the user enters the location.
  

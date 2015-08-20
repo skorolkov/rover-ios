@@ -52,6 +52,7 @@
              @"customer": @"customer",
              @"timestamp": @"timestamp",
              @"simulate": @"simulate",
+             @"locationId": @"locationIdentifier",
              
              @"device": @":RVSystemInfo.platform",
              @"operatingSystem": @":RVSystemInfo.systemName",
@@ -117,7 +118,8 @@
              @"latitude": @"latitude",
              @"longitude": @"longitude",
              @"radius": @"radius",
-             @"avatarURL": @"avatarUrl"};
+             @"avatarURL": @"avatarUrl",
+             @"majorNumber": @"majorNumber"};
 }
 
 - (NSDictionary *)valueTransformers {

@@ -28,9 +28,15 @@
  */
 - (void)sendRequestWithMethod:(NSString *)method path:(NSString *)path parameters:(NSDictionary *)parameters success:(void (^)(NSDictionary *data))success failure:(void (^)(NSError *error))failure;
 
-/** Posts a visit object to the Rover API server. This is a synchronous method and should always be called from a background thread.
+/** Posts a visit object to the Rover API server. 
+ 
+    @warning This is a synchronous method and should always be called from a background thread.
  */
 - (void)postVisit:(RVVisit *)visit;
+
+/** Gets a list of location objects from the Rover API.
+ */
+- (void)getLocationsNearLatitude:(double)latitude longitude:(double)longitude completion:(void(^)(NSArray *locations))completion;
 
 /** Posts an event to the Rover API server. The event param must be of format ":object.:action".
  */

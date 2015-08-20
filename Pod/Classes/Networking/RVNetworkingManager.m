@@ -8,6 +8,7 @@
 
 #import "RVNetworkingManager.h"
 #import "RVVisit.h"
+#import "RVLocation.h"
 
 #import "RVMapper.h"
 
@@ -167,7 +168,7 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
 
 - (void)postVisit:(RVVisit *)visit {
     // Need a synchronous call
-    dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
+    __block dispatch_semaphore_t semaphore = dispatch_semaphore_create(0);
     
     [self sendRequestWithMethod:@"POST" path:@"visits" parameters:[self.mapper JSONfromObject:visit] success:^(NSDictionary *data) {
         NSDictionary *JSON = [data objectForKey:@"visit"];
@@ -180,13 +181,38 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
         dispatch_semaphore_signal(semaphore);
     } failure:^(NSError *error) {
         NSString *reason = [error.userInfo objectForKey:NSLocalizedDescriptionKey];
-        NSLog(@"ROVER-ERROR: Post /visits failed: %@", reason);
+        NSLog(@"ROVER-ERROR: POST /visits failed: %@", reason);
 
         
         dispatch_semaphore_signal(semaphore);
     }];
     
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+}
+
+#pragma mark - Locations Nearby
+
+- (void)getLocationsNearLatitude:(double)latitude longitude:(double)longitude completion:(void(^)(NSArray *locations))completion {
+    __block NSMutableArray *array = [NSMutableArray array];
+    
+    [self sendRequestWithMethod:@"GET" path:@"locations" parameters:@{@"latitude": @(latitude), @"longitude": @(longitude)} success:^(NSDictionary *data) {
+        NSArray *JSONCollection = [data objectForKey:@"locations"];
+        
+        if (JSONCollection) {
+            for (NSDictionary *JSON in JSONCollection) {
+                RVLocation *location = [RVLocation new];
+                [self.mapper mapJSON:JSON toObject:location];
+                [array addObject:location];
+            }
+        }
+        if (completion) {
+            completion(array);
+        }
+        
+    } failure:^(NSError *error) {
+        NSString *reason = [error.userInfo objectForKey:NSLocalizedDescriptionKey];
+        NSLog(@"ROVER-ERROR: GET /locations failed: %@", reason);
+    }];
 }
 
 #pragma mark - Event Tracking

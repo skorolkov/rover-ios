@@ -16,6 +16,7 @@
 @property (strong, nonatomic) CLLocationManager *specificLocationManager;
 @property (strong, nonatomic) NSDate *beaconDetectedAt;
 @property (nonatomic, strong) NSSet *currentRegions;
+@property (nonatomic, readonly) NSSet *specificallyMonitoredRegions;
 
 @end
 
@@ -59,6 +60,20 @@
     [self setupBeaconRegions];
 }
 
+- (NSSet *)monitoredRegions {
+    NSPredicate *beaconRegionPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        return [evaluatedObject isKindOfClass:[CLBeaconRegion class]];
+    }];
+    return [_locationManager.monitoredRegions filteredSetUsingPredicate:beaconRegionPredicate];
+}
+
+- (NSSet *)specificallyMonitoredRegions {
+    NSPredicate *specificRegionPredicate = [NSPredicate predicateWithBlock:^BOOL(CLBeaconRegion *beaconRegion, NSDictionary *bindings) {
+        return beaconRegion.major != nil;
+    }];
+    return [self.monitoredRegions filteredSetUsingPredicate:specificRegionPredicate];
+}
+
 #pragma mark - Initialization
 
 - (id)init {
@@ -92,10 +107,10 @@
 }
 
 - (void)stopMonitoring {
-    [self.beaconRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, NSUInteger idx, BOOL *stop) {
+    for (CLBeaconRegion *beaconRegion in self.monitoredRegions) {
         [self.locationManager stopRangingBeaconsInRegion:beaconRegion];
         [self.locationManager stopMonitoringForRegion:beaconRegion];
-    }];
+    }
 }
 
 - (void)startMonitoringForRegions:(NSArray *)regions {
@@ -104,12 +119,22 @@
         beaconRegion.notifyEntryStateOnDisplay = YES;
         [_specificLocationManager startMonitoringForRegion:beaconRegion];
     }];
+    
+    
+    //NSLog(@"monitored regions total: %@", _locationManager.monitoredRegions);
+    
+    //NSLog(@"monitored regions: %@", self.monitoredRegions);
 }
 
 - (void)stopMonitoringForAllSpecificRegions {
-    [_specificRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, NSUInteger idx, BOOL *stop) {
+    for (CLBeaconRegion *beaconRegion in self.specificallyMonitoredRegions) {
         [_specificLocationManager stopMonitoringForRegion:beaconRegion];
-    }];
+    }
+    
+//    [_specificRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, NSUInteger idx, BOOL *stop) {
+//        [_specificLocationManager stopMonitoringForRegion:beaconRegion];
+//        NSLog(@"THIS GUY GOT CALLED ----- - - -- - - -- - - - - ");
+//    }];
     _specificRegions = nil;
 }
 
