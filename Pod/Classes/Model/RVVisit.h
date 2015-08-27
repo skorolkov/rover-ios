@@ -38,6 +38,7 @@
 @property (strong, nonatomic) RVCustomer *customer;
 @property (strong, nonatomic) NSArray *touchpoints;
 @property (nonatomic, readonly) NSSet *wildcardTouchpoints;
+@property (nonatomic, readonly) NSSet *geofenceTouchpoints;
 
 @property (nonatomic, assign) BOOL locationEntered;
 @property (nonatomic, assign) BOOL isGeofenceTriggered;

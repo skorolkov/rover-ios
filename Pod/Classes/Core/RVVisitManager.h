@@ -12,7 +12,7 @@
 @class RVLocation;
 @class RVTouchpoint;
 @class RVRegionManager;
-@class RVCircularRegionManager;
+@class RVGeofenceManager;
 @protocol RVVisitManagerDelegate;
 
 /** This class does the heavy lifting of managing a journey through beacon regions.
@@ -29,7 +29,7 @@
 
 /** The region manager that is responsible for monitoring for geofences.
  */
-@property (strong, nonatomic, readonly) RVCircularRegionManager *circularRegionManager;
+@property (strong, nonatomic, readonly) RVGeofenceManager *geofenceManager;
 
 /** The latest visit object seen by the visit manager.
  */

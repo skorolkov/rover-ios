@@ -14,9 +14,33 @@
 
 @property (nonatomic, strong) RVVisitManager *visitManager;
 
+
 @end
 
+@interface RVVisitManager ()
+@property (nonatomic, strong) RVVisit *latestVisit;
+@end
+
+@interface RVRegionManager ()
+
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (strong, nonatomic) CLLocationManager *specificLocationManager;
+@property (strong, nonatomic) NSDate *beaconDetectedAt;
+@property (nonatomic, strong) NSSet *currentRegions;
+@property (nonatomic, readonly) NSSet *specificallyMonitoredRegions;
+
+@end
+
+
+
+
+
 @interface DebugViewController ()
+
+
+@property (nonatomic, weak) IBOutlet UITextView *textView;
+
+@property (nonatomic, strong) NSTimer *timer;
 
 @end
 
@@ -24,7 +48,7 @@
 
 - (void)viewDidLoad {
 
-
+    _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(updateRegionsList) userInfo:nil repeats:YES];
 }
 
 - (IBAction)simulateButtonPressed:(id)sender {
@@ -40,7 +64,12 @@
     //[[Rover shared] presentModalWithTouchpoints:[Rover shared].currentVisit.visitedTouchpoints];
     NSLog(@" - - - BeaconRegions: %@", [Rover shared].visitManager.regionManager.monitoredRegions);
     
-    NSLog(@" - - - GeofenceRegions: %@", [Rover shared].visitManager.circularRegionManager.monitoredRegions);
+    NSLog(@" - - - GeofenceRegions: %@", [Rover shared].visitManager.geofenceManager.monitoredRegions);
+    
+}
+
+- (void)updateRegionsList {
+    self.textView.text = [NSString stringWithFormat:@" - - - BeaconRegions - - - \n%@\n\n - - - GeofenceRegions - - - \n%@\n", [Rover shared].visitManager.regionManager.monitoredRegions, [Rover shared].visitManager.geofenceManager.monitoredRegions];
 }
 
 @end

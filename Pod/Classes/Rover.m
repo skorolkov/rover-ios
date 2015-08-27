@@ -10,7 +10,7 @@
 
 #import "RXFixedViewController.h"
 
-@interface Rover () <RVVisitManagerDelegate, RXVisitViewControllerDelegate, RVCircularRegionManagerDataSource>
+@interface Rover () <RVVisitManagerDelegate, RXVisitViewControllerDelegate, RVGeofenceManagerDataSource>
 
 @property (readonly, strong, nonatomic) RVConfig *config;
 @property (nonatomic, strong) RVVisitManager *visitManager;
@@ -28,6 +28,7 @@
 @implementation Rover {
     RVCustomer *_customer;
     id<RoverDelegate> _delegate;
+    NSArray *_geofences;
 }
 
 #pragma mark - Class methods
@@ -71,7 +72,7 @@ static Rover *sharedInstance = nil;
 }
 
 - (RVVisit *)currentVisit {
-    if (_currentVisit && _visitManager.regionManager.currentRegions.count > 0) {
+    if (_currentVisit && (_visitManager.regionManager.currentRegions.count > 0 || _visitManager.geofenceManager.currentRegions.count > 0)) {
         CLBeaconRegion *beaconRegion = _visitManager.regionManager.currentRegions.anyObject;
         if ([_currentVisit isInLocationRegion:beaconRegion]) {
             return _currentVisit;
@@ -106,6 +107,25 @@ static Rover *sharedInstance = nil;
     _delegate = delegate;
 }
 
+- (NSArray *)geofences {
+    if (_geofences) {
+        return _geofences;
+    }
+    
+    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:@"GEO"];
+    NSArray *geofences = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    _geofences = geofences;
+    
+    return _geofences;
+}
+
+- (void)setGeofences:(NSArray *)geofences {
+    _geofences = geofences;
+    
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:geofences];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:@"GEO"];
+}
+
 #pragma mark - Initialization
 
 - (instancetype)initWithConfig:(RVConfig *)config {
@@ -115,7 +135,7 @@ static Rover *sharedInstance = nil;
         
         _visitManager = [RVVisitManager new];
         _visitManager.delegate = self;
-        _visitManager.circularRegionManager.dataSource = self;
+        _visitManager.geofenceManager.dataSource = self;
         
         if (config.serverURL) {
             RVNetworkingManager *networkingManager = [RVNetworkingManager sharedManager];
@@ -154,12 +174,12 @@ static Rover *sharedInstance = nil;
 
 - (void)startMonitoring {
     [_visitManager.regionManager startMonitoring];
-    [_visitManager.circularRegionManager startMonitoring];
+    [_visitManager.geofenceManager startMonitoring];
 }
 
 - (void)stopMonitoring {
     [_visitManager.regionManager stopMonitoring];
-    [_visitManager.circularRegionManager stopMonitoring];
+    [_visitManager.geofenceManager stopMonitoring];
 }
 
 - (void)simulateBeaconWithUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor duration:(NSTimeInterval)duration
@@ -349,13 +369,20 @@ static Rover *sharedInstance = nil;
     return YES;
 }
 
-#pragma mark - RVCircularRegionManagerDataSource
+#pragma mark - RVGeofenceManagerDataSource
 
-- (NSArray *)circularRegionManager:(RVCircularRegionManager *)manager regionsNearCoordinates:(CLLocationCoordinate2D)coordinates {
-    return _geofences;
+- (NSArray *)geofenceManager:(RVGeofenceManager *)manager regionsNearCoordinates:(CLLocationCoordinate2D)coordinates {
+    return self.geofences;
 }
 
-- (void)circularRegionManager:(RVCircularRegionManager *)manager didUpdateLocation:(CLLocation *)location {
+- (void)geofenceManager:(RVGeofenceManager *)manager didUpdateLocation:(CLLocation *)location {
+    if (self.currentVisit) {
+        return;
+    }
+    [self getLocationsNear:location];
+}
+
+- (void)getLocationsNear:(CLLocation *)location {
     [[RVNetworkingManager sharedManager] getLocationsNearLatitude:location.coordinate.latitude
                                                         longitude:location.coordinate.latitude
                                                        completion:^(NSArray *locations) {
@@ -363,9 +390,9 @@ static Rover *sharedInstance = nil;
                                                            for (RVLocation *location in locations) {
                                                                [array addObject:location.circularRegion];
                                                            }
-                                                           _geofences = [NSArray arrayWithArray:array];
+                                                           self.geofences = [NSArray arrayWithArray:array];
                                                            
-                                                           [_visitManager.circularRegionManager restartMonitoring];
+                                                           [_visitManager.geofenceManager restartMonitoring];
                                                        }];
 }
 

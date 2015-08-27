@@ -1,0 +1,1 @@
+../../../../../Pod/Classes/Core/RVGeofenceManager.h

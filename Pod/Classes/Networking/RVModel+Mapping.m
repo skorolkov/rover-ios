@@ -164,6 +164,8 @@
     return @{@"trigger": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
                                 if ([inputValue isEqualToString:@"beacon"]) {
                                     return [NSNumber numberWithInteger:RVTouchpointTriggerMinorNumber];
+                                } else if ([inputValue isEqualToString:@"geofence"]) {
+                                    return [NSNumber numberWithInteger:RVTouchpointTriggerGeofence];
                                 } else {
                                     return [NSNumber numberWithInteger:RVTouchpointTriggerVisit];
                                 }

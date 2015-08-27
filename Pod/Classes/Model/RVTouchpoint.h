@@ -13,7 +13,8 @@
 
 typedef NS_ENUM(NSInteger, RVTouchpointTrigger) {
     RVTouchpointTriggerMinorNumber = 1,
-    RVTouchpointTriggerVisit = 2
+    RVTouchpointTriggerVisit = 2,
+    RVTouchpointTriggerGeofence = 3
 };
 
 @interface RVTouchpoint : RVModel

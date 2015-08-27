@@ -62,22 +62,35 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Monitored Regions are displayed here..." translatesAutoresizingMaskIntoConstraints="NO" id="q9y-Qb-QJR">
+                                <rect key="frame" x="16" y="72" width="343" height="575"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="q9y-Qb-QJR" firstAttribute="top" secondItem="1lN-Sw-4ez" secondAttribute="bottom" constant="8" id="CEQ-Nr-81K"/>
+                            <constraint firstAttribute="trailing" secondItem="q9y-Qb-QJR" secondAttribute="trailing" constant="16" id="Ph9-Tv-ICp"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="q9y-Qb-QJR" secondAttribute="bottom" constant="20" id="Pw8-Mu-Yw7"/>
                             <constraint firstItem="1lN-Sw-4ez" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="Pyu-7v-Z8k"/>
                             <constraint firstAttribute="trailing" secondItem="1lN-Sw-4ez" secondAttribute="trailing" id="b33-8p-Ikh"/>
                             <constraint firstAttribute="centerX" secondItem="uAe-xP-4iH" secondAttribute="centerX" constant="0.5" id="bCB-5B-lM2"/>
                             <constraint firstItem="1lN-Sw-4ez" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="-20" id="evh-b0-mBc"/>
+                            <constraint firstItem="q9y-Qb-QJR" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="16" id="pL8-h6-Omc"/>
                             <constraint firstAttribute="centerY" secondItem="uAe-xP-4iH" secondAttribute="centerY" constant="-0.5" id="xYP-Yw-zfy"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Debug" image="spanner-7" id="GxC-G4-pLq"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="textView" destination="q9y-Qb-QJR" id="13l-Cb-UYA"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="321" y="-860"/>
+            <point key="canvasLocation" x="320.5" y="-860.5"/>
         </scene>
     </scenes>
     <resources>

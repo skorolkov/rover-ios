@@ -27,6 +27,7 @@ NSString *const kRVVisitManagerLatestVisitVersionKey = @"_roverVersion";
 
 @property (nonatomic, strong) NSMutableArray *mVisitedTouchpoints;
 @property (nonatomic, strong) NSSet *wildcardTouchpoints;
+@property (nonatomic, strong) NSSet *geofenceTouchpoints;
 
 @end
 
@@ -81,7 +82,7 @@ static RVVisit *_latestVisit;
 
 - (BOOL)isAlive {
     if (self.isGeofenceTriggered) {
-        return self.currentTouchpoints.count > 0 || !self.locationEntered;
+        return self.currentTouchpoints.count > 0;// || !self.locationEntered;
     }
     
     NSDate *now = [NSDate date];
@@ -191,6 +192,17 @@ static RVVisit *_latestVisit;
         return touchpoint.trigger == RVTouchpointTriggerVisit;
     }]]];
     return _wildcardTouchpoints;
+}
+
+- (NSSet *)geofenceTouchpoints {
+    if (_geofenceTouchpoints) {
+        return _geofenceTouchpoints;
+    }
+    
+    _geofenceTouchpoints = [NSSet setWithArray:[self.touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
+        return touchpoint.trigger == RVTouchpointTriggerGeofence;
+    }]]];
+    return _geofenceTouchpoints;
 }
 
 - (NSArray *)visitedTouchpoints

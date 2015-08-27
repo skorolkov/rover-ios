@@ -16,7 +16,7 @@
 #import "RVLog.h"
 #import "RVRegionManager.h"
 #import "RVVisitManager.h"
-#import "RVCircularRegionManager.h"
+#import "RVGeofenceManager.h"
 
 // Model
 #import "RVModel.h"

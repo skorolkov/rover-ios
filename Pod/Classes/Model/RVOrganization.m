@@ -39,7 +39,7 @@
 
 
 - (id)initWithCoder:(NSCoder *)decoder {
-    if((self = [self init])) {
+    if((self = [super initWithCoder:decoder])) {
         self.title = [decoder decodeObjectForKey:@"title"];
         self.avatarURL = [decoder decodeObjectForKey:@"avatarURL"];
     }

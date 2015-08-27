@@ -17,11 +17,11 @@
 #import "RVLocation.h"
 
 #import "RVRegionManager.h"
-#import "RVCircularRegionManager.h"
+#import "RVGeofenceManager.h"
 
 NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhileTimerValid";
 
-@interface RVVisitManager () <RVRegionManagerDelegate, RVCircularRegionManagerDelegate>
+@interface RVVisitManager () <RVRegionManagerDelegate, RVGeofenceManagerDelegate>
 
 @property (strong, nonatomic) RVVisit *latestVisit;
 @property (strong, nonatomic) NSTimer *expirationTimer;
@@ -44,8 +44,8 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
         _regionManager = [RVRegionManager new];
         _regionManager.delegate = self;
         
-        _circularRegionManager = [[RVCircularRegionManager alloc] init];
-        _circularRegionManager.delegate = self;
+        _geofenceManager = [[RVGeofenceManager alloc] init];
+        _geofenceManager.delegate = self;
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidFinishLaunching:) name:UIApplicationDidFinishLaunchingNotification object:nil];
@@ -125,6 +125,8 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
                             }];
                         }
                     }
+                    
+                    // TODO: save visit to disk
                 }
                 
                 // Touchpoint check
@@ -174,7 +176,6 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
             if (manager.currentRegions.count == 0) {
                 // Reset the keepAlive timer
                 self.latestVisit.beaconLastDetectedAt = [NSDate date];
-                [RVVisit setLatestVisit:self.latestVisit];
                 
                 // Exit all wildcard touchpoints
                 
@@ -182,7 +183,7 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
                 
                 if (!self.latestVisit.isGeofenceTriggered) {
                 
-                    [self.latestVisit.wildcardTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
+                    [self.latestVisit.geofenceTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
                         [self.latestVisit removeFromCurrentTouchpoints:touchpoint];
                         [exitedTouchpoints addObject:touchpoint];
                     }];
@@ -191,6 +192,8 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
                     [self startExpirationTimerWithInterval:self.latestVisit.keepAlive force:NO];
                 
                 }
+                
+                [RVVisit setLatestVisit:self.latestVisit];
             }
             
             // Delegate
@@ -214,12 +217,13 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
     }];
 }
 
-#pragma mark - RVCircularRegionManagerDelegate
+#pragma mark - RVGeofenceManagerDelegate
 
-- (void)circularRegionManager:(RVCircularRegionManager *)manager didEnterRegion:(CLCircularRegion *)region {
+- (void)geofenceManager:(RVGeofenceManager *)manager didEnterRegion:(CLCircularRegion *)region {
+    CLCircularRegion *_region = [region copy];
     [_operationQueue addOperationWithBlock:^{
         if (self.latestVisit && self.latestVisit.isAlive) {
-            if ([self.latestVisit isInLocationWithIdentifier:region.identifier]) {
+            if ([self.latestVisit isInLocationWithIdentifier:_region.identifier]) {
                 return;
             }
             
@@ -237,16 +241,18 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
             [self expireVisit];
         }
         
-        [self createVisitWithCircularRegion:region];
+        [self createVisitWithCircularRegion:_region];
     }];
 }
 
-- (void)circularRegionManager:(RVCircularRegionManager *)manager didExitRegion:(CLCircularRegion *)region {
+- (void)geofenceManager:(RVGeofenceManager *)manager didExitRegion:(CLCircularRegion *)region {
+    CLCircularRegion *_region = [region copy];
     [_operationQueue addOperationWithBlock:^{
         
         // TOOD: if the location was never entered, should delete that visit so when the user opens
         // their app they dont enter that location/trigger the visit
-        if (self.latestVisit && self.latestVisit.isAlive && [self.latestVisit isInLocationWithIdentifier:region.identifier] && self.latestVisit.locationEntered) {
+        
+        if (self.latestVisit && self.latestVisit.isAlive && [self.latestVisit isInLocationWithIdentifier:_region.identifier]) {
             
             // TODO: exit all touchpoints
             
@@ -274,6 +280,8 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
             }
             
             [self stopMonitoringForVisit];
+            
+            [RVVisit setLatestVisit:self.latestVisit];
             
             // expire visit
             [self expireVisit];
@@ -343,8 +351,6 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
         if ([UIApplication sharedApplication].applicationState == UIApplicationStateActive) {
             //[self enterLocation];
             
-            self.latestVisit.locationEntered = YES;
-            
             // Delegate
             if ([self.delegate respondsToSelector:@selector(visitManager:didEnterLocation:visit:)]) {
                 [self executeOnMainQueue:^{
@@ -352,21 +358,36 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
                 }];
             }
             
-            // Enter all wildcard touchpoints
-            if (![self.latestVisit.currentTouchpoints containsObject:self.latestVisit.wildcardTouchpoints.anyObject]) {
-                // Enter all wildcard touchpoints
-                [self.latestVisit.wildcardTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
-                    [self.latestVisit addToCurrentTouchpoints:touchpoint];
-                }];
-                
-                // Delegate
-                if ([self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoints:visit:)]) {
-                    [self executeOnMainQueue:^{
-                        [self.delegate visitManager:self didEnterTouchpoints:self.latestVisit.wildcardTouchpoints.allObjects visit:self.latestVisit];
-                    }];
-                }
-            }
+//            // Enter all wildcard touchpoints
+//            if (![self.latestVisit.currentTouchpoints containsObject:self.latestVisit.wildcardTouchpoints.anyObject]) {
+//                // Enter all wildcard touchpoints
+//                [self.latestVisit.wildcardTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
+//                    [self.latestVisit addToCurrentTouchpoints:touchpoint];
+//                }];
+//                
+//                // Delegate
+//                if ([self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoints:visit:)]) {
+//                    [self executeOnMainQueue:^{
+//                        [self.delegate visitManager:self didEnterTouchpoints:self.latestVisit.wildcardTouchpoints.allObjects visit:self.latestVisit];
+//                    }];
+//                }
+//            }
             
+        }
+        
+        // Enter all geofence touchpoints
+        if (![self.latestVisit.currentTouchpoints containsObject:self.latestVisit.geofenceTouchpoints.anyObject]) {
+            // Enter all wildcard touchpoints
+            [self.latestVisit.geofenceTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
+                [self.latestVisit addToCurrentTouchpoints:touchpoint];
+            }];
+            
+            // Delegate
+            if ([self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoints:visit:)]) {
+                [self executeOnMainQueue:^{
+                    [self.delegate visitManager:self didEnterTouchpoints:self.latestVisit.geofenceTouchpoints.allObjects visit:self.latestVisit];
+                }];
+            }
         }
     
         [self startMonitoringForVisit:self.latestVisit];
@@ -453,23 +474,25 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
     // Stop monitoring for all geofences except for the fence for current location
     // So that exiting the fence is still monitored by the os.
     
-    [_circularRegionManager stopMonitoring];
+    [_geofenceManager stopMonitoring];
     
     [_regionManager stopMonitoringForAllSpecificRegions];
     
     
-    [_circularRegionManager startMonitoringForRegion:visit.location.circularRegion];
     
     // Monitor for all known touchpoint specific beacons so app can wake up when
     // device comes in range during visit
     
     [_regionManager startMonitoringForRegions:self.latestVisit.observableRegions];
+    
+    
+    [_geofenceManager startMonitoringForRegion:visit.location.circularRegion];
 }
 
 - (void)stopMonitoringForVisit {
     [_regionManager stopMonitoringForAllSpecificRegions];
-    [_circularRegionManager stopMonitoring];
-    [_circularRegionManager startMonitoring];
+    [_geofenceManager stopMonitoring];
+    [_geofenceManager startMonitoring];
 }
 
 #pragma mark - UIApplicationStateNotifications
@@ -529,18 +552,18 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
         }
         
         
-        // Enter all wildcard touchpoints
-        if (![self.latestVisit.currentTouchpoints containsObject:self.latestVisit.wildcardTouchpoints.anyObject]) {
-            // Enter all wildcard touchpoints
-            [self.latestVisit.wildcardTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
-                [self.latestVisit addToCurrentTouchpoints:touchpoint];
-            }];
-            
-            // Delegate
-            if ([self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoints:visit:)]) {
-                [self.delegate visitManager:self didEnterTouchpoints:self.latestVisit.wildcardTouchpoints.allObjects visit:self.latestVisit];
-            }
-        }
+//        // Enter all wildcard touchpoints
+//        if (![self.latestVisit.currentTouchpoints containsObject:self.latestVisit.wildcardTouchpoints.anyObject]) {
+//            // Enter all wildcard touchpoints
+//            [self.latestVisit.wildcardTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
+//                [self.latestVisit addToCurrentTouchpoints:touchpoint];
+//            }];
+//            
+//            // Delegate
+//            if ([self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoints:visit:)]) {
+//                [self.delegate visitManager:self didEnterTouchpoints:self.latestVisit.wildcardTouchpoints.allObjects visit:self.latestVisit];
+//            }
+//        }
         
         [RVVisit setLatestVisit:self.latestVisit];
     }

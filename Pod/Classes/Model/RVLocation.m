@@ -56,7 +56,7 @@
 
 
 - (id)initWithCoder:(NSCoder *)decoder {
-    if((self = [self init])) {
+    if((self = [super initWithCoder:decoder])) {
         self.title = [decoder decodeObjectForKey:@"title"];
         self.address = [decoder decodeObjectForKey:@"address"];
         self.city = [decoder decodeObjectForKey:@"city"];
