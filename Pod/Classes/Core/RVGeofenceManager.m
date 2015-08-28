@@ -102,9 +102,6 @@ static NSString *const RVGeofenceManagerLastUpdatedLocationKey = @"RVGeofenceMan
     region.notifyOnEntry = YES;
     region.notifyOnExit = YES;
     [_locationManager startMonitoringForRegion:region];
-    
-    
-    NSLog(@"Now monitoring for (%lu) regions", (unsigned long)self.monitoredRegions.count);
 }
 
 - (void)startMonitoring {
@@ -126,7 +123,7 @@ static NSString *const RVGeofenceManagerLastUpdatedLocationKey = @"RVGeofenceMan
     
     // Check to see if we have exited or entered any regions
     if (regionsToMonitor.count > 0) {
-        [self startProcessing];
+        
     } else {
         if ([self.dataSource respondsToSelector:@selector(geofenceManager:didUpdateLocation:)]) {
             [self.dataSource geofenceManager:self didUpdateLocation:_locationManager.location];
@@ -148,126 +145,6 @@ static NSString *const RVGeofenceManagerLastUpdatedLocationKey = @"RVGeofenceMan
         [self startMonitoring];
         NSLog(@"restarted monitoring");
     }
-}
-
-- (void)startProcessing {
-//    if (_isProcessing) {
-//        return;
-//    }
-    
-    NSLog(@"Processing started");
-    
-    __block UIBackgroundTaskIdentifier processingTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
-        NSLog(@"Background task expired");
-        self.isProcessing = NO;
-        [_locationManager stopUpdatingLocation];
-        [_locationManager startMonitoringSignificantLocationChanges];
-        [[UIApplication sharedApplication] endBackgroundTask:processingTask];
-    }];
-    
-    // set state to processing
-    _isProcessing = YES;
-    
-    // Turn off significant location change monitoring so it doesnt wake app over the didEnter thread that may be already started and in process
-    [_locationManager stopMonitoringSignificantLocationChanges];
-    
-    // Turn on location updates for accuracy and so processing can happen in the background.
-    [_locationManager startUpdatingLocation];
-    
-    NSTimeInterval timeToLockCoordinates = 10 - 6;
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(timeToLockCoordinates * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [self process];
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            [_locationManager startMonitoringSignificantLocationChanges];
-            [[UIApplication sharedApplication] endBackgroundTask:processingTask];
-        });
-    });
-}
-
-- (void)process {
-    //self.processingTimer = [NSTimer scheduledTimerWithTimeInterval:6 target:self selector:@selector(failedProcessingGeofencesWithError:) userInfo:nil repeats:NO];
-    
-    if (!_isProcessing) {
-        return;
-    }
-    
-    NSLog(@"processing...");
-    
-    CLLocation *currentLocation = _locationManager.location;
-    
-    NSMutableOrderedSet *mutableCurrentRegions = [self.currentRegions mutableCopy];
-    
-    // Check for exited regions
-    
-    for (CLCircularRegion *region in self.currentRegions) {
-        if (![self location:currentLocation isInsideRegion:region generosity:0]) {
-            NSLog(@"Exited Region: %@", region);
-
-            [mutableCurrentRegions removeObject:region];
-            
-            // Delegate
-            [self.delegate geofenceManager:self didExitRegion:(CLCircularRegion *)region];
-        }
-    }
-    
-    // Check for entered regions
-    
-    NSArray *orderedRegions = [self.dataSource geofenceManager:self regionsNearCoordinates:_lastUpdatedLocation.coordinate];
-    
-    for (CLCircularRegion *region in orderedRegions) {
-        if ([self location:currentLocation isInsideRegion:region generosity:200] && ![self.currentRegions containsObject:region]) {
-            NSLog(@"Entered Region: %@", region);
-            
-            NSUInteger index = [self indexOfRegion:region location:currentLocation inSet:mutableCurrentRegions];
-            [mutableCurrentRegions insertObject:region atIndex:index];
-            
-            // Delegate
-            [self.delegate geofenceManager:self didEnterRegion:region];
-        }
-    }
-    
-    // finish
-    
-    [_locationManager stopUpdatingLocation];
-    
-    self.currentRegions = [NSOrderedSet orderedSetWithOrderedSet:mutableCurrentRegions];
-    [self persistCurrentRegions];
-    NSLog(@"processing ended");
-    _isProcessing = NO;
-}
-
-- (void)simulateMovingToCoordinate:(CLLocationCoordinate2D)coordinate {
-//    CLLocation *location = [[CLLocation alloc] initWithLatitude:coordinate.latitude longitude:coordinate.longitude];
-//    
-//    // Check for exited regions
-//    
-//    for (CLCircularRegion *region in self.currentRegions) {
-//        if (![self location:location isInsideRegion:region generosity:0]) {
-//            NSLog(@"Exited Region: %@", region);
-//            
-//            [self.currentRegions removeObject:region];
-//            
-//            // Delegate
-//            [self.delegate geofenceManager:self didExitRegion:(CLCircularRegion *)region];
-//        }
-//    }
-//    
-//    // Check for entered regions
-//    
-//    NSArray *orderedRegions = [self.dataSource geofenceManager:self regionsNearCoordinates:_lastUpdatedLocation.coordinate];
-//    
-//    for (CLCircularRegion *region in orderedRegions) {
-//        if ([self location:location isInsideRegion:region generosity:200] && ![self.currentRegions containsObject:region]) {
-//            NSLog(@"Entered Region: %@", region);
-//            
-//            NSUInteger index = [self indexOfRegion:region location:location inSet:];
-//            [self.currentRegions insertObject:region atIndex:index];
-//            
-//            // Delegate
-//            [self.delegate geofenceManager:self didEnterRegion:region];
-//        }
-//    }
 }
 
 #pragma mark - Helpers
@@ -313,30 +190,27 @@ static NSString *const RVGeofenceManagerLastUpdatedLocationKey = @"RVGeofenceMan
 
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
     if ([region isKindOfClass:[CLCircularRegion class]]) {
-        NSLog(@"woke up due to enter");
-        if (/*![self.currentRegions containsObject:region] &&*/ !_isProcessing) {
-            [_locationManager stopUpdatingLocation];
-            
-            NSArray *orderedRegions = [self.dataSource geofenceManager:self regionsNearCoordinates:_lastUpdatedLocation.coordinate];
-            if (orderedRegions.count == 0) {
-                return;
-            }
-            
-            [self startProcessing];
-        }
+        
+        NSLog(@"entered with accuracy: %@", manager.location);
+        NSLog(@"region: %@", region);
+        
+        NSMutableOrderedSet *mutableCurrentRegions = [self.currentRegions mutableCopy];
+        [mutableCurrentRegions insertObject:region atIndex:[self indexOfRegion:region location:_locationManager.location inSet:mutableCurrentRegions]];
+        self.currentRegions = [NSOrderedSet orderedSetWithOrderedSet:mutableCurrentRegions];
+        [self.delegate geofenceManager:self didEnterRegion:region];
     }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
     if ([region isKindOfClass:[CLCircularRegion class]]) {
-        NSLog(@"woke up due to exit");
-        [_locationManager stopUpdatingLocation];
         
-        if (self.currentRegions.count == 0) {
-            return;
-        }
+        NSLog(@"exited with accuracy: %@", manager.location);
+        NSLog(@"region: %@", region);
         
-        [self startProcessing];
+        NSMutableOrderedSet *mutableCurrentRegions = [self.currentRegions mutableCopy];
+        [mutableCurrentRegions removeObject:region];
+        self.currentRegions = [NSOrderedSet orderedSetWithOrderedSet:mutableCurrentRegions];
+        [self.delegate geofenceManager:self didExitRegion:region];
     }
 }
 
@@ -347,33 +221,24 @@ static NSString *const RVGeofenceManagerLastUpdatedLocationKey = @"RVGeofenceMan
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-    if (/*manager == _locationManager &&*/ !_isProcessing) { // Make sure this is called due to significantLocationMonitoring
-        
-        NSLog(@"Woke up due to significant change");
-        
-        // Telling the dataSource we updated location can restart monitoring and we dont want to do that if we are already in a location
-        if (self.currentRegions.count > 0) {
-            [self startProcessing];
-            return;
-        }
-//  TODO: this logic should be moved to the data source
-//        // Send updates every 10 KM
-//        if (nil != self.lastUpdatedLocation && [manager.location distanceFromLocation:self.lastUpdatedLocation] < 10000) {
-//            return;
-//        }
-        if (nil != self.lastUpdatedLocation && [manager.location isEqual:self.lastUpdatedLocation]) {
-            return;
-        }
-        
-        self.lastUpdatedLocation = manager.location;
-        
-        // Update monitored regions
-        if ([self.dataSource respondsToSelector:@selector(geofenceManager:didUpdateLocation:)]) {
-            [self.dataSource geofenceManager:self didUpdateLocation:manager.location];
-        }
-        
-        [self persistLastUpdatedLocation];
+
+    // Telling the dataSource we updated location can restart monitoring and we dont want to do that if we are already in a location
+    if (self.currentRegions.count > 0) {
+        return;
     }
+
+    if (nil != self.lastUpdatedLocation && [manager.location isEqual:self.lastUpdatedLocation]) {
+        return;
+    }
+    
+    self.lastUpdatedLocation = manager.location;
+    
+    // Update monitored regions
+    if ([self.dataSource respondsToSelector:@selector(geofenceManager:didUpdateLocation:)]) {
+        [self.dataSource geofenceManager:self didUpdateLocation:manager.location];
+    }
+    
+    [self persistLastUpdatedLocation];
 }
 
 @end

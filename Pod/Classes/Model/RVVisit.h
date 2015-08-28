@@ -55,6 +55,12 @@
 + (void)setLatestVisit:(RVVisit *)visit;
 + (void)clearLatestVisit;
 
+// TODO: use a category
++ (instancetype)cachedVisitWithIdentifier:(id<NSCopying>)identifier;
++ (void)setCachedVisit:(RVVisit *)visit withIdentifier:(id<NSCopying>)identifier;
++ (void)deleteCachedVisitWithIdentifier:(id<NSCopying>)identifier;
++ (void)clearCache;
+
 - (BOOL)isInLocationRegion:(CLBeaconRegion *)beaconRegion;
 - (BOOL)isInTouchpointRegion:(CLBeaconRegion *)beaconRegion;
 - (BOOL)isInLocationWithIdentifier:(NSString *)identifier;

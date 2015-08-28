@@ -47,10 +47,6 @@
  */
 - (void)startMonitoringForRegion:(CLCircularRegion *)region;
 
-/** Simulates moving to a coordinate. Will invoke delegate methods if necessary.
- */
-- (void)simulateMovingToCoordinate:(CLLocationCoordinate2D)coordinate;
-
 @end
 
 

@@ -328,4 +328,47 @@ static RVVisit *_latestVisit;
             self.UUID, self.majorNumber, self.timestamp, self.beaconLastDetectedAt, self.keepAlive];
 }
 
+#pragma mark - Caching
+
++ (instancetype)cachedVisitWithIdentifier:(id<NSCopying>)identifier {
+    return [[self cachedVisitsDictionary] objectForKey:identifier];
+}
+
++ (void)deleteCachedVisitWithIdentifier:(id<NSCopying>)identifier {
+    [[self cachedVisitsDictionary] removeObjectForKey:identifier];
+    [self persistCachedVisitsToDisk];
+}
+
++ (void)setCachedVisit:(RVVisit *)visit withIdentifier:(id<NSCopying>)identifier {
+    [[self cachedVisitsDictionary] setObject:visit forKey:identifier];
+    [self persistCachedVisitsToDisk];
+}
+
++ (void)clearCache {
+    [[self cachedVisitsDictionary] removeAllObjects];
+    [self persistCachedVisitsToDisk];
+}
+
++ (NSMutableDictionary *)cachedVisitsDictionary {
+    static NSMutableDictionary *visitsDictionary;
+    if (visitsDictionary) {
+        return visitsDictionary;
+    }
+    
+    NSData *visitsData = [[NSUserDefaults standardUserDefaults] objectForKey:@"RVCachedVisitsKey"];
+
+    if (visitsData) {
+        visitsDictionary = [NSKeyedUnarchiver unarchiveObjectWithData:visitsData];
+    } else {
+        visitsDictionary = [NSMutableDictionary dictionary];
+    }
+    
+    return visitsDictionary;
+}
+
++ (void)persistCachedVisitsToDisk {
+    NSData *visitsData = [NSKeyedArchiver archivedDataWithRootObject:[self cachedVisitsDictionary]];
+    [[NSUserDefaults standardUserDefaults] setObject:visitsData forKey:@"RVCachedVisitsKey"];
+}
+
 @end

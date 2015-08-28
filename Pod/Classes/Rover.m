@@ -379,6 +379,8 @@ static Rover *sharedInstance = nil;
     if (self.currentVisit) {
         return;
     }
+    // TODO: do a 15 KM check
+    //[RVVisit clearCache];
     [self getLocationsNear:location];
 }
 
