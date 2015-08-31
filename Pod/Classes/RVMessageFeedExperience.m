@@ -115,7 +115,7 @@
 }
 
 - (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
-    if ([Rover shared].currentVisit && !self.recallButton.isVisible && ![Rover shared].modalViewController) {
+    if (/*[Rover shared].currentVisit &&*/ !self.recallButton.isVisible && ![Rover shared].modalViewController) {
         [self.recallButton show];
     }
 }

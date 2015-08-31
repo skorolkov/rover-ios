@@ -72,11 +72,22 @@ static Rover *sharedInstance = nil;
 }
 
 - (RVVisit *)currentVisit {
-    if (_currentVisit && (_visitManager.regionManager.currentRegions.count > 0 || _visitManager.geofenceManager.currentRegions.count > 0)) {
-        CLBeaconRegion *beaconRegion = _visitManager.regionManager.currentRegions.anyObject;
-        if ([_currentVisit isInLocationRegion:beaconRegion]) {
-            return _currentVisit;
-        };
+    if (_currentVisit) {
+        if (_visitManager.regionManager.currentRegions.count > 0) {
+            CLBeaconRegion *beaconRegion = _visitManager.regionManager.currentRegions.anyObject;
+            if ([_currentVisit isInLocationRegion:beaconRegion]) {
+                return _currentVisit;
+            };
+        }
+        
+        if (_visitManager.geofenceManager.currentRegions.count > 0) {
+            for (CLCircularRegion *region in _visitManager.geofenceManager.currentRegions) {
+                if ([_currentVisit isInLocationWithIdentifier:region.identifier]) {
+                    return _currentVisit;
+                }
+            }
+        }
+
     }
     
     if (_visitManager.latestVisit.isAlive) {
@@ -268,14 +279,13 @@ static Rover *sharedInstance = nil;
     }
 }
 
+- (void)trackEvent:(NSString *)event params:(NSDictionary *)params visit:(RVVisit *)visit {
+    [[RVNetworkingManager sharedManager] trackEvent:event params:params visit:self.currentVisit];
+}
+
 #pragma mark - RVVisitManagerDelegate
 
 - (void)visitManager:(RVVisitManager *)manager didEnterLocation:(RVLocation *)location visit:(RVVisit *)visit {
-    // This should be the only place where we set this iVar
-    _currentVisit = visit;
-    
-    [[RVImagePrefetcher sharedImagePrefetcher] prefetchURLs:_currentVisit.allImageUrls];
-    
     [self trackEvent:@"location.enter" params:nil];
     
     // Delegate
@@ -307,18 +317,18 @@ static Rover *sharedInstance = nil;
     [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
         
         // Touchpoint Tracking
-        [self trackEvent:@"touchpoint.enter" params:@{@"touchpoint": touchpoint.ID}];
+        [self trackEvent:@"touchpoint.enter" params:@{@"touchpoint": touchpoint.ID} visit:visit];
         
         // Card Delivered Tracking
         [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
-            [self trackEvent:@"card.deliver" params:@{@"card": card.ID}];
+            [self trackEvent:@"card.deliver" params:@{@"card": card.ID} visit:visit];
         }];
         
         // Modal / Notification
         if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
 
             // Touchpoint Tracking
-            [self trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID}];
+            [self trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID} visit:visit];
         }
         
     }];
@@ -334,7 +344,7 @@ static Rover *sharedInstance = nil;
     
     // Touchpoint tracking
     [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
-        [self trackEvent:@"touchpoint.exit" params:@{@"touchpoint": touchpoint.ID}];
+        [self trackEvent:@"touchpoint.exit" params:@{@"touchpoint": touchpoint.ID} visit:visit];
     }];
     
     // Delegate
@@ -361,6 +371,11 @@ static Rover *sharedInstance = nil;
         return NO;
     }
     
+    _currentVisit = visit;
+    //dispatch_sync(dispatch_get_main_queue(), ^{
+        [[RVImagePrefetcher sharedImagePrefetcher] prefetchURLs:visit.allImageUrls];
+    //});
+    
     // Delegate
     if ([self.delegate respondsToSelector:@selector(roverDidCreateVisit:)]) {
         [self.delegate roverDidCreateVisit:visit];
@@ -372,7 +387,10 @@ static Rover *sharedInstance = nil;
 #pragma mark - RVGeofenceManagerDataSource
 
 - (NSArray *)geofenceManager:(RVGeofenceManager *)manager regionsNearCoordinates:(CLLocationCoordinate2D)coordinates {
-    return self.geofences;
+    if (self.currentVisit && self.currentVisit.locationEntered && _visitManager.regionManager.currentRegions > 0) {
+        return @[self.currentVisit.location.circularRegion];
+    }
+    return _geofences;
 }
 
 - (void)geofenceManager:(RVGeofenceManager *)manager didUpdateLocation:(CLLocation *)location {
@@ -380,7 +398,9 @@ static Rover *sharedInstance = nil;
         return;
     }
     // TODO: do a 15 KM check
-    //[RVVisit clearCache];
+    NSLog(@"Grabbing new locations from ROVER server");
+    
+    [RVVisit clearCache];
     [self getLocationsNear:location];
 }
 
@@ -393,8 +413,9 @@ static Rover *sharedInstance = nil;
                                                                [array addObject:location.circularRegion];
                                                            }
                                                            self.geofences = [NSArray arrayWithArray:array];
-                                                           
+                                                           NSLog(@"Fetch locations: %@", self.geofences);
                                                            [_visitManager.geofenceManager restartMonitoring];
+                                                           NSLog(@"Monitoring Restarted");
                                                        }];
 }
 

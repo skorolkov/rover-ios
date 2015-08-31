@@ -19,6 +19,8 @@
 @implementation AppDelegate
             
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [self redirectConsoleLogToDocumentFolder];
+    
     RVConfig *config = [RVConfig defaultConfig];
     
     // In sandbox mode visit analytics arent tracked
@@ -40,6 +42,15 @@
     if ([[Rover shared] handleDidReceiveLocalNotification:notification]) {
         return;
     }
+}
+
+- (void) redirectConsoleLogToDocumentFolder
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+                                                         NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *logPath = [documentsDirectory stringByAppendingPathComponent:@"console.log"];
+    freopen([logPath fileSystemRepresentation],"a+",stderr);
 }
 
 @end

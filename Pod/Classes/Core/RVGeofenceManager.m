@@ -42,9 +42,6 @@ static NSString *const RVGeofenceManagerLastUpdatedLocationKey = @"RVGeofenceMan
         _locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;
         
         [_locationManager startMonitoringSignificantLocationChanges];
-        
-        
-        //[[NSUserDefaults standardUserDefaults] removeObjectForKey:RVGeofenceManagerCurrentRegionsKey];
     }
     return self;
 }
@@ -106,13 +103,8 @@ static NSString *const RVGeofenceManagerLastUpdatedLocationKey = @"RVGeofenceMan
 
 - (void)startMonitoring {
     NSArray *orderedRegions = [self.dataSource geofenceManager:self regionsNearCoordinates:_lastUpdatedLocation.coordinate];
-    NSOrderedSet *regionsToMonitor;
-    if (self.currentRegions.count > 0) {
-        regionsToMonitor = self.currentRegions;
-    } else {
-        regionsToMonitor = [NSOrderedSet orderedSetWithArray:orderedRegions range:NSMakeRange(0, MIN(18, orderedRegions.count)) copyItems:NO];
-    }
-    
+    NSOrderedSet *regionsToMonitor = [NSOrderedSet orderedSetWithArray:orderedRegions range:NSMakeRange(0, MIN(18, orderedRegions.count)) copyItems:NO];
+
     for (CLCircularRegion *region in regionsToMonitor) {
         [self startMonitoringForRegion:region];
     }
@@ -136,33 +128,20 @@ static NSString *const RVGeofenceManagerLastUpdatedLocationKey = @"RVGeofenceMan
         [_locationManager stopMonitoringForRegion:region];
     }
     
+    NSLog(@"Monitoring stopped");
+    
     _isMonitoring = NO;
 }
 
 - (void)restartMonitoring {
     if (_isMonitoring) {
+        
         [self stopMonitoring];
         [self startMonitoring];
-        NSLog(@"restarted monitoring");
     }
 }
 
 #pragma mark - Helpers
-
-- (BOOL)location:(CLLocation *)location isInsideRegion:(CLCircularRegion *)region generosity:(CLLocationDistance)generosity {
-    if (region.radius < _locationManager.maximumRegionMonitoringDistance) {
-        CLLocation *regionCenter = [[CLLocation alloc] initWithLatitude:region.center.latitude longitude:region.center.longitude];
-        CLLocationDistance d_r = [location distanceFromLocation:regionCenter] - MAX(region.radius, generosity);
-        
-        int roundedDelta = (int)d_r;
-        roundedDelta -= roundedDelta % 10;
-        
-        if (d_r < 0 || roundedDelta <= 0) {
-            return YES;
-        }
-    }
-    return NO;
-}
 
 - (NSUInteger)indexOfRegion:(CLCircularRegion *)region location:(CLLocation *)location inSet:(NSOrderedSet *)regions {
     return [regions      indexOfObject:region
@@ -191,26 +170,28 @@ static NSString *const RVGeofenceManagerLastUpdatedLocationKey = @"RVGeofenceMan
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region {
     if ([region isKindOfClass:[CLCircularRegion class]]) {
         
-        NSLog(@"entered with accuracy: %@", manager.location);
-        NSLog(@"region: %@", region);
+        NSLog(@"Entered region (%@) with accuracy: %f", region.identifier, manager.location.horizontalAccuracy);
         
         NSMutableOrderedSet *mutableCurrentRegions = [self.currentRegions mutableCopy];
-        [mutableCurrentRegions insertObject:region atIndex:[self indexOfRegion:region location:_locationManager.location inSet:mutableCurrentRegions]];
+        [mutableCurrentRegions insertObject:region atIndex:[self indexOfRegion:(CLCircularRegion *)region location:_locationManager.location inSet:mutableCurrentRegions]];
         self.currentRegions = [NSOrderedSet orderedSetWithOrderedSet:mutableCurrentRegions];
-        [self.delegate geofenceManager:self didEnterRegion:region];
+        [self.delegate geofenceManager:self didEnterRegion:(CLCircularRegion *)region];
+        
+        [self persistCurrentRegions];
     }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region {
     if ([region isKindOfClass:[CLCircularRegion class]]) {
         
-        NSLog(@"exited with accuracy: %@", manager.location);
-        NSLog(@"region: %@", region);
+        NSLog(@"Exited region (%@) with accuracy: %f", region.identifier, manager.location.horizontalAccuracy);
         
         NSMutableOrderedSet *mutableCurrentRegions = [self.currentRegions mutableCopy];
         [mutableCurrentRegions removeObject:region];
         self.currentRegions = [NSOrderedSet orderedSetWithOrderedSet:mutableCurrentRegions];
-        [self.delegate geofenceManager:self didExitRegion:region];
+        [self.delegate geofenceManager:self didExitRegion:(CLCircularRegion *)region];
+    
+        [self persistCurrentRegions];
     }
 }
 
@@ -222,6 +203,7 @@ static NSString *const RVGeofenceManagerLastUpdatedLocationKey = @"RVGeofenceMan
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 
+    NSLog(@"DidUpdateLocation: %@", locations.firstObject);
     // Telling the dataSource we updated location can restart monitoring and we dont want to do that if we are already in a location
     if (self.currentRegions.count > 0) {
         return;
@@ -232,6 +214,8 @@ static NSString *const RVGeofenceManagerLastUpdatedLocationKey = @"RVGeofenceMan
     }
     
     self.lastUpdatedLocation = manager.location;
+    
+    NSLog(@"MajorLocationChange <--");
     
     // Update monitored regions
     if ([self.dataSource respondsToSelector:@selector(geofenceManager:didUpdateLocation:)]) {

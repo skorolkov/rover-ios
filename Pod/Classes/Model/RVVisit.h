@@ -73,3 +73,5 @@
 - (void)removeFromCurrentTouchpoints:(RVTouchpoint *)touchpoint;
 
 @end
+
+// TODO: persist new flags to disk

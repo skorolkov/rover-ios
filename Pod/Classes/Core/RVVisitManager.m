@@ -206,12 +206,11 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
         
         RVVisit *newVisit = [self visitWithCircularRegion:_region];
         if (newVisit) {
-            [RVVisit setCachedVisit:newVisit withIdentifier:newVisit.location.majorNumber];
             
             // Enter all geofence touchpoints
-            if (![self.latestVisit.currentTouchpoints containsObject:newVisit.geofenceTouchpoints.anyObject]) {
-                [self.latestVisit.geofenceTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
-                    [self.latestVisit addToCurrentTouchpoints:touchpoint];
+            if (![newVisit.currentTouchpoints containsObject:newVisit.geofenceTouchpoints.anyObject]) {
+                [newVisit.geofenceTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
+                    [newVisit addToCurrentTouchpoints:touchpoint];
                 }];
                 
                 // Delegate
@@ -221,6 +220,8 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
                     }];
                 }
             }
+            
+            [RVVisit setCachedVisit:newVisit withIdentifier:newVisit.location.majorNumber];
         }
     }];
 }
