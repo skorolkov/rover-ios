@@ -103,7 +103,7 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
                 
                 [self invalidateExpirationTimer];
                 
-                if (_regionManager.monitoredRegions.count < 2) {
+                if (_regionManager.monitoredRegions.count < 2) { // NOTE: not always the case
                     [self startMonitoringForVisit:self.latestVisit];
                 }
                 
@@ -369,7 +369,7 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
 }
 
 - (void)expireVisit {
-    [self stopMonitoringForVisit];
+    //[self stopMonitoringForVisit];
     
     if ([self.delegate respondsToSelector:@selector(visitManager:didExpireVisit:)]) {
         [self executeOnMainQueue:^{

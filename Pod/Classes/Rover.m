@@ -387,7 +387,7 @@ static Rover *sharedInstance = nil;
 #pragma mark - RVGeofenceManagerDataSource
 
 - (NSArray *)geofenceManager:(RVGeofenceManager *)manager regionsNearCoordinates:(CLLocationCoordinate2D)coordinates {
-    if (self.currentVisit && self.currentVisit.locationEntered && _visitManager.regionManager.currentRegions > 0) {
+    if (self.currentVisit && self.currentVisit.locationEntered && _visitManager.regionManager.monitoredRegions.count > 1) {
         return @[self.currentVisit.location.circularRegion];
     }
     return _geofences;
