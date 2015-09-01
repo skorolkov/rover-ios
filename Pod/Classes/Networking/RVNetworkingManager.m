@@ -81,8 +81,9 @@ NSString *const kRVNetworkingManagerFailingURLResponseErrorKey = @"com.roverlabs
         request.HTTPBody = [NSJSONSerialization dataWithJSONObject:parameters options:0 error:nil];
     }
     
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    //request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/vnd.api.v2+json" forHTTPHeaderField:@"Accept"];
     
     if (self.authToken) {
         [request setValue:[NSString stringWithFormat:@"Bearer %@", self.authToken] forHTTPHeaderField:@"Authorization"];
