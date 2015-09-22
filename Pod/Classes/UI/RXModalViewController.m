@@ -260,6 +260,10 @@
     UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     for (UIWindow *window in [[UIApplication sharedApplication] windows]) {
+        if (window.hidden) {
+            continue;
+        }
+        
         CGContextSaveGState(context);
         CGContextTranslateCTM(context, window.center.x, window.center.y);
         CGContextConcatCTM(context, window.transform);

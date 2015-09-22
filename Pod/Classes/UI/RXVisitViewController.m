@@ -287,7 +287,7 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     return UIInterfaceOrientationPortrait;
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
 
