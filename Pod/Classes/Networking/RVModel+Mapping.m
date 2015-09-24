@@ -117,11 +117,7 @@
              @"latitude": @"latitude",
              @"longitude": @"longitude",
              @"radius": @"radius",
-             @"avatarURL": @"avatarUrl"};
-}
-
-- (NSDictionary *)valueTransformers {
-    return @{@"avatarUrl": [RVBlockValueTransformer NSURLValueTransformer]};
+             @"majorNumber": @"majorNumber"};
 }
 
 @end
@@ -150,7 +146,7 @@
 - (NSDictionary *)inboundMapping {
     return @{@"ID": @"id",
              @"meta": @"meta",
-             @"trigger": @"trigger",
+             @"type": @"type",
              @"minorNumber": @"minorNumber",
              @"title": @"title",
              @"notification": @"notification",
@@ -159,11 +155,13 @@
 }
 
 - (NSDictionary *)valueTransformers {
-    return @{@"trigger": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
+    return @{@"type": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
                                 if ([inputValue isEqualToString:@"beacon"]) {
-                                    return [NSNumber numberWithInteger:RVTouchpointTriggerMinorNumber];
+                                    return [NSNumber numberWithInteger:RVTouchpointTypeBeacon];
+                                } else if ([inputValue isEqualToString:@"geofence"]) {
+                                    return [NSNumber numberWithInteger:RVTouchpointTypeGeofence];
                                 } else {
-                                    return [NSNumber numberWithInteger:RVTouchpointTriggerVisit];
+                                    return [NSNumber numberWithInteger:RVTouchpointTypeLocation];
                                 }
                             }],
              @"avatarUrl": [RVBlockValueTransformer NSURLValueTransformer]};
