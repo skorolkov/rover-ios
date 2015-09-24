@@ -25,7 +25,7 @@
 }
 
 - (BOOL)isMasterTouchpoint {
-    return self.trigger == RVTouchpointTriggerVisit;
+    return self.type == RVTouchpointTypeLocation;
 }
 
 - (NSUInteger)hash {
@@ -52,7 +52,7 @@
 - (void)encodeWithCoder:(NSCoder *)encoder {
     [super encodeWithCoder:encoder];
     
-    [encoder encodeObject:[NSNumber numberWithInt:self.trigger] forKey:@"trigger"];
+    [encoder encodeObject:[NSNumber numberWithInt:self.type] forKey:@"type"];
     [encoder encodeObject:self.minorNumber forKey:@"minorNumber"];
     [encoder encodeObject:self.notification forKey:@"notification"];
     [encoder encodeObject:self.title forKey:@"title"];
@@ -64,7 +64,7 @@
 
 - (id)initWithCoder:(NSCoder *)decoder {
     if((self = [super initWithCoder:decoder])) {
-        self.trigger = [[decoder decodeObjectForKey:@"trigger"] integerValue];
+        self.type = [[decoder decodeObjectForKey:@"type"] integerValue];
         self.minorNumber = [decoder decodeObjectForKey:@"minorNumber"];
         self.notification = [decoder decodeObjectForKey:@"notification"];
         self.title = [decoder decodeObjectForKey:@"title"];

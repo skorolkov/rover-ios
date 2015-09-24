@@ -21,14 +21,9 @@
     return [[CLLocation alloc] initWithLatitude:self.latitude.doubleValue longitude:self.longitude.doubleValue];
 }
 
-- (NSURL *)avatarURL {
-    if (!_avatarURL) {
-        return nil;
-    }
-    
-    NSInteger size = [UIScreen mainScreen].scale * 64;
-    
-    return [NSURL URLWithString:[NSString stringWithFormat:@"%@?w=%ld&h=%ld", _avatarURL.absoluteString, (long)size, (long)size]];
+
+- (CLCircularRegion *)circularRegion {
+    return [[CLCircularRegion alloc] initWithCenter:[self CLLocation].coordinate radius:self.radius.doubleValue identifier:self.ID];
 }
 
 #pragma mark - NSCoding
@@ -47,7 +42,6 @@
     [encoder encodeObject:self.latitude forKey:@"latitude"];
     [encoder encodeObject:self.longitude forKey:@"longitude"];
     [encoder encodeObject:self.radius forKey:@"radius"];
-    [encoder encodeObject:self.avatarURL forKey:@"avatarURL"];
 }
 
 
@@ -62,7 +56,6 @@
         self.latitude = [decoder decodeObjectForKey:@"latitude"];
         self.longitude = [decoder decodeObjectForKey:@"longitude"];
         self.radius = [decoder decodeObjectForKey:@"radius"];
-        self.avatarURL = [decoder decodeObjectForKey:@"avatarURL"];
     }
     return self;
 }

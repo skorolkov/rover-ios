@@ -17,7 +17,7 @@
 #import "RVBlock.h"
 #import "RVImageBlock.h"
 
-#define kRVVersion @"0.30.0"
+#define kRVVersion @"0.33.0"
 
 
 NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
@@ -118,11 +118,6 @@ static RVVisit *_latestVisit;
     if (self.organization.avatarURL) {
         [array addObject:self.organization.avatarURL];
     }
-    
-    // location avatar
-    if (self.location.avatarURL) {
-        [array addObject:self.location.avatarURL];
-    }
         
     return [NSArray arrayWithArray:array];
 }
@@ -137,6 +132,10 @@ static RVVisit *_latestVisit;
 {
     return [self.UUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString]
         && [self.majorNumber isEqualToNumber:beaconRegion.major];
+}
+
+- (BOOL)isInLocationWithIdentifier:(NSString *)identifier {
+    return [self.location.ID isEqualToString:identifier];
 }
 
 - (BOOL)isInTouchpointRegion:(CLBeaconRegion *)beaconRegion {
@@ -180,7 +179,7 @@ static RVVisit *_latestVisit;
     }
     
     _wildcardTouchpoints = [NSSet setWithArray:[self.touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-        return touchpoint.trigger == RVTouchpointTriggerVisit;
+        return touchpoint.type == RVTouchpointTypeLocation;
     }]]];
     return _wildcardTouchpoints;
 }
@@ -194,7 +193,7 @@ static RVVisit *_latestVisit;
     NSMutableArray *touchpointsToObserve = [NSMutableArray array];
     [[[self.touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
         // Filter for specific touchpoints
-        return touchpoint.trigger == RVTouchpointTriggerMinorNumber;
+        return touchpoint.type == RVTouchpointTypeBeacon;
     }]] sortedArrayUsingComparator:^NSComparisonResult(RVTouchpoint *touchpoint1, RVTouchpoint *touchpoint2) {
         // Sort by notification
         if (touchpoint1.notification && !touchpoint2.notification) {
@@ -272,6 +271,7 @@ static RVVisit *_latestVisit;
     [encoder encodeObject:self.touchpoints forKey:@"touchpoints"];
     [encoder encodeObject:self.visitedTouchpointIDs forKey:@"visitedTouchpointIDs"];
     [encoder encodeObject:[NSNumber numberWithBool:self.simulate] forKey:@"simulate"];
+    [encoder encodeObject:[NSNumber numberWithBool:self.locationEntered] forKey:@"locationEntered"];
 
 }
 
@@ -290,6 +290,7 @@ static RVVisit *_latestVisit;
         [self setVisitedTouchpointIDs:[decoder decodeObjectForKey:@"visitedTouchpointIDs"]];
         
         self.simulate = [[decoder decodeObjectForKey:@"simulate"] boolValue];
+        self.locationEntered = [[decoder decodeObjectForKey:@"locationEntered"] boolValue];
     }
     return self;
 }
