@@ -250,9 +250,7 @@ static Rover *sharedInstance = nil;
     _currentVisit = visit;
     
     [[RVImagePrefetcher sharedImagePrefetcher] prefetchURLs:_currentVisit.allImageUrls];
-    
-    [self trackEvent:@"location.enter" params:nil];
-    
+
     // Delegate
     if ([self.delegate respondsToSelector:@selector(roverVisit:didEnterLocation:)]) {
         [self.delegate roverVisit:_currentVisit didEnterLocation:_currentVisit.location];
@@ -260,8 +258,6 @@ static Rover *sharedInstance = nil;
 }
 
 - (void)visitManager:(RVVisitManager *)manager didPotentiallyExitLocation:(RVLocation *)location visit:(RVVisit *)visit {
-    [self trackEvent:@"location.exit" params:nil];
-    
     // Delegate
     if ([self.delegate respondsToSelector:@selector(roverVisit:didPotentiallyExitLocation:aliveForAnother:)]) {
         [self.delegate roverVisit:visit didPotentiallyExitLocation:visit.location aliveForAnother:visit.keepAlive];
@@ -288,13 +284,6 @@ static Rover *sharedInstance = nil;
         [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
             [self trackEvent:@"card.deliver" params:@{@"card": card.ID}];
         }];
-        
-        // Modal / Notification
-        if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-
-            // Touchpoint Tracking
-            [self trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID}];
-        }
         
     }];
     
@@ -364,10 +353,6 @@ static Rover *sharedInstance = nil;
 
 - (void)didOpenApplication {
     if (self.currentVisit) {
-        // Touchpoint Tracking
-        [self.currentVisit.currentTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
-            [self trackEvent:@"touchpoint.open" params:@{@"touchpoint": touchpoint.ID}];
-        }];
         
         // Delegate
         if ([self.delegate respondsToSelector:@selector(didOpenApplicationDuringVisit:)]) {
