@@ -139,6 +139,10 @@ static RVVisit *_latestVisit;
         && [self.majorNumber isEqualToNumber:beaconRegion.major];
 }
 
+- (BOOL)isInLocationWithIdentifier:(NSString *)identifier {
+    return [self.location.ID isEqualToString:identifier];
+}
+
 - (BOOL)isInTouchpointRegion:(CLBeaconRegion *)beaconRegion {
     for (RVTouchpoint *touchpoint in self.currentTouchpoints) {
         if ([touchpoint.minorNumber isEqualToNumber:beaconRegion.minor]) {
@@ -272,6 +276,7 @@ static RVVisit *_latestVisit;
     [encoder encodeObject:self.touchpoints forKey:@"touchpoints"];
     [encoder encodeObject:self.visitedTouchpointIDs forKey:@"visitedTouchpointIDs"];
     [encoder encodeObject:[NSNumber numberWithBool:self.simulate] forKey:@"simulate"];
+    [encoder encodeObject:[NSNumber numberWithBool:self.locationEntered] forKey:@"locationEntered"];
 
 }
 
@@ -290,6 +295,7 @@ static RVVisit *_latestVisit;
         [self setVisitedTouchpointIDs:[decoder decodeObjectForKey:@"visitedTouchpointIDs"]];
         
         self.simulate = [[decoder decodeObjectForKey:@"simulate"] boolValue];
+        self.locationEntered = [[decoder decodeObjectForKey:@"locationEntered"] boolValue];
     }
     return self;
 }
