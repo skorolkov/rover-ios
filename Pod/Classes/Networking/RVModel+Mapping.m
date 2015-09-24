@@ -52,6 +52,7 @@
              @"customer": @"customer",
              @"timestamp": @"timestamp",
              @"simulate": @"simulate",
+             @"locationId": @"locationIdentifier",
              
              @"device": @":RVSystemInfo.platform",
              @"operatingSystem": @":RVSystemInfo.systemName",
