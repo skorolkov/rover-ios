@@ -27,6 +27,7 @@
 @property (nonatomic, strong) NSNumber *majorNumber;
 @property (nonatomic, strong) NSDate *timestamp;
 @property (nonatomic, assign) BOOL simulate;
+@property (nonatomic, strong) NSString *locationIdentifier;
 
 // _____ RESPONSE_____
 
@@ -37,6 +38,8 @@
 @property (strong, nonatomic) RVCustomer *customer;
 @property (strong, nonatomic) NSArray *touchpoints;
 @property (nonatomic, readonly) NSSet *wildcardTouchpoints;
+
+@property (nonatomic, assign) BOOL locationEntered;
 
 // _____ TODO:  private ____
 
@@ -52,6 +55,7 @@
 
 - (BOOL)isInLocationRegion:(CLBeaconRegion *)beaconRegion;
 - (BOOL)isInTouchpointRegion:(CLBeaconRegion *)beaconRegion;
+- (BOOL)isInLocationWithIdentifier:(NSString *)identifier;
 
 - (RVTouchpoint *)touchpointForRegion:(CLBeaconRegion *)beaconRegion;
 - (RVTouchpoint *)touchpointForMinor:(NSNumber *)minor;

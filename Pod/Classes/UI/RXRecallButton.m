@@ -80,6 +80,8 @@
     button.center = button.buttonPosition.x == 0 ? [self tuckedPositionForButton:button corner:button.initialPosition] : button.buttonPosition;
     [_window addSubview:button];
     
+    button.isVisible = YES;
+    
     CGPoint point = [button snapPointToClosestEdgeFromPoint:button.center offset:UIOffsetZero];
     
     CABasicAnimation *animation = [CABasicAnimation animationWithKeyPath:@"position"];
@@ -89,9 +91,6 @@
     animation.timingFunction = [[CAMediaTimingFunction alloc] initWithControlPoints:.7 :4/22.f :7/22.f :1];
     
     [CATransaction begin]; {
-        [CATransaction setCompletionBlock:^{
-            button.isVisible = YES;
-        }];
         [button.layer addAnimation:animation forKey:@"up"];
         button.layer.position = point;
     } [CATransaction commit];
