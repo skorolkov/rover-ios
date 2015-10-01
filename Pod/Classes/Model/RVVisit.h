@@ -12,6 +12,7 @@
 @class RVLocation;
 @class RVOrganization;
 @class RVCustomer;
+@class RVDeck;
 @class CLBeaconRegion;
 
 @interface RVVisit : RVModel
@@ -27,7 +28,8 @@
 @property (nonatomic, strong) NSNumber *majorNumber;
 @property (nonatomic, strong) NSDate *timestamp;
 @property (nonatomic, assign) BOOL simulate;
-@property (nonatomic, strong) NSString *locationIdentifier;
+@property (nonatomic, strong) NSString *touchpointIdentifier;
+@property (nonatomic, strong) NSString *gimbalPlaceIdentifier;
 
 // _____ RESPONSE_____
 
@@ -40,6 +42,9 @@
 @property (nonatomic, readonly) NSSet *wildcardTouchpoints;
 
 @property (nonatomic, assign) BOOL locationEntered;
+
+
+@property (nonatomic, strong) NSArray *decks;
 
 // _____ TODO:  private ____
 
@@ -56,12 +61,17 @@
 - (BOOL)isInLocationRegion:(CLBeaconRegion *)beaconRegion;
 - (BOOL)isInTouchpointRegion:(CLBeaconRegion *)beaconRegion;
 - (BOOL)isInLocationWithIdentifier:(NSString *)identifier;
+- (BOOL)hasTouchpointWithIdentifier:(NSString *)identifier;
+- (BOOL)hasTouchpointWithGimbalIdentifier:(NSString *)identifier;
 
 - (RVTouchpoint *)touchpointForRegion:(CLBeaconRegion *)beaconRegion;
 - (RVTouchpoint *)touchpointForMinor:(NSNumber *)minor;
 - (RVTouchpoint *)touchpointWithID:(NSString *)identifier;
+- (RVTouchpoint *)touchpointWithGimbalIdentifier:(NSString *)identifier;
 
 - (void)addToCurrentTouchpoints:(RVTouchpoint *)touchpoint;
 - (void)removeFromCurrentTouchpoints:(RVTouchpoint *)touchpoint;
+
+- (RVDeck *)deckWithID:(NSString *)ID;
 
 @end

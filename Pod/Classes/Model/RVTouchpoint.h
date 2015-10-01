@@ -20,16 +20,11 @@ typedef NS_ENUM(NSInteger, RVTouchpointType) {
 @interface RVTouchpoint : RVModel
 
 @property (nonatomic, assign) RVTouchpointType type;
-@property (nonatomic, strong) NSNumber *minorNumber;
-@property (nonatomic, strong) NSString *notification;
-@property (nonatomic, strong) NSString *title;
-@property (nonatomic, strong) NSArray *cards;
 @property (nonatomic, assign) BOOL isVisited;
-@property (nonatomic, assign) BOOL notificationDelivered;
-@property (nonatomic, readonly) BOOL isMasterTouchpoint;
-@property (nonatomic, strong) NSURL *avatarURL;
+@property (nonatomic, strong) NSString *gimbalPlaceId;
+@property (nonatomic, strong) NSString *deckId;
 
-- (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
+//- (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
 
 @end
 

@@ -7,11 +7,10 @@
 //
 
 #import "RXVisitViewController.h"
-//#import "RVVisitController.h"
 #import "RXCardViewCell.h"
 #import "RXDetailViewController.h"
 #import "RVCard.h"
-#import "RVTouchpoint.h"
+#import "RVDeck.h"
 #import "RVViewDefinition.h"
 #import "RVVisit.h"
 
@@ -31,7 +30,7 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 {
     self = [super init];
     if (self) {
-        _touchpoints = [NSMutableArray array];
+        _decks = [NSMutableArray array];
         
         // Add tableView
         _tableView = [[UITableView alloc] init];
@@ -82,13 +81,13 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 #pragma mark - Helper Methods
 
 - (RVCard *)cardAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.section >= self.touchpoints.count) {
+    if (indexPath.section >= self.decks.count) {
         return nil;
     }
-    RVTouchpoint *touchpoint = self.touchpoints[indexPath.section];
-    NSArray *nonDeletedCards = [self nonDeletedCardsFromCardsArray:touchpoint.cards];
+    RVDeck *deck = self.decks[indexPath.section];
+    NSArray *nonDeletedCards = [self nonDeletedCardsFromCardsArray:deck.cards];
     if (indexPath.row < nonDeletedCards.count) {
-        RVCard *card = [self nonDeletedCardsFromCardsArray:touchpoint.cards][indexPath.row];
+        RVCard *card = [self nonDeletedCardsFromCardsArray:deck.cards][indexPath.row];
         return card;
     }
     return nil;
@@ -101,14 +100,14 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return self.touchpoints.count;
+    return self.decks.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (section >= self.touchpoints.count) {
+    if (section >= self.decks.count) {
         return 0;
     }
-    return [self nonDeletedCardsFromCardsArray:((RVTouchpoint *)self.touchpoints[section]).cards].count;
+    return [self nonDeletedCardsFromCardsArray:((RVDeck *)self.decks[section]).cards].count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -222,38 +221,38 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     return YES;
 }
 
-- (void)addTouchpoints:(NSArray *)touchpoints {
-    [self willAddTouchpoints:touchpoints];
-    [_touchpoints insertObjects:touchpoints atIndexes:[NSIndexSet indexSetWithIndex:0]];
-    [self didAddTouchpoints:touchpoints];
+- (void)addDecks:(NSArray *)decks {
+    [self willAddDecks:decks];
+    [_decks insertObjects:decks atIndexes:[NSIndexSet indexSetWithIndex:0]];
+    [self didAddDecks:decks];
 
 }
 
-- (void)removeTouchpoints:(NSArray *)touchpoints {
-    [self willRemoveTouchpoints:touchpoints];
+- (void)removeDecks:(NSArray *)decks {
+    [self willRemoveDecks:decks];
     [self.tableView beginUpdates];
     
     NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-    [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
-        [indexSet addIndex:[_touchpoints indexOfObject:touchpoint]];
+    [decks enumerateObjectsUsingBlock:^(RVDeck *deck, NSUInteger idx, BOOL *stop) {
+        [indexSet addIndex:[_decks indexOfObject:decks]];
     }];
     
     [self.tableView deleteSections:indexSet withRowAnimation:UITableViewRowAnimationAutomatic];
     
-    [_touchpoints removeObjectsInArray:touchpoints];
+    [_decks removeObjectsInArray:decks];
     [self.tableView endUpdates];
-    [self didRemoveTouchpoints:touchpoints];
+    [self didRemoveDecks:decks];
 }
 
 #pragma mark - Event Hooks
 
 // Implement in subclass
-- (void)willAddTouchpoints:(NSArray *)touchpoints {}
-- (void)didAddTouchpoints:(NSArray *)touchpoints {
+- (void)willAddDecks:(NSArray *)decks {}
+- (void)didAddDecks:(NSArray *)decks {
     
     __block CGFloat yOffset = self.tableView.contentOffset.y;
     
-    [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
+    [decks enumerateObjectsUsingBlock:^(RVDeck *deck, NSUInteger idx, BOOL *stop) {
         NSInteger rows = [self tableView:self.tableView numberOfRowsInSection:idx];
         for (int i=0; i<rows; i++) {
             yOffset += [self tableView:self.tableView heightForRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:idx]];
@@ -263,14 +262,14 @@ static NSString *cellReuseIdentifier = @"roverCardReuseIdentifier";
     [self.tableView reloadData];
     [self.tableView setContentOffset:CGPointMake(0, yOffset) animated:NO];
 }
-- (void)willRemoveTouchpoints:(NSArray *)touchpoints {}
-- (void)didRemoveTouchpoints:(NSArray *)touchpoints {
+- (void)willRemoveDecks:(NSArray *)decks {}
+- (void)didRemoveDecks:(NSArray *)decks {
     [self.tableView reloadData];
 }
 
 - (BOOL)hasNoCards {
-    for (RVTouchpoint *touchpoint in self.touchpoints) {
-        if ([self nonDeletedCardsFromCardsArray:touchpoint.cards].count > 0) {
+    for (RVDeck *deck in self.decks) {
+        if ([self nonDeletedCardsFromCardsArray:deck.cards].count > 0) {
             return NO;
         }
     }

@@ -75,6 +75,18 @@
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
     UITouch *touch = [touches anyObject];
+    CGPoint newLocation = [touch locationInView:self.superview];
+    
+    CGFloat dx = newLocation.x - _currentLocation.x;
+    CGFloat dy = newLocation.y - _currentLocation.y;
+    CGFloat distance = dx*dx + dy*dy;
+    
+    // iPhone 6S is too sensitive!
+    
+    if (!_moved && distance < 20) {
+        return;
+    }
+    
     _currentLocation = [touch locationInView:self.superview];
     
     _attachmentBehavior.anchorPoint = _currentLocation;

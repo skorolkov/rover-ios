@@ -11,6 +11,5 @@
 @interface RVOrganization : RVModel
 
 @property (nonatomic, strong) NSString *title;
-@property (nonatomic, strong) NSURL *avatarURL;
 
 @end

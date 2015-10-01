@@ -9,7 +9,7 @@
 #import "RXModalViewController.h"
 #import "RXImageEffects.h"
 #import "RXCardViewCell.h"
-#import "RVTouchpoint.h"
+#import "RVDeck.h"
 
 #import "RXUpArrow.h"
 
@@ -380,19 +380,19 @@
 
 #pragma mark - RXVisitViewController Event Hooks
 
-- (void)didAddTouchpoints:(NSArray *)touchpoints {
-    [super didAddTouchpoints:touchpoints];
+- (void)didAddDecks:(NSArray *)decks {
+    [super didAddDecks:decks];
     
     // get smarter
     _maxIndexPathSection++;
-    _minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:touchpoints.count - 1];
-    _minIndexPathSection = touchpoints.count - 1;
+    _minIndexPathRow = [self tableView:self.tableView numberOfRowsInSection:decks.count - 1];
+    _minIndexPathSection = decks.count - 1;
     
-    NSInteger numberOfTouchpointsWithCards = [touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-        return [self nonDeletedCardsFromCardsArray:touchpoint.cards].count > 0;
+    NSInteger numberOfDecksWithCards = [decks filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVDeck *deck, NSDictionary *bindings) {
+        return [self nonDeletedCardsFromCardsArray:deck.cards].count > 0;
     }]].count;
     
-    if (self.isViewLoaded && self.view.window && numberOfTouchpointsWithCards > 0) {
+    if (self.isViewLoaded && self.view.window && numberOfDecksWithCards > 0) {
         [self dropPill];
     }
 }

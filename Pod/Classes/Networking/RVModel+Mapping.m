@@ -14,6 +14,7 @@
 #import "RVCustomer.h"
 #import "RVLocation.h"
 #import "RVTouchpoint.h"
+#import "RVDeck.h"
 #import "RVCard.h"
 #import "RVViewDefinition.h"
 #import "RVOrganization.h"
@@ -52,7 +53,8 @@
              @"customer": @"customer",
              @"timestamp": @"timestamp",
              @"simulate": @"simulate",
-             @"locationId": @"locationIdentifier",
+             @"touchpointId": @"touchpointIdentifier",
+             @"gimbalPlaceId": @"gimbalPlaceIdentifier",
              
              @"device": @":RVSystemInfo.platform",
              @"operatingSystem": @":RVSystemInfo.systemName",
@@ -65,13 +67,15 @@
              @"keepAlive": @"keepAlive",
              @"location": @"location",
              @"touchpoints": @"touchpoints",
-             @"organization": @"organization"};
+             @"organization": @"organization",
+             @"decks": @"decks"};
 }
 
 - (NSDictionary *)classMapping {
     return @{@"location": [RVLocation class],
              @"touchpoints": [RVTouchpoint class],
-             @"organization": [RVOrganization class]};
+             @"organization": [RVOrganization class],
+             @"decks": [RVDeck class]};
 }
 
 - (NSDictionary *)valueTransformers {
@@ -130,12 +134,7 @@
 - (NSDictionary *)inboundMapping {
     return @{@"ID": @"id",
              @"meta": @"meta",
-             @"title": @"title",
-             @"avatarURL": @"avatarUrl"};
-}
-
-- (NSDictionary *)valueTransformers {
-    return @{@"avatarUrl": [RVBlockValueTransformer NSURLValueTransformer]};
+             @"title": @"title"};
 }
 
 @end
@@ -147,29 +146,30 @@
 - (NSDictionary *)inboundMapping {
     return @{@"ID": @"id",
              @"meta": @"meta",
-             @"type": @"type",
-             @"minorNumber": @"minorNumber",
-             @"title": @"title",
-             @"notification": @"notification",
-             @"cards": @"cards",
-             @"avatarURL": @"avatarUrl"};
+             @"gimbalPlaceId": @"gimbalPlaceId",
+             @"deckId": @"deckId"};
 }
 
-- (NSDictionary *)valueTransformers {
-    return @{@"type": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
-                                if ([inputValue isEqualToString:@"beacon"]) {
-                                    return [NSNumber numberWithInteger:RVTouchpointTypeBeacon];
-                                } else if ([inputValue isEqualToString:@"geofence"]) {
-                                    return [NSNumber numberWithInteger:RVTouchpointTypeGeofence];
-                                } else {
-                                    return [NSNumber numberWithInteger:RVTouchpointTypeLocation];
-                                }
-                            }],
-             @"avatarUrl": [RVBlockValueTransformer NSURLValueTransformer]};
+@end
+
+#pragma mark - RVDeck
+
+@implementation RVDeck (Mapping)
+
+- (NSDictionary *)inboundMapping {
+    return @{@"ID": @"id",
+             @"notification": @"notification",
+             @"avatarURL": @"avatarUrl",
+             @"cards": @"cards",
+             @"title": @"title"};
 }
 
 - (NSDictionary *)classMapping {
     return @{@"cards": [RVCard class]};
+}
+
+- (NSDictionary *)valueTransformers {
+    return @{@"avatarUrl": [RVBlockValueTransformer NSURLValueTransformer]};
 }
 
 @end

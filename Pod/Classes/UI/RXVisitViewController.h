@@ -8,14 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@class RVTouchpoint;
+@class RVDeck;
 @class RXCardViewCell;
 @class RVCard;
 @protocol RXVisitViewControllerDelegate;
 
 /** This is a base class to be used to display cards. For more control over the UI and presentation of the cards, subclass this class and register it
  as the modal view controller via the registerModalViewControllerClass method on RVConfig. If you would like to display this view controller manually,
- all you need to do is set an array touchpoints. You can also add or remove touchpoints dynamically via the addTouchpoint: and removeTouchpoint: methods.
+ all you need to do is set an array decks. You can also add or remove decks dynamically via the addDecks: and removeDecks: methods.
  */
 @interface RXVisitViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
@@ -27,9 +27,9 @@
  */
 @property (nonatomic, strong, readonly) UITableView *tableView;
 
-/** The array of RVTouchpoints to display.
+/** The array of RVDecks to display.
  */
-@property (nonatomic, strong) NSMutableArray *touchpoints;
+@property (nonatomic, strong) NSMutableArray *decks;
 
 /** Returns the RVCard at indexPath. NSIndexPath.section being the touchpoint and NSIndexPath.row being the card index.
  */
@@ -41,29 +41,29 @@
  */
 - (NSArray *)nonDeletedCardsFromCardsArray:(NSArray *)cards;
 
-/** Adds an array of touchpoints to the touchpoints array.
+/** Adds an array of decks to the decks array.
  */
-- (void)addTouchpoints:(NSArray *)touchpoints;
+- (void)addDecks:(NSArray *)decks;
 
-/** Removes an array of touchpoints from the touchpoints array.
+/** Removes an array of decks from the decks array.
  */
-- (void)removeTouchpoints:(NSArray *)touchpoints;
+- (void)removeDecks:(NSArray *)decks;
 
-/** Called before an array of touchpoints is added.
+/** Called before an array of decks is added.
  */
-- (void)willAddTouchpoints:(NSArray *)touchpoints;
+- (void)willAddDecks:(NSArray *)decks;
 
-/** Called after the array of touchpoints is added.
+/** Called after the array of decks is added.
  */
-- (void)didAddTouchpoints:(NSArray *)touchpoints;
+- (void)didAddDecks:(NSArray *)decks;
 
-/** Called before the array of touchpoints is removed.
+/** Called before the array of decks is removed.
  */
-- (void)willRemoveTouchpoints:(NSArray *)touchpoints;
+- (void)willRemoveDecks:(NSArray *)decks;
 
-/** Called after the array of touchpoints is removed.
+/** Called after the array of decks is removed.
  */
-- (void)didRemoveTouchpoints:(NSArray *)touchpoints;
+- (void)didRemoveDecks:(NSArray *)decks;
 
 @end
 
