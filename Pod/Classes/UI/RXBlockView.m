@@ -82,6 +82,9 @@
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     [imageView setImageWithURL:block.imageURL usingActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     //[imageView sd_setImageWithURL:block.imageURL];
+    
+    // TODO: if .aspectRatio is zero, skip everything
+    
     [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeWidth multiplier:1.f/block.aspectRatio constant:0]];
     
     return imageView;

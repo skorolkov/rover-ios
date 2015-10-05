@@ -9,13 +9,18 @@
 #import "RVTouchpoint.h"
 #import "RVLocation.h"
 #import "RVCard.h"
+#import "RVBeaconRegion.h"
 
 @implementation RVTouchpoint
 
-//- (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion
-//{
-//    return [self.minorNumber isEqualToNumber:beaconRegion.minor];
-//}
+- (BOOL)respondsToRegion:(CLRegion *)region {
+    for (RVBeaconRegion *beaconRegion in self.beaconRegions) {
+        if ([beaconRegion isEqualToCLBeaconRegion:(CLBeaconRegion *)region]) {
+            return YES;
+        }
+    }
+    return NO;
+}
 
 - (BOOL)isEqual:(id)object {
     // TODO: better implementation from NSHipster
@@ -38,18 +43,18 @@
 - (void)encodeWithCoder:(NSCoder *)encoder {
     [super encodeWithCoder:encoder];
     
-    [encoder encodeObject:[NSNumber numberWithInt:self.type] forKey:@"type"];
     [encoder encodeObject:[NSNumber numberWithBool:self.isVisited] forKey:@"isVisited"];
     [encoder encodeObject:self.gimbalPlaceId forKey:@"gimbalPlaceId"];
     [encoder encodeObject:self.deckId forKey:@"deckId"];
+    [encoder encodeObject:self.beaconRegions forKey:@"beaconRegions"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
     if((self = [super initWithCoder:decoder])) {
-        self.type = [[decoder decodeObjectForKey:@"type"] integerValue];
         self.isVisited = [[decoder decodeObjectForKey:@"isVisited"] boolValue];
         self.gimbalPlaceId = [decoder decodeObjectForKey:@"gimbalPlaceId"];
         self.deckId = [decoder decodeObjectForKey:@"deckId"];
+        self.beaconRegions = [decoder decodeObjectForKey:@"beaconRegions"];
     }
     return self;
 }

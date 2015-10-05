@@ -19,7 +19,6 @@
 @property (nonatomic, strong) NSNumber *latitude;
 @property (nonatomic, strong) NSNumber *longitude;
 @property (nonatomic, strong) NSNumber *radius;
-@property (nonatomic, strong) NSNumber *majorNumber;
 
 - (CLLocation *)CLLocation;
 

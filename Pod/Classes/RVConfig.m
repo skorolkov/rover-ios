@@ -17,7 +17,7 @@
     config.notificationSoundName = UILocalNotificationDefaultSoundName;
     config.sandboxMode = NO;
     config.modalViewControllerClass = [RXModalViewController class];
-    config.serverURL = @"https://api.roverlabs.co/mobile/v2/";
+    config.serverURL = @"https://api.roverlabs.co/sdk/v3";
     config.modalBackdropBlurRadius = 3;
     config.modalBackdropTintColor = [UIColor colorWithWhite:0.0 alpha:0.5];
     config.experience = RVExperienceNearby;

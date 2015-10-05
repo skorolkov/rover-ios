@@ -13,6 +13,7 @@
 @class RVOrganization;
 @class RVCustomer;
 @class RVDeck;
+@class RVBeaconRegion;
 @class CLBeaconRegion;
 
 @interface RVVisit : RVModel
@@ -24,12 +25,13 @@
 
 //_____REQUEST ______
 
-@property (nonatomic, strong) NSUUID *UUID;
-@property (nonatomic, strong) NSNumber *majorNumber;
+
 @property (nonatomic, strong) NSDate *timestamp;
 @property (nonatomic, assign) BOOL simulate;
+
 @property (nonatomic, strong) NSString *touchpointIdentifier;
 @property (nonatomic, strong) NSString *gimbalPlaceIdentifier;
+@property (nonatomic, strong) RVBeaconRegion *beaconRegion;
 
 // _____ RESPONSE_____
 
@@ -39,7 +41,6 @@
 @property (strong, nonatomic) RVLocation *location;
 @property (strong, nonatomic) RVCustomer *customer;
 @property (strong, nonatomic) NSArray *touchpoints;
-@property (nonatomic, readonly) NSSet *wildcardTouchpoints;
 
 @property (nonatomic, assign) BOOL locationEntered;
 
@@ -52,22 +53,20 @@
 @property (strong, nonatomic) NSMutableSet *currentTouchpoints;
 @property (nonatomic, readonly) NSArray *visitedTouchpoints;
 @property (nonatomic, readonly) NSArray *allImageUrls;
-@property (nonatomic, readonly) NSArray *observableRegions;
+@property (nonatomic, readonly) NSOrderedSet *observableRegions;
 
 + (instancetype)latestVisit;
 + (void)setLatestVisit:(RVVisit *)visit;
 + (void)clearLatestVisit;
 
-- (BOOL)isInLocationRegion:(CLBeaconRegion *)beaconRegion;
-- (BOOL)isInTouchpointRegion:(CLBeaconRegion *)beaconRegion;
 - (BOOL)isInLocationWithIdentifier:(NSString *)identifier;
 - (BOOL)hasTouchpointWithIdentifier:(NSString *)identifier;
 - (BOOL)hasTouchpointWithGimbalIdentifier:(NSString *)identifier;
+- (BOOL)respondsToRegion:(CLRegion *)region;
 
-- (RVTouchpoint *)touchpointForRegion:(CLBeaconRegion *)beaconRegion;
-- (RVTouchpoint *)touchpointForMinor:(NSNumber *)minor;
 - (RVTouchpoint *)touchpointWithID:(NSString *)identifier;
 - (RVTouchpoint *)touchpointWithGimbalIdentifier:(NSString *)identifier;
+- (NSArray *)touchpointsForRegion:(CLRegion *)region;
 
 - (void)addToCurrentTouchpoints:(RVTouchpoint *)touchpoint;
 - (void)removeFromCurrentTouchpoints:(RVTouchpoint *)touchpoint;

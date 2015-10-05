@@ -18,6 +18,7 @@
 #import "RVCard.h"
 #import "RVViewDefinition.h"
 #import "RVOrganization.h"
+#import "RVBeaconRegion.h"
 
 #import "RVImageBlock.h"
 #import "RVTextBlock.h"
@@ -48,13 +49,12 @@
 - (NSDictionary *)outboundMapping {
 
     return @{@"id": @"ID",
-             @"uuid": @"UUID.UUIDString",
-             @"majorNumber": @"majorNumber",
              @"customer": @"customer",
              @"timestamp": @"timestamp",
              @"simulate": @"simulate",
              @"touchpointId": @"touchpointIdentifier",
              @"gimbalPlaceId": @"gimbalPlaceIdentifier",
+             @"beacon": @"beaconRegion",
              
              @"device": @":RVSystemInfo.platform",
              @"operatingSystem": @":RVSystemInfo.systemName",
@@ -121,8 +121,7 @@
              @"postalCode": @"postalCode",
              @"latitude": @"latitude",
              @"longitude": @"longitude",
-             @"radius": @"radius",
-             @"majorNumber": @"majorNumber"};
+             @"radius": @"radius"};
 }
 
 @end
@@ -147,7 +146,30 @@
     return @{@"ID": @"id",
              @"meta": @"meta",
              @"gimbalPlaceId": @"gimbalPlaceId",
-             @"deckId": @"deckId"};
+             @"deckId": @"deckId",
+             @"beaconRegions": @"beacons"};
+}
+
+- (NSDictionary *)classMapping {
+    return @{@"beacons": [RVBeaconRegion class]};
+}
+
+@end
+
+#pragma mark - RVBeaconRegion
+
+@implementation RVBeaconRegion (Mapping)
+
+- (NSDictionary *)outboundMapping {
+    return @{@"uuid": @"UUID.UUIDString",
+             @"majorNumber": @"majorNumber",
+             @"minorNumber": @"minorNumber"};
+}
+
+- (NSDictionary *)inboundMapping {
+    return @{@"UUIDString": @"uuid",
+             @"majorNumber": @"majorNumber",
+             @"minorNumber": @"minorNumber"};
 }
 
 @end

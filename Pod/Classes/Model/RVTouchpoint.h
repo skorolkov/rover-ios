@@ -9,22 +9,23 @@
 #import <Foundation/Foundation.h>
 #import "RVModel.h"
 
-@class CLBeaconRegion;
+@class CLRegion;
 
-typedef NS_ENUM(NSInteger, RVTouchpointType) {
-    RVTouchpointTypeBeacon = 1,
-    RVTouchpointTypeLocation = 2,
-    RVTouchpointTypeGeofence = 3
-};
+//typedef NS_ENUM(NSInteger, RVTouchpointType) {
+//    RVTouchpointTypeBeacon = 1,
+//    RVTouchpointTypeLocation = 2,
+//    RVTouchpointTypeGeofence = 3
+//};
 
 @interface RVTouchpoint : RVModel
 
-@property (nonatomic, assign) RVTouchpointType type;
+//@property (nonatomic, assign) RVTouchpointType type;
 @property (nonatomic, assign) BOOL isVisited;
 @property (nonatomic, strong) NSString *gimbalPlaceId;
 @property (nonatomic, strong) NSString *deckId;
+@property (nonatomic, strong) NSArray *beaconRegions;
 
-//- (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion;
+- (BOOL)respondsToRegion:(CLRegion *)region;
 
 @end
 
