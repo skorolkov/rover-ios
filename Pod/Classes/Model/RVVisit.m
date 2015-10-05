@@ -13,11 +13,13 @@
 #import "RVCustomer.h"
 #import "RVCard.h"
 #import "RVOrganization.h"
+#import "RVDeck.h"
+#import "RVBeaconRegion.h"
 
 #import "RVBlock.h"
 #import "RVImageBlock.h"
 
-#define kRVVersion @"0.33.0"
+#define kRVVersion @"3.0.0"
 
 
 NSString *const kRVVisitManagerLatestVisitPersistenceKey = @"_roverLatestVisit";
@@ -87,8 +89,8 @@ static RVVisit *_latestVisit;
 
 - (NSArray *)allImageUrls {
     NSMutableArray *array = [NSMutableArray array];
-    [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
-        [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
+    [self.decks enumerateObjectsUsingBlock:^(RVDeck *deck, NSUInteger idx, BOOL *stop) {
+        [deck.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
             [card.viewDefinitions enumerateObjectsUsingBlock:^(RVViewDefinition *viewDefintion, NSUInteger idx, BOOL *stop) {
                 [viewDefintion.blocks enumerateObjectsUsingBlock:^(RVBlock *block, NSUInteger idx, BOOL *stop) {
                     // image blocks
@@ -108,16 +110,11 @@ static RVVisit *_latestVisit;
             }];
             
             // touchpoint avatar
-            if (touchpoint.avatarURL) {
-                [array addObject:touchpoint.avatarURL];
+            if (deck.avatarURL) {
+                [array addObject:deck.avatarURL];
             }
         }];
     }];
-    
-    // organization avatar
-    if (self.organization.avatarURL) {
-        [array addObject:self.organization.avatarURL];
-    }
         
     return [NSArray arrayWithArray:array];
 }
@@ -128,40 +125,35 @@ static RVVisit *_latestVisit;
     _timestamp = timestamp;
 }
 
-- (BOOL)isInLocationRegion:(CLBeaconRegion *)beaconRegion
-{
-    return [self.UUID.UUIDString isEqualToString:beaconRegion.proximityUUID.UUIDString]
-        && [self.majorNumber isEqualToNumber:beaconRegion.major];
-}
-
 - (BOOL)isInLocationWithIdentifier:(NSString *)identifier {
     return [self.location.ID isEqualToString:identifier];
 }
 
-- (BOOL)isInTouchpointRegion:(CLBeaconRegion *)beaconRegion {
-    for (RVTouchpoint *touchpoint in self.currentTouchpoints) {
-        if ([touchpoint.minorNumber isEqualToNumber:beaconRegion.minor]) {
+- (BOOL)hasTouchpointWithIdentifier:(NSString *)identifier {
+    for (RVTouchpoint *touchpoint in self.touchpoints) {
+        if ([touchpoint.ID isEqualToString:identifier]) {
             return YES;
         }
     }
     return NO;
 }
 
-- (RVTouchpoint *)touchpointForRegion:(CLBeaconRegion *)beaconRegion
-{
-    return [self touchpointForMinor:beaconRegion.minor];
+- (BOOL)hasTouchpointWithGimbalIdentifier:(NSString *)identifier {
+    for (RVTouchpoint *touchpoint in self.touchpoints) {
+        if ([touchpoint.gimbalPlaceId isEqualToString:identifier]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
-- (RVTouchpoint *)touchpointForMinor:(NSNumber *)minor
-{
-    __block RVTouchpoint *touchpoint = nil;
-    [self.touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *tp, NSUInteger idx, BOOL *stop) {
-        if ([tp.minorNumber isEqualToNumber:minor]) {
-            touchpoint = tp;
-            *stop = YES;
+- (BOOL)respondsToRegion:(CLRegion *)region {
+    for (RVTouchpoint *touchpoint in self.touchpoints) {
+        if ([touchpoint respondsToRegion:region]) {
+            return YES;
         }
-    }];
-    return touchpoint;
+    }
+    return NO;
 }
 
 - (RVTouchpoint *)touchpointWithID:(NSString *)identifier {
@@ -173,15 +165,19 @@ static RVVisit *_latestVisit;
     return nil;
 }
 
-- (NSSet *)wildcardTouchpoints {
-    if (_wildcardTouchpoints) {
-        return _wildcardTouchpoints;
+- (RVTouchpoint *)touchpointWithGimbalIdentifier:(NSString *)identifier {
+    for (RVTouchpoint *touchpoint in self.touchpoints) {
+        if ([touchpoint.gimbalPlaceId isEqualToString:identifier]) {
+            return touchpoint;
+        }
     }
-    
-    _wildcardTouchpoints = [NSSet setWithArray:[self.touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-        return touchpoint.type == RVTouchpointTypeLocation;
-    }]]];
-    return _wildcardTouchpoints;
+    return nil;
+}
+
+- (NSArray *)touchpointsForRegion:(CLRegion *)region {
+    return [self.touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary<NSString *,id> * _Nullable bindings) {
+        return [touchpoint respondsToRegion:region];
+    }]];
 }
 
 - (NSArray *)visitedTouchpoints
@@ -189,23 +185,43 @@ static RVVisit *_latestVisit;
     return _mVisitedTouchpoints;
 }
 
-- (NSArray *)observableRegions {
-    NSMutableArray *touchpointsToObserve = [NSMutableArray array];
-    [[[self.touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-        // Filter for specific touchpoints
-        return touchpoint.type == RVTouchpointTypeBeacon;
-    }]] sortedArrayUsingComparator:^NSComparisonResult(RVTouchpoint *touchpoint1, RVTouchpoint *touchpoint2) {
+- (RVDeck *)deckWithID:(NSString *)ID {
+    for (RVDeck *deck in self.decks) {
+        if ([deck.ID isEqualToString:ID]) {
+            return deck;
+        }
+    }
+    return nil;
+}
+
+- (NSOrderedSet *)observableRegions {
+    NSMutableOrderedSet *observableRegions = [NSMutableOrderedSet orderedSet];
+    
+    NSArray *sortedTouchpoints = [self.touchpoints sortedArrayUsingComparator:^NSComparisonResult(RVTouchpoint *tp1, RVTouchpoint *tp2) {
+        RVDeck *deck1 = [self deckWithID:tp1.deckId];
+        RVDeck *deck2 = [self deckWithID:tp2.deckId];
+        
         // Sort by notification
-        if (touchpoint1.notification && !touchpoint2.notification) {
+        if (deck1.notification && !deck2.notification) {
             return NSOrderedAscending;
-        } else if (!touchpoint1.notification && touchpoint2.notification) {
+        } else if (!deck1.notification && deck2.notification) {
             return NSOrderedDescending;
         }
         return NSOrderedSame;
-    }] enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
-        [touchpointsToObserve addObject:[[CLBeaconRegion alloc] initWithProximityUUID:self.UUID major:self.majorNumber.integerValue minor:touchpoint.minorNumber.integerValue identifier:touchpoint.ID]];
     }];
-    return touchpointsToObserve;
+    
+    for (RVTouchpoint *touchpoint in sortedTouchpoints) {
+        for (RVBeaconRegion *beaconRegion in touchpoint.beaconRegions) {
+            NSString *identifier = [NSString stringWithFormat:@"%@:%@:%@", beaconRegion.UUID.UUIDString, beaconRegion.majorNumber, beaconRegion.minorNumber];
+            CLBeaconRegion *clBeaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beaconRegion.UUID
+                                                                                     major:beaconRegion.majorNumber.integerValue
+                                                                                     minor:beaconRegion.minorNumber.integerValue
+                                                                                identifier:identifier];
+            //                          [observableRegions addObject:clBeaconRegion];
+        }
+    }
+    
+    return [NSOrderedSet orderedSetWithOrderedSet:observableRegions];
 }
 
 #pragma mark - Initialization
@@ -260,8 +276,7 @@ static RVVisit *_latestVisit;
 - (void)encodeWithCoder:(NSCoder *)encoder {
     [super encodeWithCoder:encoder];
     
-    [encoder encodeObject:self.UUID forKey:@"UUID"];
-    [encoder encodeObject:self.majorNumber forKey:@"majorNumber"];
+    [encoder encodeObject:self.beaconRegion forKey:@"beaconRegion"];
     [encoder encodeObject:[NSNumber numberWithDouble:self.keepAlive] forKey:@"keepAlive"];
     [encoder encodeObject:self.timestamp forKey:@"timestamp"];
     [encoder encodeObject:self.organization forKey:@"organization"];
@@ -272,13 +287,13 @@ static RVVisit *_latestVisit;
     [encoder encodeObject:self.visitedTouchpointIDs forKey:@"visitedTouchpointIDs"];
     [encoder encodeObject:[NSNumber numberWithBool:self.simulate] forKey:@"simulate"];
     [encoder encodeObject:[NSNumber numberWithBool:self.locationEntered] forKey:@"locationEntered"];
+    [encoder encodeObject:self.decks forKey:@"decks"];
 
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
     if((self = [super initWithCoder:decoder])) {
-        self.UUID = [decoder decodeObjectForKey:@"UUID"];
-        self.majorNumber = [decoder decodeObjectForKey:@"majorNumber"];
+        self.beaconRegion = [decoder decodeObjectForKey:@"beaconRegion"];
         self.keepAlive = [[decoder decodeObjectForKey:@"keepAlive"] doubleValue];
         self.timestamp = [decoder decodeObjectForKey:@"timestamp"];
         self.organization = [decoder decodeObjectForKey:@"organization"];
@@ -291,6 +306,7 @@ static RVVisit *_latestVisit;
         
         self.simulate = [[decoder decodeObjectForKey:@"simulate"] boolValue];
         self.locationEntered = [[decoder decodeObjectForKey:@"locationEntered"] boolValue];
+        self.decks = [decoder decodeObjectForKey:@"decks"];
     }
     return self;
 }
@@ -305,8 +321,8 @@ static RVVisit *_latestVisit;
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<RVVisit: UUID: %@, Major: %@, enteredAt: %@, beaconLastDetectedAt: %@, keepAlive: %f>",
-            self.UUID, self.majorNumber, self.timestamp, self.beaconLastDetectedAt, self.keepAlive];
+    return [NSString stringWithFormat:@"<RVVisit: enteredAt: %@, beaconLastDetectedAt: %@, keepAlive: %f>",
+            self.timestamp, self.beaconLastDetectedAt, self.keepAlive];
 }
 
 @end

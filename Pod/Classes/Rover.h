@@ -13,7 +13,6 @@
 #import "RoverDelegate.h"
 
 // Core
-#import "RVLog.h"
 #import "RVRegionManager.h"
 #import "RVVisitManager.h"
 
@@ -25,6 +24,7 @@
 #import "RVTouchpoint.h"
 #import "RVLocation.h"
 #import "RVOrganization.h"
+#import "RVDeck.h"
 
 // UI
 #import "RXVisitViewController.h"
@@ -95,9 +95,9 @@
  
 /** Present the modal view controller.
  
- @param touchpoints An array of RVTouchpoint objects to display in the modal.
+ @param touchpoints An array of RVDeck objects to display in the modal.
  */
-- (void)presentModalWithTouchpoints:(NSArray *)touchpoints;
+- (void)presentModalWithDecks:(NSArray *)decks;
 
 /** You can use this method to simulate your app coming in range of a particular beacon.
  @warning **WARNING:** This method should only be used for testing purposes. Do not use in a production application.

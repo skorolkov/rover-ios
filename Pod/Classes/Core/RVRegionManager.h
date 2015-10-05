@@ -68,15 +68,15 @@
 /** Called when the user enters a region.
  
  @param manager The region manager instance thats calling the delegate method.
- @param region An NSSet of CLRegions the user has entered.
+ @param region The CLBeaconRegion the user has entered.
  */
-- (void)regionManager:(RVRegionManager *)manager didEnterRegions:(NSSet *)regions;
+- (void)regionManager:(RVRegionManager *)manager didEnterRegion:(CLBeaconRegion *)region;
 
 /** Called when the user exits a region.
  
  @param manager The region manager instance thats calling the delegate method.
- @oaram region An NSSet of CLRegions the user has exited.
+ @oaram region The CLBeaconRegion the user has exited.
  */
-- (void)regionManager:(RVRegionManager *)manager didExitRegions:(NSSet *)regions;
+- (void)regionManager:(RVRegionManager *)manager didExitRegion:(CLBeaconRegion *)region;
 
 @end

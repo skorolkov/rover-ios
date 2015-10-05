@@ -14,9 +14,11 @@
 #import "RVCustomer.h"
 #import "RVLocation.h"
 #import "RVTouchpoint.h"
+#import "RVDeck.h"
 #import "RVCard.h"
 #import "RVViewDefinition.h"
 #import "RVOrganization.h"
+#import "RVBeaconRegion.h"
 
 #import "RVImageBlock.h"
 #import "RVTextBlock.h"
@@ -47,12 +49,12 @@
 - (NSDictionary *)outboundMapping {
 
     return @{@"id": @"ID",
-             @"uuid": @"UUID.UUIDString",
-             @"majorNumber": @"majorNumber",
              @"customer": @"customer",
              @"timestamp": @"timestamp",
              @"simulate": @"simulate",
-             @"locationId": @"locationIdentifier",
+             @"touchpointId": @"touchpointIdentifier",
+             @"gimbalPlaceId": @"gimbalPlaceIdentifier",
+             @"beacon": @"beaconRegion",
              
              @"device": @":RVSystemInfo.platform",
              @"operatingSystem": @":RVSystemInfo.systemName",
@@ -65,13 +67,15 @@
              @"keepAlive": @"keepAlive",
              @"location": @"location",
              @"touchpoints": @"touchpoints",
-             @"organization": @"organization"};
+             @"organization": @"organization",
+             @"decks": @"decks"};
 }
 
 - (NSDictionary *)classMapping {
     return @{@"location": [RVLocation class],
              @"touchpoints": [RVTouchpoint class],
-             @"organization": [RVOrganization class]};
+             @"organization": [RVOrganization class],
+             @"decks": [RVDeck class]};
 }
 
 - (NSDictionary *)valueTransformers {
@@ -117,8 +121,7 @@
              @"postalCode": @"postalCode",
              @"latitude": @"latitude",
              @"longitude": @"longitude",
-             @"radius": @"radius",
-             @"majorNumber": @"majorNumber"};
+             @"radius": @"radius"};
 }
 
 @end
@@ -130,12 +133,7 @@
 - (NSDictionary *)inboundMapping {
     return @{@"ID": @"id",
              @"meta": @"meta",
-             @"title": @"title",
-             @"avatarURL": @"avatarUrl"};
-}
-
-- (NSDictionary *)valueTransformers {
-    return @{@"avatarUrl": [RVBlockValueTransformer NSURLValueTransformer]};
+             @"title": @"title"};
 }
 
 @end
@@ -147,29 +145,53 @@
 - (NSDictionary *)inboundMapping {
     return @{@"ID": @"id",
              @"meta": @"meta",
-             @"type": @"type",
-             @"minorNumber": @"minorNumber",
-             @"title": @"title",
-             @"notification": @"notification",
-             @"cards": @"cards",
-             @"avatarURL": @"avatarUrl"};
+             @"gimbalPlaceId": @"gimbalPlaceId",
+             @"deckId": @"deckId",
+             @"beaconRegions": @"beacons"};
 }
 
-- (NSDictionary *)valueTransformers {
-    return @{@"type": [RVBlockValueTransformer valueTransformerWithBlock:^id(id inputValue) {
-                                if ([inputValue isEqualToString:@"beacon"]) {
-                                    return [NSNumber numberWithInteger:RVTouchpointTypeBeacon];
-                                } else if ([inputValue isEqualToString:@"geofence"]) {
-                                    return [NSNumber numberWithInteger:RVTouchpointTypeGeofence];
-                                } else {
-                                    return [NSNumber numberWithInteger:RVTouchpointTypeLocation];
-                                }
-                            }],
-             @"avatarUrl": [RVBlockValueTransformer NSURLValueTransformer]};
+- (NSDictionary *)classMapping {
+    return @{@"beacons": [RVBeaconRegion class]};
+}
+
+@end
+
+#pragma mark - RVBeaconRegion
+
+@implementation RVBeaconRegion (Mapping)
+
+- (NSDictionary *)outboundMapping {
+    return @{@"uuid": @"UUID.UUIDString",
+             @"majorNumber": @"majorNumber",
+             @"minorNumber": @"minorNumber"};
+}
+
+- (NSDictionary *)inboundMapping {
+    return @{@"UUIDString": @"uuid",
+             @"majorNumber": @"majorNumber",
+             @"minorNumber": @"minorNumber"};
+}
+
+@end
+
+#pragma mark - RVDeck
+
+@implementation RVDeck (Mapping)
+
+- (NSDictionary *)inboundMapping {
+    return @{@"ID": @"id",
+             @"notification": @"notification",
+             @"avatarURL": @"avatarUrl",
+             @"cards": @"cards",
+             @"title": @"title"};
 }
 
 - (NSDictionary *)classMapping {
     return @{@"cards": [RVCard class]};
+}
+
+- (NSDictionary *)valueTransformers {
+    return @{@"avatarUrl": [RVBlockValueTransformer NSURLValueTransformer]};
 }
 
 @end

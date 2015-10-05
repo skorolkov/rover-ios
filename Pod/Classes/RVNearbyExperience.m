@@ -12,7 +12,9 @@
 @interface RVNearbyExperience ()
 
 @property (nonatomic, strong) NSMutableDictionary *menuItemsDictionary;
-@property (nonatomic, strong) RVTouchpoint *openedTouchpoint;
+@property (nonatomic, strong) RVDeck *openedDeck;
+
+@property (nonatomic, strong) NSMutableSet *interactedDecks;
 
 @end
 
@@ -36,43 +38,67 @@
 - (void)roverVisit:(RVVisit *)visit didEnterTouchpoints:(NSArray *)touchpoints {
     
     for (RVTouchpoint *touchpoint in touchpoints) {
-        RXMenuItem *menuItem = [self menuItemForTouchpoint:touchpoint];
-        if (touchpoint.cards.count > 0) {
-            [self.recallMenu addItem:menuItem animated:self.recallMenu.isVisible];
+        
+        RVDeck *deck = [visit deckWithID:touchpoint.deckId];
+        if (deck && ![self.interactedDecks containsObject:deck]) {
+            
+            RXMenuItem *menuItem = [self menuItemForDeck:deck];
+            if (deck.cards.count > 0) {
+                [self.recallMenu addItem:menuItem animated:self.recallMenu.isVisible];
+            }
+            
+            
+            [self.interactedDecks addObject:deck];
         }
+        
+        
+        // ONLY present local notifications when the app is in the background
+        
+        if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+            // Do nothing
+        } else {
+            // Send local notification
+            
+            if (deck.notification && !deck.delivered) {
+                [[Rover shared] presentLocalNotification:deck.notification userInfo:@{@"visitID": visit.ID,
+                                                                                      @"deckID": deck.ID}];
+            }
+        }
+        
+        
+        // Mark deck as visited
+        deck.delivered = YES;
     }
     
+    // TODO: need to do a check to see if we have any items in the menu
     if (!self.recallMenu.isVisible && ![Rover shared].modalViewController) {
         [self.recallMenu show];
     }
     
-
-    // ONLY present local notifications when the app is in the background
-    
-    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-        // Do nothing
-    } else {
-        // Send local notification
-        
-        for (RVTouchpoint *touchpoint in touchpoints) {
-            if (touchpoint.notification && !touchpoint.notificationDelivered) {
-                [[Rover shared] presentLocalNotification:touchpoint.notification userInfo:@{@"visitID": visit.ID,
-                                                                                            @"touchpointID": touchpoint.ID}];
-            }
-        }
-    }
-    
-    // Mark touchpoints as visited
-    
-    for (RVTouchpoint *touchpoint in touchpoints) {
-        touchpoint.notificationDelivered = YES;
-    }
 }
 
 - (void)roverVisit:(RVVisit *)visit didExitTouchpoints:(NSArray *)touchpoints {
     for (RVTouchpoint *touchpoint in touchpoints) {
-        RXMenuItem *menuItem = [self menuItemForTouchpoint:touchpoint];
-        [self.recallMenu removeItem:menuItem animated:YES];
+        
+        RVDeck *deck = [visit deckWithID:touchpoint.deckId];
+        if (deck) {
+            // Remove from interactedDecks if no other current touchpoint has the same deck
+            BOOL otherTouchpointsHaveDeck = NO;
+            for (RVTouchpoint *currentTP in visit.currentTouchpoints) {
+                if ([currentTP.deckId isEqualToString:deck.ID]) {
+                    otherTouchpointsHaveDeck = YES;
+                    break;
+                }
+            }
+            if (!otherTouchpointsHaveDeck) {
+                [self.interactedDecks removeObject:deck];
+                
+                
+                RXMenuItem *menuItem = [self menuItemForDeck:deck];
+                [self.recallMenu removeItem:menuItem animated:YES];
+            }
+        }
+        
     }
     
     if (self.recallMenu.itemCount == 0) {
@@ -93,8 +119,15 @@
 }
 
 - (void)roverWillDismissModalViewController:(UIViewController *)modalViewController {
-    if ([[Rover shared].currentVisit.currentTouchpoints containsObject:_openedTouchpoint]) {
-        modalViewController.transitioningDelegate = self.modalTransition;
+    RVVisit *currentVisit = [Rover shared].currentVisit;
+    
+    for (RVTouchpoint *touchpoint in currentVisit.currentTouchpoints) {
+        
+        if ([touchpoint.deckId isEqualToString:_openedDeck.ID]) {
+            modalViewController.transitioningDelegate = self.modalTransition;
+            return;
+        }
+        
     }
 }
 
@@ -105,21 +138,38 @@
         return;
     }
     
-    NSString *touchpointID = [userInfo objectForKey:@"touchpointID"];
-    RVTouchpoint *touchpoint = [currentVisit touchpointWithID:touchpointID];
-    if (touchpoint) {
+    NSString *deckID = [userInfo objectForKey:@"deckID"];
+    RVDeck *deck = [currentVisit deckWithID:deckID];
+    if (deck) {
         if ([Rover shared].modalViewController) {
             [[Rover shared].modalViewController dismissViewControllerAnimated:YES completion:^{
-                [self presentModalForTouchpoint:touchpoint];
+                [self presentModalForDeck:deck];
             }];
         } else {
-            [self presentModalForTouchpoint:touchpoint];
+            [self presentModalForDeck:deck];
         }
     }
 }
 
 - (void)didOpenApplicationDuringVisit:(RVVisit *)visit {
-    if ([Rover shared].currentVisit && !self.recallMenu.isVisible && ![Rover shared].modalViewController && [Rover shared].currentVisit.currentTouchpoints.count > 0) {
+    if (!self.recallMenu.isVisible && ![Rover shared].modalViewController && visit.currentTouchpoints.count > 0) {
+        NSMutableSet *currentDecks = [NSMutableSet set];
+        for (RVTouchpoint *touchpoint in visit.currentTouchpoints) {
+            RVDeck *deck = [visit deckWithID:touchpoint.deckId];
+            if (deck) {
+                [currentDecks addObject:deck];
+            }
+        }
+        
+        if (currentDecks.count > self.recallMenu.itemCount) {
+            for (RXMenuItem *item in self.recallMenu.items) {
+                [self.recallMenu removeItem:item animated:NO];
+            }
+            for (RVDeck *deck in currentDecks) {
+                [self.recallMenu addItem:[self menuItemForDeck:deck] animated:NO];
+            }
+        }
+        
         [self.recallMenu show];
     }
 }
@@ -127,34 +177,34 @@
 #pragma mark - Actions
 
 - (void)menuItemClicked:(RXMenuItem *)menuItem {
-    RVTouchpoint *touchpoint = [[Rover shared].currentVisit.touchpoints objectAtIndex:menuItem.tag];
-    [self presentModalForTouchpoint:touchpoint];
+    RVDeck *deck = [[Rover shared].currentVisit.decks objectAtIndex:menuItem.tag];
+    [self presentModalForDeck:deck];
 }
 
 #pragma mark - Helpers
 
-- (RXMenuItem *)menuItemForTouchpoint:(RVTouchpoint *)touchpoint {
-    RXMenuItem *menuItem = [self.menuItemsDictionary objectForKey:touchpoint.ID];
+- (RXMenuItem *)menuItemForDeck:(RVDeck *)deck {
+    RXMenuItem *menuItem = [self.menuItemsDictionary objectForKey:deck.ID];
     if (!menuItem) {
         menuItem = [RXMenuItem new];
         
         RVVisit *visit = [Rover shared].currentVisit;
         
-        [menuItem setTag:[visit.touchpoints indexOfObject:touchpoint]];
-        [menuItem setTitle:touchpoint.title forState:UIControlStateNormal];
-        [menuItem sd_setBackgroundImageWithURL:touchpoint.avatarURL forState:UIControlStateNormal];
+        [menuItem setTag:[visit.decks indexOfObject:deck]];
+        [menuItem setTitle:deck.title forState:UIControlStateNormal];
+        [menuItem sd_setBackgroundImageWithURL:deck.avatarURL forState:UIControlStateNormal];
         [menuItem addTarget:self action:@selector(menuItemClicked:) forControlEvents:UIControlEventTouchUpInside];
-        [self.menuItemsDictionary setObject:menuItem forKey:touchpoint.ID];
+        [self.menuItemsDictionary setObject:menuItem forKey:deck.ID];
     }
     return menuItem;
 }
 
-- (void)presentModalForTouchpoint:(RVTouchpoint *)touchpoint {
-    _openedTouchpoint = touchpoint;
+- (void)presentModalForDeck:(RVDeck *)deck {
+    _openedDeck = deck;
     [self.recallMenu collapse:self.recallMenu.isVisible completion:^{
         [self.recallMenu hide:self.recallMenu.isVisible completion:^{
-            if (touchpoint) {
-                [[Rover shared] presentModalWithTouchpoints:@[touchpoint]];
+            if (deck) {
+                [[Rover shared] presentModalWithDecks:@[deck]];
             }
         }];
     }];

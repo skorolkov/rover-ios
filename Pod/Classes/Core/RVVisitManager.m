@@ -10,10 +10,10 @@
 
 #import "RVCard.h"
 #import "RVCustomer.h"
-#import "RVLog.h"
 #import "RVRegionManager.h"
 #import "RVVisit.h"
 #import "RVTouchpoint.h"
+#import "RVBeaconRegion.h"
 #import "RVCustomer.h"
 
 NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhileTimerValid";
@@ -24,6 +24,17 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
 @property (strong, nonatomic) NSTimer *expirationTimer;
 @property (strong, nonatomic) NSOperationQueue *operationQueue;
 
+@end
+
+@implementation NSSet (Contains)
+- (BOOL)containsAnyOfObjects:(NSArray *)objects {
+    for (id obj in objects) {
+        if ([self containsObject:obj]) {
+            return YES;
+        }
+    }
+    return NO;
+}
 @end
 
 @implementation RVVisitManager
@@ -65,110 +76,90 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
 
 #pragma mark - RVRegionManagerDelegate
 
-- (NSPredicate *)predicateForDistinctMajorNumbers {
-    __block NSMutableSet *set = [NSMutableSet set];
-    return [NSPredicate predicateWithBlock:^BOOL(CLBeaconRegion *beaconRegion, NSDictionary *bindings) {
-        BOOL contained = [set containsObject:beaconRegion.major];
-        if (!contained) {
-            [set addObject:beaconRegion.major];
-        }
-        return !contained;
-    }];
-}
-
-- (void)regionManager:(RVRegionManager *)manager didEnterRegions:(NSSet *)regions {
-    NSSet *majorDistinctRegions = [manager.currentRegions filteredSetUsingPredicate:[self predicateForDistinctMajorNumbers]];
-    if (majorDistinctRegions.count > 1) {
-        NSLog(@"ROVER - ERROR: Rover has stopped because it has detected beacons with different major numbers (locations). Ensure that your beacons at this location have the same major number.");
-    } else {
-        CLBeaconRegion *aRegion = regions.anyObject;
-        [_operationQueue addOperationWithBlock:^{
-            if (self.latestVisit && [self.latestVisit isInLocationRegion:aRegion] && (self.latestVisit.currentTouchpoints.count > 0 || self.latestVisit.isAlive)) {
-                
-                // Touchpoint check
-                NSSet *newTouchpointRegions = [regions filteredSetUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(CLBeaconRegion *beaconRegion, NSDictionary *bindings) {
-                    return ![self.latestVisit isInTouchpointRegion:beaconRegion];
-                }]];
-                if (newTouchpointRegions.count > 0) {
-                    [self movedToRegions:newTouchpointRegions];
-                }
-                
-                [self invalidateExpirationTimer];
-                
-                return;
-            }
+- (void)regionManager:(RVRegionManager *)manager didEnterRegion:(CLBeaconRegion *)region {
+    [_operationQueue addOperationWithBlock:^{
+        if (self.latestVisit && [self.latestVisit respondsToRegion:region] && (self.latestVisit.currentTouchpoints.count > 0 || self.latestVisit.isAlive)) {
+            NSArray *touchpoints = [self.latestVisit touchpointsForRegion:region];
+            NSArray *newTouchpoints = [touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary<NSString *,id> * _Nullable bindings) {
+                return ![self.latestVisit.currentTouchpoints containsObject:touchpoint];
+            }]];
             
+            [self movedToTouchpoints:newTouchpoints];
+            
+            [RVVisit setLatestVisit:self.latestVisit];
+                
+            return;
+            
+        }
+        
+        RVVisit *newVisit = [self visitWithBeaconRegion:region];
+        if (newVisit) {
             if (_expirationTimer) {
                 [self invalidateExpirationTimer];
                 [self expireVisit];
             }
             
-            //_expirationTimer = nil;
+            self.latestVisit = newVisit;
             
-            [self createVisitWithBeaconRegions:regions];
-        }];
-    }
+            NSArray *touchpoints = [newVisit touchpointsForRegion:region];
+            [self movedToTouchpoints:touchpoints];
+            
+            [RVVisit setLatestVisit:newVisit];
+            
+            // TODO: move this logic somewhere else
+            // Start Monitoring
+            [_regionManager stopMonitoringForAllSpecificRegions];
+            [_regionManager startMonitoringForRegions:self.latestVisit.observableRegions.array];
+        }
+    }];
 }
 
-- (void)regionManager:(RVRegionManager *)manager didExitRegions:(NSSet *)regions {
-    CLBeaconRegion *aBeaconRegion = regions.anyObject;
+- (void)regionManager:(RVRegionManager *)manager didExitRegion:(CLBeaconRegion *)region {
+    NSSet *currentRegions = [manager.currentRegions copy];
+    // TODO: maybe need to copy the region too
     
     [_operationQueue addOperationWithBlock:^{
-        if (self.latestVisit && [self.latestVisit isInLocationRegion:aBeaconRegion]) {
-            NSMutableArray *exitedTouchpoints = [NSMutableArray array];
-            
-            [regions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, BOOL *stop) {
-                RVTouchpoint *touchpoint = [self.latestVisit touchpointForRegion:beaconRegion];
-                if (touchpoint) {
+        if (self.latestVisit && [self.latestVisit respondsToRegion:region]) {
+            NSArray *touchpoints = [self.latestVisit touchpointsForRegion:region];
+            for (RVTouchpoint *touchpoint in touchpoints) {
+                if (![currentRegions containsAnyOfObjects:touchpoint.beaconRegions]) {
+                    
                     [self.latestVisit removeFromCurrentTouchpoints:touchpoint];
-                    [exitedTouchpoints addObject:touchpoint];
+                    
+                    // Delegate
+                    if ([self.delegate respondsToSelector:@selector(visitManager:didExitTouchpoints:visit:)]) {
+                        [self executeOnMainQueue:^{
+                            // TODO: single touchpoint at a time
+                            [self.delegate visitManager:self didExitTouchpoints:@[touchpoint] visit:self.latestVisit];
+                        }];
+                    }
+                    
                 }
-            }];
+            }
             
-            if (manager.currentRegions.count == 0) {
+            if (self.latestVisit.currentTouchpoints.count == 0) {
                 // Reset the keepAlive timer
                 self.latestVisit.beaconLastDetectedAt = [NSDate date];
                 [RVVisit setLatestVisit:self.latestVisit];
                 
-                // Exit all wildcard touchpoints
-                [self.latestVisit.wildcardTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
-                    [self.latestVisit removeFromCurrentTouchpoints:touchpoint];
-                    [exitedTouchpoints addObject:touchpoint];
-                }];
-                
-                //[self performSelectorOnMainThread:@selector(startExpirationTimerWithInterval:) withObject:[NSNumber numberWithDouble:self.latestVisit.keepAlive] waitUntilDone:NO];
                 [self startExpirationTimerWithInterval:self.latestVisit.keepAlive force:NO];
-            }
-            
-            // Delegate
-            if (exitedTouchpoints.count > 0 && [self.delegate respondsToSelector:@selector(visitManager:didExitTouchpoints:visit:)]) {
                 
-                [self executeOnMainQueue:^{
-                    [self.delegate visitManager:self didExitTouchpoints:exitedTouchpoints visit:self.latestVisit];
-                }];
-            }
-            if (manager.currentRegions.count == 0) {
+                // Delegate
                 if ([self.delegate respondsToSelector:@selector(visitManager:didPotentiallyExitLocation:visit:)]) {
-                    
                     [self executeOnMainQueue:^{
                         [self.delegate visitManager:self didPotentiallyExitLocation:self.latestVisit.location visit:self.latestVisit];
                     }];
                 }
             }
-            
-            
         }
     }];
 }
 
 #pragma mark - Visit Creation
 
-- (void)createVisitWithBeaconRegions:(NSSet *)beaconRegions {
-    CLBeaconRegion *beaconRegion = beaconRegions.anyObject;
-    
+- (RVVisit *)visitWithBeaconRegion:(CLBeaconRegion *)region {
     RVVisit *newVisit = [RVVisit new];
-    newVisit.UUID = beaconRegion.proximityUUID;
-    newVisit.majorNumber = beaconRegion.major;
+    newVisit.beaconRegion = [RVBeaconRegion beaconRegionWithCLBeaconRegion:region];
     newVisit.customer = [RVCustomer cachedCustomer];
     newVisit.timestamp = [NSDate date];
     
@@ -178,25 +169,10 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
     }
     
     if (shouldCreateVisit) {
-        self.latestVisit = newVisit;
-        
-        NSLog(@"Touchpoints: %@", newVisit.touchpoints);
-        
-        // Delegate
-        if ([self.delegate respondsToSelector:@selector(visitManager:didEnterLocation:visit:)]) {
-            [self executeOnMainQueue:^{
-                [self.delegate visitManager:self didEnterLocation:newVisit.location visit:newVisit];
-            }];
-        }
-        
-        // Start Monitoring
-        [_regionManager stopMonitoringForAllSpecificRegions];
-        [_regionManager startMonitoringForRegions:self.latestVisit.observableRegions];
-        
-        [self movedToRegions:beaconRegions];
-        
-        [RVVisit setLatestVisit:newVisit];
+        return newVisit;
     }
+    
+    return nil;
 }
 
 #pragma mark - Helper Methods
@@ -209,37 +185,27 @@ NSString *const kApplicationInactiveWhileTimerValid = @"ApplicationInactiveWhile
     }
 }
 
-- (void)movedToRegions:(NSSet *)beaconRegions {
-    NSMutableArray *enteredTouchpoints = [NSMutableArray array];
-    
-    if (![self.latestVisit.currentTouchpoints containsObject:self.latestVisit.wildcardTouchpoints.anyObject]) {
-        // Enter all wildcard touchpoints
-        [self.latestVisit.wildcardTouchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, BOOL *stop) {
-            [self.latestVisit addToCurrentTouchpoints:touchpoint];
-            [enteredTouchpoints addObject:touchpoint];
-        }];
-    }
-    
-    [beaconRegions enumerateObjectsUsingBlock:^(CLBeaconRegion *beaconRegion, BOOL *stop) {
-        RVTouchpoint *touchpoint = [self.latestVisit touchpointForRegion:beaconRegion];
-        if (touchpoint) {
+- (void)movedToTouchpoints:(NSArray *)touchpoints {
+    for (RVTouchpoint *touchpoint in touchpoints) {
+        if (!self.latestVisit.locationEntered) {
+            self.latestVisit.locationEntered = YES;
             
-            // TODO: do we need to do a currentTouchpoints.contains check? in case of missfires
-            
-            [self.latestVisit addToCurrentTouchpoints:touchpoint];
-            [enteredTouchpoints addObject:touchpoint];
-            
-        } else {
-            NSLog(@"ROVER: Invalid touchpoint (minorNumber: %@)", beaconRegion.minor);
+            // Delegate
+            if ([self.delegate respondsToSelector:@selector(visitManager:didEnterLocation:visit:)]) {
+                [self executeOnMainQueue:^{
+                    [self.delegate visitManager:self didEnterLocation:self.latestVisit.location visit:self.latestVisit];
+                }];
+            }
         }
-    }];
-    
-    // Delegate
-    if (enteredTouchpoints.count > 0 && [self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoints:visit:)]) {
         
-        [self executeOnMainQueue:^{
-            [self.delegate visitManager:self didEnterTouchpoints:enteredTouchpoints visit:self.latestVisit];
-        }];
+        [self.latestVisit addToCurrentTouchpoints:touchpoint];
+        
+        // Delegate
+        if ([self.delegate respondsToSelector:@selector(visitManager:didEnterTouchpoints:visit:)]) {
+            [self executeOnMainQueue:^{
+                [self.delegate visitManager:self didEnterTouchpoints:@[touchpoint] visit:self.latestVisit];
+            }];
+        }
     }
 }
 

@@ -71,9 +71,9 @@ static Rover *sharedInstance = nil;
 - (RVVisit *)currentVisit {
     if (_currentVisit && _visitManager.regionManager.currentRegions.count > 0) {
         CLBeaconRegion *beaconRegion = _visitManager.regionManager.currentRegions.anyObject;
-        if ([_currentVisit isInLocationRegion:beaconRegion]) {
+        //if ([_currentVisit isInLocationRegion:beaconRegion]) {
             return _currentVisit;
-        };
+        //};
     }
     
     if (_visitManager.latestVisit.isAlive) {
@@ -171,15 +171,15 @@ static Rover *sharedInstance = nil;
 
 #pragma mark - Utility
 
-- (void)presentModalWithTouchpoints:(NSArray *)touchpoints {
+- (void)presentModalWithDecks:(NSArray *)decks {
     
-    if ([touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-        return touchpoint.cards.count > 0;
+    if ([decks filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVDeck *deck, NSDictionary *bindings) {
+        return deck.cards.count > 0;
     }]].count == 0) {
         NSLog(@"%@ warning showModal called but there are no cards to display", self);
         return;
     }
-
+    
     _modalViewController = [[self.config.modalViewControllerClass alloc] init];
     
     // Delegate
@@ -190,8 +190,8 @@ static Rover *sharedInstance = nil;
     if ([_modalViewController isKindOfClass:[RXVisitViewController class]]) {
         ((RXVisitViewController *)_modalViewController).delegate = self;
         
-        [((RXVisitViewController *)_modalViewController) setTouchpoints:[[touchpoints filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-            return touchpoint.cards.count > 0;
+        [((RXVisitViewController *)_modalViewController) setDecks:[[decks filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVDeck *deck, NSDictionary *bindings) {
+            return deck.cards.count > 0;
         }]] mutableCopy]];
     }
     
@@ -275,17 +275,21 @@ static Rover *sharedInstance = nil;
 
 - (void)visitManager:(RVVisitManager *)manager didEnterTouchpoints:(NSArray *)touchpoints visit:(RVVisit *)visit {
     
-    [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
+    for (RVTouchpoint *touchpoint in touchpoints) {
         
         // Touchpoint Tracking
         [self trackEvent:@"touchpoint.enter" params:@{@"touchpoint": touchpoint.ID}];
         
+        // TODO: get better with card tracking and using the `delivered` flag on RVDeck
         // Card Delivered Tracking
-        [touchpoint.cards enumerateObjectsUsingBlock:^(RVCard *card, NSUInteger idx, BOOL *stop) {
-            [self trackEvent:@"card.deliver" params:@{@"card": card.ID}];
-        }];
+        RVDeck *deck = [visit deckWithID:touchpoint.deckId];
+        if (deck) {
+            for (RVCard *card in deck.cards) {
+                [self trackEvent:@"card.deliver" params:@{@"card": card.ID}];
+            }
+        }
         
-    }];
+    }
     
     // Delegate
     if ([self.delegate respondsToSelector:@selector(roverVisit:didEnterTouchpoints:)]) {
