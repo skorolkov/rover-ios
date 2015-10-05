@@ -7,8 +7,8 @@
 //
 
 #import "RVRegionManager.h"
-#import "RVLog.h"
 
+NSString *const RVRegionManagerCurrentRegionsKey = @"RVRegionManagerCurrentRegionsKey";
 
 @interface RVRegionManager ()
 
@@ -19,7 +19,9 @@
 
 @end
 
-@implementation RVRegionManager
+@implementation RVRegionManager {
+    NSSet *_currentRegions;
+}
 
 #pragma mark - Instance Methods
 
@@ -32,7 +34,7 @@
     [tempCurrentRegions addObject:beaconRegion];
     self.currentRegions = [NSSet setWithSet:tempCurrentRegions];
     
-    [self.delegate regionManager:self didEnterRegions:[NSSet setWithObject:beaconRegion]];
+    [self.delegate regionManager:self didEnterRegion:beaconRegion];
 }
 
 - (void)simulateRegionExitWithBeaconUUID:(NSUUID *)UUID major:(CLBeaconMajorValue)major minor:(CLBeaconMinorValue)minor {
@@ -42,7 +44,7 @@
     [tempCurrentRegions removeObject:beaconRegion];
     self.currentRegions = [NSSet setWithSet:tempCurrentRegions];
     
-    [self.delegate regionManager:self didExitRegions:[NSSet setWithObject:beaconRegion]];
+    [self.delegate regionManager:self didExitRegion:beaconRegion];
 }
 
 #pragma mark - Properties
@@ -59,6 +61,27 @@
     [self setupBeaconRegions];
 }
 
+- (NSSet *)currentRegions {
+    if (_currentRegions) {
+        return _currentRegions;
+    }
+    
+    NSData *data = [[NSUserDefaults standardUserDefaults] objectForKey:RVRegionManagerCurrentRegionsKey];
+    _currentRegions = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+    if (!_currentRegions) {
+        _currentRegions = [NSSet set];
+    }
+    
+    return _currentRegions;
+}
+
+- (void)setCurrentRegions:(NSSet *)currentRegions {
+    _currentRegions = currentRegions;
+    
+    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:currentRegions];
+    [[NSUserDefaults standardUserDefaults] setObject:data forKey:RVRegionManagerCurrentRegionsKey];
+}
+
 #pragma mark - Initialization
 
 - (id)init {
@@ -66,7 +89,7 @@
     if (self) {
         _beaconRegions = [[NSMutableArray alloc] initWithCapacity:20];
         
-        _currentRegions = [NSSet set];
+        //_currentRegions = [NSSet set];
         
         _locationManager = [[CLLocationManager alloc] init];
         _specificLocationManager = [[CLLocationManager alloc] init];
@@ -158,12 +181,12 @@
         
         self.currentRegions = regions;
 
-        if (exitedRegions.count > 0) {
-            [self.delegate regionManager:self didExitRegions:exitedRegions];
+        for (CLBeaconRegion *region in exitedRegions) {
+            [self.delegate regionManager:self didExitRegion:region];
         }
         
-        if (enteredRegions.count > 0) {
-            [self.delegate regionManager:self didEnterRegions:enteredRegions];
+        for (CLBeaconRegion *region in enteredRegions) {
+            [self.delegate regionManager:self didEnterRegion:region];
         }
     }
 }

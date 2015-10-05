@@ -34,7 +34,11 @@
     _recallButton = [[RXRecallButton alloc] initWithCustomView:avatarImageView initialPosition:RXRecallButtonPositionBottomRight];
     [_recallButton addTarget:self action:@selector(recallButtonClicked:) forControlEvents:UIControlEventTouchUpInside];
     
-    [avatarImageView sd_setImageWithURL:[Rover shared].currentVisit.organization.avatarURL];
+    RVTouchpoint *locationTouchpoint = [Rover shared].currentVisit.visitedTouchpoints.firstObject;
+    RVDeck *deck = [[Rover shared].currentVisit deckWithID:locationTouchpoint.deckId];
+    if (deck) {
+        [avatarImageView sd_setImageWithURL:deck.avatarURL];
+    }
     
     return _recallButton;
 }
@@ -48,15 +52,25 @@
     if ([[Rover shared].modalViewController isKindOfClass:[RXVisitViewController class]]) {
         RXVisitViewController *visitViewController = (RXVisitViewController *)[Rover shared].modalViewController;
         
-        NSMutableArray *touchpointsDifference = [NSMutableArray arrayWithArray:touchpoints];
-        [touchpointsDifference removeObjectsInArray:visitViewController.touchpoints];
+        // Construct the set of decks for the touchpoints
+        NSMutableSet *decks = [NSMutableSet set];
+        for (RVTouchpoint *touchpoint in touchpoints) {
+            RVDeck *deck = [visit deckWithID:touchpoint.deckId];
+            if (deck) {
+                [decks addObject:deck];
+            }
+        }
         
-        NSMutableArray *touchpointsWithCards = [[touchpointsDifference filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVTouchpoint *touchpoint, NSDictionary *bindings) {
-            return touchpoint.cards.count > 0;
+        
+        NSMutableArray *decksDifference = [NSMutableArray arrayWithArray:decks.allObjects];
+        [decksDifference removeObjectsInArray:visitViewController.decks];
+        
+        NSMutableArray *decksWithCards = [[decksDifference filteredArrayUsingPredicate:[NSPredicate predicateWithBlock:^BOOL(RVDeck *deck, NSDictionary *bindings) {
+            return deck.cards.count > 0;
         }]] mutableCopy];
         
-        if (touchpointsWithCards.count > 0) {
-            [visitViewController addTouchpoints:touchpointsWithCards];
+        if (decksWithCards.count > 0) {
+            [visitViewController addDecks:decksWithCards];
         }
     } else {
         // Otherwise if the modal is not open show the recall button
@@ -67,21 +81,25 @@
     
     
     [touchpoints enumerateObjectsUsingBlock:^(RVTouchpoint *touchpoint, NSUInteger idx, BOOL *stop) {
-
-        // If the app is in not in the foreground present local notification
         
-        if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
-            // Do Nothing
-        } else if (!touchpoint.notificationDelivered) {
+        RVDeck *deck = [visit deckWithID:touchpoint.deckId];
+        if (deck) {
+            // If the app is in not in the foreground present local notification
             
-            if (touchpoint.notification) {
-                [[Rover shared] presentLocalNotification:touchpoint.notification userInfo:@{@"visitID": visit.ID}];
+            if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive) {
+                // Do Nothing
+            } else if (!deck.delivered) {
+                
+                if (deck.notification) {
+                    [[Rover shared] presentLocalNotification:deck.notification userInfo:@{@"visitID": visit.ID}];
+                }
+                
             }
             
+            // Mark the deck as delivered, so we only send notifications once per deck
+            deck.delivered = YES;
         }
         
-        // Mark the touchpoint as visited, so we only send notifications once per touchpoint
-        touchpoint.notificationDelivered = YES;
     }];
 }
 
@@ -129,11 +147,19 @@
 #pragma mark - Helper
 
 - (void)presentModalForVisit:(RVVisit *)visit {
+    NSMutableSet *decks = [NSMutableSet set];
+    for (RVTouchpoint *touchpoint in visit.visitedTouchpoints) {
+        RVDeck *deck = [visit deckWithID:touchpoint.deckId];
+        if (deck) {
+            [decks addObject:deck];
+        }
+    }
+    
     if (!self.recallButton.isVisible) {
-        [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
+        [[Rover shared] presentModalWithDecks:decks.allObjects];
     } else {
         [self.recallButton hide:YES completion:^{
-            [[Rover shared] presentModalWithTouchpoints:visit.visitedTouchpoints];
+            [[Rover shared] presentModalWithDecks:decks.allObjects];
         }];
     }
 }

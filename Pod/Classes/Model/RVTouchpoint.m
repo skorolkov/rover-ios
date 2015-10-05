@@ -9,12 +9,17 @@
 #import "RVTouchpoint.h"
 #import "RVLocation.h"
 #import "RVCard.h"
+#import "RVBeaconRegion.h"
 
 @implementation RVTouchpoint
 
-- (BOOL)isInRegion:(CLBeaconRegion *)beaconRegion
-{
-    return [self.minorNumber isEqualToNumber:beaconRegion.minor];
+- (BOOL)respondsToRegion:(CLRegion *)region {
+    for (RVBeaconRegion *beaconRegion in self.beaconRegions) {
+        if ([beaconRegion isEqualToCLBeaconRegion:(CLBeaconRegion *)region]) {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (BOOL)isEqual:(id)object {
@@ -24,27 +29,13 @@
     return [self.ID isEqualToString:otherTouchpoint.ID];
 }
 
-- (BOOL)isMasterTouchpoint {
-    return self.type == RVTouchpointTypeLocation;
-}
-
 - (NSUInteger)hash {
     return [self.ID hash];
 }
 
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"<RVTouchpoint: id(%@) minorNumber(%@)>", self.ID, self.minorNumber];
-}
-
-- (NSURL *)avatarURL {
-    if (!_avatarURL) {
-        return nil;
-    }
-    
-    NSInteger size = [UIScreen mainScreen].scale * 64;
-    
-    return [NSURL URLWithString:[NSString stringWithFormat:@"%@?w=%ld&h=%ld", _avatarURL.absoluteString, (long)size, (long)size]];
+    return [NSString stringWithFormat:@"<RVTouchpoint: id(%@)>", self.ID];
 }
 
 #pragma mark - NSCoding
@@ -52,26 +43,18 @@
 - (void)encodeWithCoder:(NSCoder *)encoder {
     [super encodeWithCoder:encoder];
     
-    [encoder encodeObject:[NSNumber numberWithInt:self.type] forKey:@"type"];
-    [encoder encodeObject:self.minorNumber forKey:@"minorNumber"];
-    [encoder encodeObject:self.notification forKey:@"notification"];
-    [encoder encodeObject:self.title forKey:@"title"];
-    [encoder encodeObject:self.cards forKey:@"cards"];
     [encoder encodeObject:[NSNumber numberWithBool:self.isVisited] forKey:@"isVisited"];
-    [encoder encodeObject:[NSNumber numberWithBool:self.notificationDelivered] forKey:@"notificationDelivered"];
-    [encoder encodeObject:self.avatarURL forKey:@"avatarURL"];
+    [encoder encodeObject:self.gimbalPlaceId forKey:@"gimbalPlaceId"];
+    [encoder encodeObject:self.deckId forKey:@"deckId"];
+    [encoder encodeObject:self.beaconRegions forKey:@"beaconRegions"];
 }
 
 - (id)initWithCoder:(NSCoder *)decoder {
     if((self = [super initWithCoder:decoder])) {
-        self.type = [[decoder decodeObjectForKey:@"type"] integerValue];
-        self.minorNumber = [decoder decodeObjectForKey:@"minorNumber"];
-        self.notification = [decoder decodeObjectForKey:@"notification"];
-        self.title = [decoder decodeObjectForKey:@"title"];
-        self.cards = [decoder decodeObjectForKey:@"cards"];
         self.isVisited = [[decoder decodeObjectForKey:@"isVisited"] boolValue];
-        self.notificationDelivered = [[decoder decodeObjectForKey:@"notificationDelivered"] boolValue];
-        self.avatarURL = [decoder decodeObjectForKey:@"avatarURL"];
+        self.gimbalPlaceId = [decoder decodeObjectForKey:@"gimbalPlaceId"];
+        self.deckId = [decoder decodeObjectForKey:@"deckId"];
+        self.beaconRegions = [decoder decodeObjectForKey:@"beaconRegions"];
     }
     return self;
 }

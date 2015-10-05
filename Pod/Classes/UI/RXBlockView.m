@@ -82,6 +82,9 @@
     imageView.contentMode = UIViewContentModeScaleAspectFill;
     [imageView setImageWithURL:block.imageURL usingActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     //[imageView sd_setImageWithURL:block.imageURL];
+    
+    // TODO: if .aspectRatio is zero, skip everything
+    
     [imageView addConstraint:[NSLayoutConstraint constraintWithItem:imageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:imageView attribute:NSLayoutAttributeWidth multiplier:1.f/block.aspectRatio constant:0]];
     
     return imageView;
@@ -266,6 +269,9 @@
 - (void)tapped:(UILongPressGestureRecognizer *)recognizer {
     static UIView *titleSubview;
     static BOOL touchCancelled = NO;
+    
+    static CGPoint location;
+    
     switch (recognizer.state) {
         case UIGestureRecognizerStateBegan:
             touchCancelled = NO;
@@ -281,6 +287,10 @@
                     *stop = YES;
                 }
             }];
+            
+            // iPhone 6S sensitivity
+            location = [recognizer locationInView:self.window];
+            
             break;
         case UIGestureRecognizerStateEnded:
             if (titleSubview) {
@@ -294,12 +304,24 @@
             }
             break;
         default:
-            if (titleSubview) {
-                titleSubview.alpha = 1;
-                titleSubview = nil;
+        {
+            // iPhone 6S sensitivity
+            CGPoint newLocation = [recognizer locationInView:self.window];
+            CGFloat dx = newLocation.x - location.x;
+            CGFloat dy = newLocation.y - location.y;
+            CGFloat distance = dx*dx + dy*dy;
+            
+            if (distance > 20) {
+                if (titleSubview) {
+                    titleSubview.alpha = 1;
+                    titleSubview = nil;
+                }
+                
+                touchCancelled = YES;
             }
-            touchCancelled = YES;
+            
             break;
+        }
     }
 }
 
