@@ -279,7 +279,7 @@
             CGContextTranslateCTM(context, -imageSize.width, -imageSize.height);
         }
         if ([window respondsToSelector:@selector(drawViewHierarchyInRect:afterScreenUpdates:)]) {
-            [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:YES];
+            [window drawViewHierarchyInRect:window.bounds afterScreenUpdates:NO];
         } else {
             [window.layer renderInContext:context];
         }
